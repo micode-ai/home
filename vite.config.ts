@@ -3,6 +3,7 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/home/',
   plugins: [svelte({ hot: !process.env.VITEST })],
   test: {
     globals: true,
