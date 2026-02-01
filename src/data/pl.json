@@ -1,0 +1,151 @@
+{
+  "header": {
+    "companyName": "Micode Sp. z o.o.",
+    "tagline": "Profesjonalne rozwiązania IT"
+  },
+  "hero": {
+    "headline": "Tworzymy oprogramowanie, które działa",
+    "subheadline": "18+ lat doświadczenia w tworzeniu aplikacji mobilnych i systemów enterprise",
+    "cta": "Skontaktuj się z nami"
+  },
+  "company": {
+    "title": "O firmie",
+    "founded": "Założona",
+    "foundedYear": "2024",
+    "location": "Lokalizacja",
+    "address": "Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Poland",
+    "nip": "NIP",
+    "nipValue": "5833510147",
+    "regon": "REGON",
+    "regonValue": "528740633",
+    "industry": "Branża",
+    "industryValue": "Usługi IT i tworzenie oprogramowania"
+  },
+  "services": {
+    "title": "Nasze usługi",
+    "mobile": {
+      "title": "Tworzenie aplikacji mobilnych",
+      "description": "Aplikacje iOS i Android dostosowane do Twoich potrzeb"
+    },
+    "custom": {
+      "title": "Tworzenie oprogramowania na zamówienie",
+      "description": "Dedykowane rozwiązania dopasowane do Twojego biznesu"
+    },
+    "integration": {
+      "title": "Integracja systemów IT",
+      "description": "Łączymy różne systemy w spójną całość"
+    },
+    "analysis": {
+      "title": "Analiza danych",
+      "description": "Przekształcamy dane w wartościowe informacje"
+    },
+    "cloud": {
+      "title": "Wdrażanie rozwiązań chmurowych",
+      "description": "Migracja i optymalizacja infrastruktury w chmurze"
+    }
+  },
+  "founder": {
+    "title": "Założyciel",
+    "name": "Michał Peraviortkin",
+    "experience": "Doświadczenie",
+    "experienceValue": "18+ lat w tworzeniu oprogramowania",
+    "careerHighlights": "Najważniejsze osiągnięcia",
+    "highlights": {
+      "nokia": {
+        "company": "Nokia",
+        "duration": "2015-2020",
+        "description": "Projekty TO, Workflow, Mounting, Dispatch Tool",
+        "technologies": ["ReactJS", "Java"]
+      },
+      "enterprise": {
+        "company": "Różne firmy",
+        "duration": "2006-2024",
+        "description": "Rozwiązania enterprise: ExpertMe, Stitch, Butik, Harcord, Migrator, S3Traf, iMind",
+        "technologies": ["Java", "Oracle ADF", "Spring", "Angular"]
+      },
+      "scm": {
+        "company": "Projekt SCM",
+        "duration": "2020-2026",
+        "description": "System zarządzania łańcuchem dostaw z agentami AI (SCM v1 & v2)",
+        "technologies": ["Spring Boot 3.x", "Java 17+", "Oracle Database", "Angular 21", "TypeScript", "PrimeNG"]
+      },
+      "community": {
+        "company": "Społeczność",
+        "duration": "2010-2016",
+        "description": "Blog techniczny oracle-adf.info z 400 000+ wyświetleń",
+        "technologies": ["Oracle ADF", "Java EE", "Blogging"]
+      }
+    }
+  },
+  "projects": {
+    "title": "Kluczowe projekty",
+    "nokia": {
+      "name": "Projekty Nokia",
+      "description": "TO, Workflow, Mounting, Dispatch Tool",
+      "technologies": ["ReactJS", "Java"]
+    },
+    "enterprise": {
+      "name": "Rozwiązania enterprise",
+      "description": "ExpertMe, Stitch, Butik, Harcord, Migrator, S3Traf, iMind"
+    },
+    "scm": {
+      "name": "SCM v1 & v2",
+      "description": "System zarządzania łańcuchem dostaw z agentami AI",
+      "technologies": ["Spring Boot 3.x", "Java 17+", "Oracle Database", "Angular 17", "TypeScript", "PrimeNG"],
+      "features": [
+        "300+ REST endpoints",
+        "Modularny monolit",
+        "Integracja AI (RAG, Text2SQL)"
+      ]
+    }
+  },
+  "community": {
+    "title": "Wkład w społeczność",
+    "blog": {
+      "title": "Blog techniczny oracle-adf.info",
+      "description": "Ponad 400 000 wyświetleń do 2016 roku"
+    },
+    "opensource": {
+      "title": "Open Source",
+      "description": "Pakiet ngx-open-web-ui-chat dla Angular"
+    }
+  },
+  "products": {
+    "title": "Nasze produkty",
+    "ngxChat": {
+      "name": "ngx-open-web-ui-chat",
+      "description": "Komponent npm do integracji czatu AI w aplikacjach Angular",
+      "detailedDescription": "ngx-open-web-ui-chat to zaawansowany komponent Angular, który bezproblemowo integruje funkcjonalność czatu AI z Twoimi aplikacjami webowymi. Stworzony specjalnie dla programistów Angular, ten komponent zapewnia gotowy do użycia interfejs czatu, który łączy się bezpośrednio z Open WebUI, umożliwiając zaawansowane konwersacje z AI bez konieczności budowania interfejsu czatu od podstaw.\n\nKomponent oferuje szerokie możliwości dostosowania, pozwalając programistom dopasować doświadczenie czatu do języka projektowego ich aplikacji. Dzięki wsparciu dla nowoczesnych funkcji Angular i TypeScript, zapewnia bezpieczeństwo typów i doskonałe doświadczenie programisty. Komponent efektywnie obsługuje renderowanie wiadomości, wprowadzanie danych przez użytkownika oraz komunikację w czasie rzeczywistym z modelami AI.\n\nIntegracja jest prosta - wystarczy zainstalować pakiet przez npm, zaimportować moduł do aplikacji Angular i skonfigurować połączenie z instancją Open WebUI. Komponent zarządza stanem wewnętrznie, redukując kod szablonowy i pozwalając skupić się na budowaniu funkcji zamiast infrastruktury.\n\nIdealny dla aplikacji wymagających asystenta AI, chatbotów obsługi klienta lub interaktywnych funkcji opartych na AI, ngx-open-web-ui-chat zapewnia rozwiązanie gotowe do produkcji. Obsługuje strumieniowanie odpowiedzi, renderowanie markdown i sprawnie radzi sobie z przypadkami brzegowymi, zapewniając płynne doświadczenie użytkownika.\n\nPakiet jest aktywnie utrzymywany i przestrzega najlepszych praktyk Angular, co czyni go niezawodnym wyborem zarówno dla małych projektów, jak i aplikacji korporacyjnych. Niezależnie od tego, czy budujesz portal obsługi klienta, interfejs asystenta AI, czy jakąkolwiek aplikację wymagającą konwersacyjnej AI, ten komponent przyspiesza rozwój przy zachowaniu jakości kodu."
+    },
+    "accountingAI": {
+      "name": "Accounting AI Agent",
+      "website": "www.eKsiegowyAi.pl",
+      "description": "Asystent AI dla pracy księgowej w Polsce",
+      "detailedDescription": "Accounting AI Agent to inteligentny asystent zaprojektowany specjalnie dla księgowych i właścicieli firm w Polsce. To innowacyjne rozwiązanie łączy sztuczną inteligencję z głęboką wiedzą o polskim prawie podatkowym, przepisach księgowych i praktykach biznesowych, aby zapewnić dokładne i niezawodne wsparcie w codziennych zadaniach księgowych.\n\nSystem bezproblemowo integruje się z wFirma, jedną z wiodących platform księgowych online w Polsce, umożliwiając automatyczną synchronizację danych i dostęp w czasie rzeczywistym do dokumentów finansowych. Ta integracja eliminuje ręczne wprowadzanie danych, redukuje błędy i zapewnia, że asystent AI zawsze pracuje z aktualnymi informacjami o operacjach biznesowych.\n\nNiezależnie od tego, czy potrzebujesz pomocy w zrozumieniu skomplikowanych przepisów VAT, obliczaniu zobowiązań PIT lub CIT, czy poruszaniu się po wymaganiach ZUS, agent AI dostarcza jasne, praktyczne odpowiedzi. Może analizować faktury, sugerować optymalne strategie podatkowe i pomagać w zapewnieniu zgodności z polskimi standardami i przepisami księgowymi.\n\nAsystent wykracza poza proste odpowiadanie na pytania - aktywnie pomaga zarządzać przepływem pracy księgowej. Od przetwarzania i kategoryzacji faktur po automatyczne obliczenia i raportowanie finansowe, efektywnie obsługuje rutynowe zadania przy zachowaniu dokładności. Pozwala to księgowym i właścicielom firm skupić się na decyzjach strategicznych zamiast powtarzalnej pracy administracyjnej.\n\nZbudowany z myślą o bezpieczeństwie i prywatności, system zapewnia ochronę wrażliwych danych finansowych. Agent AI jest stale aktualizowany o najnowsze zmiany w polskim prawie podatkowym i przepisach księgowych, dostarczając aktualne, wiarygodne informacje. Niezależnie od tego, czy jesteś właścicielem małej firmy zarządzającym własną księgowością, czy księgowym obsługującym wielu klientów, ten asystent AI usprawnia przepływ pracy i zwiększa produktywność."
+    },
+    "links": {
+      "npm": "Zobacz na npm",
+      "storybook": "Zobacz demo Storybook",
+      "website": "Odwiedź stronę"
+    }
+  },
+  "contact": {
+    "title": "Kontakt",
+    "name": "Imię i nazwisko",
+    "email": "Adres email",
+    "message": "Wiadomość",
+    "send": "Wyślij",
+    "success": "Dziękujemy za wiadomość! Skontaktujemy się wkrótce.",
+    "alternativeContact": "Lub napisz do nas bezpośrednio:",
+    "errors": {
+      "nameRequired": "Imię i nazwisko jest wymagane",
+      "emailRequired": "Adres email jest wymagany",
+      "emailInvalid": "Nieprawidłowy format adresu email",
+      "messageRequired": "Wiadomość jest wymagana"
+    }
+  },
+  "footer": {
+    "copyright": "© 2024 Micode Sp. z o.o. Wszelkie prawa zastrzeżone.",
+    "address": "Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Poland"
+  }
+}

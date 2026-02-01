@@ -1,0 +1,35 @@
+[
+  {
+    "id": "ngx-chat",
+    "nameKey": "products.ngxChat.name",
+    "descriptionKey": "products.ngxChat.description",
+    "detailedDescriptionKey": "products.ngxChat.detailedDescription",
+    "links": [
+      {
+        "type": "npm",
+        "url": "https://www.npmjs.com/package/ngx-open-web-ui-chat",
+        "labelKey": "products.links.npm"
+      }
+    ]
+  },
+  {
+    "id": "accounting-ai",
+    "nameKey": "products.accountingAI.name",
+    "descriptionKey": "products.accountingAI.description",
+    "detailedDescriptionKey": "products.accountingAI.detailedDescription",
+    "website": "www.eKsiegowyAi.pl",
+    "features": [
+      "products.accountingAI.features.tax",
+      "products.accountingAI.features.invoices",
+      "products.accountingAI.features.integration",
+      "products.accountingAI.features.calculations"
+    ],
+    "links": [
+      {
+        "type": "demo",
+        "url": "https://69793e196789a44d9d4a8a02-urdcvnulav.chromatic.com/",
+        "labelKey": "products.links.storybook"
+      }
+    ]
+  }
+]

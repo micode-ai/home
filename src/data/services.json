@@ -1,0 +1,20 @@
+[
+  {
+    "id": "custom",
+    "icon": "💻",
+    "titleKey": "services.custom.title",
+    "descriptionKey": "services.custom.description"
+  },
+  {
+    "id": "integration",
+    "icon": "🔗",
+    "titleKey": "services.integration.title",
+    "descriptionKey": "services.integration.description"
+  },
+  {
+    "id": "cloud",
+    "icon": "☁️",
+    "titleKey": "services.cloud.title",
+    "descriptionKey": "services.cloud.description"
+  }
+]

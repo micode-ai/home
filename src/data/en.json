@@ -1,0 +1,151 @@
+{
+  "header": {
+    "companyName": "Micode Sp. z o.o.",
+    "tagline": "Professional IT Solutions"
+  },
+  "hero": {
+    "headline": "We build software that works",
+    "subheadline": "18+ years of experience in mobile app and enterprise system development",
+    "cta": "Contact us"
+  },
+  "company": {
+    "title": "About the company",
+    "founded": "Founded",
+    "foundedYear": "2024",
+    "location": "Location",
+    "address": "Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Poland",
+    "nip": "Tax ID (NIP)",
+    "nipValue": "5833510147",
+    "regon": "REGON",
+    "regonValue": "528740633",
+    "industry": "Industry",
+    "industryValue": "IT Services and Software Development"
+  },
+  "services": {
+    "title": "Our services",
+    "mobile": {
+      "title": "Mobile application development",
+      "description": "iOS and Android apps tailored to your needs"
+    },
+    "custom": {
+      "title": "Custom software development",
+      "description": "Dedicated solutions adapted to your business"
+    },
+    "integration": {
+      "title": "IT systems integration",
+      "description": "We connect different systems into a cohesive whole"
+    },
+    "analysis": {
+      "title": "Data analysis",
+      "description": "We transform data into valuable insights"
+    },
+    "cloud": {
+      "title": "Cloud solutions implementation",
+      "description": "Migration and optimization of cloud infrastructure"
+    }
+  },
+  "founder": {
+    "title": "Founder",
+    "name": "Michał Peraviortkin",
+    "experience": "Experience",
+    "experienceValue": "18+ years in software development",
+    "careerHighlights": "Career highlights",
+    "highlights": {
+      "nokia": {
+        "company": "Nokia",
+        "duration": "2015-2020",
+        "description": "TO, Workflow, Mounting, Dispatch Tool projects",
+        "technologies": ["ReactJS", "Java"]
+      },
+      "enterprise": {
+        "company": "Various companies",
+        "duration": "2006-2024",
+        "description": "Enterprise solutions: ExpertMe, Stitch, Butik, Harcord, Migrator, S3Traf, iMind",
+        "technologies": ["Java", "Oracle ADF", "Spring", "Angular"]
+      },
+      "scm": {
+        "company": "SCM Project",
+        "duration": "2020-2026",
+        "description": "Enterprise supply chain management system with AI agents (SCM v1 & v2)",
+        "technologies": ["Spring Boot 3.x", "Java 17+", "Oracle Database", "Angular 21", "TypeScript", "PrimeNG"]
+      },
+      "community": {
+        "company": "Community",
+        "duration": "2010-2016",
+        "description": "Technical blog oracle-adf.info with 400,000+ views",
+        "technologies": ["Oracle ADF", "Java EE", "Blogging"]
+      }
+    }
+  },
+  "projects": {
+    "title": "Key projects",
+    "nokia": {
+      "name": "Nokia Projects",
+      "description": "TO, Workflow, Mounting, Dispatch Tool",
+      "technologies": ["ReactJS", "Java"]
+    },
+    "enterprise": {
+      "name": "Enterprise solutions",
+      "description": "ExpertMe, Stitch, Butik, Harcord, Migrator, S3Traf, iMind"
+    },
+    "scm": {
+      "name": "SCM",
+      "description": "Enterprise supply chain management system with AI agents",
+      "technologies": ["Spring Boot 3.x", "Java 17+", "Oracle Database", "Angular 17", "TypeScript", "PrimeNG"],
+      "features": [
+        "300+ REST endpoints",
+        "Modular monolith",
+        "AI integration (RAG, Text2SQL)"
+      ]
+    }
+  },
+  "community": {
+    "title": "Community contributions",
+    "blog": {
+      "title": "Technical blog oracle-adf.info",
+      "description": "Over 400,000 views until 2016"
+    },
+    "opensource": {
+      "title": "Open Source",
+      "description": "ngx-open-web-ui-chat package for Angular"
+    }
+  },
+  "products": {
+    "title": "Our products",
+    "ngxChat": {
+      "name": "ngx-open-web-ui-chat",
+      "description": "npm component for AI chat integration in Angular applications",
+      "detailedDescription": "ngx-open-web-ui-chat is a powerful Angular component that seamlessly integrates AI chat functionality into your web applications. Built specifically for Angular developers, this component provides a ready-to-use chat interface that connects directly with Open WebUI, enabling sophisticated AI-powered conversations without the complexity of building chat UI from scratch.\n\nThe component offers extensive customization options, allowing developers to tailor the chat experience to match their application's design language. With support for modern Angular features and TypeScript, it ensures type safety and excellent developer experience. The component handles message rendering, user input, and real-time communication with AI models efficiently.\n\nIntegration is straightforward - simply install the package via npm, import the module into your Angular application, and configure the connection to your Open WebUI instance. The component manages state internally, reducing boilerplate code and letting you focus on building features rather than infrastructure.\n\nPerfect for applications requiring AI assistance, customer support chatbots, or interactive AI-powered features, ngx-open-web-ui-chat provides a production-ready solution. It supports streaming responses, markdown rendering, and handles edge cases gracefully, ensuring a smooth user experience.\n\nThe package is actively maintained and follows Angular best practices, making it a reliable choice for both small projects and enterprise applications. Whether you're building a customer service portal, an AI assistant interface, or any application that needs conversational AI, this component accelerates development while maintaining code quality."
+    },
+    "accountingAI": {
+      "name": "Accounting AI Agent",
+      "website": "www.eKsiegowyAi.pl",
+      "description": "AI assistant for accounting work in Poland",
+      "detailedDescription": "Accounting AI Agent is an intelligent assistant specifically designed for accounting professionals and business owners in Poland. This innovative solution combines artificial intelligence with deep knowledge of Polish tax law, accounting regulations, and business practices to provide accurate, reliable support for daily accounting tasks.\n\nThe system seamlessly integrates with wFirma, one of Poland's leading online accounting platforms, enabling automatic data synchronization and real-time access to your financial documents. This integration eliminates manual data entry, reduces errors, and ensures that the AI assistant always works with up-to-date information about your business operations.\n\nWhether you need help understanding complex VAT regulations, calculating PIT or CIT obligations, or navigating ZUS (Social Insurance Institution) requirements, the AI agent provides clear, actionable answers. It can analyze your invoices, suggest optimal tax strategies, and help ensure compliance with Polish accounting standards and regulations.\n\nThe assistant goes beyond simple question-answering - it actively helps manage your accounting workflow. From invoice processing and categorization to automated calculations and financial reporting, it handles routine tasks efficiently while maintaining accuracy. This allows accountants and business owners to focus on strategic decisions rather than repetitive administrative work.\n\nBuilt with security and privacy in mind, the system ensures that your sensitive financial data remains protected. The AI agent is continuously updated with the latest changes in Polish tax law and accounting regulations, providing you with current, reliable information. Whether you're a small business owner managing your own books or an accounting professional serving multiple clients, this AI assistant streamlines your workflow and enhances productivity."
+    },
+    "links": {
+      "npm": "View on npm",
+      "storybook": "View Storybook demo",
+      "website": "Visit website"
+    }
+  },
+  "contact": {
+    "title": "Contact",
+    "name": "Full name",
+    "email": "Email address",
+    "message": "Message",
+    "send": "Send",
+    "success": "Thank you for your message! We'll be in touch soon.",
+    "alternativeContact": "Or contact us directly:",
+    "errors": {
+      "nameRequired": "Full name is required",
+      "emailRequired": "Email address is required",
+      "emailInvalid": "Invalid email format",
+      "messageRequired": "Message is required"
+    }
+  },
+  "footer": {
+    "copyright": "© 2024 Micode Sp. z o.o. All rights reserved.",
+    "address": "Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Poland"
+  }
+}

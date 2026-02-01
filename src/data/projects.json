@@ -1,0 +1,26 @@
+[
+  {
+    "id": "nokia",
+    "nameKey": "projects.nokia.name",
+    "descriptionKey": "projects.nokia.description",
+    "technologies": ["ReactJS", "Java"],
+    "projects": ["TO", "Workflow", "Mounting", "Dispatch Tool"]
+  },
+  {
+    "id": "enterprise",
+    "nameKey": "projects.enterprise.name",
+    "descriptionKey": "projects.enterprise.description",
+    "projects": ["ExpertMe", "Stitch", "Butik", "Harcord", "Migrator", "S3Traf", "iMind"]
+  },
+  {
+    "id": "scm",
+    "nameKey": "projects.scm.name",
+    "descriptionKey": "projects.scm.description",
+    "technologies": ["Spring Boot 3.x", "Java 17+", "Oracle Database", "Angular 17", "TypeScript", "PrimeNG"],
+    "features": [
+      "300+ REST endpoints",
+      "Modular monolith",
+      "AI integration (RAG, Text2SQL)"
+    ]
+  }
+]
