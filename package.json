@@ -1,0 +1,30 @@
+{
+  "name": "micode-landing-page",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^6.2.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/svelte": "^5.3.1",
+    "@tsconfig/svelte": "^5.0.6",
+    "fast-check": "^4.5.3",
+    "jsdom": "^27.4.0",
+    "svelte": "^5.43.8",
+    "svelte-check": "^4.3.5",
+    "typescript": "^5.9.3",
+    "vite": "npm:rolldown-vite@7.2.5",
+    "vitest": "^4.0.18"
+  },
+  "overrides": {
+    "vite": "npm:rolldown-vite@7.2.5"
+  }
+}
