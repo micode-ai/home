@@ -137,11 +137,13 @@
     "send": "Wyślij",
     "success": "Dziękujemy za wiadomość! Skontaktujemy się wkrótce.",
     "alternativeContact": "Lub napisz do nas bezpośrednio:",
+    "sending": "Wysyłanie...",
     "errors": {
       "nameRequired": "Imię i nazwisko jest wymagane",
       "emailRequired": "Adres email jest wymagany",
       "emailInvalid": "Nieprawidłowy format adresu email",
-      "messageRequired": "Wiadomość jest wymagana"
+      "messageRequired": "Wiadomość jest wymagana",
+      "submitFailed": "Nie udało się wysłać wiadomości. Spróbuj ponownie lub napisz do nas bezpośrednio."
     }
   },
   "footer": {
