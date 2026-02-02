@@ -1,8 +1,13 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
+  import emailjs from '@emailjs/browser';
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import { validateForm, type FormData } from '../services/validation';
+
+  const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+  const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+  const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
   let currentLang: string;
   const unsubscribe = languageStore.subscribe(lang => {
@@ -22,6 +27,8 @@
 
   let errors: Partial<Record<keyof FormData, string>> = {};
   let isSubmitted = false;
+  let isSubmitting = false;
+  let submitError = false;
   let touched: Partial<Record<keyof FormData, boolean>> = {};
 
   // Validate on blur
@@ -42,7 +49,7 @@
     };
 
     const allErrors = validateForm(formData, translations);
-    
+
     if (allErrors[field]) {
       errors[field] = allErrors[field];
     } else {
@@ -52,7 +59,7 @@
   }
 
   // Handle form submission
-  function handleSubmit(event: Event) {
+  async function handleSubmit(event: Event) {
     event.preventDefault();
 
     // Mark all fields as touched
@@ -67,17 +74,35 @@
 
     errors = validateForm(formData, translations);
 
-    // If no errors, show success message
     if (Object.keys(errors).length === 0) {
-      isSubmitted = true;
-      // Reset form
-      formData = { name: '', email: '', message: '' };
-      touched = {};
-      
-      // Hide success message after 5 seconds
-      setTimeout(() => {
-        isSubmitted = false;
-      }, 5000);
+      isSubmitting = true;
+      submitError = false;
+
+      try {
+        await emailjs.send(
+          EMAILJS_SERVICE_ID,
+          EMAILJS_TEMPLATE_ID,
+          {
+            from_name: formData.name,
+            from_email: formData.email,
+            message: formData.message,
+          },
+          EMAILJS_PUBLIC_KEY
+        );
+
+        isSubmitted = true;
+        formData = { name: '', email: '', message: '' };
+        touched = {};
+
+        setTimeout(() => {
+          isSubmitted = false;
+        }, 5000);
+      } catch (err) {
+        console.error('EmailJS error:', err);
+        submitError = true;
+      } finally {
+        isSubmitting = false;
+      }
     }
   }
 </script>
@@ -88,6 +113,12 @@
   {#if isSubmitted}
     <div class="success-message" role="alert" aria-live="polite">
       {t('contact.success', currentLang)}
+    </div>
+  {/if}
+
+  {#if submitError}
+    <div class="error-banner" role="alert" aria-live="polite">
+      {t('contact.errors.submitFailed', currentLang)}
     </div>
   {/if}
 
@@ -146,8 +177,12 @@
       {/if}
     </div>
 
-    <button type="submit" class="submit-button" aria-label="{t('contact.send', currentLang)}">
-      {t('contact.send', currentLang)}
+    <button type="submit" class="submit-button" disabled={isSubmitting} aria-label="{t('contact.send', currentLang)}">
+      {#if isSubmitting}
+        {t('contact.sending', currentLang)}
+      {:else}
+        {t('contact.send', currentLang)}
+      {/if}
     </button>
   </form>
 
@@ -182,6 +217,18 @@
     -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(46, 204, 113, 0.3);
     color: #27ae60;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .error-banner {
+    background: rgba(220, 53, 69, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    color: #dc3545;
     padding: 1rem;
     border-radius: 12px;
     margin-bottom: 1.5rem;
