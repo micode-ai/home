@@ -7,15 +7,15 @@
   // Meta content for both languages
   const metaContent = {
     pl: {
-      title: 'Micode Sp. z o.o. - Profesjonalne rozwiązania IT | Gdańsk',
-      description: 'Micode - tworzenie aplikacji mobilnych, oprogramowania na zamówienie i rozwiązań chmurowych. 18+ lat doświadczenia. Gdańsk, Polska.',
-      ogTitle: 'Micode Sp. z o.o. - Profesjonalne rozwiązania IT',
+      title: 'MiСode Sp. z o.o. - Profesjonalne rozwiązania IT | Gdańsk',
+      description: 'MiСode - tworzenie aplikacji mobilnych, oprogramowania na zamówienie i rozwiązań chmurowych. 18+ lat doświadczenia. Gdańsk, Polska.',
+      ogTitle: 'MiСode Sp. z o.o. - Profesjonalne rozwiązania IT',
       ogDescription: 'Tworzenie aplikacji mobilnych i systemów enterprise. 18+ lat doświadczenia w branży IT.',
     },
     en: {
-      title: 'Micode Sp. z o.o. - Professional IT Solutions | Gdańsk',
-      description: 'Micode - mobile app development, custom software, and cloud solutions. 18+ years of experience. Gdańsk, Poland.',
-      ogTitle: 'Micode Sp. z o.o. - Professional IT Solutions',
+      title: 'MiСode Sp. z o.o. - Professional IT Solutions | Gdańsk',
+      description: 'MiСode - mobile app development, custom software, and cloud solutions. 18+ years of experience. Gdańsk, Poland.',
+      ogTitle: 'MiСode Sp. z o.o. - Professional IT Solutions',
       ogDescription: 'Mobile app and enterprise system development. 18+ years of experience in IT industry.',
     }
   };
@@ -24,8 +24,8 @@
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "Micode Sp. z o.o.",
-    "url": "https://micode.pl",
+    "name": "MiСode Sp. z o.o.",
+    "url": "https://micode-ai.github.io/home",
     "foundingDate": "2024",
     "address": {
       "@type": "PostalAddress",
