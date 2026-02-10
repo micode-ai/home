@@ -3,13 +3,11 @@
   import { t } from '../services/i18n';
   import LanguageSwitcher from './LanguageSwitcher.svelte';
 
-  // Subscribe to the language store
   let currentLanguage: Language;
   languageStore.subscribe(value => {
     currentLanguage = value;
   });
 
-  // Reactive translation for company name
   $: companyName = t('header.companyName', currentLanguage);
   $: tagline = t('header.tagline', currentLanguage);
 </script>
@@ -30,17 +28,20 @@
   .header {
     position: sticky;
     top: 0;
-    z-index: 1000;
-    background: var(--glass-bg-medium);
-    backdrop-filter: blur(var(--glass-blur-strong));
-    -webkit-backdrop-filter: blur(var(--glass-blur-strong));
-    border-bottom: var(--glass-border);
-    box-shadow: var(--glass-shadow);
-    transition: box-shadow 0.3s ease, background 0.3s ease;
+    z-index: var(--z-sticky);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border);
+    transition: box-shadow var(--transition-base);
+  }
+
+  .header:hover {
+    box-shadow: var(--shadow-md);
   }
 
   .header-container {
-    max-width: 1200px;
+    max-width: var(--max-width-xl);
     margin: 0 auto;
     padding: 1rem 2rem;
     display: flex;
@@ -51,24 +52,22 @@
 
   .header-brand {
     flex: 1;
-    min-width: 0; /* Allow text truncation if needed */
+    min-width: 0;
   }
 
   .company-name {
     margin: 0;
+    font-family: var(--font-heading);
     font-size: 1.5rem;
     font-weight: 700;
     line-height: 1.2;
-    background: var(--gradient-accent);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--color-primary);
   }
 
   .tagline {
     margin: 0.25rem 0 0 0;
     font-size: 0.875rem;
-    color: #4b5563;
+    color: var(--color-text-secondary);
     line-height: 1.4;
   }
 
@@ -78,7 +77,6 @@
     flex-shrink: 0;
   }
 
-  /* Mobile styles (< 768px) */
   @media (max-width: 767px) {
     .header-container {
       padding: 0.75rem 1rem;
@@ -101,7 +99,6 @@
     }
   }
 
-  /* Tablet styles (768px - 1024px) */
   @media (min-width: 768px) and (max-width: 1024px) {
     .header-container {
       padding: 1rem 1.5rem;
@@ -110,52 +107,27 @@
     .company-name {
       font-size: 1.4rem;
     }
-
-    .tagline {
-      font-size: 0.85rem;
-    }
   }
 
-  /* Desktop styles (> 1024px) */
-  @media (min-width: 1025px) {
-    .header-container {
-      padding: 1.25rem 2rem;
-    }
-
-    .company-name {
-      font-size: 1.5rem;
-    }
-
-    .tagline {
-      font-size: 0.875rem;
-    }
-  }
-
-  /* Dark mode support */
   @media (prefers-color-scheme: dark) {
     .header {
-      background: rgba(15, 15, 25, 0.7);
-      backdrop-filter: blur(var(--glass-blur-strong));
-      -webkit-backdrop-filter: blur(var(--glass-blur-strong));
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(15, 23, 42, 0.95);
+      border-bottom-color: var(--color-border);
     }
 
     .company-name {
-      background: linear-gradient(135deg, #93b5f5 0%, #c4a0e8 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: var(--color-primary);
     }
 
     .tagline {
-      color: rgba(255, 255, 255, 0.7);
+      color: var(--color-text-tertiary);
     }
   }
 
-  /* Accessibility: High contrast mode */
   @media (prefers-contrast: high) {
     .header {
-      border-bottom-width: 2px;
+      border-bottom: 2px solid #000000;
+      background: #ffffff;
     }
 
     .company-name {
@@ -163,7 +135,6 @@
     }
   }
 
-  /* Print styles */
   @media print {
     .header {
       position: static;

@@ -1,27 +1,25 @@
 <script lang="ts">
   import { languageStore, type Language } from '../stores/languageStore';
 
-  // Subscribe to the language store
   let currentLanguage: Language;
   languageStore.subscribe(value => {
     currentLanguage = value;
   });
 
-  // Handle language toggle
   function toggleLanguage() {
     const newLanguage: Language = currentLanguage === 'pl' ? 'en' : 'pl';
     languageStore.setLanguage(newLanguage);
   }
 </script>
 
-<button 
-  class="language-switcher" 
+<button
+  class="language-switcher"
   on:click={toggleLanguage}
   aria-label="Switch language"
   type="button"
 >
   <span class="language-option" class:active={currentLanguage === 'pl'}>PL</span>
-  <span class="separator">|</span>
+  <span class="separator">/</span>
   <span class="language-option" class:active={currentLanguage === 'en'}>EN</span>
 </button>
 
@@ -29,98 +27,70 @@
   .language-switcher {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background: var(--glass-bg);
-    backdrop-filter: blur(var(--glass-blur-subtle));
-    -webkit-backdrop-filter: blur(var(--glass-blur-subtle));
-    border: var(--glass-border);
-    border-radius: 50px;
+    gap: 0.375rem;
+    padding: 0.5rem 0.875rem;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
     cursor: pointer;
-    font-family: inherit;
-    font-size: 1rem;
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
     font-weight: 500;
-    transition: all 0.3s ease;
-    color: #333;
+    transition: border-color var(--transition-base), background-color var(--transition-base);
+    color: var(--color-text-secondary);
+    min-height: 44px;
+    min-width: 44px;
   }
 
   .language-switcher:hover {
-    background: var(--glass-bg-medium);
-    border-color: rgba(102, 126, 234, 0.4);
+    background: var(--color-bg-tertiary);
+    border-color: var(--color-primary-light);
   }
 
-  .language-switcher:focus,
   .language-switcher:focus-visible {
-    outline: 2px solid rgba(102, 126, 234, 0.6);
+    outline: 2px solid var(--color-focus);
     outline-offset: 2px;
   }
 
   .language-option {
-    color: #666;
-    transition: color 0.3s ease;
+    color: var(--color-text-tertiary);
+    transition: color var(--transition-fast);
   }
 
   .language-option.active {
-    color: #333;
+    color: var(--color-primary);
     font-weight: 700;
   }
 
   .separator {
-    color: #ccc;
+    color: var(--color-border-dark);
   }
 
-  /* Ensure visibility on all viewport sizes */
-  @media (max-width: 767px) {
-    /* Mobile: smaller but still visible */
-    .language-switcher {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.9rem;
-    }
-  }
-
-  @media (min-width: 768px) and (max-width: 1024px) {
-    /* Tablet: standard size */
-    .language-switcher {
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-    }
-  }
-
-  @media (min-width: 1025px) {
-    /* Desktop: standard size */
-    .language-switcher {
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-    }
-  }
-
-  /* Ensure touch-friendly size on mobile (44x44px minimum) */
   @media (max-width: 767px) {
     .language-switcher {
-      min-height: 44px;
-      min-width: 80px;
+      padding: 0.4rem 0.75rem;
+      font-size: 0.8125rem;
     }
   }
 
-  /* Dark mode support */
   @media (prefers-color-scheme: dark) {
     .language-switcher {
-      background: var(--glass-bg);
-      border: var(--glass-border);
-      color: #fff;
+      background: var(--color-bg-secondary);
+      border-color: var(--color-border);
+      color: var(--color-text-secondary);
     }
 
     .language-switcher:hover {
-      background: var(--glass-bg-medium);
-      border-color: rgba(102, 126, 234, 0.4);
+      background: var(--color-bg-tertiary);
+      border-color: var(--color-primary);
     }
 
     .language-option {
-      color: rgba(255, 255, 255, 0.5);
+      color: var(--color-text-tertiary);
     }
 
     .language-option.active {
-      color: #fff;
+      color: var(--color-primary);
     }
   }
 </style>
