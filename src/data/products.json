@@ -4,6 +4,7 @@
     "nameKey": "products.ngxChat.name",
     "descriptionKey": "products.ngxChat.description",
     "detailedDescriptionKey": "products.ngxChat.detailedDescription",
+    "pricingKey": "products.pricing.free",
     "links": [
       {
         "type": "npm",
@@ -18,6 +19,7 @@
     "descriptionKey": "products.accountingAI.description",
     "detailedDescriptionKey": "products.accountingAI.detailedDescription",
     "website": "www.eKsiegowyAi.pl",
+    "pricingKey": "products.pricing.githubFree",
     "features": [
       "products.accountingAI.features.tax",
       "products.accountingAI.features.invoices",
@@ -29,6 +31,26 @@
         "type": "demo",
         "url": "https://69793e196789a44d9d4a8a02-urdcvnulav.chromatic.com/",
         "labelKey": "products.links.storybook"
+      }
+    ]
+  },
+  {
+    "id": "budget-assistant",
+    "nameKey": "products.budgetAssistant.name",
+    "descriptionKey": "products.budgetAssistant.description",
+    "detailedDescriptionKey": "products.budgetAssistant.detailedDescription",
+    "pricingKey": "products.pricing.githubFree",
+    "features": [
+      "products.budgetAssistant.features.aiChat",
+      "products.budgetAssistant.features.expenseTracking",
+      "products.budgetAssistant.features.budgetPlanning",
+      "products.budgetAssistant.features.insights"
+    ],
+    "links": [
+      {
+        "type": "github",
+        "url": "https://github.com/micode-ai/ai-budget-assistant",
+        "labelKey": "products.links.github"
       }
     ]
   }

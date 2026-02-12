@@ -4,6 +4,7 @@
   import productsData from '../data/products.json';
   import ngxChatImage from '../assets/images/ngx-open-web-ui-chat.png';
   import accountingAiImage from '../assets/images/accounting-ai.png';
+  import budgetAssistantImage from '../assets/images/budget-assistant.png';
 
   let currentLanguage: Language;
   languageStore.subscribe(value => {
@@ -23,6 +24,7 @@
     nameKey: string;
     descriptionKey: string;
     detailedDescriptionKey?: string;
+    pricingKey?: string;
     website?: string;
     features?: string[];
     links: ProductLink[];
@@ -32,7 +34,20 @@
 
   const productImages: Record<string, string> = {
     'ngx-chat': ngxChatImage,
-    'accounting-ai': accountingAiImage
+    'accounting-ai': accountingAiImage,
+    'budget-assistant': budgetAssistantImage
+  };
+
+  const productBadges: Record<string, { label: string; icon: string }> = {
+    'ngx-chat': { label: 'Open Source', icon: 'code' },
+    'accounting-ai': { label: 'SaaS', icon: 'cloud' },
+    'budget-assistant': { label: 'Mobile App', icon: 'smartphone' }
+  };
+
+  const productAccentColors: Record<string, string> = {
+    'ngx-chat': 'var(--color-primary)',
+    'accounting-ai': 'var(--color-success)',
+    'budget-assistant': 'var(--color-accent)'
   };
 
   let selectedProduct: Product | null = null;
@@ -77,18 +92,34 @@
 
 <section class="products scroll-reveal" aria-labelledby="products-title">
   <div class="products-container">
-    <h2 id="products-title" class="products-title">{sectionTitle}</h2>
+    <div class="products-header">
+      <div class="products-header-accent"></div>
+      <h2 id="products-title" class="products-title">{sectionTitle}</h2>
+      <p class="products-subtitle">
+        {#if currentLanguage === 'pl'}
+          Narzędzia i rozwiązania, które tworzymy
+        {:else}
+          Tools and solutions we build
+        {/if}
+      </p>
+    </div>
 
     <div class="products-grid">
-      {#each products as product (product.id)}
+      {#each products as product, index (product.id)}
         <div
           class="product-card"
+          class:card-primary={product.id === 'ngx-chat'}
+          class:card-success={product.id === 'accounting-ai'}
+          class:card-accent={product.id === 'budget-assistant'}
           role="button"
           tabindex="0"
           on:click={(e) => handleCardClick(e, product)}
           on:keydown={(e) => handleCardKeydown(e, product)}
           aria-label="{t(product.nameKey, currentLanguage)} - click for details"
+          style="--card-accent: {productAccentColors[product.id]}; --card-index: {index}"
         >
+          <div class="card-accent-line"></div>
+
           {#if productImages[product.id]}
             <div class="product-image-container">
               <img
@@ -97,33 +128,83 @@
                 class="product-image"
                 loading="lazy"
               />
+              {#if productBadges[product.id]}
+                <span class="product-badge">
+                  {#if productBadges[product.id].icon === 'code'}
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                  {:else if productBadges[product.id].icon === 'cloud'}
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+                  {:else if productBadges[product.id].icon === 'smartphone'}
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+                  {/if}
+                  {productBadges[product.id].label}
+                </span>
+              {/if}
             </div>
           {/if}
 
           <div class="product-content">
             <h3 class="product-name">{t(product.nameKey, currentLanguage)}</h3>
             {#if product.website}
-              <div class="product-website">{product.website}</div>
+              <a
+                href="https://{product.website}"
+                class="product-website"
+                target="_blank"
+                rel="noopener noreferrer"
+                on:click={(e) => e.stopPropagation()}
+              >
+                {product.website}
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
+              </a>
             {/if}
             <p class="product-description">{t(product.descriptionKey, currentLanguage)}</p>
 
-            {#if product.links && product.links.length > 0}
-              <div class="product-links">
-                {#each product.links as link}
-                  <a
-                    href={link.url}
-                    class="product-link"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="{t(link.labelKey, currentLanguage)} for {t(product.nameKey, currentLanguage)}"
-                    on:click={(e) => e.stopPropagation()}
-                  >
-                    {t(link.labelKey, currentLanguage)}
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                  </a>
-                {/each}
+            {#if product.pricingKey}
+              <div class="product-pricing">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" x2="7.01" y1="7" y2="7"/></svg>
+                {t(product.pricingKey, currentLanguage)}
               </div>
             {/if}
+
+            <div class="product-footer">
+              {#if product.links && product.links.length > 0}
+                <div class="product-links">
+                  {#each product.links as link}
+                    <a
+                      href={link.url}
+                      class="product-link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="{t(link.labelKey, currentLanguage)} for {t(product.nameKey, currentLanguage)}"
+                      on:click={(e) => e.stopPropagation()}
+                    >
+                      {#if link.type === 'npm'}
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M1.763 0C.786 0 0 .786 0 1.763v20.474C0 23.214.786 24 1.763 24h20.474c.977 0 1.763-.786 1.763-1.763V1.763C24 .786 23.214 0 22.237 0zM5.13 5.323l13.837.019-.009 13.836h-3.464l.01-10.382h-3.456L12.04 19.17H5.113z"/></svg>
+                      {:else if link.type === 'demo'}
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h20v14H2z"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+                      {:else if link.type === 'github'}
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                      {/if}
+                      {t(link.labelKey, currentLanguage)}
+                      <svg class="link-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </a>
+                  {/each}
+                </div>
+              {/if}
+
+              <button
+                class="card-details-hint"
+                tabindex="-1"
+                aria-hidden="true"
+              >
+                {#if currentLanguage === 'pl'}
+                  Szczegóły
+                {:else}
+                  Details
+                {/if}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
           </div>
         </div>
       {/each}
@@ -145,6 +226,7 @@
       class="modal-content"
       on:mousedown={handleModalContentClick}
       role="document"
+      style="--card-accent: {productAccentColors[selectedProduct.id]}"
     >
       <button
         class="modal-close"
@@ -153,6 +235,8 @@
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
       </button>
+
+      <div class="modal-accent-bar"></div>
 
       {#if productImages[selectedProduct.id]}
         <div class="modal-image-container">
@@ -165,10 +249,25 @@
       {/if}
 
       <div class="modal-body">
-        <h3 id="modal-title" class="modal-title">{t(selectedProduct.nameKey, currentLanguage)}</h3>
-        {#if selectedProduct.website}
-          <div class="modal-website">{selectedProduct.website}</div>
-        {/if}
+        <div class="modal-header">
+          {#if productBadges[selectedProduct.id]}
+            <span class="modal-badge">
+              {productBadges[selectedProduct.id].label}
+            </span>
+          {/if}
+          <h3 id="modal-title" class="modal-title">{t(selectedProduct.nameKey, currentLanguage)}</h3>
+          {#if selectedProduct.website}
+            <a
+              href="https://{selectedProduct.website}"
+              class="modal-website"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {selectedProduct.website}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
+            </a>
+          {/if}
+        </div>
 
         {#if selectedProduct.detailedDescriptionKey}
           <div class="modal-description-detailed">
@@ -202,9 +301,11 @@
 {/if}
 
 <style>
+  /* ===== Section ===== */
   .products {
     background: var(--color-bg-primary);
     padding: 5rem 0;
+    position: relative;
   }
 
   .products-container {
@@ -213,37 +314,61 @@
     padding: 0 2rem;
   }
 
+  /* ===== Header ===== */
+  .products-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+  }
+
+  .products-header-accent {
+    width: 48px;
+    height: 4px;
+    background: var(--color-primary);
+    border-radius: var(--radius-full);
+    margin: 0 auto 1.25rem;
+  }
+
   .products-title {
-    margin: 0 0 3rem 0;
+    margin: 0 0 0.75rem 0;
     font-family: var(--font-heading);
     font-size: 2rem;
     font-weight: 700;
     color: var(--color-text-primary);
-    text-align: center;
     line-height: 1.2;
   }
 
+  .products-subtitle {
+    margin: 0;
+    font-size: 1.0625rem;
+    color: var(--color-text-tertiary);
+    line-height: 1.5;
+  }
+
+  /* ===== Grid ===== */
   .products-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
   }
 
+  /* ===== Card ===== */
   .product-card {
-    background: var(--color-bg-secondary);
+    background: var(--color-bg-primary);
     border-radius: var(--radius-xl);
     border: 1px solid var(--color-border);
     box-shadow: var(--shadow-card);
-    transition: transform var(--transition-base), box-shadow var(--transition-base);
+    transition: transform var(--transition-slow), box-shadow var(--transition-slow), border-color var(--transition-slow);
     display: flex;
     flex-direction: column;
     overflow: hidden;
     cursor: pointer;
+    position: relative;
   }
 
   .product-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--card-accent, var(--color-primary));
   }
 
   .product-card:focus {
@@ -251,93 +376,207 @@
     outline-offset: 2px;
   }
 
+  /* Accent line at top of card */
+  .card-accent-line {
+    height: 3px;
+    background: var(--card-accent, var(--color-primary));
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  /* ===== Image ===== */
   .product-image-container {
     width: 100%;
     height: 200px;
     overflow: hidden;
     background: var(--color-bg-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
   }
 
   .product-image {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    transition: transform var(--transition-base);
-    padding: 0.5rem;
+    transition: transform var(--transition-slow);
+    padding: 1rem;
   }
 
   .product-card:hover .product-image {
-    transform: scale(1.03);
+    transform: scale(1.05);
   }
 
+  /* ===== Badge ===== */
+  .product-badge {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.3125rem 0.625rem;
+    background: var(--color-bg-primary);
+    color: var(--color-text-secondary);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* ===== Content ===== */
   .product-content {
-    padding: 2rem;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
   }
 
   .product-name {
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 0.375rem 0;
     font-family: var(--font-heading);
-    font-size: 1.5rem;
+    font-size: 1.125rem;
     font-weight: 600;
     line-height: 1.3;
     color: var(--color-text-primary);
   }
 
   .product-website {
-    margin: 0 0 1rem 0;
-    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0 0 0.625rem 0;
+    font-size: 0.8125rem;
     font-weight: 500;
-    color: var(--color-text-tertiary);
-    font-style: italic;
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+    width: fit-content;
+  }
+
+  .product-website:hover {
+    color: var(--color-primary-dark);
+  }
+
+  .product-website:visited {
+    color: var(--color-primary);
   }
 
   .product-description {
-    margin: 0 0 1.5rem 0;
-    font-size: 1rem;
+    margin: 0 0 1.25rem 0;
+    font-size: 0.875rem;
     color: var(--color-text-secondary);
     line-height: 1.6;
     flex-grow: 1;
   }
 
+  /* ===== Pricing ===== */
+  .product-pricing {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin: 0 0 1.25rem 0;
+    padding: 0.4375rem 0.75rem;
+    background: var(--color-bg-tertiary);
+    border-radius: var(--radius-md);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+    width: fit-content;
+  }
+
+  .product-pricing svg {
+    color: var(--card-accent, var(--color-primary));
+    flex-shrink: 0;
+  }
+
+  /* ===== Footer ===== */
+  .product-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: auto;
+  }
+
   .product-links {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: auto;
+    gap: 0.5rem;
   }
 
   .product-link {
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
-    padding: 0.625rem 1.25rem;
-    background: var(--color-primary);
+    padding: 0.5rem 1rem;
+    background: var(--card-accent, var(--color-primary));
     color: #ffffff;
     text-decoration: none;
-    border-radius: var(--radius-full);
+    border-radius: var(--radius-lg);
     font-weight: 600;
-    font-size: 0.875rem;
-    transition: background var(--transition-base);
+    font-size: 0.8125rem;
+    transition: opacity var(--transition-base), transform var(--transition-base);
     z-index: 1;
   }
 
   .product-link:hover {
-    background: var(--color-primary-dark);
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .product-link:visited {
+    color: #ffffff;
   }
 
   .product-link:focus {
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid var(--card-accent, var(--color-primary));
     outline-offset: 2px;
   }
 
-  /* Modal */
+  .product-link .link-arrow {
+    transition: transform var(--transition-base);
+  }
+
+  .product-link:hover .link-arrow {
+    transform: translateX(2px);
+  }
+
+  /* ===== Details hint ===== */
+  .card-details-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.375rem 0.625rem;
+    background: transparent;
+    color: var(--color-text-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color var(--transition-base), border-color var(--transition-base);
+    min-height: auto;
+    min-width: auto;
+  }
+
+  .product-card:hover .card-details-hint {
+    color: var(--card-accent, var(--color-primary));
+    border-color: var(--card-accent, var(--color-primary));
+  }
+
+  /* ===== Modal ===== */
   .modal-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -358,27 +597,36 @@
     box-shadow: var(--shadow-xl);
   }
 
+  .modal-accent-bar {
+    height: 4px;
+    background: var(--card-accent, var(--color-primary));
+    width: 100%;
+    border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+  }
+
   .modal-close {
     position: absolute;
-    top: 1rem; right: 1rem;
-    background: var(--color-bg-secondary);
+    top: 1.25rem; right: 1.25rem;
+    background: var(--color-bg-primary);
     color: var(--color-text-secondary);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-full);
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     padding: 0;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background var(--transition-base), color var(--transition-base);
+    transition: background var(--transition-base), color var(--transition-base), box-shadow var(--transition-base);
     z-index: 1;
+    box-shadow: var(--shadow-sm);
   }
 
   .modal-close:hover {
-    background: var(--color-bg-tertiary);
+    background: var(--color-bg-secondary);
     color: var(--color-text-primary);
+    box-shadow: var(--shadow-md);
   }
 
   .modal-close:focus {
@@ -403,6 +651,23 @@
     padding: 2rem;
   }
 
+  .modal-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: var(--color-bg-tertiary);
+    color: var(--card-accent, var(--color-primary));
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+    border-radius: var(--radius-full);
+    margin-bottom: 0.75rem;
+  }
+
   .modal-title {
     margin: 0 0 0.5rem 0;
     font-family: var(--font-heading);
@@ -413,18 +678,25 @@
   }
 
   .modal-website {
-    margin: 0 0 1rem 0;
-    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.9375rem;
     font-weight: 500;
-    color: var(--color-text-tertiary);
-    font-style: italic;
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .modal-website:hover {
+    color: var(--color-primary-dark);
   }
 
   .modal-description {
     margin: 0 0 2rem 0;
-    font-size: 1.125rem;
+    font-size: 1.0625rem;
     color: var(--color-text-secondary);
-    line-height: 1.6;
+    line-height: 1.7;
   }
 
   .modal-description-detailed {
@@ -446,6 +718,8 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
   }
 
   .modal-link {
@@ -453,24 +727,30 @@
     align-items: center;
     gap: 0.375rem;
     padding: 0.75rem 1.5rem;
-    background: var(--color-primary);
+    background: var(--card-accent, var(--color-primary));
     color: #ffffff;
     text-decoration: none;
-    border-radius: var(--radius-full);
+    border-radius: var(--radius-lg);
     font-weight: 600;
     font-size: 1rem;
-    transition: background var(--transition-base);
+    transition: opacity var(--transition-base), transform var(--transition-base);
   }
 
   .modal-link:hover {
-    background: var(--color-primary-dark);
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .modal-link:visited {
+    color: #ffffff;
   }
 
   .modal-link:focus {
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid var(--card-accent, var(--color-primary));
     outline-offset: 2px;
   }
 
+  /* ===== Responsive — Mobile ===== */
   @media (max-width: 767px) {
     .products {
       padding: 3rem 0;
@@ -480,35 +760,47 @@
       padding: 0 1rem;
     }
 
+    .products-header {
+      margin-bottom: 2rem;
+    }
+
     .products-title {
       font-size: 1.5rem;
-      margin-bottom: 2rem;
+    }
+
+    .products-subtitle {
+      font-size: 0.9375rem;
     }
 
     .products-grid {
       grid-template-columns: 1fr;
-      gap: 1.25rem;
+      gap: 1.5rem;
     }
 
     .product-image-container {
-      height: 150px;
+      height: 160px;
     }
 
     .product-content {
-      padding: 1.5rem;
+      padding: 1.25rem;
     }
 
     .product-name {
-      font-size: 1.25rem;
+      font-size: 1rem;
     }
 
     .product-description {
-      font-size: 0.9375rem;
+      font-size: 0.8125rem;
     }
 
     .product-link {
-      padding: 0.5rem 1rem;
-      font-size: 0.8125rem;
+      padding: 0.5rem 0.875rem;
+      font-size: 0.75rem;
+    }
+
+    .product-footer {
+      flex-direction: column;
+      align-items: flex-start;
     }
 
     .modal-image-container {
@@ -529,6 +821,7 @@
     }
   }
 
+  /* ===== Responsive — Tablet ===== */
   @media (min-width: 768px) and (max-width: 1024px) {
     .products {
       padding: 4rem 0;
@@ -542,6 +835,17 @@
       font-size: 1.75rem;
     }
 
+    .products-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .products-grid .product-card:last-child {
+      grid-column: 1 / -1;
+      max-width: 50%;
+      justify-self: center;
+    }
+
     .product-image-container {
       height: 180px;
     }
@@ -551,6 +855,7 @@
     }
   }
 
+  /* ===== Dark Mode ===== */
   @media (prefers-color-scheme: dark) {
     .product-card {
       background: var(--color-bg-secondary);
@@ -558,11 +863,22 @@
     }
 
     .product-card:hover {
-      background: var(--color-bg-tertiary);
+      background: var(--color-bg-secondary);
+      border-color: var(--card-accent, var(--color-primary));
     }
 
     .product-image-container {
       background: var(--color-bg-tertiary);
+    }
+
+    .product-badge {
+      background: var(--color-bg-secondary);
+      border-color: var(--color-border);
+    }
+
+    .card-details-hint {
+      color: var(--color-text-tertiary);
+      border-color: var(--color-border);
     }
 
     .modal-overlay {
@@ -575,15 +891,20 @@
     }
 
     .modal-close {
-      background: var(--color-bg-tertiary);
+      background: var(--color-bg-secondary);
       border-color: var(--color-border);
     }
 
     .modal-image-container {
       background: var(--color-bg-tertiary);
     }
+
+    .modal-badge {
+      background: var(--color-bg-secondary);
+    }
   }
 
+  /* ===== High Contrast ===== */
   @media (prefers-contrast: high) {
     .product-card {
       border: 2px solid #000000;
@@ -600,6 +921,15 @@
       color: #ffffff;
     }
 
+    .product-badge {
+      border: 2px solid #000000;
+    }
+
+    .card-accent-line {
+      height: 4px;
+      background: #000000;
+    }
+
     .modal-content {
       border: 3px solid #000000;
     }
@@ -610,6 +940,7 @@
     }
   }
 
+  /* ===== Print ===== */
   @media print {
     .products {
       background: #ffffff;
@@ -640,16 +971,24 @@
       border: 1px solid #000000;
     }
 
+    .card-details-hint {
+      display: none;
+    }
+
     .modal-overlay {
       display: none;
     }
   }
 
+  /* ===== Reduced Motion ===== */
   @media (prefers-reduced-motion: reduce) {
     .product-card,
     .product-image,
     .product-link,
-    .modal-link {
+    .product-link .link-arrow,
+    .card-details-hint,
+    .modal-link,
+    .modal-close {
       transition: none;
     }
 
@@ -658,6 +997,18 @@
     }
 
     .product-card:hover .product-image {
+      transform: none;
+    }
+
+    .product-link:hover {
+      transform: none;
+    }
+
+    .product-link:hover .link-arrow {
+      transform: none;
+    }
+
+    .modal-link:hover {
       transform: none;
     }
   }
