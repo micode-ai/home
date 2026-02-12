@@ -123,10 +123,27 @@
       "description": "AI assistant for accounting work in Poland",
       "detailedDescription": "Accounting AI Agent is an intelligent assistant specifically designed for accounting professionals and business owners in Poland. This innovative solution combines artificial intelligence with deep knowledge of Polish tax law, accounting regulations, and business practices to provide accurate, reliable support for daily accounting tasks.\n\nThe system seamlessly integrates with wFirma, one of Poland's leading online accounting platforms, enabling automatic data synchronization and real-time access to your financial documents. This integration eliminates manual data entry, reduces errors, and ensures that the AI assistant always works with up-to-date information about your business operations.\n\nWhether you need help understanding complex VAT regulations, calculating PIT or CIT obligations, or navigating ZUS (Social Insurance Institution) requirements, the AI agent provides clear, actionable answers. It can analyze your invoices, suggest optimal tax strategies, and help ensure compliance with Polish accounting standards and regulations.\n\nThe assistant goes beyond simple question-answering - it actively helps manage your accounting workflow. From invoice processing and categorization to automated calculations and financial reporting, it handles routine tasks efficiently while maintaining accuracy. This allows accountants and business owners to focus on strategic decisions rather than repetitive administrative work.\n\nBuilt with security and privacy in mind, the system ensures that your sensitive financial data remains protected. The AI agent is continuously updated with the latest changes in Polish tax law and accounting regulations, providing you with current, reliable information. Whether you're a small business owner managing your own books or an accounting professional serving multiple clients, this AI assistant streamlines your workflow and enhances productivity."
     },
+    "budgetAssistant": {
+      "name": "AI Budget Assistant",
+      "description": "Smart financial companion for tracking expenses by voice, receipt scanning, or manually",
+      "detailedDescription": "AI Budget Assistant is your smart financial companion that transforms personal finance management into a simple and engaging process. The app combines cutting-edge artificial intelligence with an intuitive mobile interface, allowing you to track expenses manually, by voice, or by scanning receipts using AI-powered OCR. Support for seven languages (English, German, Spanish, French, Polish, Russian, Ukrainian) makes the app accessible to users worldwide.\n\nThe app supports multi-currency budget management simultaneously — USD, EUR, PLN, GBP, UAH with real-time exchange rates. The built-in AI chat powered by GPT-4 lets you ask questions about your finances in natural language and receive personalized advice. Artificial intelligence analyzes your spending, suggests expense categories, extracts data from receipt photos, and generates insights about your financial habits.\n\nCreate budgets with spending limits and track progress in real-time with automatic notifications when approaching limits. Interactive analytics provides detailed charts with drill-down capabilities, category breakdowns, and trend analysis. AI generates narrative \"Spending Stories\" reports — engaging stories about your spending with achievements and insights, turning dry numbers into understandable narratives.\n\nAI Budget Assistant supports multiple account types — Personal, Shared, and Business with role-based access (Owner, Editor, Viewer). This allows you to manage family budgets together with family members or track team expenses. Each participant receives an appropriate access level, ensuring security and convenience in collaborative financial planning.\n\nThe app motivates you to maintain financial discipline through a gamification system — earn achievements, maintain daily streaks, gain experience points (XP), level up, and collect badges for consistent financial tracking. Offline-first architecture ensures data is saved locally and automatically synced when online, allowing you to work with the app in any conditions.",
+      "features": {
+        "aiChat": "AI chat with GPT-4 for financial advice",
+        "expenseTracking": "Voice input, receipt scanning, and manual entry",
+        "budgetPlanning": "Multi-currency budgets with real-time tracking",
+        "insights": "Spending Stories and gamification system"
+      }
+    },
+    "pricing": {
+      "free": "Free and open source",
+      "subscription": "Available on website with subscription plans",
+      "githubFree": "Free on GitHub, subscription plans on website"
+    },
     "links": {
       "npm": "View on npm",
       "storybook": "View Storybook demo",
-      "website": "Visit website"
+      "website": "Visit website",
+      "github": "View on GitHub"
     }
   },
   "contact": {
