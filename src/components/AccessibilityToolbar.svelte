@@ -310,13 +310,15 @@
   .a11y-panel {
     display: flex;
     flex-direction: column;
-    background: #fff;
+    background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 0 8px 8px 0;
     box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.15);
     min-width: 200px;
-    overflow: hidden;
+    max-height: calc(100vh - 8rem);
+    overflow-y: auto;
     margin-left: 2px;
+    color: #1E293B;
   }
 
   .a11y-panel[hidden] {
@@ -355,7 +357,7 @@
     padding: 0.5rem 1rem;
     border: none;
     background: transparent;
-    color: var(--color-text-primary, #1E293B);
+    color: #1E293B;
     font-size: 0.875rem;
     font-family: inherit;
     text-align: left;
