@@ -11,6 +11,7 @@
   import ContactForm from './components/ContactForm.svelte';
   import Footer from './components/Footer.svelte';
   import SEO from './components/SEO.svelte';
+  import AccessibilityToolbar from './components/AccessibilityToolbar.svelte';
   import { loadTranslations } from './services/i18n';
   import plTranslations from './data/pl.json';
   import enTranslations from './data/en.json';
@@ -42,6 +43,7 @@
 </script>
 
 <SEO />
+<AccessibilityToolbar />
 <a href="#main-content" class="skip-to-main">Skip to main content</a>
 <Header />
 

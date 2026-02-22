@@ -363,6 +363,65 @@ button:focus-visible {
   }
 }
 
+/* ===== ACCESSIBILITY TOOLBAR MODES ===== */
+
+:root {
+  --a11y-font-scale: 1;
+  font-size: calc(16px * var(--a11y-font-scale));
+}
+
+html.a11y-grayscale {
+  filter: grayscale(100%);
+}
+
+html.a11y-negative-contrast {
+  filter: invert(100%) hue-rotate(180deg);
+}
+
+html.a11y-high-contrast {
+  --color-primary: #0000FF;
+  --color-primary-dark: #000080;
+  --color-accent: #FF6600;
+  --color-text-primary: #000000;
+  --color-text-secondary: #000000;
+  --color-text-tertiary: #000000;
+  --color-text-inverse: #ffffff;
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #ffffff;
+  --color-bg-tertiary: #ffffff;
+  --color-border: #000000;
+  --color-border-dark: #000000;
+  --shadow-card: none;
+  --shadow-card-hover: none;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+html.a11y-high-contrast button {
+  border: 2px solid #000000 !important;
+}
+
+html.a11y-high-contrast a {
+  text-decoration: underline !important;
+  color: #0000FF !important;
+}
+
+html.a11y-light-bg,
+html.a11y-light-bg body,
+html.a11y-light-bg *:not(.a11y-toolbar):not(.a11y-trigger):not(.a11y-panel):not(.a11y-panel *) {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+html.a11y-links-underline a {
+  text-decoration: underline !important;
+}
+
+html.a11y-readable-font,
+html.a11y-readable-font * {
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+
 /* ===== HIGH CONTRAST MODE ===== */
 @media (prefers-contrast: high) {
   :root {
