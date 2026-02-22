@@ -1,9 +1,11 @@
 <script lang="ts">
-  import { onDestroy } from 'svelte';
+  import { onDestroy, createEventDispatcher } from 'svelte';
   import emailjs from '@emailjs/browser';
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import { validateForm, type FormData } from '../services/validation';
+
+  const dispatch = createEventDispatcher<{ openPrivacyPolicy: void }>();
 
   const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
   const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
@@ -25,6 +27,8 @@
   };
 
   let errors: Partial<Record<keyof FormData, string>> = {};
+  let gdprConsent = false;
+  let gdprConsentError = '';
   let isSubmitted = false;
   let isSubmitting = false;
   let submitError = false;
@@ -69,7 +73,13 @@
 
     errors = validateForm(formData, translations);
 
-    if (Object.keys(errors).length === 0) {
+    if (!gdprConsent) {
+      gdprConsentError = t('legal.gdprConsent.required', currentLang);
+    } else {
+      gdprConsentError = '';
+    }
+
+    if (Object.keys(errors).length === 0 && gdprConsent) {
       isSubmitting = true;
       submitError = false;
 
@@ -172,6 +182,26 @@
           ></textarea>
           {#if errors.message}
             <span class="error-message" id="message-error" role="alert">{errors.message}</span>
+          {/if}
+        </div>
+
+        <div class="form-group gdpr-group">
+          <label class="gdpr-label">
+            <input
+              type="checkbox"
+              id="gdpr-consent"
+              bind:checked={gdprConsent}
+              class:error={gdprConsentError}
+              aria-invalid={gdprConsentError ? 'true' : 'false'}
+              aria-describedby={gdprConsentError ? 'gdpr-error' : undefined}
+              aria-required="true"
+            />
+            <span class="gdpr-text">
+              {t('legal.gdprConsent.label', currentLang)}
+            </span>
+          </label>
+          {#if gdprConsentError}
+            <span class="error-message" id="gdpr-error" role="alert">{gdprConsentError}</span>
           {/if}
         </div>
 
@@ -297,6 +327,38 @@
   .error-message {
     color: #dc2626;
     font-size: 0.8125rem;
+  }
+
+  .gdpr-group {
+    gap: 0.5rem;
+  }
+
+  .gdpr-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.625rem;
+    cursor: pointer;
+    font-weight: normal;
+  }
+
+  .gdpr-label input[type="checkbox"] {
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+    accent-color: var(--color-accent);
+  }
+
+  .gdpr-label input[type="checkbox"].error {
+    outline: 2px solid #dc2626;
+    outline-offset: 1px;
+  }
+
+  .gdpr-text {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
   }
 
   .submit-button {

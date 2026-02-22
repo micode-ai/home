@@ -454,3 +454,13 @@ html.a11y-readable-font * {
     text-decoration: underline;
   }
 }
+
+/* Cookie banner — push page content up so footer isn't hidden behind the fixed banner */
+html.cookie-banner-visible footer {
+  padding-bottom: 5rem;
+}
+
+/* Cookie banner — lift accessibility toolbar above the cookie banner */
+html.cookie-banner-visible .a11y-toolbar {
+  bottom: calc(4rem + 1rem);
+}
