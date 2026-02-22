@@ -12,9 +12,14 @@
   import Footer from './components/Footer.svelte';
   import SEO from './components/SEO.svelte';
   import AccessibilityToolbar from './components/AccessibilityToolbar.svelte';
+  import CookieBanner from './components/CookieBanner.svelte';
+  import PrivacyPolicyModal from './components/PrivacyPolicyModal.svelte';
   import { loadTranslations } from './services/i18n';
+
   import plTranslations from './data/pl.json';
   import enTranslations from './data/en.json';
+
+  let privacyPolicyOpen = false;
 
   loadTranslations({ pl: plTranslations, en: enTranslations });
 
@@ -57,7 +62,10 @@
   <ContactForm />
 </main>
 
-<Footer />
+<Footer on:openPrivacyPolicy={() => (privacyPolicyOpen = true)} />
+
+<CookieBanner />
+<PrivacyPolicyModal isOpen={privacyPolicyOpen} on:close={() => (privacyPolicyOpen = false)} />
 
 <style>
   :global(body) {

@@ -165,6 +165,36 @@
   },
   "footer": {
     "copyright": "© 2024 MiСode Sp. z o.o. Wszelkie prawa zastrzeżone.",
-    "address": "Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Poland"
+    "address": "Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Poland",
+    "privacyPolicy": "Polityka prywatności"
+  },
+  "legal": {
+    "cookieBanner": {
+      "message": "Ta strona używa plików cookie do analizy ruchu (Google Analytics). Czy zgadzasz się na ich użycie?",
+      "accept": "Akceptuję",
+      "reject": "Odrzuć"
+    },
+    "gdprConsent": {
+      "label": "Wyrażam zgodę na przetwarzanie moich danych osobowych (imię, adres e-mail) przez Micode Sp. z o.o. w celu odpowiedzi na moje zapytanie, zgodnie z RODO.",
+      "required": "Zgoda na przetwarzanie danych jest wymagana"
+    },
+    "privacyPolicy": {
+      "title": "Polityka prywatności",
+      "controller": "Administrator danych",
+      "controllerText": "Micode Sp. z o.o., Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, NIP: 5833510147",
+      "dataCollected": "Zbierane dane",
+      "dataCollectedText": "Imię i nazwisko, adres e-mail, treść wiadomości — wyłącznie w celu odpowiedzi na zapytanie kontaktowe.",
+      "legalBasis": "Podstawa prawna",
+      "legalBasisText": "Art. 6 ust. 1 lit. a RODO — zgoda osoby, której dane dotyczą.",
+      "retention": "Okres przechowywania",
+      "retentionText": "Dane są przechowywane do czasu realizacji zapytania, nie dłużej niż 12 miesięcy.",
+      "rights": "Prawa użytkownika",
+      "rightsText": "Prawo dostępu, sprostowania, usunięcia, ograniczenia przetwarzania, przenoszenia danych, wycofania zgody oraz wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych (UODO).",
+      "cookies": "Pliki cookie",
+      "cookiesText": "Strona może używać Google Analytics do analizy ruchu. Google Analytics stosuje pliki cookie. Możesz odmówić zgody na ich użycie przy pierwszej wizycie lub w ustawieniach przeglądarki.",
+      "contactTitle": "Kontakt w sprawach danych",
+      "contactText": "perevertkinma@gmail.com",
+      "close": "Zamknij"
+    }
   }
 }

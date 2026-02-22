@@ -165,6 +165,36 @@
   },
   "footer": {
     "copyright": "© 2024 MiСode Sp. z o.o. All rights reserved.",
-    "address": "Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Poland"
+    "address": "Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Poland",
+    "privacyPolicy": "Privacy Policy"
+  },
+  "legal": {
+    "cookieBanner": {
+      "message": "This website uses cookies for traffic analysis (Google Analytics). Do you consent to their use?",
+      "accept": "Accept",
+      "reject": "Reject"
+    },
+    "gdprConsent": {
+      "label": "I consent to the processing of my personal data (name, email) by Micode Sp. z o.o. for the purpose of responding to my inquiry, in accordance with GDPR.",
+      "required": "Consent to data processing is required"
+    },
+    "privacyPolicy": {
+      "title": "Privacy Policy",
+      "controller": "Data Controller",
+      "controllerText": "Micode Sp. z o.o., Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Tax ID (NIP): 5833510147",
+      "dataCollected": "Data collected",
+      "dataCollectedText": "Full name, email address, message content — solely for the purpose of responding to your contact inquiry.",
+      "legalBasis": "Legal basis",
+      "legalBasisText": "Art. 6(1)(a) GDPR — consent of the data subject.",
+      "retention": "Retention period",
+      "retentionText": "Data is retained until the inquiry is resolved, for no longer than 12 months.",
+      "rights": "Your rights",
+      "rightsText": "Right of access, rectification, erasure, restriction of processing, data portability, withdrawal of consent, and the right to lodge a complaint with the supervisory authority.",
+      "cookies": "Cookies",
+      "cookiesText": "This site may use Google Analytics for traffic analysis. Google Analytics uses cookies. You may decline consent at first visit or via your browser settings.",
+      "contactTitle": "Data protection contact",
+      "contactText": "perevertkinma@gmail.com",
+      "close": "Close"
+    }
   }
 }
