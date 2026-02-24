@@ -3,6 +3,7 @@
   import { languageStore, type Language } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import { getItem, setItem } from '../services/storage';
+  import { initializeAnalytics } from '../services/analytics';
 
   const COOKIE_CONSENT_KEY = 'cookieConsent';
 
@@ -23,6 +24,7 @@
 
   function accept() {
     setItem(COOKIE_CONSENT_KEY, 'accepted');
+    initializeAnalytics();
     visible = false;
     document.documentElement.classList.remove('cookie-banner-visible');
   }

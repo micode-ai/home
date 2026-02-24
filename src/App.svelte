@@ -15,6 +15,8 @@
   import CookieBanner from './components/CookieBanner.svelte';
   import PrivacyPolicyModal from './components/PrivacyPolicyModal.svelte';
   import { loadTranslations } from './services/i18n';
+  import { initializeAnalytics } from './services/analytics';
+  import { getItem } from './services/storage';
 
   import plTranslations from './data/pl.json';
   import enTranslations from './data/en.json';
@@ -24,6 +26,10 @@
   loadTranslations({ pl: plTranslations, en: enTranslations });
 
   onMount(() => {
+    if (getItem('cookieConsent') === 'accepted') {
+      initializeAnalytics();
+    }
+
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) return;
 
