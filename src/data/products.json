@@ -28,9 +28,32 @@
     ],
     "links": [
       {
-        "type": "demo",
-        "url": "https://69793e196789a44d9d4a8a02-urdcvnulav.chromatic.com/",
-        "labelKey": "products.links.storybook"
+        "type": "github",
+        "url": "https://github.com/micode-ai/accounting-ai-agent",
+        "labelKey": "products.links.github"
+      }
+    ]
+  },
+  {
+    "id": "emarketing-ai",
+    "nameKey": "products.emarketingAI.name",
+    "descriptionKey": "products.emarketingAI.description",
+    "detailedDescriptionKey": "products.emarketingAI.detailedDescription",
+    "website": "eMarketingAI.pl",
+    "pricingKey": "products.pricing.subscription",
+    "features": [
+      "products.emarketingAI.features.contentGeneration",
+      "products.emarketingAI.features.campaigns",
+      "products.emarketingAI.features.emailMarketing",
+      "products.emarketingAI.features.aiChat",
+      "products.emarketingAI.features.documents",
+      "products.emarketingAI.features.analytics"
+    ],
+    "links": [
+      {
+        "type": "github",
+        "url": "https://github.com/micode-ai/marketing-ai-assistant",
+        "labelKey": "products.links.github"
       }
     ]
   },

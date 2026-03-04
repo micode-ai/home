@@ -5,6 +5,7 @@
   import ngxChatImage from '../assets/images/ngx-open-web-ui-chat.png';
   import accountingAiImage from '../assets/images/accounting-ai.png';
   import budgetAssistantImage from '../assets/images/budget-assistant.png';
+  import emarketingAiImage from '../assets/images/emarketing-ai.png';
 
   let currentLanguage: Language;
   languageStore.subscribe(value => {
@@ -35,22 +36,68 @@
   const productImages: Record<string, string> = {
     'ngx-chat': ngxChatImage,
     'accounting-ai': accountingAiImage,
+    'emarketing-ai': emarketingAiImage,
     'budget-assistant': budgetAssistantImage
   };
 
   const productBadges: Record<string, { label: string; icon: string }> = {
     'ngx-chat': { label: 'Open Source', icon: 'code' },
     'accounting-ai': { label: 'SaaS', icon: 'cloud' },
+    'emarketing-ai': { label: 'SaaS', icon: 'cloud' },
     'budget-assistant': { label: 'Mobile App', icon: 'smartphone' }
   };
 
   const productAccentColors: Record<string, string> = {
     'ngx-chat': 'var(--color-primary)',
     'accounting-ai': 'var(--color-success)',
+    'emarketing-ai': 'var(--color-info, #8b5cf6)',
     'budget-assistant': 'var(--color-accent)'
   };
 
   let selectedProduct: Product | null = null;
+  let sliderOffset = 0;
+
+  // Desktop shows 3, tablet shows 2, mobile shows 1
+  function getVisibleCount(): number {
+    if (typeof window === 'undefined') return 3;
+    if (window.innerWidth < 768) return 1;
+    if (window.innerWidth < 1025) return 2;
+    return 3;
+  }
+
+  let visibleCount = getVisibleCount();
+
+  function handleResize() {
+    visibleCount = getVisibleCount();
+    // Clamp offset if window resized
+    const maxOffset = Math.max(0, products.length - visibleCount);
+    if (sliderOffset > maxOffset) sliderOffset = maxOffset;
+  }
+
+  $: maxOffset = Math.max(0, products.length - visibleCount);
+  $: canPrev = sliderOffset > 0;
+  $: canNext = sliderOffset < maxOffset;
+
+  // Calculate translateX: each card is (100% - gaps) / visibleCount wide, plus its gap
+  // One step = one card width + gap = (100% / visibleCount)
+  // But we must account for the gap: step = (100% + gap) / visibleCount is not right.
+  // Simpler: use calc with the gap. Each step shifts by (cardWidth + gap).
+  // cardWidth = (100% - (visibleCount-1)*gap) / visibleCount
+  // step = cardWidth + gap = (100% - (visibleCount-1)*gap) / visibleCount + gap
+  //       = (100% + gap) / visibleCount
+  $: sliderTransform = `translateX(calc(-${sliderOffset} * (100% + 2rem) / ${visibleCount}))`;
+
+  function slidePrev() {
+    if (canPrev) sliderOffset--;
+  }
+
+  function slideNext() {
+    if (canNext) sliderOffset++;
+  }
+
+  function slideTo(index: number) {
+    sliderOffset = Math.min(index, maxOffset);
+  }
 
   function openModal(product: Product) {
     selectedProduct = product;
@@ -88,7 +135,7 @@
   }
 </script>
 
-<svelte:window on:keydown={handleKeydown} />
+<svelte:window on:keydown={handleKeydown} on:resize={handleResize} />
 
 <section class="products scroll-reveal" aria-labelledby="products-title">
   <div class="products-container">
@@ -104,111 +151,158 @@
       </p>
     </div>
 
-    <div class="products-grid">
-      {#each products as product, index (product.id)}
-        <div
-          class="product-card"
-          class:card-primary={product.id === 'ngx-chat'}
-          class:card-success={product.id === 'accounting-ai'}
-          class:card-accent={product.id === 'budget-assistant'}
-          role="button"
-          tabindex="0"
-          on:click={(e) => handleCardClick(e, product)}
-          on:keydown={(e) => handleCardKeydown(e, product)}
-          aria-label="{t(product.nameKey, currentLanguage)} - click for details"
-          style="--card-accent: {productAccentColors[product.id]}; --card-index: {index}"
+    <div class="slider-wrapper">
+      {#if maxOffset > 0}
+        <button
+          class="slider-arrow slider-arrow-prev"
+          on:click={slidePrev}
+          disabled={!canPrev}
+          aria-label="Previous products"
         >
-          <div class="card-accent-line"></div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+      {/if}
 
-          {#if productImages[product.id]}
-            <div class="product-image-container">
-              <img
-                src={productImages[product.id]}
-                alt={t(product.nameKey, currentLanguage)}
-                class="product-image"
-                loading="lazy"
-              />
-              {#if productBadges[product.id]}
-                <span class="product-badge">
-                  {#if productBadges[product.id].icon === 'code'}
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-                  {:else if productBadges[product.id].icon === 'cloud'}
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
-                  {:else if productBadges[product.id].icon === 'smartphone'}
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
-                  {/if}
-                  {productBadges[product.id].label}
-                </span>
-              {/if}
-            </div>
-          {/if}
+      <div class="slider-viewport">
+        <div
+          class="products-grid"
+          style="--visible-count: {visibleCount}; transform: {sliderTransform};"
+        >
+          {#each products as product, index (product.id)}
+            <div
+              class="product-card"
+              class:card-primary={product.id === 'ngx-chat'}
+              class:card-success={product.id === 'accounting-ai'}
+              class:card-info={product.id === 'emarketing-ai'}
+              class:card-accent={product.id === 'budget-assistant'}
+              role="button"
+              tabindex="0"
+              on:click={(e) => handleCardClick(e, product)}
+              on:keydown={(e) => handleCardKeydown(e, product)}
+              aria-label="{t(product.nameKey, currentLanguage)} - click for details"
+              style="--card-accent: {productAccentColors[product.id]}; --card-index: {index}"
+            >
+              <div class="card-accent-line"></div>
 
-          <div class="product-content">
-            <h3 class="product-name">{t(product.nameKey, currentLanguage)}</h3>
-            {#if product.website}
-              <a
-                href="https://{product.website}"
-                class="product-website"
-                target="_blank"
-                rel="noopener noreferrer"
-                on:click={(e) => e.stopPropagation()}
-              >
-                {product.website}
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
-              </a>
-            {/if}
-            <p class="product-description">{t(product.descriptionKey, currentLanguage)}</p>
-
-            {#if product.pricingKey}
-              <div class="product-pricing">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" x2="7.01" y1="7" y2="7"/></svg>
-                {t(product.pricingKey, currentLanguage)}
-              </div>
-            {/if}
-
-            <div class="product-footer">
-              {#if product.links && product.links.length > 0}
-                <div class="product-links">
-                  {#each product.links as link}
-                    <a
-                      href={link.url}
-                      class="product-link"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label="{t(link.labelKey, currentLanguage)} for {t(product.nameKey, currentLanguage)}"
-                      on:click={(e) => e.stopPropagation()}
-                    >
-                      {#if link.type === 'npm'}
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M1.763 0C.786 0 0 .786 0 1.763v20.474C0 23.214.786 24 1.763 24h20.474c.977 0 1.763-.786 1.763-1.763V1.763C24 .786 23.214 0 22.237 0zM5.13 5.323l13.837.019-.009 13.836h-3.464l.01-10.382h-3.456L12.04 19.17H5.113z"/></svg>
-                      {:else if link.type === 'demo'}
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h20v14H2z"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
-                      {:else if link.type === 'github'}
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+              {#if productImages[product.id]}
+                <div class="product-image-container">
+                  <img
+                    src={productImages[product.id]}
+                    alt={t(product.nameKey, currentLanguage)}
+                    class="product-image"
+                    loading="lazy"
+                  />
+                  {#if productBadges[product.id]}
+                    <span class="product-badge">
+                      {#if productBadges[product.id].icon === 'code'}
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                      {:else if productBadges[product.id].icon === 'cloud'}
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+                      {:else if productBadges[product.id].icon === 'smartphone'}
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
                       {/if}
-                      {t(link.labelKey, currentLanguage)}
-                      <svg class="link-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                    </a>
-                  {/each}
+                      {productBadges[product.id].label}
+                    </span>
+                  {/if}
                 </div>
               {/if}
 
-              <button
-                class="card-details-hint"
-                tabindex="-1"
-                aria-hidden="true"
-              >
-                {#if currentLanguage === 'pl'}
-                  Szczegóły
-                {:else}
-                  Details
+              <div class="product-content">
+                <h3 class="product-name">{t(product.nameKey, currentLanguage)}</h3>
+                {#if product.website}
+                  <a
+                    href="https://{product.website}"
+                    class="product-website"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    on:click={(e) => e.stopPropagation()}
+                  >
+                    {product.website}
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
+                  </a>
                 {/if}
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-              </button>
+                <p class="product-description">{t(product.descriptionKey, currentLanguage)}</p>
+
+                {#if product.pricingKey}
+                  <div class="product-pricing">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" x2="7.01" y1="7" y2="7"/></svg>
+                    {t(product.pricingKey, currentLanguage)}
+                  </div>
+                {/if}
+
+                <div class="product-footer">
+                  {#if product.links && product.links.length > 0}
+                    <div class="product-links">
+                      {#each product.links as link}
+                        <a
+                          href={link.url}
+                          class="product-link"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="{t(link.labelKey, currentLanguage)} for {t(product.nameKey, currentLanguage)}"
+                          on:click={(e) => e.stopPropagation()}
+                        >
+                          {#if link.type === 'npm'}
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M1.763 0C.786 0 0 .786 0 1.763v20.474C0 23.214.786 24 1.763 24h20.474c.977 0 1.763-.786 1.763-1.763V1.763C24 .786 23.214 0 22.237 0zM5.13 5.323l13.837.019-.009 13.836h-3.464l.01-10.382h-3.456L12.04 19.17H5.113z"/></svg>
+                          {:else if link.type === 'demo'}
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h20v14H2z"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+                          {:else if link.type === 'github'}
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                          {:else if link.type === 'website'}
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                          {/if}
+                          {t(link.labelKey, currentLanguage)}
+                          <svg class="link-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                        </a>
+                      {/each}
+                    </div>
+                  {/if}
+
+                  <button
+                    class="card-details-hint"
+                    tabindex="-1"
+                    aria-hidden="true"
+                  >
+                    {#if currentLanguage === 'pl'}
+                      Szczegóły
+                    {:else}
+                      Details
+                    {/if}
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
+          {/each}
         </div>
-      {/each}
+      </div>
+
+      {#if maxOffset > 0}
+        <button
+          class="slider-arrow slider-arrow-next"
+          on:click={slideNext}
+          disabled={!canNext}
+          aria-label="Next products"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      {/if}
     </div>
+
+    {#if maxOffset > 0}
+      <div class="slider-dots" role="tablist" aria-label="Product slides">
+        {#each Array(maxOffset + 1) as _, i}
+          <button
+            class="slider-dot"
+            class:active={sliderOffset === i}
+            on:click={() => slideTo(i)}
+            role="tab"
+            aria-selected={sliderOffset === i}
+            aria-label="Go to slide {i + 1}"
+          ></button>
+        {/each}
+      </div>
+    {/if}
   </div>
 </section>
 
@@ -344,11 +438,103 @@
     line-height: 1.5;
   }
 
-  /* ===== Grid ===== */
+  /* ===== Slider ===== */
+  .slider-wrapper {
+    position: relative;
+  }
+
+  .slider-viewport {
+    overflow: hidden;
+    width: 100%;
+  }
+
   .products-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
     gap: 2rem;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .products-grid > .product-card {
+    min-width: calc((100% - 2rem * (var(--visible-count) - 1)) / var(--visible-count));
+    max-width: calc((100% - 2rem * (var(--visible-count) - 1)) / var(--visible-count));
+    flex-shrink: 0;
+  }
+
+  .slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-primary);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: background var(--transition-base), color var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
+    box-shadow: var(--shadow-md);
+    z-index: 2;
+  }
+
+  .slider-arrow-prev {
+    left: -22px;
+  }
+
+  .slider-arrow-next {
+    right: -22px;
+  }
+
+  .slider-arrow:hover:not(:disabled) {
+    background: var(--color-bg-secondary);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .slider-arrow:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .slider-arrow:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  .slider-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .slider-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: var(--radius-full);
+    border: 2px solid var(--color-border);
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: background var(--transition-base), border-color var(--transition-base), transform var(--transition-base);
+  }
+
+  .slider-dot:hover {
+    border-color: var(--color-primary);
+    transform: scale(1.2);
+  }
+
+  .slider-dot.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+
+  .slider-dot:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
   }
 
   /* ===== Card ===== */
@@ -772,8 +958,20 @@
       font-size: 0.9375rem;
     }
 
+    .slider-arrow {
+      width: 36px;
+      height: 36px;
+    }
+
+    .slider-arrow-prev {
+      left: -8px;
+    }
+
+    .slider-arrow-next {
+      right: -8px;
+    }
+
     .products-grid {
-      grid-template-columns: 1fr;
       gap: 1.5rem;
     }
 
@@ -836,14 +1034,7 @@
     }
 
     .products-grid {
-      grid-template-columns: repeat(2, 1fr);
       gap: 1.5rem;
-    }
-
-    .products-grid .product-card:last-child {
-      grid-column: 1 / -1;
-      max-width: 50%;
-      justify-self: center;
     }
 
     .product-image-container {
@@ -902,6 +1093,19 @@
     .modal-badge {
       background: var(--color-bg-secondary);
     }
+
+    .slider-arrow {
+      background: var(--color-bg-secondary);
+      border-color: var(--color-border);
+    }
+
+    .slider-arrow:hover:not(:disabled) {
+      background: var(--color-bg-tertiary);
+    }
+
+    .slider-dot {
+      border-color: var(--color-border);
+    }
   }
 
   /* ===== High Contrast ===== */
@@ -947,9 +1151,24 @@
       padding: 1rem 0;
     }
 
+    .slider-arrow,
+    .slider-dots {
+      display: none;
+    }
+
+    .slider-viewport {
+      overflow: visible;
+    }
+
     .products-grid {
-      grid-template-columns: 1fr;
+      flex-wrap: wrap;
+      transform: none !important;
       gap: 1rem;
+    }
+
+    .products-grid > .product-card {
+      min-width: 100%;
+      max-width: 100%;
     }
 
     .product-card {
@@ -1009,6 +1228,14 @@
     }
 
     .modal-link:hover {
+      transform: none;
+    }
+
+    .products-grid {
+      transition: none;
+    }
+
+    .slider-dot:hover {
       transform: none;
     }
   }
