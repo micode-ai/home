@@ -76,5 +76,26 @@
         "labelKey": "products.links.github"
       }
     ]
+  },
+  {
+    "id": "testing-ai",
+    "nameKey": "products.testingAI.name",
+    "descriptionKey": "products.testingAI.description",
+    "detailedDescriptionKey": "products.testingAI.detailedDescription",
+    "pricingKey": "products.pricing.testingFree",
+    "features": [
+      "products.testingAI.features.testExecution",
+      "products.testingAI.features.testGeneration",
+      "products.testingAI.features.checklists",
+      "products.testingAI.features.notifications",
+      "products.testingAI.features.aiAgents"
+    ],
+    "links": [
+      {
+        "type": "github",
+        "url": "https://github.com/micode-ai/testing-ai-assistant",
+        "labelKey": "products.links.github"
+      }
+    ]
   }
 ]

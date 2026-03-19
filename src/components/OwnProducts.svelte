@@ -6,6 +6,7 @@
   import accountingAiImage from '../assets/images/accounting-ai.png';
   import budgetAssistantImage from '../assets/images/budget-assistant.png';
   import emarketingAiImage from '../assets/images/emarketing-ai.png';
+  import testingAiImage from '../assets/images/testing-ai.png';
 
   let currentLanguage: Language;
   languageStore.subscribe(value => {
@@ -37,21 +38,24 @@
     'ngx-chat': ngxChatImage,
     'accounting-ai': accountingAiImage,
     'emarketing-ai': emarketingAiImage,
-    'budget-assistant': budgetAssistantImage
+    'budget-assistant': budgetAssistantImage,
+    'testing-ai': testingAiImage
   };
 
   const productBadges: Record<string, { label: string; icon: string }> = {
     'ngx-chat': { label: 'Open Source', icon: 'code' },
     'accounting-ai': { label: 'SaaS', icon: 'cloud' },
     'emarketing-ai': { label: 'SaaS', icon: 'cloud' },
-    'budget-assistant': { label: 'Mobile App', icon: 'smartphone' }
+    'budget-assistant': { label: 'Mobile App', icon: 'smartphone' },
+    'testing-ai': { label: 'SaaS', icon: 'cloud' }
   };
 
   const productAccentColors: Record<string, string> = {
     'ngx-chat': 'var(--color-primary)',
     'accounting-ai': 'var(--color-success)',
     'emarketing-ai': 'var(--color-info, #8b5cf6)',
-    'budget-assistant': 'var(--color-accent)'
+    'budget-assistant': 'var(--color-accent)',
+    'testing-ai': 'var(--color-warning, #f59e0b)'
   };
 
   let selectedProduct: Product | null = null;
