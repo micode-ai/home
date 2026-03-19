@@ -148,10 +148,23 @@
         "insights": "Spending Stories i system gamifikacji"
       }
     },
+    "testingAI": {
+      "name": "Testing AI Assistant",
+      "description": "Platforma orkiestracji testów oparta na AI do automatycznego wykonywania, generowania testów i zapewniania jakości",
+      "detailedDescription": "Testing AI Assistant to inteligentna platforma orkiestracji testów, która rewolucjonizuje podejście zespołów do zapewniania jakości oprogramowania. Łącząc sztuczną inteligencję z nowoczesnymi praktykami testowania, platforma automatyzuje wykonywanie testów, generuje przypadki testowe i dostarcza kompleksowe informacje o jakości — wszystko z jednego, zunifikowanego interfejsu.\n\nPlatforma oferuje generowanie testów oparte na AI, które analizuje bazę kodu i automatycznie tworzy wartościowe przypadki testowe obejmujące przypadki brzegowe, warunki graniczne i krytyczne przepływy użytkownika. Niezależnie od tego, czy pracujesz z testami jednostkowymi, integracyjnymi czy scenariuszami end-to-end, agent AI rozumie architekturę Twojej aplikacji i generuje testy dostarczające realną wartość.\n\nWykonywanie testów jest w pełni orkiestrowane z inteligentnym planowaniem, równoległym wykonywaniem i sprytną logiką ponownych prób. Platforma efektywnie zarządza zestawami testów, priorytetyzując testy na podstawie zmian w kodzie i historycznych wzorców awarii. Dashboardy w czasie rzeczywistym zapewniają widoczność postępu testów, wyników i trendów w całym pipeline testowania.\n\nWbudowane zarządzanie listami kontrolnymi pomaga zespołom utrzymać dyscyplinę testowania. Twórz i śledź listy kontrolne jakości dla wydań, przeglądów sprintów i walidacji funkcjonalności. Listy kontrolne generowane przez AI dostosowują się do specyficznych potrzeb projektu, zapewniając, że nic nie umknie podczas krytycznych wydań.\n\nSystem powiadomień informuje zespół na bieżąco o niepowodzeniach testów, regresjach jakości i ukończonych kamieniach milowych. Integruj się z istniejącymi narzędziami komunikacji, aby odpowiednie osoby były powiadamiane we właściwym czasie.\n\nAgenty AI pracują nieprzerwanie w tle, monitorując zmiany w kodzie, identyfikując obszary wymagające dodatkowego pokrycia testami i sugerując ulepszenia strategii testowania. Platforma uczy się z historii projektu, dostarczając coraz dokładniejsze i trafniejsze rekomendacje.",
+      "features": {
+        "testExecution": "Orkiestrowane wykonywanie testów z inteligentnym planowaniem i równoległymi uruchomieniami",
+        "testGeneration": "Generowanie przypadków testowych przez AI na podstawie analizy kodu",
+        "checklists": "Listy kontrolne jakości dla wydań i przeglądów sprintów",
+        "notifications": "Powiadomienia w czasie rzeczywistym o wynikach testów i metrykach jakości",
+        "aiAgents": "Agenty AI do ciągłego monitorowania testów i analizy pokrycia"
+      }
+    },
     "pricing": {
       "free": "Darmowy i open source",
       "subscription": "Dostępny na stronie według planów subskrypcji",
-      "githubFree": "Darmowy na GitHub, plany subskrypcji na stronie"
+      "githubFree": "Darmowy na GitHub, plany subskrypcji na stronie",
+      "testingFree": "Bezpłatnie w okresie testowania"
     },
     "links": {
       "npm": "Zobacz na npm",
