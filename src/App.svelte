@@ -8,6 +8,7 @@
   import FounderProfile from './components/FounderProfile.svelte';
   import CommunityContributions from './components/CommunityContributions.svelte';
   import OwnProducts from './components/OwnProducts.svelte';
+  import Certificates from './components/Certificates.svelte';
   import ContactForm from './components/ContactForm.svelte';
   import Footer from './components/Footer.svelte';
   import SEO from './components/SEO.svelte';
@@ -65,6 +66,7 @@
   <FounderProfile />
   <CommunityContributions />
   <OwnProducts />
+  <Certificates />
   <ContactForm />
 </main>
 
