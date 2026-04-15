@@ -2,6 +2,7 @@
   import { languageStore, type Language } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import LanguageSwitcher from './LanguageSwitcher.svelte';
+  import logoUrl from '../assets/images/mi_code_logo_mark.svg';
 
   let currentLanguage: Language;
   languageStore.subscribe(value => {
@@ -15,8 +16,7 @@
 <header class="header">
   <div class="header-container">
     <div class="header-brand">
-      <div class="company-name" role="heading" aria-level="1">{companyName}</div>
-      <p class="tagline">{tagline}</p>
+      <img src={logoUrl} alt="{companyName} logo" class="header-logo" />
     </div>
     <nav class="header-actions" aria-label="Language selection">
       <LanguageSwitcher />
@@ -51,7 +51,21 @@
   }
 
   .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
     flex: 1;
+    min-width: 0;
+  }
+
+  .header-logo {
+    height: 56px;
+    width: auto;
+    display: block;
+    flex-shrink: 0;
+  }
+
+  .header-text {
     min-width: 0;
   }
 
@@ -78,6 +92,14 @@
   }
 
   @media (max-width: 767px) {
+    .header-logo {
+      height: 40px;
+    }
+
+    .header-brand {
+      gap: 0.625rem;
+    }
+
     .header-container {
       padding: 0.75rem 1rem;
       flex-direction: column;
