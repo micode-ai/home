@@ -173,6 +173,12 @@
       "github": "Zobacz na GitHub"
     }
   },
+  "certificates": {
+    "title": "Certyfikaty i wyróżnienia",
+    "subtitle": "Osiągnięcia i uznania",
+    "prev": "Poprzedni certyfikat",
+    "next": "Następny certyfikat"
+  },
   "contact": {
     "title": "Kontakt",
     "name": "Imię i nazwisko",
