@@ -1,101 +1,101 @@
 [
-  {
-    "id": "ngx-chat",
-    "nameKey": "products.ngxChat.name",
-    "descriptionKey": "products.ngxChat.description",
-    "detailedDescriptionKey": "products.ngxChat.detailedDescription",
-    "pricingKey": "products.pricing.free",
-    "links": [
-      {
-        "type": "npm",
-        "url": "https://www.npmjs.com/package/ngx-open-web-ui-chat",
-        "labelKey": "products.links.npm"
-      }
-    ]
-  },
-  {
-    "id": "accounting-ai",
-    "nameKey": "products.accountingAI.name",
-    "descriptionKey": "products.accountingAI.description",
-    "detailedDescriptionKey": "products.accountingAI.detailedDescription",
-    "website": "www.eKsiegowyAi.pl",
-    "pricingKey": "products.pricing.githubFree",
-    "features": [
-      "products.accountingAI.features.tax",
-      "products.accountingAI.features.invoices",
-      "products.accountingAI.features.integration",
-      "products.accountingAI.features.calculations"
-    ],
-    "links": [
-      {
-        "type": "github",
-        "url": "https://github.com/micode-ai/accounting-ai-agent",
-        "labelKey": "products.links.github"
-      }
-    ]
-  },
-  {
-    "id": "emarketing-ai",
-    "nameKey": "products.emarketingAI.name",
-    "descriptionKey": "products.emarketingAI.description",
-    "detailedDescriptionKey": "products.emarketingAI.detailedDescription",
-    "website": "eMarketingAI.pl",
-    "pricingKey": "products.pricing.subscription",
-    "features": [
-      "products.emarketingAI.features.contentGeneration",
-      "products.emarketingAI.features.campaigns",
-      "products.emarketingAI.features.emailMarketing",
-      "products.emarketingAI.features.aiChat",
-      "products.emarketingAI.features.documents",
-      "products.emarketingAI.features.analytics"
-    ],
-    "links": [
-      {
-        "type": "github",
-        "url": "https://github.com/micode-ai/marketing-ai-assistant",
-        "labelKey": "products.links.github"
-      }
-    ]
-  },
-  {
-    "id": "budget-assistant",
-    "nameKey": "products.budgetAssistant.name",
-    "descriptionKey": "products.budgetAssistant.description",
-    "detailedDescriptionKey": "products.budgetAssistant.detailedDescription",
-    "pricingKey": "products.pricing.githubFree",
-    "features": [
-      "products.budgetAssistant.features.aiChat",
-      "products.budgetAssistant.features.expenseTracking",
-      "products.budgetAssistant.features.budgetPlanning",
-      "products.budgetAssistant.features.insights"
-    ],
-    "links": [
-      {
-        "type": "github",
-        "url": "https://github.com/micode-ai/ai-budget-assistant",
-        "labelKey": "products.links.github"
-      }
-    ]
-  },
-  {
-    "id": "testing-ai",
-    "nameKey": "products.testingAI.name",
-    "descriptionKey": "products.testingAI.description",
-    "detailedDescriptionKey": "products.testingAI.detailedDescription",
-    "pricingKey": "products.pricing.testingFree",
-    "features": [
-      "products.testingAI.features.testExecution",
-      "products.testingAI.features.testGeneration",
-      "products.testingAI.features.checklists",
-      "products.testingAI.features.notifications",
-      "products.testingAI.features.aiAgents"
-    ],
-    "links": [
-      {
-        "type": "github",
-        "url": "https://github.com/micode-ai/testing-ai-assistant",
-        "labelKey": "products.links.github"
-      }
-    ]
-  }
+    {
+        "id": "ngx-chat",
+        "nameKey": "products.ngxChat.name",
+        "descriptionKey": "products.ngxChat.description",
+        "detailedDescriptionKey": "products.ngxChat.detailedDescription",
+        "pricingKey": "products.pricing.free",
+        "links": [
+            {
+                "type": "npm",
+                "url": "https://www.npmjs.com/package/ngx-open-web-ui-chat",
+                "labelKey": "products.links.npm"
+            }
+        ]
+    },
+    {
+        "id": "accounting-ai",
+        "nameKey": "products.accountingAI.name",
+        "descriptionKey": "products.accountingAI.description",
+        "detailedDescriptionKey": "products.accountingAI.detailedDescription",
+        "website": "www.eKsiegowyAi.pl",
+        "pricingKey": "products.pricing.githubFree",
+        "features": [
+            "products.accountingAI.features.tax",
+            "products.accountingAI.features.invoices",
+            "products.accountingAI.features.integration",
+            "products.accountingAI.features.calculations"
+        ],
+        "links": [
+            {
+                "type": "github",
+                "url": "https://github.com/micode-ai/accounting-ai-agent",
+                "labelKey": "products.links.github"
+            }
+        ]
+    },
+    {
+        "id": "emarketing-ai",
+        "nameKey": "products.emarketingAI.name",
+        "descriptionKey": "products.emarketingAI.description",
+        "detailedDescriptionKey": "products.emarketingAI.detailedDescription",
+        "website": "www.eMarketingAI.pl",
+        "pricingKey": "products.pricing.githubFree",
+        "features": [
+            "products.emarketingAI.features.contentGeneration",
+            "products.emarketingAI.features.campaigns",
+            "products.emarketingAI.features.emailMarketing",
+            "products.emarketingAI.features.aiChat",
+            "products.emarketingAI.features.documents",
+            "products.emarketingAI.features.analytics"
+        ],
+        "links": [
+            {
+                "type": "github",
+                "url": "https://github.com/micode-ai/marketing-ai-assistant",
+                "labelKey": "products.links.github"
+            }
+        ]
+    },
+    {
+        "id": "budget-assistant",
+        "nameKey": "products.budgetAssistant.name",
+        "descriptionKey": "products.budgetAssistant.description",
+        "detailedDescriptionKey": "products.budgetAssistant.detailedDescription",
+        "pricingKey": "products.pricing.githubFree",
+        "features": [
+            "products.budgetAssistant.features.aiChat",
+            "products.budgetAssistant.features.expenseTracking",
+            "products.budgetAssistant.features.budgetPlanning",
+            "products.budgetAssistant.features.insights"
+        ],
+        "links": [
+            {
+                "type": "github",
+                "url": "https://github.com/micode-ai/ai-budget-assistant",
+                "labelKey": "products.links.github"
+            }
+        ]
+    },
+    {
+        "id": "testing-ai",
+        "nameKey": "products.testingAI.name",
+        "descriptionKey": "products.testingAI.description",
+        "detailedDescriptionKey": "products.testingAI.detailedDescription",
+        "pricingKey": "products.pricing.testingFree",
+        "features": [
+            "products.testingAI.features.testExecution",
+            "products.testingAI.features.testGeneration",
+            "products.testingAI.features.checklists",
+            "products.testingAI.features.notifications",
+            "products.testingAI.features.aiAgents"
+        ],
+        "links": [
+            {
+                "type": "github",
+                "url": "https://github.com/micode-ai/testing-ai-assistant",
+                "labelKey": "products.links.github"
+            }
+        ]
+    }
 ]
