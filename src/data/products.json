@@ -71,6 +71,11 @@
         ],
         "links": [
             {
+                "type": "playStore",
+                "url": "https://play.google.com/store/apps/details?id=com.budget.assistant",
+                "labelKey": "products.links.playStore"
+            },
+            {
                 "type": "github",
                 "url": "https://github.com/micode-ai/ai-budget-assistant",
                 "labelKey": "products.links.github"
