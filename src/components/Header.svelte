@@ -137,6 +137,10 @@
       border-bottom-color: var(--color-border);
     }
 
+    .header-logo {
+      filter: invert(1) hue-rotate(180deg);
+    }
+
     .company-name {
       color: var(--color-primary);
     }
