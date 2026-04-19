@@ -102,8 +102,6 @@
 
     .header-container {
       padding: 0.75rem 1rem;
-      flex-direction: column;
-      align-items: flex-start;
       gap: 0.75rem;
     }
 
@@ -113,11 +111,6 @@
 
     .tagline {
       font-size: 0.8rem;
-    }
-
-    .header-actions {
-      width: 100%;
-      justify-content: flex-end;
     }
   }
 
