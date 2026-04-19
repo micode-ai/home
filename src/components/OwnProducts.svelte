@@ -82,14 +82,9 @@
   $: canPrev = sliderOffset > 0;
   $: canNext = sliderOffset < maxOffset;
 
-  // Calculate translateX: each card is (100% - gaps) / visibleCount wide, plus its gap
-  // One step = one card width + gap = (100% / visibleCount)
-  // But we must account for the gap: step = (100% + gap) / visibleCount is not right.
-  // Simpler: use calc with the gap. Each step shifts by (cardWidth + gap).
-  // cardWidth = (100% - (visibleCount-1)*gap) / visibleCount
-  // step = cardWidth + gap = (100% - (visibleCount-1)*gap) / visibleCount + gap
-  //       = (100% + gap) / visibleCount
-  $: sliderTransform = `translateX(calc(-${sliderOffset} * (100% + 2rem) / ${visibleCount}))`;
+  // Step shift = (100% + gap) / visibleCount; gap comes from --grid-gap so it
+  // stays in sync with the CSS media queries below.
+  $: sliderTransform = `translateX(calc(-${sliderOffset} * (100% + var(--grid-gap)) / ${visibleCount}))`;
 
   function slidePrev() {
     if (canPrev) sliderOffset--;
@@ -456,13 +451,14 @@
 
   .products-grid {
     display: flex;
-    gap: 2rem;
+    --grid-gap: 2rem;
+    gap: var(--grid-gap);
     transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
   .products-grid > .product-card {
-    min-width: calc((100% - 2rem * (var(--visible-count) - 1)) / var(--visible-count));
-    max-width: calc((100% - 2rem * (var(--visible-count) - 1)) / var(--visible-count));
+    min-width: calc((100% - var(--grid-gap) * (var(--visible-count) - 1)) / var(--visible-count));
+    max-width: calc((100% - var(--grid-gap) * (var(--visible-count) - 1)) / var(--visible-count));
     flex-shrink: 0;
   }
 
@@ -978,7 +974,7 @@
     }
 
     .products-grid {
-      gap: 1.5rem;
+      --grid-gap: 1.5rem;
     }
 
     .product-image-container {
@@ -1040,7 +1036,7 @@
     }
 
     .products-grid {
-      gap: 1.5rem;
+      --grid-gap: 1.5rem;
     }
 
     .product-image-container {
