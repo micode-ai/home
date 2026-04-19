@@ -170,7 +170,8 @@
       "npm": "Zobacz na npm",
       "storybook": "Zobacz demo Storybook",
       "website": "Odwiedź stronę",
-      "github": "Zobacz na GitHub"
+      "github": "Zobacz na GitHub",
+      "playStore": "Pobierz z Google Play"
     }
   },
   "certificates": {
