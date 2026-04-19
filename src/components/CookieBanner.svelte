@@ -4,6 +4,7 @@
   import { t } from '../services/i18n';
   import { getItem, setItem } from '../services/storage';
   import { initializeAnalytics } from '../services/analytics';
+  import { initializeMktai } from '../services/mktai';
 
   const COOKIE_CONSENT_KEY = 'cookieConsent';
 
@@ -25,6 +26,7 @@
   function accept() {
     setItem(COOKIE_CONSENT_KEY, 'accepted');
     initializeAnalytics();
+    initializeMktai();
     visible = false;
     document.documentElement.classList.remove('cookie-banner-visible');
   }

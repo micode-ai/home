@@ -17,6 +17,7 @@
   import PrivacyPolicyModal from './components/PrivacyPolicyModal.svelte';
   import { loadTranslations } from './services/i18n';
   import { initializeAnalytics } from './services/analytics';
+  import { initializeMktai } from './services/mktai';
   import { getItem } from './services/storage';
 
   import plTranslations from './data/pl.json';
@@ -29,6 +30,7 @@
   onMount(() => {
     if (getItem('cookieConsent') === 'accepted') {
       initializeAnalytics();
+      initializeMktai();
     }
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
