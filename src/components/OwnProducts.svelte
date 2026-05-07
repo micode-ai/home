@@ -144,6 +144,8 @@
       <p class="products-subtitle">
         {#if currentLanguage === 'pl'}
           Narzędzia i rozwiązania, które tworzymy
+        {:else if currentLanguage === 'ru'}
+          Инструменты и решения, которые мы создаём
         {:else}
           Tools and solutions we build
         {/if}
@@ -266,6 +268,8 @@
                   >
                     {#if currentLanguage === 'pl'}
                       Szczegóły
+                    {:else if currentLanguage === 'ru'}
+                      Подробнее
                     {:else}
                       Details
                     {/if}

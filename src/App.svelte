@@ -22,10 +22,11 @@
 
   import plTranslations from './data/pl.json';
   import enTranslations from './data/en.json';
+  import ruTranslations from './data/ru.json';
 
   let privacyPolicyOpen = false;
 
-  loadTranslations({ pl: plTranslations, en: enTranslations });
+  loadTranslations({ pl: plTranslations, en: enTranslations, ru: ruTranslations });
 
   onMount(() => {
     if (getItem('cookieConsent') === 'accepted') {

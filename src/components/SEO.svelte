@@ -4,8 +4,8 @@
 
   let currentLanguage: Language = 'pl';
 
-  // Meta content for both languages
-  const metaContent = {
+  // Meta content for supported languages
+  const metaContent: Record<Language, { title: string; description: string; ogTitle: string; ogDescription: string }> = {
     pl: {
       title: 'MiСode Sp. z o.o. - Profesjonalne rozwiązania IT | Gdańsk',
       description: 'MiСode - tworzenie aplikacji mobilnych, oprogramowania na zamówienie i rozwiązań chmurowych. 18+ lat doświadczenia. Gdańsk, Polska.',
@@ -17,7 +17,19 @@
       description: 'MiСode - mobile app development, custom software, and cloud solutions. 18+ years of experience. Gdańsk, Poland.',
       ogTitle: 'MiСode Sp. z o.o. - Professional IT Solutions',
       ogDescription: 'Mobile app and enterprise system development. 18+ years of experience in IT industry.',
+    },
+    ru: {
+      title: 'MiСode Sp. z o.o. - Профессиональные IT-решения | Гданьск',
+      description: 'MiСode — разработка мобильных приложений, ПО на заказ и облачных решений. 18+ лет опыта. Гданьск, Польша.',
+      ogTitle: 'MiСode Sp. z o.o. - Профессиональные IT-решения',
+      ogDescription: 'Разработка мобильных приложений и enterprise-систем. 18+ лет опыта в IT-индустрии.',
     }
+  };
+
+  const ogLocaleMap: Record<Language, string> = {
+    pl: 'pl_PL',
+    en: 'en_US',
+    ru: 'ru_RU'
   };
 
   // Structured data (JSON-LD) for organization
@@ -84,7 +96,7 @@
     updateMetaTag('property', 'og:title', content.ogTitle);
     updateMetaTag('property', 'og:description', content.ogDescription);
     updateMetaTag('property', 'og:type', 'website');
-    updateMetaTag('property', 'og:locale', lang === 'pl' ? 'pl_PL' : 'en_US');
+    updateMetaTag('property', 'og:locale', ogLocaleMap[lang]);
     
     // Update html lang attribute
     document.documentElement.lang = lang;

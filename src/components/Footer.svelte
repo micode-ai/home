@@ -2,6 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import { languageStore, type Language } from '../stores/languageStore';
   import { t } from '../services/i18n';
+  import SocialMedia from './SocialMedia.svelte';
 
   const dispatch = createEventDispatcher<{ openPrivacyPolicy: void }>();
 
@@ -17,6 +18,8 @@
 
 <footer class="footer">
   <div class="footer-container">
+    <SocialMedia />
+    <div class="footer-divider" aria-hidden="true"></div>
     <div class="footer-content">
       <p class="footer-copyright">{copyright}</p>
       <address class="footer-address">{address}</address>
@@ -44,6 +47,14 @@
 
   .footer-content {
     text-align: center;
+  }
+
+  .footer-divider {
+    height: 1px;
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto 1.25rem;
+    background: rgba(255, 255, 255, 0.08);
   }
 
   .footer-copyright {

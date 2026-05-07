@@ -200,7 +200,8 @@
   "footer": {
     "copyright": "© 2024 MiСode Sp. z o.o. All rights reserved.",
     "address": "Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Poland",
-    "privacyPolicy": "Privacy Policy"
+    "privacyPolicy": "Privacy Policy",
+    "socialMedia": "Follow us"
   },
   "legal": {
     "cookieBanner": {

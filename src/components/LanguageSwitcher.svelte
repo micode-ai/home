@@ -1,45 +1,53 @@
 <script lang="ts">
   import { languageStore, type Language } from '../stores/languageStore';
 
+  const languages: Language[] = ['pl', 'en', 'ru'];
+
   let currentLanguage: Language;
   languageStore.subscribe(value => {
     currentLanguage = value;
   });
 
-  function toggleLanguage() {
-    const newLanguage: Language = currentLanguage === 'pl' ? 'en' : 'pl';
-    languageStore.setLanguage(newLanguage);
+  function selectLanguage(lang: Language) {
+    if (lang !== currentLanguage) {
+      languageStore.setLanguage(lang);
+    }
   }
 </script>
 
-<button
-  class="language-switcher"
-  on:click={toggleLanguage}
-  aria-label="Switch language"
-  type="button"
->
-  <span class="language-option" class:active={currentLanguage === 'pl'}>PL</span>
-  <span class="separator">/</span>
-  <span class="language-option" class:active={currentLanguage === 'en'}>EN</span>
-</button>
+<div class="language-switcher" role="group" aria-label="Language selection">
+  {#each languages as lang, i}
+    <button
+      type="button"
+      class="language-option"
+      class:active={currentLanguage === lang}
+      aria-pressed={currentLanguage === lang}
+      aria-label="Switch to {lang.toUpperCase()}"
+      on:click={() => selectLanguage(lang)}
+    >
+      {lang.toUpperCase()}
+    </button>
+    {#if i < languages.length - 1}
+      <span class="separator" aria-hidden="true">/</span>
+    {/if}
+  {/each}
+</div>
 
 <style>
   .language-switcher {
     display: inline-flex;
     align-items: center;
-    gap: 0.375rem;
-    padding: 0.5rem 0.875rem;
+    gap: 0.25rem;
+    padding: 0.375rem 0.625rem;
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-full);
-    cursor: pointer;
     font-family: var(--font-heading);
     font-size: 0.875rem;
     font-weight: 500;
     transition: border-color var(--transition-base), background-color var(--transition-base);
     color: var(--color-text-secondary);
     min-height: 44px;
-    min-width: 44px;
   }
 
   .language-switcher:hover {
@@ -47,14 +55,23 @@
     border-color: var(--color-primary-light);
   }
 
-  .language-switcher:focus-visible {
-    outline: 2px solid var(--color-focus);
-    outline-offset: 2px;
+  .language-option {
+    background: transparent;
+    border: none;
+    padding: 0.25rem 0.4rem;
+    margin: 0;
+    font: inherit;
+    color: var(--color-text-tertiary);
+    cursor: pointer;
+    border-radius: var(--radius-full);
+    transition: color var(--transition-fast), background-color var(--transition-fast);
+    min-height: 32px;
+    min-width: 32px;
+    line-height: 1;
   }
 
-  .language-option {
-    color: var(--color-text-tertiary);
-    transition: color var(--transition-fast);
+  .language-option:hover {
+    color: var(--color-primary-dark);
   }
 
   .language-option.active {
@@ -62,14 +79,24 @@
     font-weight: 700;
   }
 
+  .language-option:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
   .separator {
     color: var(--color-border-dark);
+    user-select: none;
   }
 
   @media (max-width: 767px) {
     .language-switcher {
-      padding: 0.4rem 0.75rem;
+      padding: 0.3rem 0.5rem;
       font-size: 0.8125rem;
+    }
+
+    .language-option {
+      padding: 0.2rem 0.35rem;
     }
   }
 
