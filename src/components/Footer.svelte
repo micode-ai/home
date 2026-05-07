@@ -18,8 +18,6 @@
 
 <footer class="footer">
   <div class="footer-container">
-    <SocialMedia />
-    <div class="footer-divider" aria-hidden="true"></div>
     <div class="footer-content">
       <p class="footer-copyright">{copyright}</p>
       <address class="footer-address">{address}</address>
@@ -27,6 +25,7 @@
         {privacyPolicyLabel}
       </button>
     </div>
+    <SocialMedia />
   </div>
 </footer>
 
@@ -43,18 +42,16 @@
     max-width: var(--max-width-xl);
     margin: 0 auto;
     padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
   }
 
   .footer-content {
-    text-align: center;
-  }
-
-  .footer-divider {
-    height: 1px;
-    width: 100%;
-    max-width: 360px;
-    margin: 0 auto 1.25rem;
-    background: rgba(255, 255, 255, 0.08);
+    text-align: left;
+    flex: 1;
+    min-width: 0;
   }
 
   .footer-copyright {
@@ -95,6 +92,19 @@
     outline: 2px solid rgba(255, 255, 255, 0.5);
     outline-offset: 2px;
     border-radius: 2px;
+  }
+
+  @media (max-width: 900px) {
+    .footer-container {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 1.25rem;
+    }
+
+    .footer-content {
+      text-align: center;
+    }
   }
 
   @media (max-width: 767px) {
