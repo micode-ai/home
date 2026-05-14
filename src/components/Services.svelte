@@ -27,7 +27,7 @@
   };
 </script>
 
-<section class="services scroll-reveal" aria-labelledby="services-title">
+<section class="services scroll-reveal" id="services" aria-labelledby="services-title">
   <div class="services-container">
     <h2 id="services-title" class="services-title">{sectionTitle}</h2>
 

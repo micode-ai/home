@@ -3,6 +3,13 @@
     "companyName": "MiСode Sp. z o.o.",
     "tagline": "Profesjonalne rozwiązania IT"
   },
+  "nav": {
+    "services": "Usługi",
+    "products": "Produkty",
+    "contact": "Kontakt",
+    "menu": "Otwórz menu",
+    "menuClose": "Zamknij menu"
+  },
   "hero": {
     "headline": "Tworzymy oprogramowanie, które działa",
     "subheadline": "18+ lat doświadczenia w tworzeniu aplikacji mobilnych i systemów enterprise",

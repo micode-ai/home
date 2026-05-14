@@ -136,7 +136,7 @@
 
 <svelte:window on:keydown={handleKeydown} on:resize={handleResize} />
 
-<section class="products scroll-reveal" aria-labelledby="products-title">
+<section class="products scroll-reveal" id="products" aria-labelledby="products-title">
   <div class="products-container">
     <div class="products-header">
       <div class="products-header-accent"></div>
