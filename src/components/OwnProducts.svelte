@@ -132,6 +132,22 @@
   function handleModalContentClick(event: MouseEvent) {
     event.stopPropagation();
   }
+
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  function handleTouchStart(e: TouchEvent) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }
+
+  function handleTouchEnd(e: TouchEvent) {
+    const deltaX = e.changedTouches[0].clientX - touchStartX;
+    const deltaY = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(deltaX) < 40 || Math.abs(deltaX) < Math.abs(deltaY)) return;
+    if (deltaX < 0) slideNext();
+    else slidePrev();
+  }
 </script>
 
 <svelte:window on:keydown={handleKeydown} on:resize={handleResize} />
@@ -164,7 +180,11 @@
         </button>
       {/if}
 
-      <div class="slider-viewport">
+      <div
+        class="slider-viewport"
+        on:touchstart={handleTouchStart}
+        on:touchend={handleTouchEnd}
+      >
         <div
           class="products-grid"
           style="--visible-count: {visibleCount}; transform: {sliderTransform};"
@@ -451,6 +471,7 @@
   .slider-viewport {
     overflow: hidden;
     width: 100%;
+    touch-action: pan-y;
   }
 
   .products-grid {

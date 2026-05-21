@@ -75,6 +75,22 @@
     if (event.key === 'ArrowRight' && lightboxIndex < certificates.length - 1) lightboxIndex++;
   }
 
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  function handleTouchStart(e: TouchEvent) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }
+
+  function handleTouchEnd(e: TouchEvent) {
+    const deltaX = e.changedTouches[0].clientX - touchStartX;
+    const deltaY = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(deltaX) < 40 || Math.abs(deltaX) < Math.abs(deltaY)) return;
+    if (deltaX < 0) slideNext();
+    else slidePrev();
+  }
+
   onMount(() => {
     visibleCount = getVisibleCount();
     window.addEventListener('resize', handleResize);
@@ -112,7 +128,11 @@
         </svg>
       </button>
 
-      <div class="slider-viewport">
+      <div
+        class="slider-viewport"
+        on:touchstart={handleTouchStart}
+        on:touchend={handleTouchEnd}
+      >
         <div class="certificates-grid" style="transform: {sliderTransform};">
           {#each certificates as cert, index}
             <button
@@ -258,6 +278,7 @@
   .slider-viewport {
     flex: 1 1 auto;
     overflow: hidden;
+    touch-action: pan-y;
   }
 
   .certificates-grid {
