@@ -1,16 +1,11 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import { languageStore, type Language } from '../stores/languageStore';
+  import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import LanguageSwitcher from './LanguageSwitcher.svelte';
   import logoUrl from '../assets/images/mi_code_logo_mark.svg';
 
-  let currentLanguage: Language;
-  const unsubscribeLang = languageStore.subscribe(value => {
-    currentLanguage = value;
-  });
-
-  $: companyName = t('header.companyName', currentLanguage);
+  const companyName = $derived(t('header.companyName', $languageStore));
 
   const navLinks = [
     { key: 'nav.services', href: '#services' },
@@ -18,8 +13,8 @@
     { key: 'nav.contact',  href: '#contact'  },
   ];
 
-  let activeSection = '';
-  let menuOpen = false;
+  let activeSection = $state('');
+  let menuOpen = $state(false);
   let observerCleanup: (() => void) | null = null;
 
   function closeMenu() {
@@ -58,7 +53,6 @@
   });
 
   onDestroy(() => {
-    unsubscribeLang();
     observerCleanup?.();
   });
 </script>
@@ -70,16 +64,16 @@
     </div>
 
     <!-- Desktop nav -->
-    <nav class="header-nav" aria-label={t('nav.menu', currentLanguage)}>
+    <nav class="header-nav" aria-label={t('nav.menu', $languageStore)}>
       {#each navLinks as link}
         <a
           href={link.href}
           class="nav-link"
           class:active={activeSection === link.href}
           aria-current={activeSection === link.href ? 'page' : undefined}
-          on:click={e => handleNavClick(e, link.href)}
+          onclick={e => handleNavClick(e, link.href)}
         >
-          {t(link.key, currentLanguage)}
+          {t(link.key, $languageStore)}
         </a>
       {/each}
     </nav>
@@ -90,11 +84,11 @@
         type="button"
         class="hamburger"
         aria-label={menuOpen
-          ? t('nav.menuClose', currentLanguage)
-          : t('nav.menu', currentLanguage)}
+          ? t('nav.menuClose', $languageStore)
+          : t('nav.menu', $languageStore)}
         aria-expanded={menuOpen}
         aria-controls="mobile-nav"
-        on:click={() => (menuOpen = !menuOpen)}
+        onclick={() => (menuOpen = !menuOpen)}
       >
         <span class="hamburger-bar"></span>
         <span class="hamburger-bar"></span>
@@ -110,7 +104,7 @@
     <nav
       id="mobile-nav"
       class="mobile-nav"
-      aria-label={t('nav.menu', currentLanguage)}
+      aria-label={t('nav.menu', $languageStore)}
     >
       {#each navLinks as link}
         <a
@@ -118,9 +112,9 @@
           class="mobile-nav-link"
           class:active={activeSection === link.href}
           aria-current={activeSection === link.href ? 'page' : undefined}
-          on:click={e => handleNavClick(e, link.href)}
+          onclick={e => handleNavClick(e, link.href)}
         >
-          {t(link.key, currentLanguage)}
+          {t(link.key, $languageStore)}
         </a>
       {/each}
     </nav>

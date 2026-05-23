@@ -1,0 +1,3 @@
+# Place founder.jpg or founder.webp here.
+# The FounderProfile component will pick it up automatically via import.meta.glob.
+# If absent, a CSS monogram avatar (initials "MP") is shown instead.

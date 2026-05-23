@@ -1,38 +1,26 @@
 <script lang="ts">
-  import { onDestroy, createEventDispatcher } from 'svelte';
   import emailjs from '@emailjs/browser';
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import { validateForm, type FormData } from '../services/validation';
 
-  const dispatch = createEventDispatcher<{ openPrivacyPolicy: void }>();
-
   const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
   const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
   const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
-  let currentLang: string;
-  const unsubscribe = languageStore.subscribe(lang => {
-    currentLang = lang;
-  });
-
-  onDestroy(() => {
-    unsubscribe();
-  });
-
-  let formData: FormData = {
+  let formData = $state<FormData>({
     name: '',
     email: '',
     message: ''
-  };
+  });
 
-  let errors: Partial<Record<keyof FormData, string>> = {};
-  let gdprConsent = false;
-  let gdprConsentError = '';
-  let isSubmitted = false;
-  let isSubmitting = false;
-  let submitError = false;
-  let touched: Partial<Record<keyof FormData, boolean>> = {};
+  let errors = $state<Partial<Record<keyof FormData, string>>>({});
+  let gdprConsent = $state(false);
+  let gdprConsentError = $state('');
+  let isSubmitted = $state(false);
+  let isSubmitting = $state(false);
+  let submitError = $state(false);
+  let touched = $state<Partial<Record<keyof FormData, boolean>>>({});
 
   function handleBlur(field: keyof FormData) {
     touched[field] = true;
@@ -43,10 +31,10 @@
     if (!touched[field]) return;
 
     const translations = {
-      nameRequired: t('contact.errors.nameRequired', currentLang),
-      emailRequired: t('contact.errors.emailRequired', currentLang),
-      emailInvalid: t('contact.errors.emailInvalid', currentLang),
-      messageRequired: t('contact.errors.messageRequired', currentLang)
+      nameRequired: t('contact.errors.nameRequired', $languageStore),
+      emailRequired: t('contact.errors.emailRequired', $languageStore),
+      emailInvalid: t('contact.errors.emailInvalid', $languageStore),
+      messageRequired: t('contact.errors.messageRequired', $languageStore)
     };
 
     const allErrors = validateForm(formData, translations);
@@ -56,7 +44,6 @@
     } else {
       delete errors[field];
     }
-    errors = errors;
   }
 
   async function handleSubmit(event: Event) {
@@ -65,16 +52,16 @@
     touched = { name: true, email: true, message: true };
 
     const translations = {
-      nameRequired: t('contact.errors.nameRequired', currentLang),
-      emailRequired: t('contact.errors.emailRequired', currentLang),
-      emailInvalid: t('contact.errors.emailInvalid', currentLang),
-      messageRequired: t('contact.errors.messageRequired', currentLang)
+      nameRequired: t('contact.errors.nameRequired', $languageStore),
+      emailRequired: t('contact.errors.emailRequired', $languageStore),
+      emailInvalid: t('contact.errors.emailInvalid', $languageStore),
+      messageRequired: t('contact.errors.messageRequired', $languageStore)
     };
 
     errors = validateForm(formData, translations);
 
     if (!gdprConsent) {
-      gdprConsentError = t('legal.gdprConsent.required', currentLang);
+      gdprConsentError = t('legal.gdprConsent.required', $languageStore);
     } else {
       gdprConsentError = '';
     }
@@ -115,30 +102,30 @@
 <section class="contact-section scroll-reveal" id="contact" aria-labelledby="contact-title">
   <div class="contact-container">
     <div class="contact-form">
-      <h2 id="contact-title" class="contact-title">{t('contact.title', currentLang)}</h2>
+      <h2 id="contact-title" class="contact-title">{t('contact.title', $languageStore)}</h2>
 
       {#if isSubmitted}
         <div class="success-message" role="alert" aria-live="polite">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
-          <span>{t('contact.success', currentLang)}</span>
+          <span>{t('contact.success', $languageStore)}</span>
         </div>
       {/if}
 
       {#if submitError}
         <div class="error-banner" role="alert" aria-live="polite">
-          {t('contact.errors.submitFailed', currentLang)}
+          {t('contact.errors.submitFailed', $languageStore)}
         </div>
       {/if}
 
-      <form on:submit={handleSubmit} novalidate aria-label="Contact form">
+      <form onsubmit={handleSubmit} novalidate aria-label="Contact form">
         <div class="form-group">
-          <label for="name">{t('contact.name', currentLang)}</label>
+          <label for="name">{t('contact.name', $languageStore)}</label>
           <input
             type="text"
             id="name"
             bind:value={formData.name}
-            on:blur={() => handleBlur('name')}
-            on:input={() => validateField('name')}
+            onblur={() => handleBlur('name')}
+            oninput={() => validateField('name')}
             class:error={errors.name}
             aria-invalid={errors.name ? 'true' : 'false'}
             aria-describedby={errors.name ? 'name-error' : undefined}
@@ -150,13 +137,13 @@
         </div>
 
         <div class="form-group">
-          <label for="email">{t('contact.email', currentLang)}</label>
+          <label for="email">{t('contact.email', $languageStore)}</label>
           <input
             type="email"
             id="email"
             bind:value={formData.email}
-            on:blur={() => handleBlur('email')}
-            on:input={() => validateField('email')}
+            onblur={() => handleBlur('email')}
+            oninput={() => validateField('email')}
             class:error={errors.email}
             aria-invalid={errors.email ? 'true' : 'false'}
             aria-describedby={errors.email ? 'email-error' : undefined}
@@ -168,12 +155,12 @@
         </div>
 
         <div class="form-group">
-          <label for="message">{t('contact.message', currentLang)}</label>
+          <label for="message">{t('contact.message', $languageStore)}</label>
           <textarea
             id="message"
             bind:value={formData.message}
-            on:blur={() => handleBlur('message')}
-            on:input={() => validateField('message')}
+            onblur={() => handleBlur('message')}
+            oninput={() => validateField('message')}
             rows="5"
             class:error={errors.message}
             aria-invalid={errors.message ? 'true' : 'false'}
@@ -197,7 +184,7 @@
               aria-required="true"
             />
             <span class="gdpr-text">
-              {t('legal.gdprConsent.label', currentLang)}
+              {t('legal.gdprConsent.label', $languageStore)}
             </span>
           </label>
           {#if gdprConsentError}
@@ -205,17 +192,17 @@
           {/if}
         </div>
 
-        <button type="submit" class="submit-button" disabled={isSubmitting} aria-label="{t('contact.send', currentLang)}">
+        <button type="submit" class="submit-button" disabled={isSubmitting} aria-label="{t('contact.send', $languageStore)}">
           {#if isSubmitting}
-            {t('contact.sending', currentLang)}
+            {t('contact.sending', $languageStore)}
           {:else}
-            {t('contact.send', currentLang)}
+            {t('contact.send', $languageStore)}
           {/if}
         </button>
       </form>
 
       <div class="alternative-contact" role="complementary" aria-label="Alternative contact information">
-        <p>{t('contact.alternativeContact', currentLang)}</p>
+        <p>{t('contact.alternativeContact', $languageStore)}</p>
         <p><strong>perevertkinma@gmail.com</strong></p>
       </div>
     </div>

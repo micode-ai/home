@@ -1,19 +1,13 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
-  import { languageStore, type Language } from '../stores/languageStore';
+  import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import SocialMedia from './SocialMedia.svelte';
 
-  const dispatch = createEventDispatcher<{ openPrivacyPolicy: void }>();
+  const { onopenPrivacyPolicy }: { onopenPrivacyPolicy?: () => void } = $props();
 
-  let currentLanguage: Language;
-  languageStore.subscribe(value => {
-    currentLanguage = value;
-  });
-
-  $: copyright = t('footer.copyright', currentLanguage);
-  $: address = t('footer.address', currentLanguage);
-  $: privacyPolicyLabel = t('footer.privacyPolicy', currentLanguage);
+  const copyright = $derived(t('footer.copyright', $languageStore));
+  const address = $derived(t('footer.address', $languageStore));
+  const privacyPolicyLabel = $derived(t('footer.privacyPolicy', $languageStore));
 </script>
 
 <footer class="footer">
@@ -21,7 +15,7 @@
     <div class="footer-content">
       <p class="footer-copyright">{copyright}</p>
       <address class="footer-address">{address}</address>
-      <button class="footer-privacy-link" on:click={() => dispatch('openPrivacyPolicy')}>
+      <button class="footer-privacy-link" onclick={() => onopenPrivacyPolicy?.()}>
         {privacyPolicyLabel}
       </button>
     </div>

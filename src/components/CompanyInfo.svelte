@@ -1,23 +1,18 @@
 <script lang="ts">
-  import { languageStore, type Language } from '../stores/languageStore';
+  import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
 
-  let currentLanguage: Language;
-  languageStore.subscribe(value => {
-    currentLanguage = value;
-  });
-
-  $: title = t('company.title', currentLanguage);
-  $: foundedLabel = t('company.founded', currentLanguage);
-  $: foundedYear = t('company.foundedYear', currentLanguage);
-  $: locationLabel = t('company.location', currentLanguage);
-  $: address = t('company.address', currentLanguage);
-  $: nipLabel = t('company.nip', currentLanguage);
-  $: nipValue = t('company.nipValue', currentLanguage);
-  $: regonLabel = t('company.regon', currentLanguage);
-  $: regonValue = t('company.regonValue', currentLanguage);
-  $: industryLabel = t('company.industry', currentLanguage);
-  $: industryValue = t('company.industryValue', currentLanguage);
+  const title = $derived(t('company.title', $languageStore));
+  const foundedLabel = $derived(t('company.founded', $languageStore));
+  const foundedYear = $derived(t('company.foundedYear', $languageStore));
+  const locationLabel = $derived(t('company.location', $languageStore));
+  const address = $derived(t('company.address', $languageStore));
+  const nipLabel = $derived(t('company.nip', $languageStore));
+  const nipValue = $derived(t('company.nipValue', $languageStore));
+  const regonLabel = $derived(t('company.regon', $languageStore));
+  const regonValue = $derived(t('company.regonValue', $languageStore));
+  const industryLabel = $derived(t('company.industry', $languageStore));
+  const industryValue = $derived(t('company.industryValue', $languageStore));
 
   const companyName = "MiСode Sp. z o.o.";
 </script>

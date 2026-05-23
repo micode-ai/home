@@ -1,47 +1,42 @@
 <script lang="ts">
-  import { languageStore, type Language } from '../stores/languageStore';
+  import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
 
-  let currentLanguage: Language;
-  languageStore.subscribe(value => {
-    currentLanguage = value;
-  });
+  const sectionTitle = $derived(t('founder.title', $languageStore));
+  const founderName = $derived(t('founder.name', $languageStore));
+  const experienceValue = $derived(t('founder.experienceValue', $languageStore));
+  const careerHighlightsLabel = $derived(t('founder.careerHighlights', $languageStore));
 
-  $: sectionTitle = t('founder.title', currentLanguage);
-  $: founderName = t('founder.name', currentLanguage);
-  $: experienceValue = t('founder.experienceValue', currentLanguage);
-  $: careerHighlightsLabel = t('founder.careerHighlights', currentLanguage);
-
-  $: highlights = [
+  const highlights = $derived([
     {
       id: 'nokia',
-      company: t('founder.highlights.nokia.company', currentLanguage),
-      duration: t('founder.highlights.nokia.duration', currentLanguage),
-      description: t('founder.highlights.nokia.description', currentLanguage),
+      company: t('founder.highlights.nokia.company', $languageStore),
+      duration: t('founder.highlights.nokia.duration', $languageStore),
+      description: t('founder.highlights.nokia.description', $languageStore),
       technologies: ['ReactJS', 'Java']
     },
     {
       id: 'enterprise',
-      company: t('founder.highlights.enterprise.company', currentLanguage),
-      duration: t('founder.highlights.enterprise.duration', currentLanguage),
-      description: t('founder.highlights.enterprise.description', currentLanguage),
+      company: t('founder.highlights.enterprise.company', $languageStore),
+      duration: t('founder.highlights.enterprise.duration', $languageStore),
+      description: t('founder.highlights.enterprise.description', $languageStore),
       technologies: ['Java', 'Oracle ADF', 'Spring', 'Angular']
     },
     {
       id: 'scm',
-      company: t('founder.highlights.scm.company', currentLanguage),
-      duration: t('founder.highlights.scm.duration', currentLanguage),
-      description: t('founder.highlights.scm.description', currentLanguage),
+      company: t('founder.highlights.scm.company', $languageStore),
+      duration: t('founder.highlights.scm.duration', $languageStore),
+      description: t('founder.highlights.scm.description', $languageStore),
       technologies: ['Spring Boot 3.x', 'Java 17+', 'Oracle Database', 'Angular 17', 'TypeScript', 'PrimeNG']
     },
     {
       id: 'community',
-      company: t('founder.highlights.community.company', currentLanguage),
-      duration: t('founder.highlights.community.duration', currentLanguage),
-      description: t('founder.highlights.community.description', currentLanguage),
+      company: t('founder.highlights.community.company', $languageStore),
+      duration: t('founder.highlights.community.duration', $languageStore),
+      description: t('founder.highlights.community.description', $languageStore),
       technologies: ['Oracle ADF', 'Java EE', 'Blogging']
     }
-  ];
+  ]);
 </script>
 
 <section class="founder-profile scroll-reveal" aria-labelledby="founder-title">

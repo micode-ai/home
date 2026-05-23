@@ -5,6 +5,15 @@
         "descriptionKey": "products.ngxChat.description",
         "detailedDescriptionKey": "products.ngxChat.detailedDescription",
         "pricingKey": "products.pricing.free",
+        "badge": { "label": "Open Source", "icon": "code" },
+        "accentColor": "var(--color-primary)",
+        "features": [
+            "products.ngxChat.features.easyIntegration",
+            "products.ngxChat.features.customization",
+            "products.ngxChat.features.streaming",
+            "products.ngxChat.features.typescript",
+            "products.ngxChat.features.openWebUI"
+        ],
         "links": [
             {
                 "type": "npm",
@@ -20,6 +29,8 @@
         "detailedDescriptionKey": "products.accountingAI.detailedDescription",
         "website": "www.eKsiegowyAi.pl",
         "pricingKey": "products.pricing.githubFree",
+        "badge": { "label": "SaaS", "icon": "cloud" },
+        "accentColor": "var(--color-success)",
         "features": [
             "products.accountingAI.features.tax",
             "products.accountingAI.features.invoices",
@@ -41,6 +52,8 @@
         "detailedDescriptionKey": "products.emarketingAI.detailedDescription",
         "website": "www.eMarketingAI.pl",
         "pricingKey": "products.pricing.githubFree",
+        "badge": { "label": "SaaS", "icon": "cloud" },
+        "accentColor": "var(--color-info, #8b5cf6)",
         "features": [
             "products.emarketingAI.features.contentGeneration",
             "products.emarketingAI.features.campaigns",
@@ -63,6 +76,8 @@
         "descriptionKey": "products.budgetAssistant.description",
         "detailedDescriptionKey": "products.budgetAssistant.detailedDescription",
         "pricingKey": "products.pricing.githubFree",
+        "badge": { "label": "Mobile App", "icon": "smartphone" },
+        "accentColor": "var(--color-accent)",
         "features": [
             "products.budgetAssistant.features.aiChat",
             "products.budgetAssistant.features.expenseTracking",
@@ -88,6 +103,8 @@
         "descriptionKey": "products.testingAI.description",
         "detailedDescriptionKey": "products.testingAI.detailedDescription",
         "pricingKey": "products.pricing.testingFree",
+        "badge": { "label": "SaaS", "icon": "cloud" },
+        "accentColor": "var(--color-warning, #f59e0b)",
         "features": [
             "products.testingAI.features.testExecution",
             "products.testingAI.features.testGeneration",

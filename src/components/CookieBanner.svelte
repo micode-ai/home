@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { languageStore, type Language } from '../stores/languageStore';
+  import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import { getItem, setItem } from '../services/storage';
   import { initializeAnalytics } from '../services/analytics';
@@ -8,12 +8,7 @@
 
   const COOKIE_CONSENT_KEY = 'cookieConsent';
 
-  let visible = false;
-  let currentLanguage: Language;
-
-  languageStore.subscribe(value => {
-    currentLanguage = value;
-  });
+  let visible = $state(false);
 
   onMount(() => {
     const stored = getItem(COOKIE_CONSENT_KEY);
@@ -40,13 +35,13 @@
 
 {#if visible}
   <div class="cookie-banner" role="region" aria-label="Cookie consent">
-    <p class="cookie-message">{t('legal.cookieBanner.message', currentLanguage)}</p>
+    <p class="cookie-message">{t('legal.cookieBanner.message', $languageStore)}</p>
     <div class="cookie-actions">
-      <button class="btn-reject" on:click={reject}>
-        {t('legal.cookieBanner.reject', currentLanguage)}
+      <button class="btn-reject" onclick={reject}>
+        {t('legal.cookieBanner.reject', $languageStore)}
       </button>
-      <button class="btn-accept" on:click={accept}>
-        {t('legal.cookieBanner.accept', currentLanguage)}
+      <button class="btn-accept" onclick={accept}>
+        {t('legal.cookieBanner.accept', $languageStore)}
       </button>
     </div>
   </div>

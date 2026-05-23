@@ -2,8 +2,6 @@
   import { onMount } from 'svelte';
   import { languageStore, type Language } from '../stores/languageStore';
 
-  let currentLanguage: Language = 'pl';
-
   // Meta content for supported languages
   const metaContent: Record<Language, { title: string; description: string; ogTitle: string; ogDescription: string }> = {
     pl: {
@@ -75,11 +73,9 @@
     ]
   };
 
-  // Subscribe to language changes
-  languageStore.subscribe(lang => {
-    currentLanguage = lang;
+  $effect(() => {
     if (typeof document !== 'undefined') {
-      updateMetaTags(lang);
+      updateMetaTags($languageStore);
     }
   });
 
@@ -124,7 +120,6 @@
   }
 
   onMount(() => {
-    updateMetaTags(currentLanguage);
     addStructuredData();
   });
 </script>

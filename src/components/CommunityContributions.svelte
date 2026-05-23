@@ -1,13 +1,8 @@
 <script lang="ts">
-  import { languageStore, type Language } from '../stores/languageStore';
+  import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
 
-  let currentLanguage: Language;
-  languageStore.subscribe(value => {
-    currentLanguage = value;
-  });
-
-  $: sectionTitle = t('community.title', currentLanguage);
+  const sectionTitle = $derived(t('community.title', $languageStore));
 
   const contributions = [
     {
@@ -39,18 +34,18 @@
           <div class="contribution-icon" aria-hidden="true">
             {@html contribution.iconSvg}
           </div>
-          <h3 class="contribution-title">{t(contribution.titleKey, currentLanguage)}</h3>
+          <h3 class="contribution-title">{t(contribution.titleKey, $languageStore)}</h3>
           {#if contribution.stats}
             <div class="contribution-stats">{contribution.stats}</div>
           {/if}
-          <p class="contribution-description">{t(contribution.descriptionKey, currentLanguage)}</p>
+          <p class="contribution-description">{t(contribution.descriptionKey, $languageStore)}</p>
           {#if contribution.link}
             <a
               href={contribution.link}
               class="contribution-link"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="View {t(contribution.titleKey, currentLanguage)} on npm"
+              aria-label="View {t(contribution.titleKey, $languageStore)} on npm"
             >
               View on npm
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>

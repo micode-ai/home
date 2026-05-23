@@ -2,11 +2,6 @@
   import { languageStore, type Language } from '../stores/languageStore';
   import { t } from '../services/i18n';
 
-  let currentLanguage: Language;
-  languageStore.subscribe(value => {
-    currentLanguage = value;
-  });
-
   type TelegramBrand = {
     id: string;
     label: string;
@@ -46,12 +41,12 @@
   const facebookUrl = 'https://www.facebook.com/profile.php?id=61570771625318';
   const instagramUrl = 'https://www.instagram.com/micode.development/';
 
-  $: heading = t('footer.socialMedia', currentLanguage);
-  $: telegramLinks = telegramBrands.map(brand => ({
+  const heading = $derived(t('footer.socialMedia', $languageStore));
+  const telegramLinks = $derived(telegramBrands.map(brand => ({
     id: brand.id,
     label: brand.label,
-    url: brand.urls[currentLanguage]
-  }));
+    url: brand.urls[$languageStore]
+  })));
 </script>
 
 <div class="social-media" aria-label={heading}>

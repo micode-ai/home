@@ -3,13 +3,8 @@
 
   const languages: Language[] = ['pl', 'en', 'ru'];
 
-  let currentLanguage: Language;
-  languageStore.subscribe(value => {
-    currentLanguage = value;
-  });
-
   function selectLanguage(lang: Language) {
-    if (lang !== currentLanguage) {
+    if (lang !== $languageStore) {
       languageStore.setLanguage(lang);
     }
   }
@@ -20,10 +15,10 @@
     <button
       type="button"
       class="language-option"
-      class:active={currentLanguage === lang}
-      aria-pressed={currentLanguage === lang}
+      class:active={$languageStore === lang}
+      aria-pressed={$languageStore === lang}
       aria-label="Switch to {lang.toUpperCase()}"
-      on:click={() => selectLanguage(lang)}
+      onclick={() => selectLanguage(lang)}
     >
       {lang.toUpperCase()}
     </button>

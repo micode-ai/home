@@ -1,15 +1,10 @@
 <script lang="ts">
-  import { languageStore, type Language } from '../stores/languageStore';
+  import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
 
-  let currentLanguage: Language;
-  languageStore.subscribe(value => {
-    currentLanguage = value;
-  });
-
-  $: headline = t('hero.headline', currentLanguage);
-  $: subheadline = t('hero.subheadline', currentLanguage);
-  $: ctaText = t('hero.cta', currentLanguage);
+  const headline = $derived(t('hero.headline', $languageStore));
+  const subheadline = $derived(t('hero.subheadline', $languageStore));
+  const ctaText = $derived(t('hero.cta', $languageStore));
 
   function scrollToContact() {
     const contactSection = document.getElementById('contact');
@@ -39,8 +34,8 @@
       <p class="hero-subheadline">{subheadline}</p>
       <button
         class="hero-cta"
-        on:click={scrollToContact}
-        on:keydown={handleKeydown}
+        onclick={scrollToContact}
+        onkeydown={handleKeydown}
         aria-label="{ctaText} - Navigate to contact form"
       >
         {ctaText}

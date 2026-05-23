@@ -1,14 +1,9 @@
 <script lang="ts">
-  import { languageStore, type Language } from '../stores/languageStore';
+  import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import servicesData from '../data/services.json';
 
-  let currentLanguage: Language;
-  languageStore.subscribe(value => {
-    currentLanguage = value;
-  });
-
-  $: sectionTitle = t('services.title', currentLanguage);
+  const sectionTitle = $derived(t('services.title', $languageStore));
 
   interface Service {
     id: string;
@@ -41,8 +36,8 @@
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
             {/if}
           </div>
-          <h3 class="service-title">{t(service.titleKey, currentLanguage)}</h3>
-          <p class="service-description">{t(service.descriptionKey, currentLanguage)}</p>
+          <h3 class="service-title">{t(service.titleKey, $languageStore)}</h3>
+          <p class="service-description">{t(service.descriptionKey, $languageStore)}</p>
         </article>
       {/each}
     </div>

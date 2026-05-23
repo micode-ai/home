@@ -1,14 +1,9 @@
 <script lang="ts">
-  import { languageStore, type Language } from '../stores/languageStore';
+  import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import projectsData from '../data/projects.json';
 
-  let currentLanguage: Language;
-  languageStore.subscribe(value => {
-    currentLanguage = value;
-  });
-
-  $: sectionTitle = t('projects.title', currentLanguage);
+  const sectionTitle = $derived(t('projects.title', $languageStore));
 
   interface Project {
     id: string;
@@ -29,8 +24,8 @@
     <div class="projects-grid">
       {#each projects as project (project.id)}
         <article class="project-card">
-          <h3 class="project-name">{t(project.nameKey, currentLanguage)}</h3>
-          <p class="project-description">{t(project.descriptionKey, currentLanguage)}</p>
+          <h3 class="project-name">{t(project.nameKey, $languageStore)}</h3>
+          <p class="project-description">{t(project.descriptionKey, $languageStore)}</p>
 
           {#if project.technologies && project.technologies.length > 0}
             <div class="technologies">

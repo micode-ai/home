@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   // Micode Landing Page - Main Application Component
   import { onMount } from 'svelte';
   import Header from './components/Header.svelte';
@@ -24,7 +24,7 @@
   import enTranslations from './data/en.json';
   import ruTranslations from './data/ru.json';
 
-  let privacyPolicyOpen = false;
+  let privacyPolicyOpen = $state(false);
 
   loadTranslations({ pl: plTranslations, en: enTranslations, ru: ruTranslations });
 
@@ -73,10 +73,10 @@
   <ContactForm />
 </main>
 
-<Footer on:openPrivacyPolicy={() => (privacyPolicyOpen = true)} />
+<Footer onopenPrivacyPolicy={() => (privacyPolicyOpen = true)} />
 
 <CookieBanner />
-<PrivacyPolicyModal isOpen={privacyPolicyOpen} on:close={() => (privacyPolicyOpen = false)} />
+<PrivacyPolicyModal isOpen={privacyPolicyOpen} onclose={() => (privacyPolicyOpen = false)} />
 
 <style>
   :global(body) {

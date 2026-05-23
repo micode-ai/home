@@ -1,21 +1,16 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import { languageStore, type Language } from '../stores/languageStore';
+  import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import cert1 from '../assets/images/cerificates/1.png';
   import cert2 from '../assets/images/cerificates/2.png';
   import cert3 from '../assets/images/cerificates/3.png';
   import cert4 from '../assets/images/cerificates/4.png';
 
-  let currentLanguage: Language;
-  languageStore.subscribe(value => {
-    currentLanguage = value;
-  });
-
-  $: sectionTitle = t('certificates.title', currentLanguage);
-  $: sectionSubtitle = t('certificates.subtitle', currentLanguage);
-  $: prevLabel = t('certificates.prev', currentLanguage);
-  $: nextLabel = t('certificates.next', currentLanguage);
+  const sectionTitle = $derived(t('certificates.title', $languageStore));
+  const sectionSubtitle = $derived(t('certificates.subtitle', $languageStore));
+  const prevLabel = $derived(t('certificates.prev', $languageStore));
+  const nextLabel = $derived(t('certificates.next', $languageStore));
 
   const certificates = [
     { src: cert1, alt: 'Certificate 1' },
@@ -24,9 +19,9 @@
     { src: cert4, alt: 'Certificate 4' }
   ];
 
-  let sliderOffset = 0;
-  let visibleCount = 3;
-  let lightboxIndex: number | null = null;
+  let sliderOffset = $state(0);
+  let visibleCount = $state(3);
+  let lightboxIndex = $state<number | null>(null);
 
   function getVisibleCount(): number {
     if (typeof window === 'undefined') return 3;
@@ -41,10 +36,10 @@
     if (sliderOffset > maxOffset) sliderOffset = maxOffset;
   }
 
-  $: maxOffset = Math.max(0, certificates.length - visibleCount);
-  $: canPrev = sliderOffset > 0;
-  $: canNext = sliderOffset < maxOffset;
-  $: sliderTransform = `translateX(calc(-${sliderOffset} * (100% + 2rem) / ${visibleCount}))`;
+  const maxOffset = $derived(Math.max(0, certificates.length - visibleCount));
+  const canPrev = $derived(sliderOffset > 0);
+  const canNext = $derived(sliderOffset < maxOffset);
+  const sliderTransform = $derived(`translateX(calc(-${sliderOffset} * (100% + 2rem) / ${visibleCount}))`);
 
   function slidePrev() {
     if (canPrev) sliderOffset--;
@@ -119,7 +114,7 @@
       <button
         type="button"
         class="slider-arrow slider-arrow-prev"
-        on:click={slidePrev}
+        onclick={slidePrev}
         disabled={!canPrev}
         aria-label={prevLabel}
       >
@@ -130,15 +125,15 @@
 
       <div
         class="slider-viewport"
-        on:touchstart={handleTouchStart}
-        on:touchend={handleTouchEnd}
+        ontouchstart={handleTouchStart}
+        ontouchend={handleTouchEnd}
       >
         <div class="certificates-grid" style="transform: {sliderTransform};">
           {#each certificates as cert, index}
             <button
               type="button"
               class="certificate-card"
-              on:click={() => openLightbox(index)}
+              onclick={() => openLightbox(index)}
               aria-label="Open certificate {index + 1}"
             >
               <img src={cert.src} alt={cert.alt} class="certificate-image" loading="lazy" />
@@ -150,7 +145,7 @@
       <button
         type="button"
         class="slider-arrow slider-arrow-next"
-        on:click={slideNext}
+        onclick={slideNext}
         disabled={!canNext}
         aria-label={nextLabel}
       >
@@ -167,7 +162,7 @@
             type="button"
             class="slider-dot"
             class:active={sliderOffset === i}
-            on:click={() => slideTo(i)}
+            onclick={() => slideTo(i)}
             role="tab"
             aria-selected={sliderOffset === i}
             aria-label="Go to slide {i + 1}"
@@ -181,14 +176,14 @@
 {#if lightboxIndex !== null}
   <div
     class="lightbox-overlay"
-    on:click={closeLightbox}
-    on:keydown={(e) => { if (e.key === 'Enter' || e.key === ' ') closeLightbox(); }}
+    onclick={closeLightbox}
+    onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') closeLightbox(); }}
     role="dialog"
     aria-modal="true"
     aria-label="Certificate preview"
     tabindex="-1"
   >
-    <button type="button" class="lightbox-close" on:click|stopPropagation={closeLightbox} aria-label="Close">
+    <button type="button" class="lightbox-close" onclick={(e) => { e.stopPropagation(); closeLightbox(); }} aria-label="Close">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
       </svg>
@@ -197,7 +192,7 @@
       src={certificates[lightboxIndex].src}
       alt={certificates[lightboxIndex].alt}
       class="lightbox-image"
-      on:click|stopPropagation
+      onclick={(e) => e.stopPropagation()}
     />
   </div>
 {/if}

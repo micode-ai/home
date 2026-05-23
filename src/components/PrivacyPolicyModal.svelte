@@ -1,23 +1,19 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount, onDestroy } from 'svelte';
-  import { languageStore, type Language } from '../stores/languageStore';
+  import { onDestroy } from 'svelte';
+  import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
 
-  export let isOpen = false;
+  interface Props {
+    isOpen?: boolean;
+    onclose?: () => void;
+  }
 
-  const dispatch = createEventDispatcher<{ close: void }>();
+  const { isOpen = false, onclose }: Props = $props();
 
-  let currentLanguage: Language;
   let dialogEl: HTMLDialogElement;
 
-  const unsubscribe = languageStore.subscribe(value => {
-    currentLanguage = value;
-  });
-
-  onDestroy(unsubscribe);
-
   function close() {
-    dispatch('close');
+    onclose?.();
   }
 
   function handleBackdropClick(event: MouseEvent) {
@@ -32,18 +28,13 @@
     }
   }
 
-  $: if (isOpen) {
-    document.body.style.overflow = 'hidden';
-  } else {
-    document.body.style.overflow = '';
-  }
-
-  onDestroy(() => {
-    document.body.style.overflow = '';
+  $effect(() => {
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
   });
 </script>
 
-<svelte:window on:keydown={handleKeydown} />
+<svelte:window onkeydown={handleKeydown} />
 
 {#if isOpen}
   <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
@@ -53,17 +44,17 @@
     aria-modal="true"
     aria-labelledby="privacy-policy-title"
     tabindex="-1"
-    on:click={handleBackdropClick}
+    onclick={handleBackdropClick}
   >
     <div class="modal-content">
       <div class="modal-header">
         <h2 id="privacy-policy-title" class="modal-title">
-          {t('legal.privacyPolicy.title', currentLanguage)}
+          {t('legal.privacyPolicy.title', $languageStore)}
         </h2>
         <button
           class="modal-close"
-          on:click={close}
-          aria-label={t('legal.privacyPolicy.close', currentLanguage)}
+          onclick={close}
+          aria-label={t('legal.privacyPolicy.close', $languageStore)}
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <line x1="18" y1="6" x2="6" y2="18"/>
@@ -74,48 +65,48 @@
 
       <div class="modal-body">
         <section class="policy-section">
-          <h3>{t('legal.privacyPolicy.controller', currentLanguage)}</h3>
-          <p>{t('legal.privacyPolicy.controllerText', currentLanguage)}</p>
+          <h3>{t('legal.privacyPolicy.controller', $languageStore)}</h3>
+          <p>{t('legal.privacyPolicy.controllerText', $languageStore)}</p>
         </section>
 
         <section class="policy-section">
-          <h3>{t('legal.privacyPolicy.dataCollected', currentLanguage)}</h3>
-          <p>{t('legal.privacyPolicy.dataCollectedText', currentLanguage)}</p>
+          <h3>{t('legal.privacyPolicy.dataCollected', $languageStore)}</h3>
+          <p>{t('legal.privacyPolicy.dataCollectedText', $languageStore)}</p>
         </section>
 
         <section class="policy-section">
-          <h3>{t('legal.privacyPolicy.legalBasis', currentLanguage)}</h3>
-          <p>{t('legal.privacyPolicy.legalBasisText', currentLanguage)}</p>
+          <h3>{t('legal.privacyPolicy.legalBasis', $languageStore)}</h3>
+          <p>{t('legal.privacyPolicy.legalBasisText', $languageStore)}</p>
         </section>
 
         <section class="policy-section">
-          <h3>{t('legal.privacyPolicy.retention', currentLanguage)}</h3>
-          <p>{t('legal.privacyPolicy.retentionText', currentLanguage)}</p>
+          <h3>{t('legal.privacyPolicy.retention', $languageStore)}</h3>
+          <p>{t('legal.privacyPolicy.retentionText', $languageStore)}</p>
         </section>
 
         <section class="policy-section">
-          <h3>{t('legal.privacyPolicy.rights', currentLanguage)}</h3>
-          <p>{t('legal.privacyPolicy.rightsText', currentLanguage)}</p>
+          <h3>{t('legal.privacyPolicy.rights', $languageStore)}</h3>
+          <p>{t('legal.privacyPolicy.rightsText', $languageStore)}</p>
         </section>
 
         <section class="policy-section">
-          <h3>{t('legal.privacyPolicy.cookies', currentLanguage)}</h3>
-          <p>{t('legal.privacyPolicy.cookiesText', currentLanguage)}</p>
+          <h3>{t('legal.privacyPolicy.cookies', $languageStore)}</h3>
+          <p>{t('legal.privacyPolicy.cookiesText', $languageStore)}</p>
         </section>
 
         <section class="policy-section">
-          <h3>{t('legal.privacyPolicy.contactTitle', currentLanguage)}</h3>
+          <h3>{t('legal.privacyPolicy.contactTitle', $languageStore)}</h3>
           <p>
-            <a href="mailto:{t('legal.privacyPolicy.contactText', currentLanguage)}">
-              {t('legal.privacyPolicy.contactText', currentLanguage)}
+            <a href="mailto:{t('legal.privacyPolicy.contactText', $languageStore)}">
+              {t('legal.privacyPolicy.contactText', $languageStore)}
             </a>
           </p>
         </section>
       </div>
 
       <div class="modal-footer">
-        <button class="btn-close" on:click={close}>
-          {t('legal.privacyPolicy.close', currentLanguage)}
+        <button class="btn-close" onclick={close}>
+          {t('legal.privacyPolicy.close', $languageStore)}
         </button>
       </div>
     </div>
