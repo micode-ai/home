@@ -212,6 +212,7 @@
     "message": "Wiadomość",
     "send": "Wyślij",
     "success": "Dziękujemy za wiadomość! Skontaktujemy się wkrótce.",
+    "responsePromise": "Zazwyczaj odpowiadamy w ciągu 1 dnia roboczego.",
     "alternativeContact": "Lub napisz do nas bezpośrednio:",
     "sending": "Wysyłanie...",
     "errors": {

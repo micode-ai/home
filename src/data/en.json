@@ -226,6 +226,7 @@
         "message": "Message",
         "send": "Send",
         "success": "Thank you for your message! We'll be in touch soon.",
+        "responsePromise": "We typically respond within 1 business day.",
         "alternativeContact": "Or contact us directly:",
         "sending": "Sending...",
         "errors": {

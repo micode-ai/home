@@ -103,11 +103,12 @@
   <div class="contact-container">
     <div class="contact-form">
       <h2 id="contact-title" class="contact-title">{t('contact.title', $languageStore)}</h2>
+      <p class="response-promise">{t('contact.responsePromise', $languageStore)}</p>
 
       {#if isSubmitted}
         <div class="success-message" role="alert" aria-live="polite">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
-          <span>{t('contact.success', $languageStore)}</span>
+          <span>{t('contact.success', $languageStore)}<br>{t('contact.responsePromise', $languageStore)}</span>
         </div>
       {/if}
 
@@ -256,6 +257,13 @@
     margin-bottom: 1.5rem;
     text-align: center;
     font-weight: 500;
+  }
+
+  .response-promise {
+    margin: -0.75rem 0 1.25rem 0;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    text-align: center;
   }
 
   .error-banner {
