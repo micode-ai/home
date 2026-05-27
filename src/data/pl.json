@@ -256,5 +256,12 @@
       "contactText": "perevertkinma@gmail.com",
       "close": "Zamknij"
     }
+  },
+  "a11y": {
+    "darkMode": {
+      "label": "Tryb ciemny",
+      "on": "Tryb ciemny: Włączony",
+      "off": "Tryb ciemny: Wyłączony"
+    }
   }
 }

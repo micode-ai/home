@@ -12,6 +12,7 @@
   let lightBackground = $state(false);
   let linksUnderline = $state(false);
   let readableFont = $state(false);
+  let darkMode = $state(false);
 
   let panelEl: HTMLDivElement | null = null;
   let triggerEl: HTMLButtonElement | null = null;
@@ -19,7 +20,7 @@
   function saveSettings() {
     setItem(
       STORAGE_KEY,
-      JSON.stringify({ fontSize, grayscale, highContrast, negativeContrast, lightBackground, linksUnderline, readableFont })
+      JSON.stringify({ fontSize, grayscale, highContrast, negativeContrast, lightBackground, linksUnderline, readableFont, darkMode })
     );
   }
 
@@ -32,13 +33,14 @@
     html.classList.toggle('a11y-light-bg', lightBackground);
     html.classList.toggle('a11y-links-underline', linksUnderline);
     html.classList.toggle('a11y-readable-font', readableFont);
+    html.classList.toggle('dark-mode-active', darkMode);
 
     html.style.setProperty('--a11y-font-scale', String(1 + fontSize * 0.1));
   }
 
   $effect(() => {
     // Depend on all state
-    void [fontSize, grayscale, highContrast, negativeContrast, lightBackground, linksUnderline, readableFont];
+    void [fontSize, grayscale, highContrast, negativeContrast, lightBackground, linksUnderline, readableFont, darkMode];
     applyToDOM();
     saveSettings();
   });
@@ -55,6 +57,7 @@
         lightBackground = s.lightBackground ?? false;
         linksUnderline = s.linksUnderline ?? false;
         readableFont = s.readableFont ?? false;
+        darkMode = s.darkMode ?? false;
       } catch {
         // ignore corrupt data
       }
@@ -90,6 +93,7 @@
     lightBackground = false;
     linksUnderline = false;
     readableFont = false;
+    darkMode = false;
     document.documentElement.style.setProperty('--a11y-font-scale', '1');
     removeItem(STORAGE_KEY);
   }
@@ -224,6 +228,21 @@
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
           </span>
           Light Background
+        </button>
+      </li>
+      <li>
+        <button
+          class="a11y-option"
+          class:active={darkMode}
+          onclick={() => (darkMode = !darkMode)}
+          aria-label="Toggle dark mode"
+          aria-pressed={darkMode}
+          type="button"
+        >
+          <span class="a11y-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </span>
+          Dark Mode
         </button>
       </li>
       <li>

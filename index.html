@@ -10,6 +10,21 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
+    <!-- Apply saved dark mode preference before first paint to avoid flash -->
+    <script>
+      (function () {
+        try {
+          var raw = localStorage.getItem('a11y-settings');
+          if (raw) {
+            var s = JSON.parse(raw);
+            if (s.darkMode) {
+              document.documentElement.classList.add('dark-mode-active');
+            }
+          }
+        } catch (e) {}
+      })();
+    </script>
+
     <!-- Default meta tags (will be updated by SEO component) -->
     <title>MiCode Sp. z o.o. - Profesjonalne rozwiązania IT | Gdańsk</title>
     <meta name="description" content="Micode - tworzenie aplikacji mobilnych, oprogramowania na zamówienie i rozwiązań chmurowych. 18+ lat doświadczenia. Gdańsk, Polska." />

@@ -270,5 +270,12 @@
             "contactText": "perevertkinma@gmail.com",
             "close": "Close"
         }
+    },
+    "a11y": {
+        "darkMode": {
+            "label": "Dark Mode",
+            "on": "Dark Mode: On",
+            "off": "Dark Mode: Off"
+        }
     }
 }

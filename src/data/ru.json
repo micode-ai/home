@@ -256,5 +256,12 @@
       "contactText": "perevertkinma@gmail.com",
       "close": "Закрыть"
     }
+  },
+  "a11y": {
+    "darkMode": {
+      "label": "Тёмный режим",
+      "on": "Тёмный режим: Вкл",
+      "off": "Тёмный режим: Выкл"
+    }
   }
 }
