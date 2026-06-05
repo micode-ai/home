@@ -4,6 +4,11 @@ export interface ProductLink {
   labelKey: string;
 }
 
+export interface CommunityStats {
+  githubStars: number | null;
+  npmWeeklyDownloads: number | null;
+}
+
 export interface Product {
   id: string;
   nameKey: string;
@@ -15,4 +20,5 @@ export interface Product {
   links: ProductLink[];
   badge?: { label: string; icon: string };
   accentColor?: string;
+  communityStats?: CommunityStats | null;
 }

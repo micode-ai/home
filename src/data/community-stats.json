@@ -1,0 +1,25 @@
+{
+  "fetchedAt": "2026-06-05T11:44:53.180Z",
+  "stats": {
+    "ngx-chat": {
+      "githubStars": null,
+      "npmWeeklyDownloads": 23
+    },
+    "accounting-ai": {
+      "githubStars": 0,
+      "npmWeeklyDownloads": null
+    },
+    "emarketing-ai": {
+      "githubStars": 0,
+      "npmWeeklyDownloads": null
+    },
+    "budget-assistant": {
+      "githubStars": 0,
+      "npmWeeklyDownloads": null
+    },
+    "testing-ai": {
+      "githubStars": 0,
+      "npmWeeklyDownloads": null
+    }
+  }
+}

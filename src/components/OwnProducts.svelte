@@ -2,6 +2,7 @@
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import productsData from '../data/products.json';
+  import communityStatsData from '../data/community-stats.json';
   import type { Product } from '../types/products';
   import ProductSlider from './ProductSlider.svelte';
   import ProductModal from './ProductModal.svelte';
@@ -11,7 +12,10 @@
   import emarketingAiImage from '../assets/images/emarketing-ai.png';
   import testingAiImage from '../assets/images/testing-ai.png';
 
-  const products: Product[] = productsData;
+  const products: Product[] = (productsData as Product[]).map((p) => ({
+    ...p,
+    communityStats: (communityStatsData.stats as Record<string, { githubStars: number | null; npmWeeklyDownloads: number | null }>)[p.id] ?? null,
+  }));
 
   const productImages: Record<string, string> = {
     'ngx-chat': ngxChatImage,

@@ -2,6 +2,7 @@
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import type { Product } from '../types/products';
+  import CommunityStatBadges from './CommunityStatBadges.svelte';
 
   interface Props {
     product: Product;
@@ -75,6 +76,8 @@
       </a>
     {/if}
     <p class="product-description">{t(product.descriptionKey, $languageStore)}</p>
+
+    <CommunityStatBadges stats={product.communityStats} />
 
     {#if product.pricingKey}
       <div class="product-pricing">
@@ -242,7 +245,7 @@
   }
 
   .product-description {
-    margin: 0 0 1.25rem 0;
+    margin: 0 0 0.625rem 0;
     font-size: 0.875rem;
     color: var(--color-text-secondary);
     line-height: 1.6;

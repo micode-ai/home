@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/fetch-github-npm-stats.js",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest",
