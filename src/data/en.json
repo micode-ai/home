@@ -278,5 +278,11 @@
             "on": "Dark Mode: On",
             "off": "Dark Mode: Off"
         }
+    },
+    "stats": {
+        "title": "By the numbers",
+        "experience": { "label": "Years of experience" },
+        "products": { "label": "AI products shipped" },
+        "projects": { "label": "Projects delivered" }
     }
 }

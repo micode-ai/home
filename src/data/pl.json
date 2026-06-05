@@ -264,5 +264,11 @@
       "on": "Tryb ciemny: Włączony",
       "off": "Tryb ciemny: Wyłączony"
     }
+  },
+  "stats": {
+    "title": "W liczbach",
+    "experience": { "label": "Lat doświadczenia" },
+    "products": { "label": "Produktów AI" },
+    "projects": { "label": "Zrealizowanych projektów" }
   }
 }

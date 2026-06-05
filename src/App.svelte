@@ -6,6 +6,7 @@
   import CompanyInfo from './components/CompanyInfo.svelte';
   import Services from './components/Services.svelte';
   import FounderProfile from './components/FounderProfile.svelte';
+  import StatsStrip from './components/StatsStrip.svelte';
   import CommunityContributions from './components/CommunityContributions.svelte';
   import OwnProducts from './components/OwnProducts.svelte';
   import Certificates from './components/Certificates.svelte';
@@ -67,6 +68,7 @@
   <CompanyInfo />
   <Services />
   <FounderProfile />
+  <StatsStrip />
   <CommunityContributions />
   <OwnProducts />
   <Certificates />
