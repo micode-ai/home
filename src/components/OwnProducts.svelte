@@ -8,7 +8,7 @@
   import ProductModal from './ProductModal.svelte';
   import ngxChatImage from '../assets/images/ngx-open-web-ui-chat.png';
   import accountingAiImage from '../assets/images/accounting-ai.png';
-  import budgetAssistantImage from '../assets/images/budget-assistant.png';
+  import budgetAssistantImage from '../assets/images/budget-assistant.jpg';
   import emarketingAiImage from '../assets/images/emarketing-ai.png';
   import testingAiImage from '../assets/images/testing-ai.png';
 

@@ -195,8 +195,8 @@
       "npm": "Открыть в npm",
       "storybook": "Демо в Storybook",
       "website": "Перейти на сайт",
-      "github": "Открыть на GitHub",
-      "playStore": "Скачать в Google Play"
+      "github": "GitHub",
+      "playStore": "Google Play"
     }
   },
   "certificates": {
