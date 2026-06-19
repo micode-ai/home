@@ -25,7 +25,7 @@
       <p class="company-name">{companyName}</p>
     </div>
 
-    <div class="company-grid">
+    <dl class="company-grid">
       <div class="info-item">
         <dt class="info-label">{foundedLabel}</dt>
         <dd class="info-value">{foundedYear}</dd>
@@ -50,7 +50,7 @@
         <dt class="info-label">{industryLabel}</dt>
         <dd class="info-value">{industryValue}</dd>
       </div>
-    </div>
+    </dl>
   </div>
 </section>
 
@@ -94,6 +94,7 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1.25rem;
+    margin: 0;
   }
 
   .info-item {

@@ -13,10 +13,10 @@
   const nextLabel = $derived(t('certificates.next', $languageStore));
 
   const certificates = [
-    { src: cert1, alt: 'Certificate 1' },
-    { src: cert2, alt: 'Certificate 2' },
-    { src: cert3, alt: 'Certificate 3' },
-    { src: cert4, alt: 'Certificate 4' }
+    { src: cert1, alt: 'Oracle Application Development Framework 11g Certified Implementation Specialist — Mikhail Peraviortkin, Oracle University, 2014' },
+    { src: cert2, alt: 'Hugging Face Agents Course — Fundamentals of Agents certificate, Mikhail Peraviortkin, 2025' },
+    { src: cert3, alt: 'Hugging Face LLM Course — Fundamentals of LLMs certificate, Mikhail Peraviortkin, 2025' },
+    { src: cert4, alt: 'Hugging Face MCP Course — Fundamentals of MCP certificate, Mikhail Peraviortkin, 2025' }
   ];
 
   let sliderOffset = $state(0);

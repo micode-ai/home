@@ -44,6 +44,8 @@
         src={productImage}
         alt={t(product.nameKey, $languageStore)}
         class="product-image"
+        width="415"
+        height="900"
         loading="lazy"
       />
       {#if product.badge}
@@ -65,13 +67,13 @@
     <h3 class="product-name">{t(product.nameKey, $languageStore)}</h3>
     {#if product.website}
       <a
-        href="https://{product.website}"
+        href={product.website}
         class="product-website"
         target="_blank"
         rel="noopener noreferrer"
         onclick={(e) => e.stopPropagation()}
       >
-        {product.website}
+        {product.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
       </a>
     {/if}

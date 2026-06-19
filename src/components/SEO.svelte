@@ -1,6 +1,8 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import { languageStore, type Language } from '../stores/languageStore';
+  import { t } from '../services/i18n';
+  import productsData from '../data/products.json';
+  import type { Product } from '../types/products';
 
   // Meta content for supported languages
   const metaContent: Record<Language, { title: string; description: string; ogTitle: string; ogDescription: string }> = {
@@ -30,12 +32,15 @@
     ru: 'ru_RU'
   };
 
+  const SITE_URL = 'https://mi-code.pl/';
+  const OG_IMAGE = 'https://mi-code.pl/og-image.png';
+
   // Structured data (JSON-LD) for organization
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "MiСode Sp. z o.o.",
-    "url": "https://micode-ai.github.io/home",
+    "url": "https://mi-code.pl/",
     "foundingDate": "2024",
     "address": {
       "@type": "PostalAddress",
@@ -73,9 +78,64 @@
     ]
   };
 
+  const websiteData = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "MiСode Sp. z o.o.",
+    "url": "https://mi-code.pl/",
+    "inLanguage": ["pl", "en", "ru"],
+    "publisher": {
+      "@type": "Organization",
+      "name": "MiСode Sp. z o.o."
+    }
+  };
+
+  // Per-product Schema.org metadata (category + platform) keyed by product id
+  const productSchemaMeta: Record<string, { applicationCategory: string; operatingSystem: string }> = {
+    'budget-assistant': { applicationCategory: 'FinanceApplication', operatingSystem: 'Android' },
+    'ngx-chat': { applicationCategory: 'DeveloperApplication', operatingSystem: 'Cross-platform' },
+    'accounting-ai': { applicationCategory: 'BusinessApplication', operatingSystem: 'Web' },
+    'emarketing-ai': { applicationCategory: 'BusinessApplication', operatingSystem: 'Web' },
+    'testing-ai': { applicationCategory: 'BusinessApplication', operatingSystem: 'Web' }
+  };
+
+  function buildProductSchemas(lang: Language) {
+    return (productsData as Product[]).map((product) => {
+      const meta = productSchemaMeta[product.id] ?? {
+        applicationCategory: 'BusinessApplication',
+        operatingSystem: 'Web'
+      };
+      const playStore = product.links?.find((l) => l.type === 'playStore')?.url;
+      const url = product.website ?? product.links?.[0]?.url;
+
+      const schema: Record<string, unknown> = {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": t(product.nameKey, lang),
+        "description": t(product.descriptionKey, lang),
+        "applicationCategory": meta.applicationCategory,
+        "operatingSystem": meta.operatingSystem,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "PLN"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "MiСode Sp. z o.o.",
+          "url": "https://mi-code.pl/"
+        }
+      };
+      if (url) schema.url = url;
+      if (playStore) schema.downloadUrl = playStore;
+      return schema;
+    });
+  }
+
   $effect(() => {
     if (typeof document !== 'undefined') {
       updateMetaTags($languageStore);
+      addStructuredData($languageStore);
     }
   });
 
@@ -92,10 +152,32 @@
     updateMetaTag('property', 'og:title', content.ogTitle);
     updateMetaTag('property', 'og:description', content.ogDescription);
     updateMetaTag('property', 'og:type', 'website');
+    updateMetaTag('property', 'og:site_name', 'MiСode Sp. z o.o.');
+    updateMetaTag('property', 'og:url', SITE_URL);
+    updateMetaTag('property', 'og:image', OG_IMAGE);
     updateMetaTag('property', 'og:locale', ogLocaleMap[lang]);
-    
+
+    // Update Twitter Card tags
+    updateMetaTag('name', 'twitter:card', 'summary_large_image');
+    updateMetaTag('name', 'twitter:title', content.ogTitle);
+    updateMetaTag('name', 'twitter:description', content.ogDescription);
+    updateMetaTag('name', 'twitter:image', OG_IMAGE);
+
+    // Update canonical link
+    updateCanonical(SITE_URL);
+
     // Update html lang attribute
     document.documentElement.lang = lang;
+  }
+
+  function updateCanonical(href: string) {
+    let link = document.querySelector('link[rel="canonical"]');
+    if (!link) {
+      link = document.createElement('link');
+      link.setAttribute('rel', 'canonical');
+      document.head.appendChild(link);
+    }
+    link.setAttribute('href', href);
   }
 
   function updateMetaTag(attribute: string, attributeValue: string, content: string) {
@@ -108,7 +190,7 @@
     meta.setAttribute('content', content);
   }
 
-  function addStructuredData() {
+  function addStructuredData(lang: Language) {
     // Check if structured data script already exists
     let script = document.querySelector('script[type="application/ld+json"]');
     if (!script) {
@@ -116,10 +198,10 @@
       script.setAttribute('type', 'application/ld+json');
       document.head.appendChild(script);
     }
-    script.textContent = JSON.stringify(structuredData);
+    script.textContent = JSON.stringify([
+      structuredData,
+      websiteData,
+      ...buildProductSchemas(lang)
+    ]);
   }
-
-  onMount(() => {
-    addStructuredData();
-  });
 </script>
