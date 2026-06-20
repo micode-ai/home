@@ -2,6 +2,7 @@
   import { onMount, onDestroy } from 'svelte';
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
+  import certNvidia from '../assets/images/cerificates/nvidia.png';
   import cert1 from '../assets/images/cerificates/1.png';
   import cert2 from '../assets/images/cerificates/2.png';
   import cert3 from '../assets/images/cerificates/3.png';
@@ -13,6 +14,7 @@
   const nextLabel = $derived(t('certificates.next', $languageStore));
 
   const certificates = [
+    { src: certNvidia, alt: 'NVIDIA Certificate of Competency — Getting Started with Deep Learning, Mikhail Peraviortkin, NVIDIA, 2026' },
     { src: cert1, alt: 'Oracle Application Development Framework 11g Certified Implementation Specialist — Mikhail Peraviortkin, Oracle University, 2014' },
     { src: cert2, alt: 'Hugging Face Agents Course — Fundamentals of Agents certificate, Mikhail Peraviortkin, 2025' },
     { src: cert3, alt: 'Hugging Face LLM Course — Fundamentals of LLMs certificate, Mikhail Peraviortkin, 2025' },
