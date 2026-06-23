@@ -3,6 +3,19 @@
   import { t } from '../services/i18n';
   import productsData from '../data/products.json';
   import type { Product } from '../types/products';
+  import ngxChatImage from '../assets/images/ngx-open-web-ui-chat.png';
+  import accountingAiImage from '../assets/images/accounting-ai.png';
+  import budgetAssistantImage from '../assets/images/budget-assistant.jpg';
+  import emarketingAiImage from '../assets/images/emarketing-ai.png';
+  import testingAiImage from '../assets/images/testing-ai.png';
+
+  const productImages: Record<string, string> = {
+    'ngx-chat': ngxChatImage,
+    'accounting-ai': accountingAiImage,
+    'emarketing-ai': emarketingAiImage,
+    'budget-assistant': budgetAssistantImage,
+    'testing-ai': testingAiImage,
+  };
 
   let { productId }: { productId: string } = $props();
 
@@ -27,6 +40,8 @@
   const backLabel = $derived(t('product.backToMicode', lang));
   const notFoundLabel = $derived(t('product.notFound', lang));
 
+  const productImage = $derived(productImages[productId]);
+
   function getProductUrl(product: Product): string | undefined {
     return product.website ?? product.links?.[0]?.url;
   }
@@ -46,6 +61,12 @@
       {/if}
     </div>
   </div>
+
+  {#if productImage}
+  <div class="product-image-wrap">
+    <img src={productImage} alt={name} class="product-image" />
+  </div>
+  {/if}
 
   <div class="product-content">
     <div class="product-content-inner">
@@ -132,6 +153,21 @@
     transition: opacity 0.2s;
   }
   .product-cta:hover { opacity: 0.9; }
+  .product-image-wrap {
+    background: var(--color-bg-secondary, #f8fafc);
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+    border-bottom: 1px solid var(--color-border, #e2e8f0);
+  }
+  .product-image {
+    max-width: 720px;
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    display: block;
+  }
   .product-content { padding: 3rem 2rem; }
   .product-content-inner { max-width: 800px; margin: 0 auto; }
   .product-details, .product-features, .product-links { margin-bottom: 3rem; }
