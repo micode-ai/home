@@ -8,7 +8,8 @@
     "products": "Продукты",
     "contact": "Контакты",
     "menu": "Открыть меню",
-    "menuClose": "Закрыть меню"
+    "menuClose": "Закрыть меню",
+    "blog": "Блог"
   },
   "hero": {
     "headline": "Разработка мобильных приложений и enterprise-систем",
@@ -270,5 +271,19 @@
     "experience": { "label": "Лет опыта" },
     "products": { "label": "AI-продуктов запущено" },
     "projects": { "label": "Реализованных проектов" }
+  },
+  "product": {
+    "visitWebsite": "Перейти на сайт →",
+    "about": "О продукте",
+    "features": "Ключевые возможности",
+    "links": "Ссылки",
+    "backToMicode": "← На сайт MiCode",
+    "notFound": "Продукт не найден."
+  },
+  "blog": {
+    "title": "Блог",
+    "comingSoon": "Скоро",
+    "backToMicode": "← На сайт MiCode",
+    "readArticle": "Читать статью →"
   }
 }

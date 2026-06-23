@@ -19,6 +19,14 @@
     product && product.features ? product.features.map((key) => t(key, $languageStore)) : []
   );
 
+  const lang = $derived($languageStore);
+  const visitWebsite = $derived(t('product.visitWebsite', lang));
+  const aboutLabel = $derived(t('product.about', lang));
+  const featuresLabel = $derived(t('product.features', lang));
+  const linksLabel = $derived(t('product.links', lang));
+  const backLabel = $derived(t('product.backToMicode', lang));
+  const notFoundLabel = $derived(t('product.notFound', lang));
+
   function getProductUrl(product: Product): string | undefined {
     return product.website ?? product.links?.[0]?.url;
   }
@@ -33,7 +41,7 @@
       <p class="product-description">{description}</p>
       {#if getProductUrl(product)}
         <a href={getProductUrl(product)} target="_blank" rel="noopener noreferrer" class="product-cta">
-          Visit website →
+          {visitWebsite}
         </a>
       {/if}
     </div>
@@ -42,13 +50,13 @@
   <div class="product-content">
     <div class="product-content-inner">
       <section class="product-details">
-        <h2>About this product</h2>
+        <h2>{aboutLabel}</h2>
         <p class="product-detailed">{detailedDescription}</p>
       </section>
 
       {#if features.length > 0}
       <section class="product-features">
-        <h2>Key features</h2>
+        <h2>{featuresLabel}</h2>
         <ul class="features-list">
           {#each features as feature}
             <li>{feature}</li>
@@ -59,7 +67,7 @@
 
       {#if product.links && product.links.length > 0}
       <section class="product-links">
-        <h2>Links</h2>
+        <h2>{linksLabel}</h2>
         <div class="links-list">
           {#each product.links as link}
             <a href={link.url} target="_blank" rel="noopener noreferrer" class="product-link">
@@ -71,13 +79,13 @@
       {/if}
 
       <div class="back-link">
-        <a href="/">← Back to MiCode</a>
+        <a href="/">{backLabel}</a>
       </div>
     </div>
   </div>
 </article>
 {:else}
-<p>Product not found.</p>
+<p>{notFoundLabel}</p>
 {/if}
 
 <style>

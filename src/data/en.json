@@ -8,7 +8,8 @@
         "products": "Products",
         "contact": "Contact",
         "menu": "Open menu",
-        "menuClose": "Close menu"
+        "menuClose": "Close menu",
+        "blog": "Blog"
     },
     "hero": {
         "headline": "Mobile Apps & Enterprise Software Development",
@@ -284,5 +285,19 @@
         "experience": { "label": "Years of experience" },
         "products": { "label": "AI products shipped" },
         "projects": { "label": "Projects delivered" }
+    },
+    "product": {
+        "visitWebsite": "Visit website →",
+        "about": "About this product",
+        "features": "Key features",
+        "links": "Links",
+        "backToMicode": "← Back to MiCode",
+        "notFound": "Product not found."
+    },
+    "blog": {
+        "title": "Blog",
+        "comingSoon": "Coming soon",
+        "backToMicode": "← Back to MiCode",
+        "readArticle": "Read article →"
     }
 }

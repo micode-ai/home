@@ -1,5 +1,6 @@
 <script lang="ts">
   import { languageStore } from '../stores/languageStore';
+  import { t } from '../services/i18n';
   import blogPosts from '../data/blog-posts.json';
 
   type Post = typeof blogPosts[number];
@@ -15,18 +16,22 @@
     if (lang === 'ru') return post.summaryRu;
     return post.summaryEn;
   }
+
+  function getComingSoon(lang: string): string { return t('blog.comingSoon', lang); }
+  function getBlogTitle(lang: string): string { return t('blog.title', lang); }
+  function getBack(lang: string): string { return t('blog.backToMicode', lang); }
 </script>
 
 <section class="blog-listing" aria-labelledby="blog-title">
   <div class="blog-inner">
-    <h1 id="blog-title" class="blog-headline">Blog</h1>
+    <h1 id="blog-title" class="blog-headline">{getBlogTitle($languageStore)}</h1>
     <ul class="posts-list">
       {#each blogPosts as post}
         <li class="post-card">
           <time class="post-date" datetime={post.date}>{post.date}</time>
           <h2 class="post-title">
             {getTitle(post, $languageStore)}
-            <span class="post-coming-soon">Coming soon</span>
+            <span class="post-coming-soon">{getComingSoon($languageStore)}</span>
           </h2>
           <p class="post-summary">{getSummary(post, $languageStore)}</p>
           <div class="post-tags">
@@ -37,7 +42,7 @@
         </li>
       {/each}
     </ul>
-    <div class="back-link"><a href="/">← Back to MiCode</a></div>
+    <div class="back-link"><a href="/">{getBack($languageStore)}</a></div>
   </div>
 </section>
 

@@ -8,7 +8,8 @@
     "products": "Produkty",
     "contact": "Kontakt",
     "menu": "Otwórz menu",
-    "menuClose": "Zamknij menu"
+    "menuClose": "Zamknij menu",
+    "blog": "Blog"
   },
   "hero": {
     "headline": "Tworzymy aplikacje mobilne i systemy enterprise",
@@ -270,5 +271,19 @@
     "experience": { "label": "Lat doświadczenia" },
     "products": { "label": "Produktów AI" },
     "projects": { "label": "Zrealizowanych projektów" }
+  },
+  "product": {
+    "visitWebsite": "Przejdź na stronę →",
+    "about": "O produkcie",
+    "features": "Kluczowe funkcje",
+    "links": "Linki",
+    "backToMicode": "← Powrót do MiCode",
+    "notFound": "Produkt nie znaleziony."
+  },
+  "blog": {
+    "title": "Blog",
+    "comingSoon": "Wkrótce",
+    "backToMicode": "← Powrót do MiCode",
+    "readArticle": "Czytaj artykuł →"
   }
 }
