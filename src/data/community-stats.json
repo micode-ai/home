@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-06-19T21:42:27.554Z",
+  "fetchedAt": "2026-06-23T16:09:18.080Z",
   "stats": {
     "budget-assistant": {
       "githubStars": 3,
@@ -7,7 +7,7 @@
     },
     "ngx-chat": {
       "githubStars": null,
-      "npmWeeklyDownloads": 23
+      "npmWeeklyDownloads": 2
     },
     "accounting-ai": {
       "githubStars": 3,
