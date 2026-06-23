@@ -64,6 +64,11 @@
       }
     },
     "description": "IT services company specializing in mobile application development, custom software development, IT systems integration, data analysis, and cloud solutions implementation.",
+    "sameAs": [
+      "https://www.linkedin.com/in/mikhailperaviortkin/",
+      "https://github.com/micode-ai",
+      "https://www.npmjs.com/~perevertkinma"
+    ],
     "knowsAbout": [
       "Mobile Application Development",
       "Custom Software Development",
@@ -89,6 +94,69 @@
       "name": "MiСode Sp. z o.o."
     }
   };
+
+  const localBusinessData = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "MiСode Sp. z o.o.",
+    "url": "https://mi-code.pl/",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Jana Heweliusza 11 lok. 811",
+      "addressLocality": "Gdańsk",
+      "postalCode": "80-890",
+      "addressCountry": "PL"
+    },
+    "areaServed": ["PL", "EU"],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "customer service",
+      "email": "office@mi-code.pl"
+    }
+  };
+
+  const serviceSchemas = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Mobile Application Development",
+      "provider": { "@type": "Organization", "name": "MiСode Sp. z o.o." },
+      "areaServed": ["PL", "EU"],
+      "description": "iOS and Android mobile app development tailored to business needs."
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Custom Software Development",
+      "provider": { "@type": "Organization", "name": "MiСode Sp. z o.o." },
+      "areaServed": ["PL", "EU"],
+      "description": "Dedicated software solutions adapted to specific business requirements."
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "IT Systems Integration",
+      "provider": { "@type": "Organization", "name": "MiСode Sp. z o.o." },
+      "areaServed": ["PL", "EU"],
+      "description": "Connecting disparate IT systems into a unified, coherent architecture."
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Data Analysis",
+      "provider": { "@type": "Organization", "name": "MiСode Sp. z o.o." },
+      "areaServed": ["PL", "EU"],
+      "description": "Transforming raw data into actionable business insights."
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Cloud Solutions Implementation",
+      "provider": { "@type": "Organization", "name": "MiСode Sp. z o.o." },
+      "areaServed": ["PL", "EU"],
+      "description": "Cloud migration, infrastructure optimisation, and managed cloud services."
+    }
+  ];
 
   // Per-product Schema.org metadata (category + platform) keyed by product id
   const productSchemaMeta: Record<string, { applicationCategory: string; operatingSystem: string }> = {
@@ -201,6 +269,8 @@
     script.textContent = JSON.stringify([
       structuredData,
       websiteData,
+      localBusinessData,
+      ...serviceSchemas,
       ...buildProductSchemas(lang)
     ]);
   }
