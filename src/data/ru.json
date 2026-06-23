@@ -284,6 +284,7 @@
     "title": "Блог",
     "comingSoon": "Скоро",
     "backToMicode": "← На сайт MiCode",
-    "readArticle": "Читать статью →"
+    "readArticle": "Читать статью →",
+    "articleNotFound": "Статья не найдена."
   }
 }

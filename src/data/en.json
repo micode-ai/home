@@ -298,6 +298,7 @@
         "title": "Blog",
         "comingSoon": "Coming soon",
         "backToMicode": "← Back to MiCode",
-        "readArticle": "Read article →"
+        "readArticle": "Read article →",
+        "articleNotFound": "Article not found."
     }
 }

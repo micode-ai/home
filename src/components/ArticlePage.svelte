@@ -52,7 +52,7 @@
   </div>
 </article>
 {:else}
-<p class="not-found" style="padding: 4rem 2rem; text-align: center;">Article not found.</p>
+<p class="not-found" style="padding: 4rem 2rem; text-align: center;">{t('blog.articleNotFound', lang)}</p>
 {/if}
 
 <style>
