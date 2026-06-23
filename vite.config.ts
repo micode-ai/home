@@ -16,6 +16,8 @@ export default defineConfig({
                 ngxChat: resolve(__dirname, "products/ngx-chat/index.html"),
                 testingAi: resolve(__dirname, "products/testing-ai/index.html"),
                 blog: resolve(__dirname, "blog/index.html"),
+                scmArticle: resolve(__dirname, "blog/scm-ai-agents-supply-chain/index.html"),
+                ngxChatArticle: resolve(__dirname, "blog/ngx-open-web-ui-chat-tutorial/index.html"),
             },
         },
     },
