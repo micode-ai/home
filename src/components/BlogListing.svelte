@@ -5,6 +5,10 @@
 
   type Post = typeof blogPosts[number];
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const publishedPosts = blogPosts.filter(p => new Date(p.date) <= today);
+
   function getTitle(post: Post, lang: string): string {
     if (lang === 'pl') return post.titlePl;
     if (lang === 'ru') return post.titleRu;
@@ -25,7 +29,7 @@
   <div class="blog-inner">
     <h1 id="blog-title" class="blog-headline">{getBlogTitle($languageStore)}</h1>
     <ul class="posts-list">
-      {#each blogPosts as post}
+      {#each publishedPosts as post}
         <li class="post-card">
           <time class="post-date" datetime={post.date}>{post.date}</time>
           <h2 class="post-title">

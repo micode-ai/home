@@ -7,7 +7,7 @@
     "summaryPl": "Studium przypadku systemu SCM z AI — 300+ endpointów REST, Text2SQL i integracja RAG w praktyce.",
     "summaryEn": "A case study of the SCM system with AI — 300+ REST endpoints, Text2SQL, and RAG integration in practice.",
     "summaryRu": "Кейс системы SCM с AI — 300+ REST эндпоинтов, Text2SQL и RAG-интеграция на практике.",
-    "date": "2026-07-01",
+    "date": "2026-06-23",
     "tags": [
       "AI",
       "Java",
@@ -26,7 +26,7 @@
     "summaryPl": "Krok po kroku z ngx-open-web-ui-chat — instalacja npm, konfiguracja Open WebUI i pierwsze wiadomości.",
     "summaryEn": "Step by step with ngx-open-web-ui-chat — npm install, Open WebUI config, and first messages.",
     "summaryRu": "Пошагово с ngx-open-web-ui-chat — npm install, конфигурация Open WebUI и первые сообщения.",
-    "date": "2026-07-15",
+    "date": "2026-06-23",
     "tags": [
       "Angular",
       "AI",
