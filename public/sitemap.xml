@@ -79,4 +79,26 @@
     <priority>0.7</priority>
   </url>
 
+  <url>
+    <loc>https://mi-code.pl/blog/scm-ai-agents-supply-chain/</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/scm-ai-agents-supply-chain/?lang=pl"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/blog/scm-ai-agents-supply-chain/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/blog/scm-ai-agents-supply-chain/?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/scm-ai-agents-supply-chain/"/>
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/blog/ngx-open-web-ui-chat-tutorial/</loc>
+    <lastmod>2026-07-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/ngx-open-web-ui-chat-tutorial/?lang=pl"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/blog/ngx-open-web-ui-chat-tutorial/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/blog/ngx-open-web-ui-chat-tutorial/?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/ngx-open-web-ui-chat-tutorial/"/>
+  </url>
+
 </urlset>

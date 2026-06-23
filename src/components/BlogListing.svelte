@@ -17,7 +17,6 @@
     return post.summaryEn;
   }
 
-  function getComingSoon(lang: string): string { return t('blog.comingSoon', lang); }
   function getBlogTitle(lang: string): string { return t('blog.title', lang); }
   function getBack(lang: string): string { return t('blog.backToMicode', lang); }
 </script>
@@ -30,10 +29,10 @@
         <li class="post-card">
           <time class="post-date" datetime={post.date}>{post.date}</time>
           <h2 class="post-title">
-            {getTitle(post, $languageStore)}
-            <span class="post-coming-soon">{getComingSoon($languageStore)}</span>
+            <a href="/blog/{post.slug}/">{getTitle(post, $languageStore)}</a>
           </h2>
           <p class="post-summary">{getSummary(post, $languageStore)}</p>
+          <a href="/blog/{post.slug}/" class="read-link">{t('blog.readArticle', $languageStore)}</a>
           <div class="post-tags">
             {#each post.tags as tag}
               <span class="tag">{tag}</span>
@@ -57,19 +56,16 @@
   }
   .post-date { font-size: 0.875rem; color: var(--color-muted, #64748b); }
   .post-title { font-size: 1.5rem; margin: 0.5rem 0; }
-  .post-coming-soon {
+  .post-title a { color: inherit; text-decoration: none; }
+  .post-title a:hover { text-decoration: underline; }
+  .read-link {
     display: inline-block;
-    margin-left: 0.5rem;
-    padding: 0.15rem 0.5rem;
-    background: var(--color-bg-alt, #f1f5f9);
-    border-radius: 0.25rem;
-    font-size: 0.7rem;
+    margin-top: 0.75rem;
+    color: var(--color-primary, #1e3a8a);
     font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-muted, #64748b);
-    vertical-align: middle;
+    text-decoration: none;
   }
+  .read-link:hover { text-decoration: underline; }
   .post-summary { color: var(--color-muted, #64748b); line-height: 1.7; }
   .post-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
   .tag {
