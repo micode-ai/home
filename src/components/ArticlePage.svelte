@@ -70,8 +70,8 @@
   .article-date { font-size: 0.875rem; opacity: 0.7; }
   .article-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
   .tag { padding: 0.2rem 0.6rem; background: rgba(255,255,255,0.15); border-radius: 0.25rem; font-size: 0.75rem; }
-  .article-body { padding: 3rem 2rem; }
-  .article-body p { line-height: 1.8; margin-bottom: 1.25rem; color: var(--color-text, #1e293b); }
+  .article-body { padding: 3rem 2rem; background: var(--color-bg-primary, #fff); }
+  .article-body p { line-height: 1.8; margin-bottom: 1.25rem; color: var(--color-text-primary, #1e293b); }
   .back-link { margin-top: 3rem; }
   .back-link a { color: var(--color-primary, #1e3a8a); text-decoration: none; }
   .back-link a:hover { text-decoration: underline; }
