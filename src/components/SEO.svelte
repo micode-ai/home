@@ -52,7 +52,7 @@
     "contactPoint": {
       "@type": "ContactPoint",
       "contactType": "customer service",
-      "email": "perevertkinma@gmail.com"
+      "email": "office@mi-code.pl"
     },
     "founder": {
       "@type": "Person",
