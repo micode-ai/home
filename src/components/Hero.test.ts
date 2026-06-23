@@ -36,3 +36,24 @@ describe('Hero smoke render', () => {
     expect(screen.getByRole('button')).toBeTruthy();
   });
 });
+
+describe('Hero EN copy contains target keywords', () => {
+  beforeAll(() => {
+    const enTranslations = require('../data/en.json');
+    loadTranslations({ en: enTranslations });
+  });
+
+  it('headline contains "Mobile" or "Enterprise" or "Software"', () => {
+    const enTranslations = require('../data/en.json');
+    const { headline } = enTranslations.hero;
+    const hasKeyword = /mobile|enterprise|software/i.test(headline);
+    expect(hasKeyword).toBe(true);
+  });
+
+  it('subheadline mentions location Poland or Gdańsk', () => {
+    const enTranslations = require('../data/en.json');
+    const { subheadline } = enTranslations.hero;
+    const hasLocation = /poland|gdańsk|gdansk/i.test(subheadline);
+    expect(hasLocation).toBe(true);
+  });
+});

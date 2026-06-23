@@ -7,22 +7,22 @@
   // Meta content for supported languages
   const metaContent: Record<Language, { title: string; description: string; ogTitle: string; ogDescription: string }> = {
     pl: {
-      title: 'MiСode Sp. z o.o. - Profesjonalne rozwiązania IT | Gdańsk',
-      description: 'MiСode - tworzenie aplikacji mobilnych, oprogramowania na zamówienie i rozwiązań chmurowych. 18+ lat doświadczenia. Gdańsk, Polska.',
-      ogTitle: 'MiСode Sp. z o.o. - Profesjonalne rozwiązania IT',
-      ogDescription: 'Tworzenie aplikacji mobilnych i systemów enterprise. 18+ lat doświadczenia w branży IT.',
+      title: 'MiСode Sp. z o.o. — Tworzenie aplikacji mobilnych i systemów enterprise | Gdańsk',
+      description: 'MiСode — tworzenie aplikacji mobilnych, oprogramowania na zamówienie i rozwiązań AI. 18 lat doświadczenia IT. Gdańsk, Polska.',
+      ogTitle: 'MiСode — Tworzenie aplikacji mobilnych i systemów enterprise',
+      ogDescription: 'Dedykowane oprogramowanie, integracja systemów IT, rozwiązania AI. 18 lat doświadczenia w branży IT.',
     },
     en: {
-      title: 'MiСode Sp. z o.o. - Professional IT Solutions | Gdańsk',
-      description: 'MiСode - mobile app development, custom software, and cloud solutions. 18+ years of experience. Gdańsk, Poland.',
-      ogTitle: 'MiСode Sp. z o.o. - Professional IT Solutions',
-      ogDescription: 'Mobile app and enterprise system development. 18+ years of experience in IT industry.',
+      title: 'MiСode Sp. z o.o. — Mobile App & Enterprise Software Development | Gdańsk',
+      description: 'MiСode — mobile app development, custom software and AI solutions. 18+ years of IT experience. Gdańsk, Poland.',
+      ogTitle: 'MiСode — Mobile App & Enterprise Software Development',
+      ogDescription: 'Custom software, IT systems integration, and AI solutions. 18+ years of experience — Gdańsk, Poland.',
     },
     ru: {
-      title: 'MiСode Sp. z o.o. - Профессиональные IT-решения | Гданьск',
-      description: 'MiСode — разработка мобильных приложений, ПО на заказ и облачных решений. 18+ лет опыта. Гданьск, Польша.',
-      ogTitle: 'MiСode Sp. z o.o. - Профессиональные IT-решения',
-      ogDescription: 'Разработка мобильных приложений и enterprise-систем. 18+ лет опыта в IT-индустрии.',
+      title: 'MiСode Sp. z o.o. — Разработка мобильных приложений и enterprise-систем | Гданьск',
+      description: 'MiСode — разработка мобильных приложений, ПО на заказ и AI-решений. 18+ лет опыта. Гданьск, Польша.',
+      ogTitle: 'MiСode — Разработка мобильных приложений и enterprise-систем',
+      ogDescription: 'Разработка ПО на заказ, интеграция IT-систем и AI-решения. 18+ лет опыта — Гданьск, Польша.',
     }
   };
 
