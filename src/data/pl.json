@@ -282,7 +282,6 @@
   },
   "blog": {
     "title": "Blog",
-    "comingSoon": "Wkrótce",
     "backToMicode": "← Powrót do MiCode",
     "readArticle": "Czytaj artykuł →",
     "articleNotFound": "Artykuł nie znaleziony."

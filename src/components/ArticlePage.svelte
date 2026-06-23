@@ -25,7 +25,7 @@
   <div class="article-hero">
     <div class="article-inner">
       <nav class="article-breadcrumb" aria-label="Breadcrumb">
-        <a href="/">MiCode</a>
+        <a href="/">{t('header.companyName', lang)}</a>
         <span aria-hidden="true">›</span>
         <a href="/blog/">{blogLabel}</a>
       </nav>
