@@ -1,0 +1,24 @@
+[
+  {
+    "slug": "scm-ai-agents-supply-chain",
+    "titlePl": "Jak agenty AI zoptymalizowały zarządzanie łańcuchem dostaw",
+    "titleEn": "How AI agents optimised supply chain management",
+    "titleRu": "Как AI-агенты оптимизировали управление цепочкой поставок",
+    "summaryPl": "Studium przypadku systemu SCM z AI — 300+ endpointów REST, Text2SQL i integracja RAG w praktyce.",
+    "summaryEn": "A case study of the SCM system with AI — 300+ REST endpoints, Text2SQL, and RAG integration in practice.",
+    "summaryRu": "Кейс системы SCM с AI — 300+ REST эндпоинтов, Text2SQL и RAG-интеграция на практике.",
+    "date": "2026-07-01",
+    "tags": ["AI", "Java", "Spring Boot", "enterprise"]
+  },
+  {
+    "slug": "ngx-open-web-ui-chat-tutorial",
+    "titlePl": "Jak dodać czat AI do Angular w 15 minut",
+    "titleEn": "How to add AI chat to Angular in 15 minutes",
+    "titleRu": "Как добавить AI-чат в Angular за 15 минут",
+    "summaryPl": "Krok po kroku z ngx-open-web-ui-chat — instalacja npm, konfiguracja Open WebUI i pierwsze wiadomości.",
+    "summaryEn": "Step by step with ngx-open-web-ui-chat — npm install, Open WebUI config, and first messages.",
+    "summaryRu": "Пошагово с ngx-open-web-ui-chat — npm install, конфигурация Open WebUI и первые сообщения.",
+    "date": "2026-07-15",
+    "tags": ["Angular", "AI", "npm", "tutorial"]
+  }
+]

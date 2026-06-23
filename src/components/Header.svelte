@@ -76,6 +76,7 @@
           {t(link.key, $languageStore)}
         </a>
       {/each}
+      <a href="/blog/" class="nav-link">Blog</a>
     </nav>
 
     <div class="header-right">
@@ -117,6 +118,7 @@
           {t(link.key, $languageStore)}
         </a>
       {/each}
+      <a href="/blog/" class="mobile-nav-link">Blog</a>
     </nav>
   {/if}
 </header>
