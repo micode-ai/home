@@ -2,6 +2,7 @@
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import blogPosts from '../data/blog-posts.json';
+  import products from '../data/products.json';
 
   type Post = typeof blogPosts[number];
 
@@ -18,6 +19,16 @@
     : '');
   const backLabel = $derived(t('blog.backToMicode', lang));
   const blogLabel = $derived(t('blog.title', lang));
+
+  const relatedProductSlug = $derived((post as any)?.relatedProductSlug as string | undefined);
+  const relatedProduct = $derived(relatedProductSlug
+    ? products.find(p => p.id === relatedProductSlug)
+    : undefined);
+  const relatedLabel = $derived(
+    lang === 'pl' ? 'Zobacz powiązany produkt'
+    : lang === 'ru' ? 'Посмотреть связанный продукт'
+    : 'See related product'
+  );
 </script>
 
 {#if post}
@@ -45,6 +56,17 @@
           <p>{para}</p>
         {/each}
       {/if}
+
+      {#if relatedProduct}
+        <aside class="related-product" aria-label={relatedLabel}>
+          <span class="related-label">{relatedLabel}</span>
+          <a href="/products/{relatedProduct.id}/" class="related-link">
+            {t(relatedProduct.nameKey, lang)}
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </aside>
+      {/if}
+
       <div class="back-link">
         <a href="/blog/">{backLabel}</a>
       </div>
@@ -72,7 +94,39 @@
   .tag { padding: 0.2rem 0.6rem; background: rgba(255,255,255,0.15); border-radius: 0.25rem; font-size: 0.75rem; }
   .article-body { padding: 3rem 2rem; background: var(--color-bg-primary, #fff); }
   .article-body p { line-height: 1.8; margin-bottom: 1.25rem; color: var(--color-text-primary, #1e293b); }
-  .back-link { margin-top: 3rem; }
+  .related-product {
+    margin: 2.5rem 0 0;
+    padding: 1.25rem 1.5rem;
+    background: var(--color-bg-secondary, #f8fafc);
+    border: 1px solid var(--color-border, #e2e8f0);
+    border-left: 3px solid var(--color-primary, #1e3a8a);
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .related-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-secondary, #475569);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .related-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--color-primary, #1e3a8a);
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.9375rem;
+  }
+  .related-link:hover { text-decoration: underline; }
+  .related-link svg { flex-shrink: 0; }
+
+  .back-link { margin-top: 2.5rem; }
   .back-link a { color: var(--color-primary, #1e3a8a); text-decoration: none; }
   .back-link a:hover { text-decoration: underline; }
 </style>

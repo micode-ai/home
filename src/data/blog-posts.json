@@ -27,6 +27,7 @@
     "summaryEn": "Step by step with ngx-open-web-ui-chat — npm install, Open WebUI config, and first messages.",
     "summaryRu": "Пошагово с ngx-open-web-ui-chat — npm install, конфигурация Open WebUI и первые сообщения.",
     "date": "2026-06-23",
+    "relatedProductSlug": "ngx-chat",
     "tags": [
       "Angular",
       "AI",

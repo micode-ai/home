@@ -5,9 +5,10 @@
 
   type Post = typeof blogPosts[number];
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const publishedPosts = blogPosts.filter(p => new Date(p.date) <= today);
+  const d = new Date();
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const todayStr = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const publishedPosts = blogPosts.filter(p => p.date <= todayStr);
 
   function getTitle(post: Post, lang: string): string {
     if (lang === 'pl') return post.titlePl;
