@@ -25,7 +25,8 @@
         <li class="post-card">
           <time class="post-date" datetime={post.date}>{post.date}</time>
           <h2 class="post-title">
-            <a href="/blog/{post.slug}/">{getTitle(post, $languageStore)}</a>
+            {getTitle(post, $languageStore)}
+            <span class="post-coming-soon">Coming soon</span>
           </h2>
           <p class="post-summary">{getSummary(post, $languageStore)}</p>
           <div class="post-tags">
@@ -51,8 +52,19 @@
   }
   .post-date { font-size: 0.875rem; color: var(--color-muted, #64748b); }
   .post-title { font-size: 1.5rem; margin: 0.5rem 0; }
-  .post-title a { color: inherit; text-decoration: none; }
-  .post-title a:hover { color: var(--color-primary, #1e3a8a); }
+  .post-coming-soon {
+    display: inline-block;
+    margin-left: 0.5rem;
+    padding: 0.15rem 0.5rem;
+    background: var(--color-bg-alt, #f1f5f9);
+    border-radius: 0.25rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-muted, #64748b);
+    vertical-align: middle;
+  }
   .post-summary { color: var(--color-muted, #64748b); line-height: 1.7; }
   .post-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
   .tag {

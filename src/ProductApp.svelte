@@ -6,7 +6,6 @@
   import ContactForm from './components/ContactForm.svelte';
   import CookieBanner from './components/CookieBanner.svelte';
   import PrivacyPolicyModal from './components/PrivacyPolicyModal.svelte';
-  import SEO from './components/SEO.svelte';
   import { loadTranslations } from './services/i18n';
   import { initializeAnalytics } from './services/analytics';
   import { initializeMktai } from './services/mktai';
@@ -29,7 +28,6 @@
   });
 </script>
 
-<SEO />
 <Header />
 
 <main id="main-content">
