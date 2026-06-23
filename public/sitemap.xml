@@ -1,14 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
   <url>
     <loc>https://mi-code.pl/</loc>
     <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/?lang=pl"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/?lang=en"/>
     <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/?lang=ru"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/"/>
-    <lastmod>2026-06-20</lastmod>
+    <lastmod>2026-06-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
+
+  <url>
+    <loc>https://mi-code.pl/products/accounting-ai/</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/products/accounting-ai/?lang=pl"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/products/accounting-ai/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/products/accounting-ai/?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/products/accounting-ai/"/>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/products/emarketing-ai/</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/products/emarketing-ai/?lang=pl"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/products/emarketing-ai/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/products/emarketing-ai/?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/products/emarketing-ai/"/>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/products/budget-assistant/</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/products/budget-assistant/?lang=pl"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/products/budget-assistant/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/products/budget-assistant/?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/products/budget-assistant/"/>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/products/ngx-chat/</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/products/ngx-chat/?lang=pl"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/products/ngx-chat/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/products/ngx-chat/?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/products/ngx-chat/"/>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/products/testing-ai/</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/products/testing-ai/?lang=pl"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/products/testing-ai/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/products/testing-ai/?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/products/testing-ai/"/>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/blog/</loc>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/?lang=pl"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/blog/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/blog/?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/"/>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
 </urlset>
