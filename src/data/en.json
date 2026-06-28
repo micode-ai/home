@@ -290,6 +290,8 @@
         "visitWebsite": "Visit website →",
         "about": "About this product",
         "features": "Key features",
+        "architecture": "AI Architecture (LangGraph)",
+        "architectureNote": "A representative LangGraph workflow showing how this product's AI agent routes input, runs its processing steps, calls tools, and reaches a final result.",
         "links": "Links",
         "backToMicode": "Back to MiCode",
         "notFound": "Product not found."

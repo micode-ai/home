@@ -2,8 +2,10 @@
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import productsData from '../data/products.json';
+  import { langGraphSchemas } from '../data/langGraphSchemas';
   import type { Product } from '../types/products';
   import CommunityStatBadges from './CommunityStatBadges.svelte';
+  import LangGraphSchema from './LangGraphSchema.svelte';
   import ngxChatImage from '../assets/images/ngx-open-web-ui-chat.png';
   import accountingAiImage from '../assets/images/accounting-ai.png';
   import budgetAssistantImage from '../assets/images/budget-assistant.jpg';
@@ -36,9 +38,13 @@
   const lang = $derived($languageStore);
   const aboutLabel = $derived(t('product.about', lang));
   const featuresLabel = $derived(t('product.features', lang));
+  const architectureLabel = $derived(t('product.architecture', lang));
+  const architectureNote = $derived(t('product.architectureNote', lang));
   const linksLabel = $derived(t('product.links', lang));
   const backLabel = $derived(t('product.backToMicode', lang));
   const notFoundLabel = $derived(t('product.notFound', lang));
+
+  const schema = $derived(langGraphSchemas[productId]);
 
   const productImage = $derived(productImages[productId]);
 </script>
@@ -155,6 +161,14 @@
               <li class="feature-item">{feature}</li>
             {/each}
           </ul>
+        </section>
+      {/if}
+
+      {#if schema}
+        <section class="content-section" aria-labelledby="section-architecture">
+          <h2 id="section-architecture" class="section-heading">{architectureLabel}</h2>
+          <p class="section-paragraph">{architectureNote}</p>
+          <LangGraphSchema definition={schema} label="{architectureLabel} — {name}" />
         </section>
       {/if}
 

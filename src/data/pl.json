@@ -276,6 +276,8 @@
     "visitWebsite": "Przejdź na stronę →",
     "about": "O produkcie",
     "features": "Kluczowe funkcje",
+    "architecture": "Architektura AI (LangGraph)",
+    "architectureNote": "Przykładowy przepływ LangGraph pokazujący, jak agent AI tego produktu kieruje dane wejściowe, wykonuje kolejne kroki, wywołuje narzędzia i dochodzi do końcowego wyniku.",
     "links": "Linki",
     "backToMicode": "Powrót do MiCode",
     "notFound": "Produkt nie znaleziony."
