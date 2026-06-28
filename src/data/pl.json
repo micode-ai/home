@@ -276,6 +276,7 @@
     "visitWebsite": "Przejdź na stronę →",
     "about": "O produkcie",
     "features": "Kluczowe funkcje",
+    "agentArchitecture": "Architektura agentów (LangGraph)",
     "links": "Linki",
     "backToMicode": "Powrót do MiCode",
     "notFound": "Produkt nie znaleziony."

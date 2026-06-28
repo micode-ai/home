@@ -4,6 +4,11 @@
   import productsData from '../data/products.json';
   import type { Product } from '../types/products';
   import CommunityStatBadges from './CommunityStatBadges.svelte';
+  import MermaidDiagram from './MermaidDiagram.svelte';
+  import { langgraphDiagrams } from '../data/langgraph-diagrams';
+  import ImageLightbox from './ImageLightbox.svelte';
+
+  let lightboxOpen = $state(false);
   import ngxChatImage from '../assets/images/ngx-open-web-ui-chat.png';
   import accountingAiImage from '../assets/images/accounting-ai.png';
   import budgetAssistantImage from '../assets/images/budget-assistant.jpg';
@@ -36,9 +41,14 @@
   const lang = $derived($languageStore);
   const aboutLabel = $derived(t('product.about', lang));
   const featuresLabel = $derived(t('product.features', lang));
+  const agentArchitectureLabel = $derived(t('product.agentArchitecture', lang));
   const linksLabel = $derived(t('product.links', lang));
   const backLabel = $derived(t('product.backToMicode', lang));
   const notFoundLabel = $derived(t('product.notFound', lang));
+
+  const diagramDefinition = $derived(
+    product?.langgraphDiagramId ? langgraphDiagrams[product.langgraphDiagramId] : undefined
+  );
 
   const productImage = $derived(productImages[productId]);
 </script>
@@ -127,7 +137,17 @@
       <!-- Right: product image -->
       {#if productImage}
         <div class="product-hero-image-col">
-          <img src={productImage} alt={name} class="product-hero-image" loading="eager" />
+          <button
+            class="product-hero-image-btn"
+            onclick={() => (lightboxOpen = true)}
+            aria-label="Enlarge image"
+            title="Click to enlarge"
+          >
+            <img src={productImage} alt={name} class="product-hero-image" loading="eager" />
+            <span class="zoom-hint" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+            </span>
+          </button>
         </div>
       {/if}
 
@@ -155,6 +175,13 @@
               <li class="feature-item">{feature}</li>
             {/each}
           </ul>
+        </section>
+      {/if}
+
+      {#if diagramDefinition}
+        <section class="content-section" aria-labelledby="section-architecture">
+          <h2 id="section-architecture" class="section-heading">{agentArchitectureLabel}</h2>
+          <MermaidDiagram definition={diagramDefinition} accentColor={product.accentColor ?? 'var(--color-primary)'} />
         </section>
       {/if}
 
@@ -200,6 +227,10 @@
 </article>
 {:else}
 <p class="not-found">{notFoundLabel}</p>
+{/if}
+
+{#if lightboxOpen && productImage}
+  <ImageLightbox src={productImage} alt={name} onClose={() => (lightboxOpen = false)} />
 {/if}
 
 <style>
@@ -575,11 +606,61 @@
     .product-hero-image-col { display: none; }
   }
 
+  /* ===== Image button / zoom hint ===== */
+  .product-hero-image-btn {
+    position: relative;
+    display: block;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: zoom-in;
+    border-radius: var(--radius-xl);
+    width: 100%;
+  }
+
+  .product-hero-image-btn:focus-visible {
+    outline: 2px solid var(--card-accent, var(--color-primary));
+    outline-offset: 4px;
+  }
+
+  .zoom-hint {
+    position: absolute;
+    bottom: 0.6rem;
+    right: 0.6rem;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.18s;
+    pointer-events: none;
+  }
+
+  .product-hero-image-btn:hover .zoom-hint,
+  .product-hero-image-btn:focus-visible .zoom-hint {
+    opacity: 1;
+  }
+
+  .product-hero-image-btn .product-hero-image {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .product-hero-image-btn:hover .product-hero-image {
+    transform: scale(1.02);
+    box-shadow: 0 32px 64px rgba(0, 0, 0, 0.5), 0 12px 24px rgba(0, 0, 0, 0.4);
+  }
+
   /* ===== Reduced Motion ===== */
   @media (prefers-reduced-motion: reduce) {
     .hero-link, .content-link, .back-link a, .product-website-link { transition: none; }
     .hero-link:hover, .content-link:hover { transform: none; }
     .hero-link .link-arrow, .content-link .link-arrow { transition: none; }
     .hero-link:hover .link-arrow, .content-link:hover .link-arrow { transform: none; }
+    .product-hero-image-btn .product-hero-image { transition: none; }
+    .product-hero-image-btn:hover .product-hero-image { transform: none; }
   }
 </style>

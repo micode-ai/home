@@ -290,6 +290,7 @@
         "visitWebsite": "Visit website →",
         "about": "About this product",
         "features": "Key features",
+        "agentArchitecture": "Agent Architecture (LangGraph)",
         "links": "Links",
         "backToMicode": "Back to MiCode",
         "notFound": "Product not found."

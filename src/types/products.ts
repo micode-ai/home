@@ -21,4 +21,5 @@ export interface Product {
   badge?: { label: string; icon: string };
   accentColor?: string;
   communityStats?: CommunityStats | null;
+  langgraphDiagramId?: string;
 }

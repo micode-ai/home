@@ -276,6 +276,7 @@
     "visitWebsite": "Перейти на сайт →",
     "about": "О продукте",
     "features": "Ключевые возможности",
+    "agentArchitecture": "Архитектура агентов (LangGraph)",
     "links": "Ссылки",
     "backToMicode": "На сайт MiCode",
     "notFound": "Продукт не найден."
