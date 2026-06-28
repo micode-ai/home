@@ -95,6 +95,8 @@
     position: relative;
     display: block;
     width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     overflow-x: auto;
     background: var(--color-bg-secondary, #f8fafc);
     border: 1px solid var(--color-border, #e2e8f0);

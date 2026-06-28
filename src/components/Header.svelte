@@ -124,7 +124,10 @@
         <span class="hamburger-bar"></span>
       </button>
 
-      <LanguageSwitcher />
+      <!-- Hidden on mobile — shown in mobile-nav instead -->
+      <div class="lang-desktop">
+        <LanguageSwitcher />
+      </div>
     </div>
   </div>
 
@@ -147,6 +150,10 @@
         </a>
       {/each}
       <a href="/blog/" class="mobile-nav-link">{t('nav.blog', $languageStore)}</a>
+      <!-- Language switcher at the bottom of mobile menu -->
+      <div class="lang-mobile">
+        <LanguageSwitcher />
+      </div>
     </nav>
   {/if}
 </header>
@@ -374,6 +381,26 @@
 
     .hamburger {
       display: flex;
+    }
+
+    /* Language switcher moves into mobile menu */
+    .lang-desktop {
+      display: none;
+    }
+  }
+
+  .lang-mobile {
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem 0.75rem 0.25rem;
+    margin-top: 0.25rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  /* On desktop, hide the copy inside mobile-nav */
+  @media (min-width: 768px) {
+    .lang-mobile {
+      display: none;
     }
   }
 
