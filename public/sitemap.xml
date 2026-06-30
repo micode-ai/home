@@ -101,4 +101,48 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/ngx-open-web-ui-chat-tutorial/"/>
   </url>
 
+  <url>
+    <loc>https://mi-code.pl/blog/accounting-ai-polish-tax-automation/</loc>
+    <lastmod>2026-06-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/accounting-ai-polish-tax-automation/?lang=pl"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/blog/accounting-ai-polish-tax-automation/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/blog/accounting-ai-polish-tax-automation/?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/accounting-ai-polish-tax-automation/"/>
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/blog/emarketing-ai-content-automation/</loc>
+    <lastmod>2026-06-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/emarketing-ai-content-automation/?lang=pl"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/blog/emarketing-ai-content-automation/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/blog/emarketing-ai-content-automation/?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/emarketing-ai-content-automation/"/>
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/blog/ai-budget-assistant-receipt-ocr-gpt4/</loc>
+    <lastmod>2026-06-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/ai-budget-assistant-receipt-ocr-gpt4/?lang=pl"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/blog/ai-budget-assistant-receipt-ocr-gpt4/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/blog/ai-budget-assistant-receipt-ocr-gpt4/?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/ai-budget-assistant-receipt-ocr-gpt4/"/>
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/blog/testing-ai-agent-orchestration/</loc>
+    <lastmod>2026-06-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/testing-ai-agent-orchestration/?lang=pl"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/blog/testing-ai-agent-orchestration/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/blog/testing-ai-agent-orchestration/?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/testing-ai-agent-orchestration/"/>
+  </url>
+
 </urlset>
