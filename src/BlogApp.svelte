@@ -8,6 +8,7 @@
   import { loadTranslations } from './services/i18n';
   import { initializeAnalytics } from './services/analytics';
   import { getItem } from './services/storage';
+  import { initScrollReveal } from './services/scrollReveal';
 
   import plTranslations from './data/pl.json';
   import enTranslations from './data/en.json';
@@ -21,6 +22,7 @@
     if (getItem('cookieConsent') === 'accepted') {
       initializeAnalytics();
     }
+    return initScrollReveal();
   });
 </script>
 

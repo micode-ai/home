@@ -1,5 +1,5 @@
-import { mount } from 'svelte';
+import { hydrate } from 'svelte';
 import BlogApp from '../src/BlogApp.svelte';
 import '../src/app.css';
 
-mount(BlogApp, { target: document.getElementById('app')! });
+hydrate(BlogApp, { target: document.getElementById('app')! });

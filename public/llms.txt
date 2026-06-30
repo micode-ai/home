@@ -1,0 +1,26 @@
+# MiCode Sp. z o.o.
+
+> MiCode is a software development company based in Gdańsk, Poland, with 18+ years of IT experience. We build mobile apps, custom enterprise software, IT systems integration, and AI-powered products. Founder & CEO: Mikhail Peraviortkin.
+
+MiCode also designs and ships its own AI products: an accounting assistant for Polish tax law, a marketing automation platform, a personal budget assistant, an Angular AI-chat component, and an AI test orchestration platform.
+
+Languages: Polish (default), English, Russian — select via `?lang=pl|en|ru` query parameter on any page (the page content is the same across locales, only UI text and copy are translated).
+
+Contact: office@mi-code.pl — Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Poland.
+
+## Company
+
+- [Homepage](https://mi-code.pl/): Company overview — services (mobile app development, custom software, IT systems integration, data analysis, cloud solutions), founder profile, key projects (incl. an enterprise supply chain management system with 300+ REST endpoints and AI agents for Text2SQL/RAG), and contact form.
+
+## Products
+
+- [Accounting AI Agent](https://mi-code.pl/products/accounting-ai/): AI assistant for accounting professionals and business owners in Poland. Integrates with the wFirma accounting platform, advises on VAT/PIT/CIT tax compliance and ZUS requirements, automates invoice processing and financial calculations. Website: eKsiegowyAi.pl
+- [Marketing AI Assistant (eMarketing AI)](https://mi-code.pl/products/emarketing-ai/): AI-powered marketing automation SaaS — content generation (social posts, blogs, emails, ads), multi-channel campaign management, email marketing with subscriber management, an interactive AI chat assistant for marketing strategy, AI-generated documents/checklists, and an analytics dashboard. Website: eMarketingAI.pl
+- [AI Budget Assistant](https://mi-code.pl/products/budget-assistant/): Mobile personal finance app — expense tracking by voice, receipt OCR scanning, or manual entry; multi-currency budgets; a GPT-4-powered finance chat; gamified "Spending Stories" insights; shared/business accounts with role-based access. Available on Google Play and GitHub. Website: ai-budget.pl
+- [ngx-open-web-ui-chat](https://mi-code.pl/products/ngx-chat/): Open-source Angular component that adds AI chat (via Open WebUI) to any Angular application with a single npm install. Supports streaming responses, markdown rendering, and full customization. Free, available on npm.
+- [Testing AI Assistant](https://mi-code.pl/products/testing-ai/): AI-powered test orchestration platform — automated test execution with intelligent scheduling, AI-generated test cases from codebase analysis, quality checklists for releases, and continuous AI-driven test coverage monitoring.
+
+## Blog
+
+- [How AI agents optimised supply chain management](https://mi-code.pl/blog/scm-ai-agents-supply-chain/): Case study of an enterprise SCM system built with Java 21 + Spring Boot 3.2 — 300+ REST endpoints, a Text2SQL module for natural-language database queries, and a RAG system for supplier-contract and documentation Q&A. Report preparation time dropped from 8 hours to 20 minutes; order errors fell 34%.
+- [How to add AI chat to Angular in 15 minutes](https://mi-code.pl/blog/ngx-open-web-ui-chat-tutorial/): Step-by-step tutorial for integrating the ngx-open-web-ui-chat component into an Angular app — npm install, module setup, and Open WebUI configuration (apiUrl, model parameters).

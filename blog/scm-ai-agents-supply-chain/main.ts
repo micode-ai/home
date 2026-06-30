@@ -1,8 +1,8 @@
 import '../../src/app.css';
 import ArticleApp from '../../src/ArticleApp.svelte';
-import { mount } from 'svelte';
+import { hydrate } from 'svelte';
 
-mount(ArticleApp, {
+hydrate(ArticleApp, {
   target: document.getElementById('app')!,
   props: { slug: 'scm-ai-agents-supply-chain' }
 });

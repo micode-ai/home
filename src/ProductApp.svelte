@@ -10,6 +10,7 @@
   import { initializeAnalytics } from './services/analytics';
   import { initializeMktai } from './services/mktai';
   import { getItem } from './services/storage';
+  import { initScrollReveal } from './services/scrollReveal';
 
   import plTranslations from './data/pl.json';
   import enTranslations from './data/en.json';
@@ -25,6 +26,7 @@
       initializeAnalytics();
       initializeMktai();
     }
+    return initScrollReveal();
   });
 </script>
 

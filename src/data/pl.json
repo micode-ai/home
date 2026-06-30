@@ -129,12 +129,19 @@
       "name": "ngx-open-web-ui-chat",
       "description": "Komponent npm do integracji czatu AI w aplikacjach Angular",
       "detailedDescription": "ngx-open-web-ui-chat to zaawansowany komponent Angular, który bezproblemowo integruje funkcjonalność czatu AI z Twoimi aplikacjami webowymi. Stworzony specjalnie dla programistów Angular, ten komponent zapewnia gotowy do użycia interfejs czatu, który łączy się bezpośrednio z Open WebUI, umożliwiając zaawansowane konwersacje z AI bez konieczności budowania interfejsu czatu od podstaw.\n\nKomponent oferuje szerokie możliwości dostosowania, pozwalając programistom dopasować doświadczenie czatu do języka projektowego ich aplikacji. Dzięki wsparciu dla nowoczesnych funkcji Angular i TypeScript, zapewnia bezpieczeństwo typów i doskonałe doświadczenie programisty. Komponent efektywnie obsługuje renderowanie wiadomości, wprowadzanie danych przez użytkownika oraz komunikację w czasie rzeczywistym z modelami AI.\n\nIntegracja jest prosta - wystarczy zainstalować pakiet przez npm, zaimportować moduł do aplikacji Angular i skonfigurować połączenie z instancją Open WebUI. Komponent zarządza stanem wewnętrznie, redukując kod szablonowy i pozwalając skupić się na budowaniu funkcji zamiast infrastruktury.\n\nIdealny dla aplikacji wymagających asystenta AI, chatbotów obsługi klienta lub interaktywnych funkcji opartych na AI, ngx-open-web-ui-chat zapewnia rozwiązanie gotowe do produkcji. Obsługuje strumieniowanie odpowiedzi, renderowanie markdown i sprawnie radzi sobie z przypadkami brzegowymi, zapewniając płynne doświadczenie użytkownika.\n\nPakiet jest aktywnie utrzymywany i przestrzega najlepszych praktyk Angular, co czyni go niezawodnym wyborem zarówno dla małych projektów, jak i aplikacji korporacyjnych. Niezależnie od tego, czy budujesz portal obsługi klienta, interfejs asystenta AI, czy jakąkolwiek aplikację wymagającą konwersacyjnej AI, ten komponent przyspiesza rozwój przy zachowaniu jakości kodu.",
+      "imageAlt": "Interaktywne demo komponentu Angular ngx-open-web-ui-chat — panel konfiguracji adresu hosta i klucza API obok połączonego okna czatu AI",
       "features": {
         "easyIntegration": "Szybka integracja przez npm z jednym importem modułu Angular",
         "customization": "W pełni konfigurowalny interfejs czatu dopasowany do designu aplikacji",
         "streaming": "Strumieniowanie odpowiedzi AI z renderowaniem markdown w czasie rzeczywistym",
         "typescript": "Pełna obsługa TypeScript z bezpieczeństwem typów",
         "openWebUI": "Bezpośrednie połączenie z Open WebUI bez dodatkowej infrastruktury"
+      },
+      "faq": {
+        "q1": { "question": "Czym jest ngx-open-web-ui-chat?", "answer": "Otwartoźródłowy komponent Angular, który dodaje funkcjonalność czatu AI do dowolnej aplikacji Angular poprzez bezpośrednie połączenie z instancją Open WebUI." },
+        "q2": { "question": "Jak go zainstalować?", "answer": "Uruchom npm install ngx-open-web-ui-chat, zaimportuj moduł do aplikacji Angular i skonfiguruj połączenie z instancją Open WebUI." },
+        "q3": { "question": "Czy obsługuje strumieniowanie i markdown?", "answer": "Tak — obsługuje strumieniowanie odpowiedzi AI w czasie rzeczywistym z renderowaniem markdown, a interfejs czatu można w pełni dostosować przez CSS custom properties." },
+        "q4": { "question": "Czy jest darmowy?", "answer": "Tak, jest darmowy i open source, dostępny na npm." }
       }
     },
     "accountingAI": {
@@ -142,11 +149,18 @@
       "website": "www.eKsiegowyAi.pl",
       "description": "Asystent AI dla pracy księgowej w Polsce",
       "detailedDescription": "Accounting AI Agent to inteligentny asystent zaprojektowany specjalnie dla księgowych i właścicieli firm w Polsce. To innowacyjne rozwiązanie łączy sztuczną inteligencję z głęboką wiedzą o polskim prawie podatkowym, przepisach księgowych i praktykach biznesowych, aby zapewnić dokładne i niezawodne wsparcie w codziennych zadaniach księgowych.\n\nSystem bezproblemowo integruje się z wFirma, jedną z wiodących platform księgowych online w Polsce, umożliwiając automatyczną synchronizację danych i dostęp w czasie rzeczywistym do dokumentów finansowych. Ta integracja eliminuje ręczne wprowadzanie danych, redukuje błędy i zapewnia, że asystent AI zawsze pracuje z aktualnymi informacjami o operacjach biznesowych.\n\nNiezależnie od tego, czy potrzebujesz pomocy w zrozumieniu skomplikowanych przepisów VAT, obliczaniu zobowiązań PIT lub CIT, czy poruszaniu się po wymaganiach ZUS, agent AI dostarcza jasne, praktyczne odpowiedzi. Może analizować faktury, sugerować optymalne strategie podatkowe i pomagać w zapewnieniu zgodności z polskimi standardami i przepisami księgowymi.\n\nAsystent wykracza poza proste odpowiadanie na pytania - aktywnie pomaga zarządzać przepływem pracy księgowej. Od przetwarzania i kategoryzacji faktur po automatyczne obliczenia i raportowanie finansowe, efektywnie obsługuje rutynowe zadania przy zachowaniu dokładności. Pozwala to księgowym i właścicielom firm skupić się na decyzjach strategicznych zamiast powtarzalnej pracy administracyjnej.\n\nZbudowany z myślą o bezpieczeństwie i prywatności, system zapewnia ochronę wrażliwych danych finansowych. Agent AI jest stale aktualizowany o najnowsze zmiany w polskim prawie podatkowym i przepisach księgowych, dostarczając aktualne, wiarygodne informacje. Niezależnie od tego, czy jesteś właścicielem małej firmy zarządzającym własną księgowością, czy księgowym obsługującym wielu klientów, ten asystent AI usprawnia przepływ pracy i zwiększa produktywność.",
+      "imageAlt": "Interfejs czatu Accounting AI Agent — rozmowa w języku polskim z danymi firmy (nazwa, NIP, adres) pobranymi z połączonej platformy wFirma",
       "features": {
         "tax": "Doradztwo podatkowe VAT, PIT i CIT zgodne z polskim prawem",
         "invoices": "Automatyczne przetwarzanie i kategoryzacja faktur",
         "integration": "Integracja z platformą wFirma i synchronizacja danych w czasie rzeczywistym",
         "calculations": "Automatyczne obliczenia i raportowanie finansowe"
+      },
+      "faq": {
+        "q1": { "question": "Czym jest Accounting AI Agent?", "answer": "Asystent AI dla księgowych i właścicieli firm w Polsce, łączący sztuczną inteligencję z głęboką wiedzą o polskim prawie podatkowym i integrujący się z platformą wFirma." },
+        "q2": { "question": "Czy integruje się z wFirma?", "answer": "Tak — integruje się bezpośrednio z wFirma, zapewniając automatyczną synchronizację danych i dostęp w czasie rzeczywistym do dokumentów finansowych, bez ręcznego wprowadzania danych." },
+        "q3": { "question": "Jakie obszary podatkowe obejmuje?", "answer": "Doradza w zakresie VAT, PIT i CIT oraz pomaga poruszać się po wymaganiach ZUS, zgodnie z polskimi standardami księgowymi." },
+        "q4": { "question": "Ile to kosztuje?", "answer": "Jest darmowy na GitHub, a plany subskrypcji dostępne są na stronie eKsiegowyAi.pl." }
       }
     },
     "emarketingAI": {
@@ -154,6 +168,7 @@
       "website": "www.eMarketingAI.pl",
       "description": "Platforma automatyzacji marketingu oparta na AI do tworzenia treści, kampanii, email marketingu i analityki",
       "detailedDescription": "eMarketing AI to platforma SaaS do automatyzacji marketingu oparta na sztucznej inteligencji, która pomaga tworzyć treści, zarządzać kampaniami, wysyłać emaile i analizować wyniki — wszystko w jednym miejscu. Platforma wykorzystuje zaawansowane modele AI do generowania spersonalizowanych materiałów marketingowych dopasowanych do głosu Twojej marki i grupy docelowej.\n\nPlatforma oferuje kompleksowe generowanie treści AI wspierające posty w mediach społecznościowych, artykuły blogowe, emaile, newslettery, teksty reklamowe i strony docelowe. Użytkownicy mogą konfigurować typ treści, platformę, temat, słowa kluczowe, ton i długość. Treści przechodzą przez ustrukturyzowany workflow od wersji roboczej, przez przegląd, do zatwierdzenia i publikacji.\n\nZarządzanie kampaniami pozwala na planowanie i śledzenie kampanii emailowych, w mediach społecznościowych, blogowych oraz wielokanałowych. Wbudowany system email marketingu obejmuje integrację z SMTP i Resend API, zarządzanie subskrybentami ze zmiennymi personalizacji oraz gotowe szablony na szybki start.\n\nInteraktywny asystent AI Chat zapewnia wsparcie marketingowe w czasie rzeczywistym — od pytań o strategię i pomysłów na treści po wskazówki SEO, pomoc z emailami i planowanie kampanii. Działa w języku angielskim, polskim i rosyjskim, dostosowując się do kontekstu projektu dla bardziej trafnych sugestii.\n\nDodatkowe funkcje obejmują generowane przez AI listy kontrolne zadań do premier produktów, zadań tygodniowych i przygotowania kampanii. System generowania dokumentów tworzy plany marketingowe, raporty, analizy konkurencji, wytyczne marki, kalendarze treści i propozycje w ustrukturyzowanym formacie. Panel analityczny śledzi wyświetlenia, otwarcia emaili, kliknięcia i konwersje z analizą trendów.\n\nPlatforma wspiera współpracę zespołową z dostępem opartym na rolach (Właściciel, Admin, Członek) i oferuje elastyczne plany subskrypcji: FREE z 50 generacjami AI/miesiąc, PRO z 500 generacjami i do 5 członków zespołu, oraz ENTERPRISE z nielimitowanymi zasobami. Nowe konta otrzymują 14-dniowy okres próbny bez konieczności podawania danych płatniczych.",
+      "imageAlt": "Panel Marketing AI Assistant ze statystykami treści, kampanii i subskrybentów email, podpowiedzią asystenta AI oraz listą kroków na start",
       "features": {
         "contentGeneration": "Generowanie treści AI dla postów, blogów, emaili i reklam",
         "campaigns": "Wielokanałowe zarządzanie kampaniami i śledzenie",
@@ -161,29 +176,49 @@
         "aiChat": "Interaktywny asystent czatu AI dla strategii marketingowej",
         "documents": "Dokumenty marketingowe i listy kontrolne generowane przez AI",
         "analytics": "Panel analityczny z metrykami zaangażowania"
+      },
+      "faq": {
+        "q1": { "question": "Czym jest eMarketing AI?", "answer": "Platforma SaaS do automatyzacji marketingu oparta na AI, służąca do generowania treści, zarządzania kampaniami, wysyłki emaili i śledzenia analityki — wszystko w jednym miejscu." },
+        "q2": { "question": "Jakie treści może generować?", "answer": "Posty w mediach społecznościowych, artykuły blogowe, emaile, newslettery, teksty reklamowe i strony docelowe, dopasowane do głosu marki i grupy docelowej." },
+        "q3": { "question": "Czy zawiera asystenta czatu AI?", "answer": "Tak — interaktywny asystent czatu AI udziela wskazówek marketingowych w czasie rzeczywistym: strategia, pomysły na treści, SEO i planowanie kampanii, w językach angielskim, polskim i rosyjskim." },
+        "q4": { "question": "Jakie plany cenowe są dostępne?", "answer": "FREE z 50 generacjami AI/miesiąc, PRO z 500 generacjami i do 5 członków zespołu oraz ENTERPRISE z nielimitowanymi zasobami — nowe konta otrzymują 14-dniowy okres próbny." }
       }
     },
     "budgetAssistant": {
       "name": "AI Budget Assistant",
       "description": "Inteligentny asystent finansowy do śledzenia wydatków głosem, skanowaniem paragonów lub ręcznie",
       "detailedDescription": "AI Budget Assistant to Twój inteligentny towarzysz finansowy, który przekształca zarządzanie finansami osobistymi w prosty i angażujący proces. Aplikacja łączy najnowocześniejsze technologie sztucznej inteligencji z intuicyjnym interfejsem mobilnym, umożliwiając śledzenie wydatków ręcznie, głosem lub poprzez skanowanie paragonów za pomocą AI-powered OCR. Wsparcie dla siedmiu języków (angielski, niemiecki, hiszpański, francuski, polski, rosyjski, ukraiński) sprawia, że aplikacja jest dostępna dla użytkowników na całym świecie.\n\nAplikacja obsługuje zarządzanie budżetem w wielu walutach jednocześnie — USD, EUR, PLN, GBP, UAH z aktualnymi kursami wymiany w czasie rzeczywistym. Wbudowany czat AI oparty na GPT-4 pozwala zadawać pytania o finanse w naturalnym języku i otrzymywać spersonalizowane porady. Sztuczna inteligencja analizuje Twoje wydatki, sugeruje kategorie wydatków, wyodrębnia dane ze zdjęć paragonów i generuje wglądy dotyczące Twoich nawyków finansowych.\n\nTwórz budżety z limitami wydatków i śledź postępy w czasie rzeczywistym z automatycznymi powiadomieniami przy zbliżaniu się do limitów. Interaktywna analityka zapewnia szczegółowe wykresy z możliwością drill-down, podziałem na kategorie i analizą trendów. AI generuje narracyjne raporty \"Spending Stories\" — wciągające historie o Twoich wydatkach z osiągnięciami i wglądami, przekształcając suche liczby w zrozumiałe narracje.\n\nAI Budget Assistant obsługuje wiele typów kont — osobiste (Personal), wspólne (Shared) i biznesowe (Business) z dostępem opartym na rolach (Owner, Editor, Viewer). Pozwala to zarządzać budżetem rodzinnym wspólnie z członkami rodziny lub śledzić wydatki zespołu. Każdy uczestnik otrzymuje odpowiedni poziom dostępu, zapewniając bezpieczeństwo i wygodę we wspólnym planowaniu finansów.\n\nAplikacja motywuje do utrzymywania dyscypliny finansowej poprzez system gamifikacji — zdobywaj osiągnięcia, utrzymuj codzienne serie (daily streaks), zdobywaj punkty doświadczenia (XP), awansuj na wyższe poziomy i zbieraj odznaki za konsekwentne śledzenie finansów. Architektura offline-first gwarantuje, że dane są zapisywane lokalnie i automatycznie synchronizowane po pojawieniu się internetu, umożliwiając pracę z aplikacją w każdych warunkach.",
+      "imageAlt": "Panel mobilnej aplikacji AI Budget Assistant z paskiem postępu miesięcznego budżetu, szybkimi akcjami dodawania wydatków i skanowania paragonów oraz licznikiem poziomu i serii dni",
       "features": {
         "aiChat": "Czat AI z GPT-4 dla porad finansowych",
         "expenseTracking": "Wprowadzanie głosem, skanowanie paragonów i ręczne wpisy",
         "budgetPlanning": "Budżety wielowalutowe ze śledzeniem w czasie rzeczywistym",
         "insights": "Spending Stories i system gamifikacji"
+      },
+      "faq": {
+        "q1": { "question": "Czym jest AI Budget Assistant?", "answer": "Mobilna aplikacja finansowa, która pozwala śledzić wydatki głosem, skanowaniem paragonów (AI OCR) lub ręcznie, z budżetami wielowalutowymi i czatem finansowym opartym na GPT-4." },
+        "q2": { "question": "Jakie waluty i języki są obsługiwane?", "answer": "Obsługuje USD, EUR, PLN, GBP i UAH z aktualnymi kursami wymiany, a interfejs dostępny jest w siedmiu językach, w tym angielskim, polskim i rosyjskim." },
+        "q3": { "question": "Czy mogę dzielić budżet z rodziną lub zespołem?", "answer": "Tak — obsługuje konta typu Personal, Shared i Business z dostępem opartym na rolach (Owner, Editor, Viewer)." },
+        "q4": { "question": "Gdzie mogę ją pobrać?", "answer": "Jest dostępna na Google Play, a kod źródłowy znajduje się na GitHub." }
       }
     },
     "testingAI": {
       "name": "Testing AI Assistant",
       "description": "Platforma orkiestracji testów oparta na AI do automatycznego wykonywania, generowania testów i zapewniania jakości",
       "detailedDescription": "Testing AI Assistant to inteligentna platforma orkiestracji testów, która rewolucjonizuje podejście zespołów do zapewniania jakości oprogramowania. Łącząc sztuczną inteligencję z nowoczesnymi praktykami testowania, platforma automatyzuje wykonywanie testów, generuje przypadki testowe i dostarcza kompleksowe informacje o jakości — wszystko z jednego, zunifikowanego interfejsu.\n\nPlatforma oferuje generowanie testów oparte na AI, które analizuje bazę kodu i automatycznie tworzy wartościowe przypadki testowe obejmujące przypadki brzegowe, warunki graniczne i krytyczne przepływy użytkownika. Niezależnie od tego, czy pracujesz z testami jednostkowymi, integracyjnymi czy scenariuszami end-to-end, agent AI rozumie architekturę Twojej aplikacji i generuje testy dostarczające realną wartość.\n\nWykonywanie testów jest w pełni orkiestrowane z inteligentnym planowaniem, równoległym wykonywaniem i sprytną logiką ponownych prób. Platforma efektywnie zarządza zestawami testów, priorytetyzując testy na podstawie zmian w kodzie i historycznych wzorców awarii. Dashboardy w czasie rzeczywistym zapewniają widoczność postępu testów, wyników i trendów w całym pipeline testowania.\n\nWbudowane zarządzanie listami kontrolnymi pomaga zespołom utrzymać dyscyplinę testowania. Twórz i śledź listy kontrolne jakości dla wydań, przeglądów sprintów i walidacji funkcjonalności. Listy kontrolne generowane przez AI dostosowują się do specyficznych potrzeb projektu, zapewniając, że nic nie umknie podczas krytycznych wydań.\n\nSystem powiadomień informuje zespół na bieżąco o niepowodzeniach testów, regresjach jakości i ukończonych kamieniach milowych. Integruj się z istniejącymi narzędziami komunikacji, aby odpowiednie osoby były powiadamiane we właściwym czasie.\n\nAgenty AI pracują nieprzerwanie w tle, monitorując zmiany w kodzie, identyfikując obszary wymagające dodatkowego pokrycia testami i sugerując ulepszenia strategii testowania. Platforma uczy się z historii projektu, dostarczając coraz dokładniejsze i trafniejsze rekomendacje.",
+      "imageAlt": "Panel Testing AI Assistant z liczbą generacji testów, wskaźnikiem akceptacji, zużyciem tokenów, generatorem testów AI oraz historią poprzednich sesji",
       "features": {
         "testExecution": "Orkiestrowane wykonywanie testów z inteligentnym planowaniem i równoległymi uruchomieniami",
         "testGeneration": "Generowanie przypadków testowych przez AI na podstawie analizy kodu",
         "checklists": "Listy kontrolne jakości dla wydań i przeglądów sprintów",
         "notifications": "Powiadomienia w czasie rzeczywistym o wynikach testów i metrykach jakości",
         "aiAgents": "Agenty AI do ciągłego monitorowania testów i analizy pokrycia"
+      },
+      "faq": {
+        "q1": { "question": "Czym jest Testing AI Assistant?", "answer": "Platforma orkiestracji testów oparta na AI, która automatyzuje wykonywanie testów, generuje przypadki testowe na podstawie analizy kodu i dostarcza informacje o jakości z jednego interfejsu." },
+        "q2": { "question": "Czy potrafi automatycznie generować przypadki testowe?", "answer": "Tak — analizuje bazę kodu i automatycznie tworzy przypadki testowe obejmujące przypadki brzegowe, warunki graniczne i krytyczne przepływy użytkownika." },
+        "q3": { "question": "Czy obsługuje listy kontrolne dla wydań?", "answer": "Tak — wbudowane zarządzanie listami kontrolnymi z listami generowanymi przez AI pomaga zespołom utrzymać dyscyplinę testowania podczas wydań i przeglądów sprintów." },
+        "q4": { "question": "Ile to kosztuje?", "answer": "Jest bezpłatny w okresie testowania; kod źródłowy dostępny jest na GitHub." }
       }
     },
     "pricing": {
@@ -277,6 +312,7 @@
     "about": "O produkcie",
     "features": "Kluczowe funkcje",
     "agentArchitecture": "Architektura agentów (LangGraph)",
+    "faq": "Najczęściej zadawane pytania",
     "links": "Linki",
     "backToMicode": "Powrót do MiCode",
     "notFound": "Produkt nie znaleziony."

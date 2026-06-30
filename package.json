@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "prebuild": "node scripts/fetch-github-npm-stats.js",
-    "build": "vite build",
+    "build": "vite build && vite build --config vite.ssr.config.ts && node scripts/prerender.mjs",
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",

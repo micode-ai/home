@@ -1,8 +1,8 @@
-import { mount } from 'svelte';
+import { hydrate } from 'svelte';
 import ProductApp from '../../src/ProductApp.svelte';
 import '../../src/app.css';
 
-mount(ProductApp, {
+hydrate(ProductApp, {
   target: document.getElementById('app')!,
   props: { productId: 'emarketing-ai' },
 });

@@ -31,6 +31,9 @@
 
   const name = $derived(product ? t(product.nameKey, $languageStore) : '');
   const description = $derived(product ? t(product.descriptionKey, $languageStore) : '');
+  const imageAlt = $derived(
+    product && product.imageAltKey ? t(product.imageAltKey, $languageStore) : name
+  );
   const detailedDescription = $derived(
     product && product.detailedDescriptionKey ? t(product.detailedDescriptionKey, $languageStore) : ''
   );
@@ -42,12 +45,22 @@
   const aboutLabel = $derived(t('product.about', lang));
   const featuresLabel = $derived(t('product.features', lang));
   const agentArchitectureLabel = $derived(t('product.agentArchitecture', lang));
+  const faqLabel = $derived(t('product.faq', lang));
   const linksLabel = $derived(t('product.links', lang));
   const backLabel = $derived(t('product.backToMicode', lang));
   const notFoundLabel = $derived(t('product.notFound', lang));
 
   const diagramDefinition = $derived(
     product?.langgraphDiagramId ? langgraphDiagrams[product.langgraphDiagramId] : undefined
+  );
+
+  const faqItems = $derived(
+    product && product.faq
+      ? product.faq.map((item) => ({
+          question: t(item.questionKey, $languageStore),
+          answer: t(item.answerKey, $languageStore),
+        }))
+      : []
   );
 
   const productImage = $derived(productImages[productId]);
@@ -143,7 +156,7 @@
             aria-label="Enlarge image"
             title="Click to enlarge"
           >
-            <img src={productImage} alt={name} class="product-hero-image" loading="eager" />
+            <img src={productImage} alt={imageAlt} class="product-hero-image" loading="eager" />
             <span class="zoom-hint" aria-hidden="true">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
             </span>
@@ -182,6 +195,18 @@
         <section class="content-section" aria-labelledby="section-architecture">
           <h2 id="section-architecture" class="section-heading">{agentArchitectureLabel}</h2>
           <MermaidDiagram definition={diagramDefinition} accentColor={product.accentColor ?? 'var(--color-primary)'} />
+        </section>
+      {/if}
+
+      {#if faqItems.length > 0}
+        <section class="content-section" aria-labelledby="section-faq">
+          <h2 id="section-faq" class="section-heading">{faqLabel}</h2>
+          <dl class="faq-list">
+            {#each faqItems as item}
+              <dt class="faq-question">{item.question}</dt>
+              <dd class="faq-answer">{item.answer}</dd>
+            {/each}
+          </dl>
         </section>
       {/if}
 
@@ -230,7 +255,7 @@
 {/if}
 
 {#if lightboxOpen && productImage}
-  <ImageLightbox src={productImage} alt={name} onClose={() => (lightboxOpen = false)} />
+  <ImageLightbox src={productImage} alt={imageAlt} onClose={() => (lightboxOpen = false)} />
 {/if}
 
 <style>
@@ -460,6 +485,27 @@
     height: 0.4375rem;
     border-radius: 50%;
     background: var(--card-accent, var(--color-primary));
+  }
+
+  /* ===== FAQ list ===== */
+  .faq-list {
+    margin: 0;
+  }
+
+  .faq-question {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-primary, #1e293b);
+    margin: 1.25rem 0 0.375rem;
+  }
+
+  .faq-question:first-child { margin-top: 0; }
+
+  .faq-answer {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary, #475569);
   }
 
   /* ===== Content links ===== */

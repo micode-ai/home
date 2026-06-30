@@ -53,7 +53,9 @@
     document.body.style.overflow = open ? 'hidden' : '';
   });
 
-  onDestroy(() => { document.body.style.overflow = ''; });
+  onDestroy(() => {
+    if (typeof document !== 'undefined') document.body.style.overflow = '';
+  });
 </script>
 
 <svelte:window onkeydown={handleKey} />

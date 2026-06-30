@@ -14,7 +14,9 @@
   const { product, productImage, onClose }: Props = $props();
 
   onMount(() => { document.body.style.overflow = 'hidden'; });
-  onDestroy(() => { document.body.style.overflow = ''; });
+  onDestroy(() => {
+    if (typeof document !== 'undefined') document.body.style.overflow = '';
+  });
 
   function handleKeydown(event: KeyboardEvent) {
     if (event.key === 'Escape') onClose();

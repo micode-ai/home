@@ -143,12 +143,19 @@
             "name": "ngx-open-web-ui-chat",
             "description": "npm component for AI chat integration in Angular applications",
             "detailedDescription": "ngx-open-web-ui-chat is a powerful Angular component that seamlessly integrates AI chat functionality into your web applications. Built specifically for Angular developers, this component provides a ready-to-use chat interface that connects directly with Open WebUI, enabling sophisticated AI-powered conversations without the complexity of building chat UI from scratch.\n\nThe component offers extensive customization options, allowing developers to tailor the chat experience to match their application's design language. With support for modern Angular features and TypeScript, it ensures type safety and excellent developer experience. The component handles message rendering, user input, and real-time communication with AI models efficiently.\n\nIntegration is straightforward - simply install the package via npm, import the module into your Angular application, and configure the connection to your Open WebUI instance. The component manages state internally, reducing boilerplate code and letting you focus on building features rather than infrastructure.\n\nPerfect for applications requiring AI assistance, customer support chatbots, or interactive AI-powered features, ngx-open-web-ui-chat provides a production-ready solution. It supports streaming responses, markdown rendering, and handles edge cases gracefully, ensuring a smooth user experience.\n\nThe package is actively maintained and follows Angular best practices, making it a reliable choice for both small projects and enterprise applications. Whether you're building a customer service portal, an AI assistant interface, or any application that needs conversational AI, this component accelerates development while maintaining code quality.",
+            "imageAlt": "Interactive demo of the ngx-open-web-ui-chat Angular component, showing the host URL and API key configuration panel next to a connected AI chat window",
             "features": {
                 "easyIntegration": "Quick npm setup with a single Angular module import",
                 "customization": "Fully customizable chat UI to match your application's design",
                 "streaming": "Real-time AI response streaming with markdown rendering",
                 "typescript": "Full TypeScript support with type safety",
                 "openWebUI": "Direct Open WebUI connection — no extra infrastructure needed"
+            },
+            "faq": {
+                "q1": { "question": "What is ngx-open-web-ui-chat?", "answer": "An open-source Angular component that adds AI chat functionality to any Angular application by connecting directly to an Open WebUI instance." },
+                "q2": { "question": "How do I install it?", "answer": "Run npm install ngx-open-web-ui-chat, import the module into your Angular application, and configure the connection to your Open WebUI instance." },
+                "q3": { "question": "Does it support streaming and markdown?", "answer": "Yes — it supports real-time streaming AI responses with markdown rendering, and the chat UI is fully customizable via CSS custom properties." },
+                "q4": { "question": "Is it free?", "answer": "Yes, it's free and open source, available on npm." }
             }
         },
         "accountingAI": {
@@ -156,11 +163,18 @@
             "website": "www.eKsiegowyAi.pl",
             "description": "AI assistant for accounting work in Poland",
             "detailedDescription": "Accounting AI Agent is an intelligent assistant specifically designed for accounting professionals and business owners in Poland. This innovative solution combines artificial intelligence with deep knowledge of Polish tax law, accounting regulations, and business practices to provide accurate, reliable support for daily accounting tasks.\n\nThe system seamlessly integrates with wFirma, one of Poland's leading online accounting platforms, enabling automatic data synchronization and real-time access to your financial documents. This integration eliminates manual data entry, reduces errors, and ensures that the AI assistant always works with up-to-date information about your business operations.\n\nWhether you need help understanding complex VAT regulations, calculating PIT or CIT obligations, or navigating ZUS (Social Insurance Institution) requirements, the AI agent provides clear, actionable answers. It can analyze your invoices, suggest optimal tax strategies, and help ensure compliance with Polish accounting standards and regulations.\n\nThe assistant goes beyond simple question-answering - it actively helps manage your accounting workflow. From invoice processing and categorization to automated calculations and financial reporting, it handles routine tasks efficiently while maintaining accuracy. This allows accountants and business owners to focus on strategic decisions rather than repetitive administrative work.\n\nBuilt with security and privacy in mind, the system ensures that your sensitive financial data remains protected. The AI agent is continuously updated with the latest changes in Polish tax law and accounting regulations, providing you with current, reliable information. Whether you're a small business owner managing your own books or an accounting professional serving multiple clients, this AI assistant streamlines your workflow and enhances productivity.",
+            "imageAlt": "Accounting AI Agent chat interface showing a Polish-language conversation with company details — name, NIP tax ID, and address — retrieved from the connected wFirma accounting platform",
             "features": {
                 "tax": "VAT, PIT, and CIT tax advisory compliant with Polish law",
                 "invoices": "Automated invoice processing and categorization",
                 "integration": "wFirma platform integration with real-time data sync",
                 "calculations": "Automated financial calculations and reporting"
+            },
+            "faq": {
+                "q1": { "question": "What is Accounting AI Agent?", "answer": "An AI assistant for accounting professionals and business owners in Poland that combines AI with deep knowledge of Polish tax law and integrates with the wFirma accounting platform." },
+                "q2": { "question": "Does it integrate with wFirma?", "answer": "Yes — it integrates directly with wFirma for automatic data synchronization and real-time access to financial documents, eliminating manual data entry." },
+                "q3": { "question": "What tax areas does it cover?", "answer": "It advises on VAT, PIT, and CIT obligations and helps navigate ZUS (Social Insurance Institution) requirements, in compliance with Polish accounting standards." },
+                "q4": { "question": "How much does it cost?", "answer": "It's free on GitHub, with subscription plans available on the eKsiegowyAi.pl website." }
             }
         },
         "emarketingAI": {
@@ -168,6 +182,7 @@
             "website": "www.eMarketingAI.pl",
             "description": "AI-powered marketing automation platform for content creation, campaigns, email marketing, and analytics",
             "detailedDescription": "eMarketing AI is an AI-powered marketing automation SaaS platform that helps create content, manage campaigns, send emails, and analyze results — all in one place. The platform leverages advanced AI models to generate customized marketing materials tailored to your brand voice and target audience.\n\nThe platform offers comprehensive AI content generation supporting social media posts, blog articles, emails, newsletters, ad copy, and landing pages. Users can configure content type, platform, topic, keywords, tone, and length. Content follows a structured workflow from Draft through Review to Approved and Published status.\n\nCampaign management allows planning and tracking across email, social media, blogs, and multi-channel strategies. The built-in email marketing system includes SMTP and Resend API integration, subscriber management with personalization placeholders, and pre-built templates for quick start.\n\nThe interactive AI Chat Assistant provides real-time marketing guidance — from strategy questions and content ideas to SEO guidance, email assistance, and campaign planning. It works in English, Polish, and Russian, adapting to your project context for more relevant suggestions.\n\nAdditional features include AI-generated task checklists for product launches, weekly tasks, and campaign preparation. The document generation system creates marketing plans, reports, competitive analyses, brand guidelines, content calendars, and proposals in structured format. The analytics dashboard tracks impressions, email opens, clicks, and conversions with trend analysis.\n\nThe platform supports team collaboration with role-based access (Owner, Admin, Member) and offers flexible subscription plans: FREE with 50 AI generations/month, PRO with 500 generations and up to 5 team members, and ENTERPRISE with unlimited resources. New accounts receive a 14-day free trial without requiring payment information.",
+            "imageAlt": "Marketing AI Assistant dashboard showing content, campaign, and email subscriber stats, an AI assistant prompt, and a getting-started checklist",
             "features": {
                 "contentGeneration": "AI content generation for social posts, blogs, emails, and ads",
                 "campaigns": "Multi-channel campaign management and tracking",
@@ -175,29 +190,49 @@
                 "aiChat": "Interactive AI chat assistant for marketing strategy",
                 "documents": "AI-generated marketing documents and checklists",
                 "analytics": "Analytics dashboard with engagement metrics"
+            },
+            "faq": {
+                "q1": { "question": "What is eMarketing AI?", "answer": "An AI-powered marketing automation SaaS platform for generating content, managing campaigns, sending emails, and tracking analytics — all in one place." },
+                "q2": { "question": "What kind of content can it generate?", "answer": "Social media posts, blog articles, emails, newsletters, ad copy, and landing pages, tailored to your brand voice and target audience." },
+                "q3": { "question": "Does it include an AI chat assistant?", "answer": "Yes — an interactive AI chat assistant provides real-time marketing guidance on strategy, content ideas, SEO, and campaign planning in English, Polish, and Russian." },
+                "q4": { "question": "What pricing plans are available?", "answer": "FREE with 50 AI generations/month, PRO with 500 generations and up to 5 team members, and ENTERPRISE with unlimited resources — new accounts get a 14-day free trial." }
             }
         },
         "budgetAssistant": {
             "name": "AI Budget Assistant",
             "description": "Smart financial companion for tracking expenses by voice, receipt scanning, or manually",
             "detailedDescription": "AI Budget Assistant is your smart financial companion that transforms personal finance management into a simple and engaging process. The app combines cutting-edge artificial intelligence with an intuitive mobile interface, allowing you to track expenses manually, by voice, or by scanning receipts using AI-powered OCR. Support for seven languages (English, German, Spanish, French, Polish, Russian, Ukrainian) makes the app accessible to users worldwide.\n\nThe app supports multi-currency budget management simultaneously — USD, EUR, PLN, GBP, UAH with real-time exchange rates. The built-in AI chat powered by GPT-4 lets you ask questions about your finances in natural language and receive personalized advice. Artificial intelligence analyzes your spending, suggests expense categories, extracts data from receipt photos, and generates insights about your financial habits.\n\nCreate budgets with spending limits and track progress in real-time with automatic notifications when approaching limits. Interactive analytics provides detailed charts with drill-down capabilities, category breakdowns, and trend analysis. AI generates narrative \"Spending Stories\" reports — engaging stories about your spending with achievements and insights, turning dry numbers into understandable narratives.\n\nAI Budget Assistant supports multiple account types — Personal, Shared, and Business with role-based access (Owner, Editor, Viewer). This allows you to manage family budgets together with family members or track team expenses. Each participant receives an appropriate access level, ensuring security and convenience in collaborative financial planning.\n\nThe app motivates you to maintain financial discipline through a gamification system — earn achievements, maintain daily streaks, gain experience points (XP), level up, and collect badges for consistent financial tracking. Offline-first architecture ensures data is saved locally and automatically synced when online, allowing you to work with the app in any conditions.",
+            "imageAlt": "AI Budget Assistant mobile app dashboard showing a monthly budget progress bar, quick-action buttons for adding expenses and scanning receipts, and a gamified level/streak tracker",
             "features": {
                 "aiChat": "AI chat with GPT-4 for financial advice",
                 "expenseTracking": "Voice input, receipt scanning, and manual entry",
                 "budgetPlanning": "Multi-currency budgets with real-time tracking",
                 "insights": "Spending Stories and gamification system"
+            },
+            "faq": {
+                "q1": { "question": "What is AI Budget Assistant?", "answer": "A mobile personal finance app that lets you track expenses by voice, receipt scanning (AI OCR), or manual entry, with multi-currency budgets and a GPT-4-powered finance chat." },
+                "q2": { "question": "Which currencies and languages are supported?", "answer": "It supports USD, EUR, PLN, GBP, and UAH with real-time exchange rates, and the interface is available in seven languages including English, Polish, and Russian." },
+                "q3": { "question": "Can I share a budget with family or a team?", "answer": "Yes — it supports Personal, Shared, and Business account types with role-based access (Owner, Editor, Viewer)." },
+                "q4": { "question": "Where can I download it?", "answer": "It's available on Google Play, and the source code is on GitHub." }
             }
         },
         "testingAI": {
             "name": "Testing AI Assistant",
             "description": "AI-powered test orchestration platform for automated test execution, generation, and quality assurance",
             "detailedDescription": "Testing AI Assistant is an intelligent test orchestration platform that revolutionizes how teams approach software quality assurance. By combining artificial intelligence with modern testing practices, this platform automates test execution, generates test cases, and provides comprehensive quality insights — all from a single, unified interface.\n\nThe platform features AI-powered test generation that analyzes your codebase and automatically creates meaningful test cases covering edge cases, boundary conditions, and critical user flows. Whether you're working with unit tests, integration tests, or end-to-end scenarios, the AI agent understands your application's architecture and generates tests that provide real value.\n\nTest execution is fully orchestrated with intelligent scheduling, parallel execution, and smart retry logic. The platform manages your test suites efficiently, prioritizing tests based on code changes and historical failure patterns. Real-time dashboards provide visibility into test progress, results, and trends across your entire testing pipeline.\n\nBuilt-in checklist management helps teams maintain testing discipline. Create and track quality checklists for releases, sprint reviews, and feature validations. AI-generated checklists adapt to your project's specific needs, ensuring nothing falls through the cracks during critical releases.\n\nThe notification system keeps your team informed with real-time alerts on test failures, quality regressions, and milestone completions. Integrate with your existing communication tools to ensure the right people are notified at the right time.\n\nAI agents work continuously in the background, monitoring code changes, identifying areas that need additional test coverage, and suggesting improvements to your testing strategy. The platform learns from your project's history to provide increasingly accurate and relevant recommendations over time.",
+            "imageAlt": "Testing AI Assistant dashboard showing total test generations, acceptance rate, token usage, an AI test generator panel, and a history of previous test sessions",
             "features": {
                 "testExecution": "Orchestrated test execution with intelligent scheduling and parallel runs",
                 "testGeneration": "AI-powered test case generation from codebase analysis",
                 "checklists": "Quality checklists for releases and sprint reviews",
                 "notifications": "Real-time notifications on test results and quality metrics",
                 "aiAgents": "AI agents for continuous test monitoring and coverage analysis"
+            },
+            "faq": {
+                "q1": { "question": "What is Testing AI Assistant?", "answer": "An AI-powered test orchestration platform that automates test execution, generates test cases from codebase analysis, and provides quality insights from a single interface." },
+                "q2": { "question": "Can it generate test cases automatically?", "answer": "Yes — it analyzes your codebase and automatically creates test cases covering edge cases, boundary conditions, and critical user flows." },
+                "q3": { "question": "Does it support checklists for releases?", "answer": "Yes — built-in checklist management with AI-generated checklists helps teams maintain testing discipline for releases and sprint reviews." },
+                "q4": { "question": "How much does it cost?", "answer": "It's free during the testing period; source code is available on GitHub." }
             }
         },
         "pricing": {
@@ -291,6 +326,7 @@
         "about": "About this product",
         "features": "Key features",
         "agentArchitecture": "Agent Architecture (LangGraph)",
+        "faq": "Frequently asked questions",
         "links": "Links",
         "backToMicode": "Back to MiCode",
         "notFound": "Product not found."

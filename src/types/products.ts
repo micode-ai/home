@@ -9,11 +9,17 @@ export interface CommunityStats {
   npmWeeklyDownloads: number | null;
 }
 
+export interface ProductFaqItem {
+  questionKey: string;
+  answerKey: string;
+}
+
 export interface Product {
   id: string;
   nameKey: string;
   descriptionKey: string;
   detailedDescriptionKey?: string;
+  imageAltKey?: string;
   pricingKey?: string;
   website?: string;
   features?: string[];
@@ -22,4 +28,5 @@ export interface Product {
   accentColor?: string;
   communityStats?: CommunityStats | null;
   langgraphDiagramId?: string;
+  faq?: ProductFaqItem[];
 }

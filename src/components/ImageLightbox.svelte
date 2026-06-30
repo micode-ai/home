@@ -4,7 +4,9 @@
   let { src, alt, onClose }: { src: string; alt: string; onClose: () => void } = $props();
 
   onMount(() => { document.body.style.overflow = 'hidden'; });
-  onDestroy(() => { document.body.style.overflow = ''; });
+  onDestroy(() => {
+    if (typeof document !== 'undefined') document.body.style.overflow = '';
+  });
 
   function handleKey(e: KeyboardEvent) {
     if (e.key === 'Escape') onClose();

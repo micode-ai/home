@@ -1,8 +1,8 @@
-import { mount } from 'svelte'
+import { hydrate } from 'svelte'
 import './app.css'
 import App from './App.svelte'
 
-const app = mount(App, {
+const app = hydrate(App, {
   target: document.getElementById('app')!,
 })
 
