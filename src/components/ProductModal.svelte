@@ -374,28 +374,26 @@
   }
 
   /* ===== Dark Mode ===== */
-  @media (prefers-color-scheme: dark) {
-    .modal-overlay {
-      background: rgba(0, 0, 0, 0.7);
-    }
+  :global(html.dark-mode-active) .modal-overlay {
+    background: rgba(0, 0, 0, 0.7);
+  }
 
-    .modal-content {
-      background: var(--color-bg-primary);
-      border-color: var(--color-border);
-    }
+  :global(html.dark-mode-active) .modal-content {
+    background: var(--color-bg-primary);
+    border-color: var(--color-border);
+  }
 
-    .modal-close {
-      background: var(--color-bg-secondary);
-      border-color: var(--color-border);
-    }
+  :global(html.dark-mode-active) .modal-close {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-border);
+  }
 
-    .modal-image-container {
-      background: var(--color-bg-tertiary);
-    }
+  :global(html.dark-mode-active) .modal-image-container {
+    background: var(--color-bg-tertiary);
+  }
 
-    .modal-badge {
-      background: var(--color-bg-secondary);
-    }
+  :global(html.dark-mode-active) .modal-badge {
+    background: var(--color-bg-secondary);
   }
 
   /* ===== High Contrast ===== */

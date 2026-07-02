@@ -158,15 +158,14 @@
     </div>
 
     {#if maxOffset > 0}
-      <div class="slider-dots" role="tablist" aria-label="Certificate slides">
+      <div class="slider-dots">
         {#each Array(maxOffset + 1) as _, i}
           <button
             type="button"
             class="slider-dot"
             class:active={sliderOffset === i}
             onclick={() => slideTo(i)}
-            role="tab"
-            aria-selected={sliderOffset === i}
+            aria-current={sliderOffset === i}
             aria-label="Go to slide {i + 1}"
           ></button>
         {/each}
@@ -201,13 +200,14 @@
 
 <style>
   .certificates {
-    padding: 5rem 2rem;
-    background: var(--color-background, #ffffff);
+    padding: var(--section-padding);
+    background: var(--color-bg-primary);
   }
 
   .certificates-container {
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0 2rem;
   }
 
   .certificates-header {
@@ -219,7 +219,7 @@
   .certificates-header-accent {
     width: 60px;
     height: 4px;
-    background: var(--color-primary, #0ea5e9);
+    background: var(--color-primary);
     border-radius: 2px;
     margin: 0 auto 1.25rem;
   }
@@ -227,14 +227,14 @@
   .certificates-title {
     font-size: clamp(1.75rem, 3vw, 2.5rem);
     font-weight: 700;
-    color: var(--color-text, #0f172a);
+    color: var(--color-text-primary);
     margin: 0 0 0.75rem;
     letter-spacing: -0.02em;
   }
 
   .certificates-subtitle {
     font-size: 1.05rem;
-    color: var(--color-text-secondary, #64748b);
+    color: var(--color-text-secondary);
     margin: 0;
   }
 
@@ -249,21 +249,21 @@
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    border: 1px solid rgba(15, 23, 42, 0.12);
-    background: #ffffff;
-    color: var(--color-text, #0f172a);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+    box-shadow: var(--shadow-sm);
   }
 
   .slider-arrow:hover:not(:disabled) {
-    background: var(--color-primary, #0ea5e9);
+    background: var(--color-primary);
     color: #ffffff;
-    border-color: var(--color-primary, #0ea5e9);
+    border-color: var(--color-primary);
     transform: scale(1.05);
   }
 
@@ -289,52 +289,63 @@
     aspect-ratio: 4 / 3;
     border-radius: 12px;
     overflow: hidden;
-    background: #f8fafc;
-    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
     padding: 0;
     cursor: zoom-in;
     transition: transform 0.25s ease, box-shadow 0.25s ease;
-    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+    box-shadow: var(--shadow-sm);
   }
 
   .certificate-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+    box-shadow: var(--shadow-card-hover);
   }
 
   .certificate-image {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    background: #ffffff;
+    background: var(--color-bg-primary);
     display: block;
   }
 
   .slider-dots {
     display: flex;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 0.25rem;
     margin-top: 2rem;
   }
 
   .slider-dot {
-    width: 10px;
-    height: 10px;
+    width: 24px;
+    height: 24px;
     padding: 0;
     border-radius: 50%;
     border: none;
-    background: rgba(15, 23, 42, 0.2);
+    background: transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: all 0.2s ease;
   }
 
-  .slider-dot:hover {
-    background: rgba(15, 23, 42, 0.4);
+  .slider-dot::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-border);
+    transition: background-color 0.2s ease, width 0.2s ease, border-radius 0.2s ease;
   }
 
-  .slider-dot.active {
-    background: var(--color-primary, #0ea5e9);
-    width: 28px;
+  .slider-dot:hover::after {
+    background: var(--color-text-tertiary);
+  }
+
+  .slider-dot.active::after {
+    background: var(--color-primary);
+    width: 20px;
     border-radius: 5px;
   }
 
@@ -345,8 +356,8 @@
   }
 
   @media (max-width: 767px) {
-    .certificates {
-      padding: 3.5rem 1rem;
+    .certificates-container {
+      padding: 0 1rem;
     }
     .certificate-card {
       flex: 0 0 100%;

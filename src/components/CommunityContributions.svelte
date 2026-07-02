@@ -3,6 +3,7 @@
   import { t } from '../services/i18n';
 
   const sectionTitle = $derived(t('community.title', $languageStore));
+  const viewOnNpmLabel = $derived(t('community.viewOnNpm', $languageStore));
 
   const contributions = [
     {
@@ -45,9 +46,9 @@
               class="contribution-link"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="View {t(contribution.titleKey, $languageStore)} on npm"
+              aria-label="{t(contribution.titleKey, $languageStore)} — {viewOnNpmLabel}"
             >
-              View on npm
+              {viewOnNpmLabel}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </a>
           {/if}
@@ -60,7 +61,7 @@
 <style>
   .community {
     background: var(--color-bg-primary);
-    padding: 5rem 0;
+    padding: var(--section-padding);
   }
 
   .community-container {
@@ -72,7 +73,7 @@
   .community-title {
     margin: 0 0 3rem 0;
     font-family: var(--font-heading);
-    font-size: 2rem;
+    font-size: var(--font-size-3xl);
     font-weight: 700;
     color: var(--color-text-primary);
     text-align: center;
@@ -88,7 +89,7 @@
   }
 
   .contribution-card {
-    background: var(--color-bg-secondary);
+    background: var(--color-bg-primary);
     padding: 2rem;
     border-radius: var(--radius-xl);
     border: 1px solid var(--color-border);
@@ -167,10 +168,6 @@
   }
 
   @media (max-width: 767px) {
-    .community {
-      padding: 3rem 0;
-    }
-
     .community-container {
       padding: 0 1rem;
     }
@@ -195,10 +192,6 @@
   }
 
   @media (min-width: 768px) and (max-width: 1024px) {
-    .community {
-      padding: 4rem 0;
-    }
-
     .community-container {
       padding: 0 1.5rem;
     }
@@ -208,20 +201,13 @@
     }
   }
 
-  @media (prefers-color-scheme: dark) {
-    .contribution-card {
-      background: var(--color-bg-secondary);
-      border-color: var(--color-border);
-    }
+  :global(html.dark-mode-active) .contribution-icon {
+    background: var(--color-bg-tertiary);
+    color: var(--color-primary);
+  }
 
-    .contribution-icon {
-      background: var(--color-bg-tertiary);
-      color: var(--color-primary);
-    }
-
-    .contribution-stats {
-      color: var(--color-accent);
-    }
+  :global(html.dark-mode-active) .contribution-stats {
+    color: var(--color-accent);
   }
 
   @media (prefers-contrast: high) {

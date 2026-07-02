@@ -85,7 +85,7 @@
 
 <style>
   .stats-strip {
-    background: var(--color-primary);
+    background: var(--color-band-blue);
     padding: 4rem 0;
   }
 

@@ -62,7 +62,7 @@
   /* ===== Section ===== */
   .products {
     background: var(--color-bg-primary);
-    padding: 5rem 0;
+    padding: var(--section-padding);
     position: relative;
   }
 
@@ -89,7 +89,7 @@
   .products-title {
     margin: 0 0 0.75rem 0;
     font-family: var(--font-heading);
-    font-size: 2rem;
+    font-size: var(--font-size-3xl);
     font-weight: 700;
     color: var(--color-text-primary);
     line-height: 1.2;
@@ -104,10 +104,6 @@
 
   /* ===== Responsive — Mobile ===== */
   @media (max-width: 767px) {
-    .products {
-      padding: 3rem 0;
-    }
-
     .products-container {
       padding: 0 1rem;
     }
@@ -127,10 +123,6 @@
 
   /* ===== Responsive — Tablet ===== */
   @media (min-width: 768px) and (max-width: 1024px) {
-    .products {
-      padding: 4rem 0;
-    }
-
     .products-container {
       padding: 0 1.5rem;
     }

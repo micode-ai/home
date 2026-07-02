@@ -3,10 +3,20 @@ import { writable } from 'svelte/store';
 function createDarkModeStore() {
   const { subscribe, set, update } = writable(false);
 
-  function readFromStorage(): boolean {
+  function readFromStorage(): boolean | null {
     try {
       const raw = localStorage.getItem('a11y-settings');
-      if (raw) return (JSON.parse(raw) as Record<string, unknown>).darkMode === true;
+      if (raw) {
+        const parsed = JSON.parse(raw) as Record<string, unknown>;
+        if (typeof parsed.darkMode === 'boolean') return parsed.darkMode;
+      }
+    } catch {}
+    return null;
+  }
+
+  function prefersDarkOS(): boolean {
+    try {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
     } catch {}
     return false;
   }
@@ -23,7 +33,8 @@ function createDarkModeStore() {
   return {
     subscribe,
     init() {
-      const dark = readFromStorage();
+      const stored = readFromStorage();
+      const dark = stored === null ? prefersDarkOS() : stored;
       set(dark);
       document.documentElement.classList.toggle('dark-mode-active', dark);
     },

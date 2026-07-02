@@ -256,30 +256,28 @@
     }
   }
 
-  @media (prefers-color-scheme: dark) {
-    .modal-content {
-      background: var(--color-bg-secondary, #1f2937);
-      border-color: var(--color-border, #374151);
-    }
+  :global(html.dark-mode-active) .modal-content {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-border);
+  }
 
-    .modal-header,
-    .modal-footer {
-      border-color: var(--color-border, #374151);
-    }
+  :global(html.dark-mode-active) .modal-header,
+  :global(html.dark-mode-active) .modal-footer {
+    border-color: var(--color-border);
+  }
 
-    .modal-title,
-    .policy-section h3 {
-      color: var(--color-text-primary, #f9fafb);
-    }
+  :global(html.dark-mode-active) .modal-title,
+  :global(html.dark-mode-active) .policy-section h3 {
+    color: var(--color-text-primary);
+  }
 
-    .policy-section p {
-      color: var(--color-text-secondary, #9ca3af);
-    }
+  :global(html.dark-mode-active) .policy-section p {
+    color: var(--color-text-secondary);
+  }
 
-    .modal-close:hover {
-      background: var(--color-bg-tertiary, #374151);
-      color: var(--color-text-primary, #f9fafb);
-    }
+  :global(html.dark-mode-active) .modal-close:hover {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
   }
 
   @media (prefers-contrast: high) {

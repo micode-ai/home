@@ -95,24 +95,22 @@
     }
   }
 
-  @media (prefers-color-scheme: dark) {
-    .language-switcher {
-      background: var(--color-bg-secondary);
-      border-color: var(--color-border);
-      color: var(--color-text-secondary);
-    }
+  :global(html.dark-mode-active) .language-switcher {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-border);
+    color: var(--color-text-secondary);
+  }
 
-    .language-switcher:hover {
-      background: var(--color-bg-tertiary);
-      border-color: var(--color-primary);
-    }
+  :global(html.dark-mode-active) .language-switcher:hover {
+    background: var(--color-bg-tertiary);
+    border-color: var(--color-primary);
+  }
 
-    .language-option {
-      color: var(--color-text-tertiary);
-    }
+  :global(html.dark-mode-active) .language-option {
+    color: var(--color-text-tertiary);
+  }
 
-    .language-option.active {
-      color: var(--color-primary);
-    }
+  :global(html.dark-mode-active) .language-option.active {
+    color: var(--color-primary);
   }
 </style>

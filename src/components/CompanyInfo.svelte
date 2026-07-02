@@ -13,8 +13,9 @@
   const regonValue = $derived(t('company.regonValue', $languageStore));
   const industryLabel = $derived(t('company.industry', $languageStore));
   const industryValue = $derived(t('company.industryValue', $languageStore));
+  const foundedNote = $derived(t('company.foundedNote', $languageStore));
 
-  const companyName = "MiСode Sp. z o.o.";
+  const companyName = "MiCode Sp. z o.o.";
 </script>
 
 <section class="company-info scroll-reveal" aria-labelledby="company-title">
@@ -51,13 +52,17 @@
         <dd class="info-value">{industryValue}</dd>
       </div>
     </dl>
+
+    {#if foundedNote && foundedNote !== 'company.foundedNote'}
+      <p class="founded-note">{foundedNote}</p>
+    {/if}
   </div>
 </section>
 
 <style>
   .company-info {
     background: var(--color-bg-primary);
-    padding: 5rem 0;
+    padding: var(--section-padding);
   }
 
   .company-container {
@@ -69,7 +74,7 @@
   .company-title {
     margin: 0 0 2rem 0;
     font-family: var(--font-heading);
-    font-size: 2rem;
+    font-size: var(--font-size-3xl);
     font-weight: 700;
     color: var(--color-text-primary);
     text-align: center;
@@ -98,7 +103,7 @@
   }
 
   .info-item {
-    background: var(--color-bg-secondary);
+    background: var(--color-bg-primary);
     padding: 1.5rem;
     border-radius: var(--radius-xl);
     border: 1px solid var(--color-border);
@@ -111,6 +116,14 @@
 
   .info-item-wide {
     grid-column: 1 / -1;
+  }
+
+  .founded-note {
+    margin: 1.5rem 0 0 0;
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--color-text-tertiary);
+    line-height: 1.6;
   }
 
   .info-label {
@@ -131,10 +144,6 @@
   }
 
   @media (max-width: 767px) {
-    .company-info {
-      padding: 3rem 0;
-    }
-
     .company-container {
       padding: 0 1rem;
     }
@@ -158,10 +167,6 @@
   }
 
   @media (min-width: 768px) and (max-width: 1024px) {
-    .company-info {
-      padding: 4rem 0;
-    }
-
     .company-container {
       padding: 0 1.5rem;
     }
@@ -175,15 +180,9 @@
     }
   }
 
-  @media (prefers-color-scheme: dark) {
-    .company-info {
-      background: var(--color-bg-primary);
-    }
-
-    .info-item {
-      background: var(--color-bg-secondary);
-      border-color: var(--color-border);
-    }
+  :global(html.dark-mode-active) .info-item {
+    background: var(--color-bg-primary);
+    border-color: var(--color-border);
   }
 
   @media (prefers-contrast: high) {

@@ -68,7 +68,7 @@
 <style>
   .projects {
     background: var(--color-bg-secondary);
-    padding: 5rem 0;
+    padding: var(--section-padding);
   }
 
   .projects-container {
@@ -94,7 +94,7 @@
   }
 
   .project-card {
-    background: var(--color-bg-primary);
+    background: var(--color-bg-secondary);
     padding: 2rem;
     border-radius: var(--radius-xl);
     border: 1px solid var(--color-border);
@@ -178,10 +178,6 @@
   }
 
   @media (max-width: 767px) {
-    .projects {
-      padding: 3rem 0;
-    }
-
     .projects-container {
       padding: 0 1rem;
     }
@@ -219,10 +215,6 @@
   }
 
   @media (min-width: 768px) and (max-width: 1024px) {
-    .projects {
-      padding: 4rem 0;
-    }
-
     .projects-container {
       padding: 0 1.5rem;
     }
@@ -232,20 +224,13 @@
     }
   }
 
-  @media (prefers-color-scheme: dark) {
-    .project-card {
-      background: var(--color-bg-secondary);
-      border-color: var(--color-border);
-    }
+  :global(html.dark-mode-active) .project-card:hover {
+    background: var(--color-bg-tertiary);
+  }
 
-    .project-card:hover {
-      background: var(--color-bg-tertiary);
-    }
-
-    .tech-tag {
-      background: var(--color-bg-tertiary);
-      color: var(--color-primary);
-    }
+  :global(html.dark-mode-active) .tech-tag {
+    background: var(--color-bg-tertiary);
+    color: var(--color-primary);
   }
 
   @media (prefers-contrast: high) {

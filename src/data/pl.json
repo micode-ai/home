@@ -1,6 +1,6 @@
 {
   "header": {
-    "companyName": "MiСode Sp. z o.o.",
+    "companyName": "MiCode Sp. z o.o.",
     "tagline": "Profesjonalne rozwiązania IT"
   },
   "nav": {
@@ -12,40 +12,34 @@
     "blog": "Blog"
   },
   "hero": {
-    "headline": "Tworzymy aplikacje mobilne i systemy enterprise",
+    "headline": "Budujemy systemy enterprise z integracjami AI",
     "subheadline": "18 lat doświadczenia w IT — Gdańsk, Polska. Java, Angular, rozwiązania AI.",
-    "cta": "Skontaktuj się z nami"
+    "cta": "Skontaktuj się z nami",
+    "ctaAriaLabel": "Przejdź do formularza kontaktowego"
   },
   "company": {
     "title": "O firmie",
     "founded": "Założona",
     "foundedYear": "2024",
     "location": "Lokalizacja",
-    "address": "Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Poland",
+    "address": "Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Polska",
     "nip": "NIP",
     "nipValue": "5833510147",
     "regon": "REGON",
     "regonValue": "528740633",
     "industry": "Branża",
-    "industryValue": "Usługi IT i tworzenie oprogramowania"
+    "industryValue": "Usługi IT i tworzenie oprogramowania",
+    "foundedNote": "Firma założona w 2024 roku przez inżyniera z 18-letnim doświadczeniem w IT"
   },
   "services": {
     "title": "Nasze usługi",
-    "mobile": {
-      "title": "Tworzenie aplikacji mobilnych",
-      "description": "Aplikacje iOS i Android dostosowane do Twoich potrzeb"
-    },
     "custom": {
       "title": "Tworzenie oprogramowania na zamówienie",
-      "description": "Dedykowane rozwiązania dopasowane do Twojego biznesu"
+      "description": "Systemy na zamówienie w Java/Spring Boot i Angular — od analizy wymagań po wdrożenie"
     },
     "integration": {
       "title": "Integracja systemów IT",
-      "description": "Łączymy różne systemy w spójną całość"
-    },
-    "analysis": {
-      "title": "Analiza danych",
-      "description": "Przekształcamy dane w wartościowe informacje"
+      "description": "Integrujemy ERP, CRM i systemy wewnętrzne przez REST API"
     },
     "cloud": {
       "title": "Wdrażanie rozwiązań chmurowych",
@@ -74,7 +68,7 @@
       "scm": {
         "company": "Projekt SCM",
         "duration": "2020-2026",
-        "description": "System zarządzania łańcuchem dostaw z agentami AI (SCM v1 & v2)",
+        "description": "System zarządzania łańcuchem dostaw z agentami AI (SCM v1 & v2) — 300+ endpointów REST, integracja AI (RAG, Text2SQL)",
         "technologies": ["Spring Boot 3.x", "Java 17+", "Oracle Database", "Angular 21", "TypeScript", "PrimeNG"]
       },
       "community": {
@@ -116,7 +110,8 @@
     "opensource": {
       "title": "Open Source",
       "description": "Pakiet ngx-open-web-ui-chat dla Angular"
-    }
+    },
+    "viewOnNpm": "Zobacz na npm"
   },
   "products": {
     "title": "Nasze produkty",
@@ -236,7 +231,7 @@
     }
   },
   "certificates": {
-    "title": "Certyfikaty i wyróżnienia",
+    "title": "Ciągłe kształcenie",
     "subtitle": "Osiągnięcia i uznania",
     "prev": "Poprzedni certyfikat",
     "next": "Następny certyfikat"
@@ -260,8 +255,8 @@
     }
   },
   "footer": {
-    "copyright": "© 2026 MiСode Sp. z o.o. Wszelkie prawa zastrzeżone.",
-    "address": "Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Poland",
+    "copyright": "© 2026 MiCode Sp. z o.o. Wszelkie prawa zastrzeżone.",
+    "address": "Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Polska",
     "privacyPolicy": "Polityka prywatności",
     "socialMedia": "Obserwuj nas"
   },
@@ -272,13 +267,13 @@
       "reject": "Odrzuć"
     },
     "gdprConsent": {
-      "label": "Wyrażam zgodę na przetwarzanie moich danych osobowych (imię, adres e-mail) przez Micode Sp. z o.o. w celu odpowiedzi na moje zapytanie, zgodnie z RODO.",
+      "label": "Wyrażam zgodę na przetwarzanie moich danych osobowych (imię, adres e-mail) przez MiCode Sp. z o.o. w celu odpowiedzi na moje zapytanie, zgodnie z RODO.",
       "required": "Zgoda na przetwarzanie danych jest wymagana"
     },
     "privacyPolicy": {
       "title": "Polityka prywatności",
       "controller": "Administrator danych",
-      "controllerText": "Micode Sp. z o.o., Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, NIP: 5833510147",
+      "controllerText": "MiCode Sp. z o.o., Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, NIP: 5833510147",
       "dataCollected": "Zbierane dane",
       "dataCollectedText": "Imię i nazwisko, adres e-mail, treść wiadomości — wyłącznie w celu odpowiedzi na zapytanie kontaktowe.",
       "legalBasis": "Podstawa prawna",
@@ -290,7 +285,7 @@
       "cookies": "Pliki cookie",
       "cookiesText": "Strona może używać Google Analytics do analizy ruchu. Google Analytics stosuje pliki cookie. Możesz odmówić zgody na ich użycie przy pierwszej wizycie lub w ustawieniach przeglądarki.",
       "contactTitle": "Kontakt w sprawach danych",
-      "contactText": "perevertkinma@gmail.com",
+      "contactText": "office@mi-code.pl",
       "close": "Zamknij"
     }
   },
@@ -322,5 +317,16 @@
     "backToMicode": "← Powrót do MiCode",
     "readArticle": "Czytaj artykuł →",
     "articleNotFound": "Artykuł nie znaleziony."
+  },
+  "faq": {
+    "title": "Częste pytania",
+    "q1": "Jak wygląda proces realizacji projektu?",
+    "a1": "Zaczynamy od analizy wymagań, następnie prowadzimy prace rozwojowe w Java/Spring Boot i Angular, a kończymy wdrożeniem u klienta.",
+    "q2": "Jak szybko odpowiadacie na zapytania?",
+    "a2": "Zazwyczaj odpowiadamy w ciągu 1 dnia roboczego.",
+    "q3": "W jakich technologiach pracujecie?",
+    "a3": "Tworzymy systemy w Java/Spring Boot i Angular oraz wdrażamy rozwiązania AI: RAG, Text2SQL i agentów zbudowanych na LangGraph.",
+    "q4": "Czy integrujecie AI z istniejącymi systemami?",
+    "a4": "Tak — integrujemy AI z systemami takimi jak ERP i CRM przez REST API; przykładem jest nasz Accounting AI Agent, który integruje się z platformą księgową wFirma."
   }
 }

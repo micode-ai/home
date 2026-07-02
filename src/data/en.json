@@ -1,6 +1,6 @@
 {
     "header": {
-        "companyName": "MiСode Sp. z o.o.",
+        "companyName": "MiCode Sp. z o.o.",
         "tagline": "Professional IT Solutions"
     },
     "nav": {
@@ -12,9 +12,10 @@
         "blog": "Blog"
     },
     "hero": {
-        "headline": "Mobile Apps & Enterprise Software Development",
+        "headline": "We build enterprise software with AI integrations",
         "subheadline": "18+ years of IT experience — Gdańsk, Poland. Java, Angular, AI solutions.",
-        "cta": "Contact us"
+        "cta": "Contact us",
+        "ctaAriaLabel": "Go to the contact form"
     },
     "company": {
         "title": "About the company",
@@ -27,25 +28,18 @@
         "regon": "REGON",
         "regonValue": "528740633",
         "industry": "Industry",
-        "industryValue": "IT Services and Software Development"
+        "industryValue": "IT Services and Software Development",
+        "foundedNote": "Founded in 2024 by an engineer with 18+ years of IT experience"
     },
     "services": {
         "title": "Our services",
-        "mobile": {
-            "title": "Mobile application development",
-            "description": "iOS and Android apps tailored to your needs"
-        },
         "custom": {
             "title": "Custom software development",
-            "description": "Dedicated solutions adapted to your business"
+            "description": "Custom systems in Java/Spring Boot and Angular — from requirements to deployment"
         },
         "integration": {
             "title": "IT systems integration",
-            "description": "We connect different systems into a cohesive whole"
-        },
-        "analysis": {
-            "title": "Data analysis",
-            "description": "We transform data into valuable insights"
+            "description": "We integrate ERP, CRM, and internal systems via REST APIs"
         },
         "cloud": {
             "title": "Cloud solutions implementation",
@@ -74,7 +68,7 @@
             "scm": {
                 "company": "SCM Project",
                 "duration": "2020-2026",
-                "description": "Enterprise supply chain management system with AI agents (SCM v1 & v2)",
+                "description": "Enterprise supply chain management system with AI agents (SCM v1 & v2) — 300+ REST endpoints, AI integration (RAG, Text2SQL)",
                 "technologies": [
                     "Spring Boot 3.x",
                     "Java 17+",
@@ -130,7 +124,8 @@
         "opensource": {
             "title": "Open Source",
             "description": "ngx-open-web-ui-chat package for Angular"
-        }
+        },
+        "viewOnNpm": "View on npm"
     },
     "products": {
         "title": "Our products",
@@ -250,7 +245,7 @@
         }
     },
     "certificates": {
-        "title": "Certificates & Awards",
+        "title": "Continuous learning",
         "subtitle": "Recognitions and achievements",
         "prev": "Previous certificate",
         "next": "Next certificate"
@@ -274,7 +269,7 @@
         }
     },
     "footer": {
-        "copyright": "© 2026 MiСode Sp. z o.o. All rights reserved.",
+        "copyright": "© 2026 MiCode Sp. z o.o. All rights reserved.",
         "address": "Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Poland",
         "privacyPolicy": "Privacy Policy",
         "socialMedia": "Follow us"
@@ -286,13 +281,13 @@
             "reject": "Reject"
         },
         "gdprConsent": {
-            "label": "I consent to the processing of my personal data (name, email) by Micode Sp. z o.o. for the purpose of responding to my inquiry, in accordance with GDPR.",
+            "label": "I consent to the processing of my personal data (name, email) by MiCode Sp. z o.o. for the purpose of responding to my inquiry, in accordance with GDPR.",
             "required": "Consent to data processing is required"
         },
         "privacyPolicy": {
             "title": "Privacy Policy",
             "controller": "Data Controller",
-            "controllerText": "Micode Sp. z o.o., Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Tax ID (NIP): 5833510147",
+            "controllerText": "MiCode Sp. z o.o., Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Tax ID (NIP): 5833510147",
             "dataCollected": "Data collected",
             "dataCollectedText": "Full name, email address, message content — solely for the purpose of responding to your contact inquiry.",
             "legalBasis": "Legal basis",
@@ -304,7 +299,7 @@
             "cookies": "Cookies",
             "cookiesText": "This site may use Google Analytics for traffic analysis. Google Analytics uses cookies. You may decline consent at first visit or via your browser settings.",
             "contactTitle": "Data protection contact",
-            "contactText": "perevertkinma@gmail.com",
+            "contactText": "office@mi-code.pl",
             "close": "Close"
         }
     },
@@ -336,5 +331,16 @@
         "backToMicode": "← Back to MiCode",
         "readArticle": "Read article →",
         "articleNotFound": "Article not found."
+    },
+    "faq": {
+        "title": "FAQ",
+        "q1": "What does the engagement process look like?",
+        "a1": "We start with requirements analysis, then move into development in Java/Spring Boot and Angular, and finish with deployment for the client.",
+        "q2": "How fast do you respond to inquiries?",
+        "a2": "We typically respond within 1 business day.",
+        "q3": "What technologies do you work with?",
+        "a3": "We build systems in Java/Spring Boot and Angular, and implement AI solutions including RAG, Text2SQL, and LangGraph-based agents.",
+        "q4": "Do you integrate AI into existing systems?",
+        "a4": "Yes — we integrate AI with systems such as ERP and CRM via REST APIs; for example, our Accounting AI Agent integrates with the wFirma accounting platform."
     }
 }

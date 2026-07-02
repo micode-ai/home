@@ -5,6 +5,7 @@
   const headline = $derived(t('hero.headline', $languageStore));
   const subheadline = $derived(t('hero.subheadline', $languageStore));
   const ctaText = $derived(t('hero.cta', $languageStore));
+  const ctaAriaLabel = $derived(t('hero.ctaAriaLabel', $languageStore));
 
   function scrollToContact() {
     const contactSection = document.getElementById('contact');
@@ -36,7 +37,7 @@
         class="hero-cta"
         onclick={scrollToContact}
         onkeydown={handleKeydown}
-        aria-label="{ctaText} - Navigate to contact form"
+        aria-label={ctaAriaLabel}
       >
         {ctaText}
         <svg class="cta-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -223,10 +224,8 @@
     }
   }
 
-  @media (prefers-color-scheme: dark) {
-    .hero {
-      background: var(--color-bg-hero);
-    }
+  :global(html.dark-mode-active) .hero {
+    background: var(--color-bg-hero);
   }
 
   @media (prefers-reduced-motion: reduce) {

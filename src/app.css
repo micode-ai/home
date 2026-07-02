@@ -15,6 +15,10 @@
   --color-primary-dark: #1E3A8A;
   --color-primary-light: #3B82F6;
 
+  /* Fixed-blue bands — always meet ≥4.5:1 with white text, regardless of theme */
+  --color-band-blue: #1E40AF;
+  --color-band-blue-dark: #1E3A8A;
+
   /* Secondary / Accent */
   --color-accent: #F97316;
   --color-accent-dark: #EA580C;
@@ -93,6 +97,9 @@
   --spacing-20: 5rem;
   --spacing-24: 6rem;
   --spacing-32: 8rem;
+
+  /* Section rhythm */
+  --section-padding: 5rem 0;
 
   /* Border Radius */
   --radius-sm: 0.25rem;
@@ -253,6 +260,17 @@ button:focus-visible {
     padding: 0.75em 1.5em;
     font-size: 0.9375em;
   }
+
+  :root {
+    --section-padding: 3rem 0;
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 768px) and (max-width: 1024px) {
+  :root {
+    --section-padding: 4rem 0;
+  }
 }
 
 /* ===== GLOBAL ANIMATIONS ===== */
@@ -268,12 +286,17 @@ button:focus-visible {
   }
 }
 
-.scroll-reveal {
+html.js .scroll-reveal {
   opacity: 0;
   transform: translateY(24px);
 }
 
 .scroll-reveal.revealed {
+  animation: fade-in-up 0.5s ease-out forwards;
+}
+
+.scroll-reveal.revealed .reveal-child {
+  opacity: 0;
   animation: fade-in-up 0.5s ease-out forwards;
 }
 
@@ -295,12 +318,15 @@ button:focus-visible {
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
+  html.js .scroll-reveal,
   .scroll-reveal {
     opacity: 1;
     transform: none;
   }
-  .scroll-reveal.revealed {
+  .scroll-reveal.revealed,
+  .scroll-reveal.revealed .reveal-child {
     animation: none;
+    opacity: 1;
   }
 }
 
@@ -309,61 +335,21 @@ button:focus-visible {
   .section-divider {
     display: none;
   }
+  html.js .scroll-reveal,
   .scroll-reveal {
     opacity: 1;
     transform: none;
   }
 }
 
-/* ===== DARK MODE ===== */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-primary: #60A5FA;
-    --color-primary-dark: #3B82F6;
-    --color-primary-light: #93C5FD;
-
-    --color-accent: #FB923C;
-    --color-accent-dark: #F97316;
-    --color-accent-light: #FDBA74;
-
-    --color-text-primary: #F1F5F9;
-    --color-text-secondary: #CBD5E1;
-    --color-text-tertiary: #94A3B8;
-    --color-text-inverse: #0F172A;
-
-    --color-bg-primary: #0F172A;
-    --color-bg-secondary: #1E293B;
-    --color-bg-tertiary: #1E3A5F;
-    --color-bg-hero: #020617;
-
-    --color-link: #60A5FA;
-    --color-link-hover: #93C5FD;
-    --color-link-visited: #A78BFA;
-
-    --color-success: #34D399;
-    --color-success-bg: #064E3B;
-    --color-error: #F87171;
-    --color-error-bg: #7F1D1D;
-    --color-warning: #FBBF24;
-    --color-warning-bg: #78350F;
-    --color-info: #38BDF8;
-    --color-info-bg: #0C4A6E;
-
-    --color-border: #334155;
-    --color-border-dark: #475569;
-
-    --color-focus: #60A5FA;
-    --color-focus-ring: rgba(96, 165, 250, 0.3);
-
-    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
-    --shadow-card-hover: 0 10px 20px -5px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
-
-    color: var(--color-text-primary);
-    background-color: var(--color-bg-primary);
-  }
-}
-
-/* Manual dark mode toggle — mirrors the media query above */
+/* ===== DARK MODE =====
+   The `dark-mode-active` class is the single source of truth for theme.
+   `darkModeStore.init()` applies it on load from the stored preference, or
+   from `prefers-color-scheme` when no preference is stored — so OS-dark users
+   still get dark mode, but the toggle can always override it. Do NOT reintroduce
+   a `@media (prefers-color-scheme: dark)` token block here: it would force dark
+   tokens that the toggle can't turn off, leaving light-mode component chrome
+   (e.g. the white header) with dark-mode text colors. */
 html.dark-mode-active {
   --color-primary: #60A5FA;
   --color-primary-dark: #3B82F6;

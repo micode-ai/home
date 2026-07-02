@@ -106,14 +106,13 @@
 </div>
 
 {#if maxOffset > 0}
-  <div class="slider-dots" role="tablist" aria-label="Product slides">
+  <div class="slider-dots">
     {#each Array(maxOffset + 1) as _, i}
       <button
         class="slider-dot"
         class:active={sliderOffset === i}
         onclick={() => slideTo(i)}
-        role="tab"
-        aria-selected={sliderOffset === i}
+        aria-current={sliderOffset === i}
         aria-label="Go to slide {i + 1}"
       ></button>
     {/each}
@@ -197,27 +196,39 @@
   }
 
   .slider-dot {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    border-radius: var(--radius-full);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .slider-dot::after {
+    content: '';
     width: 10px;
     height: 10px;
     border-radius: var(--radius-full);
     border: 2px solid var(--color-border);
     background: transparent;
-    cursor: pointer;
-    padding: 0;
     transition: background var(--transition-base), border-color var(--transition-base), transform var(--transition-base);
   }
 
-  .slider-dot:hover {
+  .slider-dot:hover::after {
     border-color: var(--color-primary);
     transform: scale(1.2);
   }
 
-  .slider-dot.active {
+  .slider-dot.active::after {
     background: var(--color-primary);
     border-color: var(--color-primary);
   }
 
-  .slider-dot:focus {
+  .slider-dot:focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
@@ -250,19 +261,13 @@
   }
 
   /* ===== Dark Mode ===== */
-  @media (prefers-color-scheme: dark) {
-    .slider-arrow {
-      background: var(--color-bg-secondary);
-      border-color: var(--color-border);
-    }
+  :global(html.dark-mode-active) .slider-arrow {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-border);
+  }
 
-    .slider-arrow:hover:not(:disabled) {
-      background: var(--color-bg-tertiary);
-    }
-
-    .slider-dot {
-      border-color: var(--color-border);
-    }
+  :global(html.dark-mode-active) .slider-arrow:hover:not(:disabled) {
+    background: var(--color-bg-tertiary);
   }
 
   /* ===== Print ===== */

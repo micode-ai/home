@@ -47,7 +47,7 @@
 <style>
   .services {
     background: var(--color-bg-secondary);
-    padding: 5rem 0;
+    padding: var(--section-padding);
   }
 
   .services-container {
@@ -59,7 +59,7 @@
   .services-title {
     margin: 0 0 3rem 0;
     font-family: var(--font-heading);
-    font-size: 2rem;
+    font-size: var(--font-size-3xl);
     font-weight: 700;
     color: var(--color-text-primary);
     text-align: center;
@@ -117,10 +117,6 @@
   }
 
   @media (max-width: 767px) {
-    .services {
-      padding: 3rem 0;
-    }
-
     .services-container {
       padding: 0 1rem;
     }
@@ -155,10 +151,6 @@
   }
 
   @media (min-width: 768px) and (max-width: 1024px) {
-    .services {
-      padding: 4rem 0;
-    }
-
     .services-container {
       padding: 0 1.5rem;
     }
@@ -174,24 +166,22 @@
     }
   }
 
-  @media (prefers-color-scheme: dark) {
-    .services {
-      background: var(--color-bg-secondary);
-    }
+  :global(html.dark-mode-active) .services {
+    background: var(--color-bg-secondary);
+  }
 
-    .service-card {
-      background: var(--color-bg-secondary);
-      border-color: var(--color-border);
-    }
+  :global(html.dark-mode-active) .service-card {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-border);
+  }
 
-    .service-card:hover {
-      background: var(--color-bg-tertiary);
-    }
+  :global(html.dark-mode-active) .service-card:hover {
+    background: var(--color-bg-tertiary);
+  }
 
-    .service-icon {
-      background: var(--color-bg-tertiary);
-      color: var(--color-primary);
-    }
+  :global(html.dark-mode-active) .service-icon {
+    background: var(--color-bg-tertiary);
+    color: var(--color-primary);
   }
 
   @media (prefers-contrast: high) {

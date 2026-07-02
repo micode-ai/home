@@ -121,11 +121,9 @@
   }
 
   /* ===== Dark Mode ===== */
-  @media (prefers-color-scheme: dark) {
-    .stat-badge {
-      background: var(--color-bg-secondary);
-      border-color: var(--color-border);
-    }
+  :global(html.dark-mode-active) .stat-badge {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-border);
   }
 
   /* ===== High Contrast ===== */

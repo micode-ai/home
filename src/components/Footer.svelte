@@ -119,10 +119,8 @@
     }
   }
 
-  @media (prefers-color-scheme: dark) {
-    .footer {
-      background: var(--color-bg-hero);
-    }
+  :global(html.dark-mode-active) .footer {
+    background: var(--color-bg-hero);
   }
 
   @media (prefers-contrast: high) {

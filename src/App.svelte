@@ -10,6 +10,7 @@
   import CommunityContributions from './components/CommunityContributions.svelte';
   import OwnProducts from './components/OwnProducts.svelte';
   import Certificates from './components/Certificates.svelte';
+  import Faq from './components/Faq.svelte';
   import ContactForm from './components/ContactForm.svelte';
   import Footer from './components/Footer.svelte';
   import SEO from './components/SEO.svelte';
@@ -47,13 +48,14 @@
 
 <main id="main-content">
   <Hero />
-  <CompanyInfo />
   <Services />
+  <OwnProducts />
   <FounderProfile />
   <StatsStrip />
   <CommunityContributions />
-  <OwnProducts />
   <Certificates />
+  <CompanyInfo />
+  <Faq />
   <ContactForm />
 </main>
 
@@ -72,5 +74,29 @@
 
   main {
     width: 100%;
+  }
+
+  /*
+   * Background rhythm — landing page section order is:
+   * Hero (dark) → Services (secondary, native) → OwnProducts → FounderProfile →
+   * StatsStrip (fixed blue, native) → CommunityContributions → Certificates (primary, native) →
+   * CompanyInfo → Faq (primary, native) → ContactForm (tertiary, native)
+   * Each component owns its own background token; these overrides only retune
+   * the alternation for sections whose native default would repeat their neighbor's band.
+   */
+  :global(.products) {
+    background: var(--color-bg-primary) !important;
+  }
+
+  :global(.founder-profile) {
+    background: var(--color-bg-secondary) !important;
+  }
+
+  :global(.community) {
+    background: var(--color-bg-secondary) !important;
+  }
+
+  :global(.company-info) {
+    background: var(--color-bg-secondary) !important;
   }
 </style>

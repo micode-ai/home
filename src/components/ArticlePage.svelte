@@ -29,6 +29,14 @@
     : lang === 'ru' ? 'Посмотреть связанный продукт'
     : 'See related product'
   );
+
+  const AUTHOR_NAME = 'Michał Peraviortkin';
+  const AUTHOR_URL = 'https://www.linkedin.com/in/mikhailperaviortkin/';
+  const authorTitle = $derived(
+    lang === 'pl' ? 'Założyciel i CEO'
+    : lang === 'ru' ? 'Основатель и CEO'
+    : 'Founder & CEO'
+  );
 </script>
 
 {#if post}
@@ -41,6 +49,10 @@
         <a href="/blog/">{blogLabel}</a>
       </nav>
       <h1 id="article-title" class="article-title">{title}</h1>
+      <p class="article-byline">
+        <a href={AUTHOR_URL} target="_blank" rel="author noopener noreferrer">{AUTHOR_NAME}</a>
+        <span aria-hidden="true"> — </span>{authorTitle}
+      </p>
       <time class="article-date" datetime={post.date}>{post.date}</time>
       <div class="article-tags">
         {#each post.tags as tag}
@@ -89,6 +101,9 @@
   .article-breadcrumb a:hover { text-decoration: underline; }
   .article-breadcrumb span { margin: 0 0.5rem; }
   .article-title { font-size: 2rem; font-weight: 700; margin: 0 0 1rem; line-height: 1.25; }
+  .article-byline { font-size: 0.9375rem; opacity: 0.85; margin: 0 0 0.75rem; }
+  .article-byline a { color: inherit; font-weight: 600; text-decoration: none; }
+  .article-byline a:hover { text-decoration: underline; }
   .article-date { font-size: 0.875rem; opacity: 0.7; }
   .article-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
   .tag { padding: 0.2rem 0.6rem; background: rgba(255,255,255,0.15); border-radius: 0.25rem; font-size: 0.75rem; }

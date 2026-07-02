@@ -108,7 +108,7 @@
 <style>
   .founder-profile {
     background: var(--color-bg-secondary);
-    padding: 5rem 0;
+    padding: var(--section-padding);
   }
 
   .founder-container {
@@ -120,7 +120,7 @@
   .founder-title {
     margin: 0 0 2.5rem 0;
     font-family: var(--font-heading);
-    font-size: 2rem;
+    font-size: var(--font-size-3xl);
     font-weight: 700;
     color: var(--color-text-primary);
     text-align: center;
@@ -128,7 +128,7 @@
   }
 
   .founder-header {
-    background: var(--color-primary);
+    background: var(--color-band-blue);
     padding: 2rem 2.5rem;
     border-radius: var(--radius-2xl);
     margin-bottom: 3rem;
@@ -253,7 +253,7 @@
   }
 
   .timeline-content {
-    background: var(--color-bg-primary);
+    background: var(--color-bg-secondary);
     padding: 1.5rem;
     border-radius: var(--radius-xl);
     border: 1px solid var(--color-border);
@@ -315,10 +315,6 @@
   }
 
   @media (max-width: 767px) {
-    .founder-profile {
-      padding: 3rem 0;
-    }
-
     .founder-container {
       padding: 0 1rem;
     }
@@ -364,33 +360,18 @@
   }
 
   @media (min-width: 768px) and (max-width: 1024px) {
-    .founder-profile {
-      padding: 4rem 0;
-    }
-
     .founder-container {
       padding: 0 1.5rem;
     }
   }
 
-  @media (prefers-color-scheme: dark) {
-    .founder-header {
-      background: var(--color-primary-dark);
-    }
+  :global(html.dark-mode-active) .timeline-marker {
+    border-color: var(--color-bg-primary);
+  }
 
-    .timeline-marker {
-      border-color: var(--color-bg-primary);
-    }
-
-    .timeline-content {
-      background: var(--color-bg-secondary);
-      border-color: var(--color-border);
-    }
-
-    .tech-badge {
-      background: var(--color-bg-tertiary);
-      color: var(--color-primary);
-    }
+  :global(html.dark-mode-active) .tech-badge {
+    background: var(--color-bg-tertiary);
+    color: var(--color-primary);
   }
 
   @media (prefers-contrast: high) {

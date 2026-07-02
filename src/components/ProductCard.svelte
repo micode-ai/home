@@ -428,30 +428,28 @@
   }
 
   /* ===== Dark Mode ===== */
-  @media (prefers-color-scheme: dark) {
-    .product-card {
-      background: var(--color-bg-secondary);
-      border-color: var(--color-border);
-    }
+  :global(html.dark-mode-active) .product-card {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-border);
+  }
 
-    .product-card:hover {
-      background: var(--color-bg-secondary);
-      border-color: var(--card-accent, var(--color-primary));
-    }
+  :global(html.dark-mode-active) .product-card:hover {
+    background: var(--color-bg-secondary);
+    border-color: var(--card-accent, var(--color-primary));
+  }
 
-    .product-image-container {
-      background: var(--color-bg-tertiary);
-    }
+  :global(html.dark-mode-active) .product-image-container {
+    background: var(--color-bg-tertiary);
+  }
 
-    .product-badge {
-      background: var(--color-bg-secondary);
-      border-color: var(--color-border);
-    }
+  :global(html.dark-mode-active) .product-badge {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-border);
+  }
 
-    .card-details-hint {
-      color: var(--color-text-tertiary);
-      border-color: var(--color-border);
-    }
+  :global(html.dark-mode-active) .card-details-hint {
+    color: var(--color-text-tertiary);
+    border-color: var(--color-border);
   }
 
   /* ===== High Contrast ===== */

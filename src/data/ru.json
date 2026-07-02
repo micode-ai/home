@@ -1,6 +1,6 @@
 {
   "header": {
-    "companyName": "MiСode Sp. z o.o.",
+    "companyName": "MiCode Sp. z o.o.",
     "tagline": "Профессиональные IT-решения"
   },
   "nav": {
@@ -12,9 +12,10 @@
     "blog": "Блог"
   },
   "hero": {
-    "headline": "Разработка мобильных приложений и enterprise-систем",
+    "headline": "Мы создаём enterprise-системы с AI-интеграциями",
     "subheadline": "18+ лет опыта в IT — Гданьск, Польша. Java, Angular, AI-решения.",
-    "cta": "Свяжитесь с нами"
+    "cta": "Свяжитесь с нами",
+    "ctaAriaLabel": "Перейти к форме контакта"
   },
   "company": {
     "title": "О компании",
@@ -27,25 +28,18 @@
     "regon": "REGON",
     "regonValue": "528740633",
     "industry": "Отрасль",
-    "industryValue": "IT-услуги и разработка программного обеспечения"
+    "industryValue": "IT-услуги и разработка программного обеспечения",
+    "foundedNote": "Компания основана в 2024 году инженером с 18-летним опытом в IT"
   },
   "services": {
     "title": "Наши услуги",
-    "mobile": {
-      "title": "Разработка мобильных приложений",
-      "description": "Приложения iOS и Android, адаптированные под ваши задачи"
-    },
     "custom": {
       "title": "Разработка ПО на заказ",
-      "description": "Индивидуальные решения под ваш бизнес"
+      "description": "Индивидуальные системы на Java/Spring Boot и Angular — от анализа требований до внедрения"
     },
     "integration": {
       "title": "Интеграция IT-систем",
-      "description": "Объединяем разные системы в единое целое"
-    },
-    "analysis": {
-      "title": "Анализ данных",
-      "description": "Превращаем данные в ценные инсайты"
+      "description": "Интегрируем ERP, CRM и внутренние системы через REST API"
     },
     "cloud": {
       "title": "Внедрение облачных решений",
@@ -74,7 +68,7 @@
       "scm": {
         "company": "Проект SCM",
         "duration": "2020-2026",
-        "description": "Enterprise-система управления цепочками поставок с AI-агентами (SCM v1 & v2)",
+        "description": "Enterprise-система управления цепочками поставок с AI-агентами (SCM v1 & v2) — 300+ REST-эндпоинтов, AI-интеграция (RAG, Text2SQL)",
         "technologies": ["Spring Boot 3.x", "Java 17+", "Oracle Database", "Angular 21", "TypeScript", "PrimeNG"]
       },
       "community": {
@@ -116,7 +110,8 @@
     "opensource": {
       "title": "Open Source",
       "description": "Пакет ngx-open-web-ui-chat для Angular"
-    }
+    },
+    "viewOnNpm": "Смотреть на npm"
   },
   "products": {
     "title": "Наши продукты",
@@ -236,7 +231,7 @@
     }
   },
   "certificates": {
-    "title": "Сертификаты и награды",
+    "title": "Непрерывное обучение",
     "subtitle": "Признания и достижения",
     "prev": "Предыдущий сертификат",
     "next": "Следующий сертификат"
@@ -260,7 +255,7 @@
     }
   },
   "footer": {
-    "copyright": "© 2026 MiСode Sp. z o.o. Все права защищены.",
+    "copyright": "© 2026 MiCode Sp. z o.o. Все права защищены.",
     "address": "Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Польша",
     "privacyPolicy": "Политика конфиденциальности",
     "socialMedia": "Мы в соцсетях"
@@ -272,13 +267,13 @@
       "reject": "Отклонить"
     },
     "gdprConsent": {
-      "label": "Я даю согласие на обработку моих персональных данных (имя, email) компанией Micode Sp. z o.o. для ответа на моё обращение, в соответствии с GDPR.",
+      "label": "Я даю согласие на обработку моих персональных данных (имя, email) компанией MiCode Sp. z o.o. для ответа на моё обращение, в соответствии с GDPR.",
       "required": "Согласие на обработку данных обязательно"
     },
     "privacyPolicy": {
       "title": "Политика конфиденциальности",
       "controller": "Контроллер данных",
-      "controllerText": "Micode Sp. z o.o., Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, ИНН (NIP): 5833510147",
+      "controllerText": "MiCode Sp. z o.o., Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, ИНН (NIP): 5833510147",
       "dataCollected": "Собираемые данные",
       "dataCollectedText": "Имя и фамилия, адрес email, содержание сообщения — исключительно для ответа на ваш запрос.",
       "legalBasis": "Правовое основание",
@@ -290,7 +285,7 @@
       "cookies": "Cookies",
       "cookiesText": "Этот сайт может использовать Google Analytics для анализа трафика. Google Analytics использует файлы cookie. Вы можете отказаться при первом посещении или через настройки браузера.",
       "contactTitle": "Контакт по вопросам данных",
-      "contactText": "perevertkinma@gmail.com",
+      "contactText": "office@mi-code.pl",
       "close": "Закрыть"
     }
   },
@@ -322,5 +317,16 @@
     "backToMicode": "← На сайт MiCode",
     "readArticle": "Читать статью →",
     "articleNotFound": "Статья не найдена."
+  },
+  "faq": {
+    "title": "Частые вопросы",
+    "q1": "Как проходит процесс работы над проектом?",
+    "a1": "Мы начинаем с анализа требований, затем переходим к разработке на Java/Spring Boot и Angular и завершаем внедрением у клиента.",
+    "q2": "Как быстро вы отвечаете на обращения?",
+    "a2": "Мы обычно отвечаем в течение 1 рабочего дня.",
+    "q3": "С какими технологиями вы работаете?",
+    "a3": "Мы создаём системы на Java/Spring Boot и Angular, а также внедряем AI-решения: RAG, Text2SQL и агентов на базе LangGraph.",
+    "q4": "Интегрируете ли вы AI в существующие системы?",
+    "a4": "Да — мы интегрируем AI с такими системами, как ERP и CRM, через REST API; например, наш Accounting AI Agent интегрируется с бухгалтерской платформой wFirma."
   }
 }

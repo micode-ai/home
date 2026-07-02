@@ -1,16 +1,18 @@
 # MiCode Sp. z o.o.
 
-> MiCode is a software development company based in Gdańsk, Poland, with 18+ years of IT experience. We build mobile apps, custom enterprise software, IT systems integration, and AI-powered products. Founder & CEO: Mikhail Peraviortkin.
+> MiCode is a software development company based in Gdańsk, Poland. We build enterprise software with AI integrations, custom software, IT systems integration, and AI-powered products. Founder & CEO: Mikhail Peraviortkin.
 
-MiCode also designs and ships its own AI products: an accounting assistant for Polish tax law, a marketing automation platform, a personal budget assistant, an Angular AI-chat component, and an AI test orchestration platform.
+MiCode Sp. z o.o. was incorporated in 2024; founder Michał Peraviortkin brings 18+ years of prior IT industry experience.
 
-Languages: Polish (default), English, Russian — select via `?lang=pl|en|ru` query parameter on any page (the page content is the same across locales, only UI text and copy are translated).
+MiCode also designs and ships its own AI products: an accounting assistant for Polish tax law, a marketing automation platform, a personal budget assistant (mobile app), an Angular AI-chat component, and an AI test orchestration platform.
+
+Languages: Polish (default), English, Russian — select via `?lang=pl|en|ru` query parameter on any page (the page content is the same across locales, only UI text and copy are translated). Note: because the locale switch is client-side only and each language does not have its own prerendered URL, this site intentionally does not publish hreflang alternate tags — hreflang would incorrectly claim separate URLs per language when there are none.
 
 Contact: office@mi-code.pl — Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Poland.
 
 ## Company
 
-- [Homepage](https://mi-code.pl/): Company overview — services (mobile app development, custom software, IT systems integration, data analysis, cloud solutions), founder profile, key projects (incl. an enterprise supply chain management system with 300+ REST endpoints and AI agents for Text2SQL/RAG), and contact form.
+- [Homepage](https://mi-code.pl/): Company overview — services (enterprise software development, AI integrations, custom software, IT systems integration, data analysis, cloud solutions), founder profile, key projects (incl. an enterprise supply chain management system with 300+ REST endpoints and AI agents for Text2SQL/RAG), and contact form.
 
 ## Products
 
@@ -28,3 +30,16 @@ Contact: office@mi-code.pl — Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Pola
 - [Inside eMarketing AI: one platform for AI-generated content, campaigns, and email](https://mi-code.pl/blog/emarketing-ai-content-automation/): Why eMarketing AI combines content generation, campaign management, email marketing, and an AI chat assistant in a single SaaS platform instead of several disconnected tools.
 - [Receipts, voice, or chat: how AI Budget Assistant tracks spending without the spreadsheet](https://mi-code.pl/blog/ai-budget-assistant-receipt-ocr-gpt4/): How AI Budget Assistant combines receipt OCR, voice input, a GPT-4 finance chat, multi-currency budgets, and gamification to keep people logging expenses.
 - [Letting AI agents own the boring parts of QA](https://mi-code.pl/blog/testing-ai-agent-orchestration/): How Testing AI Assistant generates test cases from a codebase, orchestrates execution with intelligent scheduling and retry logic, and keeps quality checklists and coverage up to date.
+
+## FAQ
+
+- **What is Accounting AI Agent?** An AI assistant for accounting professionals and business owners in Poland that combines AI with deep knowledge of Polish tax law and integrates with the wFirma accounting platform.
+- **Does Accounting AI Agent integrate with wFirma?** Yes — it integrates directly with wFirma for automatic data synchronization and real-time access to financial documents, eliminating manual data entry.
+- **What is AI Budget Assistant?** A mobile personal finance app that lets you track expenses by voice, receipt scanning (AI OCR), or manual entry, with multi-currency budgets and a GPT-4-powered finance chat.
+- **Where can I download AI Budget Assistant?** It's available on Google Play, and the source code is on GitHub.
+- **What is eMarketing AI?** An AI-powered marketing automation SaaS platform for generating content, managing campaigns, sending emails, and tracking analytics — all in one place.
+- **What pricing plans does eMarketing AI offer?** FREE with 50 AI generations/month, PRO with 500 generations and up to 5 team members, and ENTERPRISE with unlimited resources — new accounts get a 14-day free trial.
+- **What is ngx-open-web-ui-chat?** An open-source Angular component that adds AI chat functionality to any Angular application by connecting directly to an Open WebUI instance.
+- **Is ngx-open-web-ui-chat free?** Yes, it's free and open source, available on npm.
+- **What is Testing AI Assistant?** An AI-powered test orchestration platform that automates test execution, generates test cases from codebase analysis, and provides quality insights from a single interface.
+- **How much does Testing AI Assistant cost?** It's free during the testing period; source code is available on GitHub.

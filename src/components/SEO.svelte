@@ -7,22 +7,22 @@
   // Meta content for supported languages
   const metaContent: Record<Language, { title: string; description: string; ogTitle: string; ogDescription: string }> = {
     pl: {
-      title: 'MiСode Sp. z o.o. — Tworzenie aplikacji mobilnych i systemów enterprise | Gdańsk',
-      description: 'MiСode — tworzenie aplikacji mobilnych, oprogramowania na zamówienie i rozwiązań AI. 18 lat doświadczenia IT. Gdańsk, Polska.',
-      ogTitle: 'MiСode — Tworzenie aplikacji mobilnych i systemów enterprise',
-      ogDescription: 'Dedykowane oprogramowanie, integracja systemów IT, rozwiązania AI. 18 lat doświadczenia w branży IT.',
+      title: 'MiCode Sp. z o.o. — Systemy enterprise i integracje AI',
+      description: 'MiCode — budowa systemów enterprise, integracje AI (RAG, Text2SQL) i oprogramowanie na zamówienie. 18 lat doświadczenia IT. Gdańsk, Polska.',
+      ogTitle: 'MiCode — Systemy enterprise i integracje AI',
+      ogDescription: 'Oprogramowanie enterprise, integracja systemów IT, integracje AI. 18 lat doświadczenia w branży IT.',
     },
     en: {
-      title: 'MiСode Sp. z o.o. — Mobile App & Enterprise Software Development | Gdańsk',
-      description: 'MiСode — mobile app development, custom software and AI solutions. 18+ years of IT experience. Gdańsk, Poland.',
-      ogTitle: 'MiСode — Mobile App & Enterprise Software Development',
-      ogDescription: 'Custom software, IT systems integration, and AI solutions. 18+ years of experience — Gdańsk, Poland.',
+      title: 'MiCode Sp. z o.o. — Enterprise Software & AI Integrations',
+      description: 'MiCode — enterprise software development, AI integrations (RAG, Text2SQL), and custom solutions. 18+ years of IT experience. Gdańsk, Poland.',
+      ogTitle: 'MiCode — Enterprise Software & AI Integrations',
+      ogDescription: 'Custom enterprise software, IT systems integration, and AI integrations. 18+ years of experience — Gdańsk, Poland.',
     },
     ru: {
-      title: 'MiСode Sp. z o.o. — Разработка мобильных приложений и enterprise-систем | Гданьск',
-      description: 'MiСode — разработка мобильных приложений, ПО на заказ и AI-решений. 18+ лет опыта. Гданьск, Польша.',
-      ogTitle: 'MiСode — Разработка мобильных приложений и enterprise-систем',
-      ogDescription: 'Разработка ПО на заказ, интеграция IT-систем и AI-решения. 18+ лет опыта — Гданьск, Польша.',
+      title: 'MiCode Sp. z o.o. — Enterprise-системы и AI-интеграции',
+      description: 'MiCode — разработка enterprise-систем, AI-интеграции (RAG, Text2SQL) и ПО на заказ. 18+ лет опыта. Гданьск, Польша.',
+      ogTitle: 'MiCode — Enterprise-системы и AI-интеграции',
+      ogDescription: 'Разработка ПО на заказ, интеграция IT-систем и AI-интеграции. 18+ лет опыта — Гданьск, Польша.',
     }
   };
 
@@ -36,12 +36,20 @@
   const OG_IMAGE = 'https://mi-code.pl/og-image.png';
 
   // Structured data (JSON-LD) for organization
+  // Combined Organization + ProfessionalService node (mirrors the static node in root index.html)
   const structuredData = {
     "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "MiСode Sp. z o.o.",
+    "@type": ["Organization", "ProfessionalService"],
+    "name": "MiCode Sp. z o.o.",
     "url": "https://mi-code.pl/",
     "foundingDate": "2024",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://mi-code.pl/mi_code_logo_mark.svg",
+      "width": 512,
+      "height": 512
+    },
+    "image": "https://mi-code.pl/og-image.png",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Jana Heweliusza 11 lok. 811",
@@ -49,6 +57,12 @@
       "postalCode": "80-890",
       "addressCountry": "PL"
     },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 54.3565,
+      "longitude": 18.6487
+    },
+    "areaServed": ["PL", "EU"],
     "contactPoint": {
       "@type": "ContactPoint",
       "contactType": "customer service",
@@ -63,14 +77,13 @@
         "name": "Brest State Technical University"
       }
     },
-    "description": "IT services company specializing in mobile application development, custom software development, IT systems integration, data analysis, and cloud solutions implementation.",
+    "description": "IT services company specializing in enterprise software development, AI integrations, custom software development, IT systems integration, data analysis, and cloud solutions implementation.",
     "sameAs": [
       "https://www.linkedin.com/in/mikhailperaviortkin/",
       "https://github.com/micode-ai",
       "https://www.npmjs.com/~perevertkinma"
     ],
     "knowsAbout": [
-      "Mobile Application Development",
       "Custom Software Development",
       "IT Systems Integration",
       "Data Analysis",
@@ -86,32 +99,12 @@
   const websiteData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "MiСode Sp. z o.o.",
+    "name": "MiCode Sp. z o.o.",
     "url": "https://mi-code.pl/",
     "inLanguage": ["pl", "en", "ru"],
     "publisher": {
       "@type": "Organization",
-      "name": "MiСode Sp. z o.o."
-    }
-  };
-
-  const localBusinessData = {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": "MiСode Sp. z o.o.",
-    "url": "https://mi-code.pl/",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Jana Heweliusza 11 lok. 811",
-      "addressLocality": "Gdańsk",
-      "postalCode": "80-890",
-      "addressCountry": "PL"
-    },
-    "areaServed": ["PL", "EU"],
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "contactType": "customer service",
-      "email": "office@mi-code.pl"
+      "name": "MiCode Sp. z o.o."
     }
   };
 
@@ -119,16 +112,8 @@
     {
       "@context": "https://schema.org",
       "@type": "Service",
-      "name": "Mobile Application Development",
-      "provider": { "@type": "Organization", "name": "MiСode Sp. z o.o." },
-      "areaServed": ["PL", "EU"],
-      "description": "iOS and Android mobile app development tailored to business needs."
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "Service",
       "name": "Custom Software Development",
-      "provider": { "@type": "Organization", "name": "MiСode Sp. z o.o." },
+      "provider": { "@type": "Organization", "name": "MiCode Sp. z o.o." },
       "areaServed": ["PL", "EU"],
       "description": "Dedicated software solutions adapted to specific business requirements."
     },
@@ -136,7 +121,7 @@
       "@context": "https://schema.org",
       "@type": "Service",
       "name": "IT Systems Integration",
-      "provider": { "@type": "Organization", "name": "MiСode Sp. z o.o." },
+      "provider": { "@type": "Organization", "name": "MiCode Sp. z o.o." },
       "areaServed": ["PL", "EU"],
       "description": "Connecting disparate IT systems into a unified, coherent architecture."
     },
@@ -144,7 +129,7 @@
       "@context": "https://schema.org",
       "@type": "Service",
       "name": "Data Analysis",
-      "provider": { "@type": "Organization", "name": "MiСode Sp. z o.o." },
+      "provider": { "@type": "Organization", "name": "MiCode Sp. z o.o." },
       "areaServed": ["PL", "EU"],
       "description": "Transforming raw data into actionable business insights."
     },
@@ -152,7 +137,7 @@
       "@context": "https://schema.org",
       "@type": "Service",
       "name": "Cloud Solutions Implementation",
-      "provider": { "@type": "Organization", "name": "MiСode Sp. z o.o." },
+      "provider": { "@type": "Organization", "name": "MiCode Sp. z o.o." },
       "areaServed": ["PL", "EU"],
       "description": "Cloud migration, infrastructure optimisation, and managed cloud services."
     }
@@ -190,7 +175,7 @@
         },
         "publisher": {
           "@type": "Organization",
-          "name": "MiСode Sp. z o.o.",
+          "name": "MiCode Sp. z o.o.",
           "url": "https://mi-code.pl/"
         }
       };
@@ -220,7 +205,7 @@
     updateMetaTag('property', 'og:title', content.ogTitle);
     updateMetaTag('property', 'og:description', content.ogDescription);
     updateMetaTag('property', 'og:type', 'website');
-    updateMetaTag('property', 'og:site_name', 'MiСode Sp. z o.o.');
+    updateMetaTag('property', 'og:site_name', 'MiCode Sp. z o.o.');
     updateMetaTag('property', 'og:url', SITE_URL);
     updateMetaTag('property', 'og:image', OG_IMAGE);
     updateMetaTag('property', 'og:locale', ogLocaleMap[lang]);
@@ -269,7 +254,6 @@
     script.textContent = JSON.stringify([
       structuredData,
       websiteData,
-      localBusinessData,
       ...serviceSchemas,
       ...buildProductSchemas(lang)
     ]);

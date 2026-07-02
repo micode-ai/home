@@ -618,12 +618,6 @@
   }
 
   /* ===== Dark Mode ===== */
-  @media (prefers-color-scheme: dark) {
-    .product-content { background: var(--color-bg-primary); }
-    .content-links-section,
-    .back-link { border-top-color: var(--color-border); }
-  }
-
   :global(html.dark-mode-active) .product-content {
     background: var(--color-bg-primary);
   }

@@ -22,6 +22,10 @@
   let submitError = $state(false);
   let touched = $state<Partial<Record<keyof FormData, boolean>>>({});
 
+  function dismissSuccess() {
+    isSubmitted = false;
+  }
+
   function handleBlur(field: keyof FormData) {
     touched[field] = true;
     validateField(field);
@@ -85,10 +89,6 @@
         isSubmitted = true;
         formData = { name: '', email: '', message: '' };
         touched = {};
-
-        setTimeout(() => {
-          isSubmitted = false;
-        }, 5000);
       } catch (err) {
         console.error('EmailJS error:', err);
         submitError = true;
@@ -109,6 +109,14 @@
         <div class="success-message" role="alert" aria-live="polite">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
           <span>{t('contact.success', $languageStore)}<br>{t('contact.responsePromise', $languageStore)}</span>
+          <button
+            type="button"
+            class="success-dismiss"
+            onclick={dismissSuccess}
+            aria-label={t('legal.privacyPolicy.close', $languageStore)}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
         </div>
       {/if}
 
@@ -124,6 +132,8 @@
           <input
             type="text"
             id="name"
+            name="name"
+            autocomplete="name"
             bind:value={formData.name}
             onblur={() => handleBlur('name')}
             oninput={() => validateField('name')}
@@ -142,6 +152,8 @@
           <input
             type="email"
             id="email"
+            name="email"
+            autocomplete="email"
             bind:value={formData.email}
             onblur={() => handleBlur('email')}
             oninput={() => validateField('email')}
@@ -159,6 +171,7 @@
           <label for="message">{t('contact.message', $languageStore)}</label>
           <textarea
             id="message"
+            name="message"
             bind:value={formData.message}
             onblur={() => handleBlur('message')}
             oninput={() => validateField('message')}
@@ -204,7 +217,7 @@
 
       <div class="alternative-contact" role="complementary" aria-label="Alternative contact information">
         <p>{t('contact.alternativeContact', $languageStore)}</p>
-        <p><strong>perevertkinma@gmail.com</strong></p>
+        <p><strong>office@mi-code.pl</strong></p>
       </div>
     </div>
   </div>
@@ -213,7 +226,7 @@
 <style>
   .contact-section {
     background: var(--color-bg-tertiary);
-    padding: 5rem 0;
+    padding: var(--section-padding);
   }
 
   .contact-container {
@@ -237,7 +250,7 @@
   .contact-title {
     margin: 0 0 1.5rem 0;
     font-family: var(--font-heading);
-    font-size: 2rem;
+    font-size: var(--font-size-3xl);
     font-weight: 700;
     color: var(--color-text-primary);
     text-align: center;
@@ -245,6 +258,7 @@
   }
 
   .success-message {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -252,11 +266,40 @@
     background: #ecfdf5;
     border: 1px solid #a7f3d0;
     color: #065f46;
-    padding: 1rem;
+    padding: 1rem 2.75rem 1rem 1rem;
     border-radius: var(--radius-lg);
     margin-bottom: 1.5rem;
     text-align: center;
     font-weight: 500;
+  }
+
+  .success-dismiss {
+    position: absolute;
+    top: 0.375rem;
+    right: 0.375rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-md);
+    color: #065f46;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+  }
+
+  .success-dismiss:hover {
+    background: rgba(6, 95, 70, 0.1);
+  }
+
+  .success-dismiss:focus-visible {
+    outline: 2px solid #065f46;
+    outline-offset: 2px;
   }
 
   .response-promise {
@@ -316,11 +359,11 @@
 
   input.error,
   textarea.error {
-    border-color: #dc2626;
+    border-color: var(--color-error);
   }
 
   .error-message {
-    color: #dc2626;
+    color: var(--color-error);
     font-size: 0.8125rem;
   }
 
@@ -346,7 +389,7 @@
   }
 
   .gdpr-label input[type="checkbox"].error {
-    outline: 2px solid #dc2626;
+    outline: 2px solid var(--color-error);
     outline-offset: 1px;
   }
 
@@ -404,10 +447,6 @@
   }
 
   @media (max-width: 767px) {
-    .contact-section {
-      padding: 3rem 0;
-    }
-
     .contact-container {
       padding: 0 1rem;
     }
@@ -426,10 +465,6 @@
   }
 
   @media (min-width: 768px) and (max-width: 1024px) {
-    .contact-section {
-      padding: 4rem 0;
-    }
-
     .contact-container {
       padding: 0 1.5rem;
     }
@@ -443,49 +478,55 @@
     }
   }
 
-  @media (prefers-color-scheme: dark) {
-    .contact-form {
-      background: var(--color-bg-secondary);
-      border-color: var(--color-border);
-    }
+  :global(html.dark-mode-active) .contact-form {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-border);
+  }
 
-    .success-message {
-      background: rgba(16, 185, 129, 0.1);
-      border-color: rgba(16, 185, 129, 0.2);
-      color: #34d399;
-    }
+  :global(html.dark-mode-active) .success-message {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.2);
+    color: #34d399;
+  }
 
-    .error-banner {
-      background: rgba(239, 68, 68, 0.1);
-      border-color: rgba(239, 68, 68, 0.2);
-      color: #f87171;
-    }
+  :global(html.dark-mode-active) .success-dismiss {
+    color: #34d399;
+  }
 
-    input,
-    textarea {
-      background: var(--color-bg-tertiary);
-      border-color: var(--color-border);
-      color: var(--color-text-primary);
-    }
+  :global(html.dark-mode-active) .success-dismiss:hover {
+    background: rgba(52, 211, 153, 0.15);
+  }
 
-    input:focus,
-    textarea:focus {
-      border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
-    }
+  :global(html.dark-mode-active) .error-banner {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+  }
 
-    input.error,
-    textarea.error {
-      border-color: #ef4444;
-    }
+  :global(html.dark-mode-active) input,
+  :global(html.dark-mode-active) textarea {
+    background: var(--color-bg-tertiary);
+    border-color: var(--color-border);
+    color: var(--color-text-primary);
+  }
 
-    .error-message {
-      color: #f87171;
-    }
+  :global(html.dark-mode-active) input:focus,
+  :global(html.dark-mode-active) textarea:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
+  }
 
-    .alternative-contact {
-      border-top-color: var(--color-border);
-    }
+  :global(html.dark-mode-active) input.error,
+  :global(html.dark-mode-active) textarea.error {
+    border-color: #ef4444;
+  }
+
+  :global(html.dark-mode-active) .error-message {
+    color: #f87171;
+  }
+
+  :global(html.dark-mode-active) .alternative-contact {
+    border-top-color: var(--color-border);
   }
 
   @media (prefers-contrast: high) {

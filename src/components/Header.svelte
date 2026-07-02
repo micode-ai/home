@@ -16,10 +16,19 @@
 
   let activeSection = $state('');
   let menuOpen = $state(false);
+  let scrolled = $state(false);
   let observerCleanup: (() => void) | null = null;
+  let hamburgerEl: HTMLButtonElement | undefined = $state();
+  let mobileNavEl: HTMLElement | undefined = $state();
 
-  function closeMenu() {
+  function closeMenu(returnFocus = false) {
+    const wasOpen = menuOpen;
     menuOpen = false;
+    if (returnFocus && wasOpen) hamburgerEl?.focus();
+  }
+
+  function toggleMenu() {
+    menuOpen = !menuOpen;
   }
 
   function handleNavClick(e: MouseEvent, href: string) {
@@ -32,8 +41,26 @@
     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  function handleWindowKeydown(e: KeyboardEvent) {
+    if (menuOpen && e.key === 'Escape') {
+      closeMenu(true);
+    }
+  }
+
+  function handleWindowClick(e: MouseEvent) {
+    if (!menuOpen) return;
+    const target = e.target as Node;
+    if (mobileNavEl?.contains(target) || hamburgerEl?.contains(target)) return;
+    closeMenu(false);
+  }
+
+  function handleScroll() {
+    scrolled = window.scrollY > 0;
+  }
+
   onMount(() => {
     darkModeStore.init();
+    handleScroll();
 
     const sectionIds = ['services', 'products', 'contact'];
     const sections = sectionIds
@@ -50,7 +77,7 @@
           }
         });
       },
-      { threshold: 0.4 }
+      { rootMargin: '-40% 0px -55% 0px', threshold: 0 }
     );
 
     sections.forEach(el => observer.observe(el));
@@ -62,7 +89,9 @@
   });
 </script>
 
-<header class="header">
+<svelte:window onscroll={handleScroll} onkeydown={handleWindowKeydown} onclick={handleWindowClick} />
+
+<header class="header" class:scrolled>
   <div class="header-container">
     <div class="header-brand">
       <a href="/" aria-label="{companyName} — home">
@@ -112,12 +141,13 @@
       <button
         type="button"
         class="hamburger"
+        bind:this={hamburgerEl}
         aria-label={menuOpen
           ? t('nav.menuClose', $languageStore)
           : t('nav.menu', $languageStore)}
         aria-expanded={menuOpen}
         aria-controls="mobile-nav"
-        onclick={() => (menuOpen = !menuOpen)}
+        onclick={toggleMenu}
       >
         <span class="hamburger-bar"></span>
         <span class="hamburger-bar"></span>
@@ -136,6 +166,7 @@
     <nav
       id="mobile-nav"
       class="mobile-nav"
+      bind:this={mobileNavEl}
       aria-label={t('nav.menu', $languageStore)}
     >
       {#each navLinks as link}
@@ -170,7 +201,7 @@
     transition: box-shadow var(--transition-base);
   }
 
-  .header:hover {
+  .header.scrolled {
     box-shadow: var(--shadow-md);
   }
 
@@ -339,8 +370,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
     padding: 0;
     background: transparent;
     border: 1px solid var(--color-border);
@@ -417,51 +448,49 @@
 
   /* ── Dark mode ── */
 
-  @media (prefers-color-scheme: dark) {
-    .header {
-      background: rgba(15, 23, 42, 0.95);
-      border-bottom-color: var(--color-border);
-    }
+  :global(html.dark-mode-active) .header {
+    background: rgba(15, 23, 42, 0.95);
+    border-bottom-color: var(--color-border);
+  }
 
-    .header-logo {
-      filter: invert(1) hue-rotate(180deg);
-    }
+  :global(html.dark-mode-active) .header-logo {
+    filter: invert(1) hue-rotate(180deg);
+  }
 
-    .nav-link {
-      color: var(--color-text-tertiary);
-    }
+  :global(html.dark-mode-active) .nav-link {
+    color: var(--color-text-tertiary);
+  }
 
-    .nav-link:hover,
-    .nav-link.active {
-      color: var(--color-primary-light);
-      background: rgba(59, 130, 246, 0.1);
-    }
+  :global(html.dark-mode-active) .nav-link:hover,
+  :global(html.dark-mode-active) .nav-link.active {
+    color: var(--color-primary-light);
+    background: rgba(59, 130, 246, 0.1);
+  }
 
-    .nav-link.active::after {
-      background: var(--color-primary-light);
-    }
+  :global(html.dark-mode-active) .nav-link.active::after {
+    background: var(--color-primary-light);
+  }
 
-    .hamburger-bar {
-      background: var(--color-text-tertiary);
-    }
+  :global(html.dark-mode-active) .hamburger-bar {
+    background: var(--color-text-tertiary);
+  }
 
-    .hamburger:hover .hamburger-bar {
-      background: var(--color-primary-light);
-    }
+  :global(html.dark-mode-active) .hamburger:hover .hamburger-bar {
+    background: var(--color-primary-light);
+  }
 
-    .mobile-nav {
-      border-top-color: var(--color-border);
-    }
+  :global(html.dark-mode-active) .mobile-nav {
+    border-top-color: var(--color-border);
+  }
 
-    .mobile-nav-link {
-      color: var(--color-text-tertiary);
-    }
+  :global(html.dark-mode-active) .mobile-nav-link {
+    color: var(--color-text-tertiary);
+  }
 
-    .mobile-nav-link:hover,
-    .mobile-nav-link.active {
-      color: var(--color-primary-light);
-      background: rgba(59, 130, 246, 0.1);
-    }
+  :global(html.dark-mode-active) .mobile-nav-link:hover,
+  :global(html.dark-mode-active) .mobile-nav-link.active {
+    color: var(--color-primary-light);
+    background: rgba(59, 130, 246, 0.1);
   }
 
   /* ── High contrast ── */
