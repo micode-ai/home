@@ -1,0 +1,20 @@
+{
+  "pl": {
+    "title": "MiCode Sp. z o.o. — Systemy enterprise i integracje AI",
+    "description": "MiCode — budowa systemów enterprise, integracje AI (RAG, Text2SQL) i oprogramowanie na zamówienie. 18 lat doświadczenia IT. Gdańsk, Polska.",
+    "ogTitle": "MiCode — Systemy enterprise i integracje AI",
+    "ogDescription": "Oprogramowanie enterprise, integracja systemów IT, integracje AI. 18 lat doświadczenia w branży IT."
+  },
+  "en": {
+    "title": "MiCode Sp. z o.o. — Enterprise Software & AI Integrations",
+    "description": "MiCode — enterprise software development, AI integrations (RAG, Text2SQL), and custom solutions. 18+ years of IT experience. Gdańsk, Poland.",
+    "ogTitle": "MiCode — Enterprise Software & AI Integrations",
+    "ogDescription": "Custom enterprise software, IT systems integration, and AI integrations. 18+ years of experience — Gdańsk, Poland."
+  },
+  "ru": {
+    "title": "MiCode Sp. z o.o. — Enterprise-системы и AI-интеграции",
+    "description": "MiCode — разработка enterprise-систем, AI-интеграции (RAG, Text2SQL) и ПО на заказ. 18+ лет опыта. Гданьск, Польша.",
+    "ogTitle": "MiCode — Enterprise-системы и AI-интеграции",
+    "ogDescription": "Разработка ПО на заказ, интеграция IT-систем и AI-интеграции. 18+ лет опыта — Гданьск, Польша."
+  }
+}

@@ -1,5 +1,5 @@
 import { writable, type Writable } from 'svelte/store';
-import { getItem, setItem } from '../services/storage';
+import { setItem } from '../services/storage';
 
 /**
  * Language store for managing the current language state
@@ -19,10 +19,29 @@ export interface LanguageStore extends Writable<Language> {
   getCurrentLanguage: () => Language;
 }
 
-// Create a writable store with language loaded from localStorage or default to 'pl'
+/**
+ * Determine the initial language.
+ *
+ * The URL path is authoritative: prerendered locale pages live under `/en/…`
+ * and `/ru/…`, so the client must pick the same language the page was
+ * prerendered in — otherwise hydration mismatches. Root and unknown prefixes
+ * are Polish (the canonical default). localStorage is intentionally NOT used
+ * for the initial value, so hydration always matches the static HTML.
+ *
+ * On the server (prerender) there is no `window`; `renderPage()` sets the
+ * locale explicitly before rendering, so we just default to 'pl' here.
+ */
+const detectInitialLanguage = (): Language => {
+  if (typeof window !== 'undefined') {
+    const segment = window.location.pathname.replace(/^\/+/, '').split('/')[0];
+    if (segment === 'en' || segment === 'ru') return segment;
+  }
+  return 'pl';
+};
+
+// Create a writable store with language derived from the URL (see above)
 const createLanguageStore = (): LanguageStore => {
-  const storedLanguage = getItem(STORAGE_KEY);
-  const initialLanguage: Language = isLanguage(storedLanguage) ? storedLanguage : 'pl';
+  const initialLanguage: Language = detectInitialLanguage();
 
   const { subscribe, set, update } = writable<Language>(initialLanguage);
 

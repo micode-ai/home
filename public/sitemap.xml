@@ -1,95 +1,433 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
   <url>
     <loc>https://mi-code.pl/</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/" />
   </url>
 
   <url>
-    <loc>https://mi-code.pl/products/accounting-ai/</loc>
-    <lastmod>2026-07-02</lastmod>
+    <loc>https://mi-code.pl/en/</loc>
+    <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>1.0</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/" />
   </url>
 
   <url>
-    <loc>https://mi-code.pl/products/emarketing-ai/</loc>
-    <lastmod>2026-07-02</lastmod>
+    <loc>https://mi-code.pl/ru/</loc>
+    <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>1.0</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/" />
   </url>
 
   <url>
     <loc>https://mi-code.pl/products/budget-assistant/</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/products/budget-assistant/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/products/budget-assistant/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/products/budget-assistant/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/products/budget-assistant/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/en/products/budget-assistant/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/products/budget-assistant/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/products/budget-assistant/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/products/budget-assistant/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/products/budget-assistant/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/ru/products/budget-assistant/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/products/budget-assistant/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/products/budget-assistant/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/products/budget-assistant/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/products/budget-assistant/" />
   </url>
 
   <url>
     <loc>https://mi-code.pl/products/ngx-chat/</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/products/ngx-chat/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/products/ngx-chat/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/products/ngx-chat/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/products/ngx-chat/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/en/products/ngx-chat/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/products/ngx-chat/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/products/ngx-chat/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/products/ngx-chat/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/products/ngx-chat/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/ru/products/ngx-chat/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/products/ngx-chat/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/products/ngx-chat/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/products/ngx-chat/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/products/ngx-chat/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/products/accounting-ai/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/products/accounting-ai/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/products/accounting-ai/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/products/accounting-ai/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/products/accounting-ai/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/en/products/accounting-ai/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/products/accounting-ai/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/products/accounting-ai/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/products/accounting-ai/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/products/accounting-ai/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/ru/products/accounting-ai/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/products/accounting-ai/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/products/accounting-ai/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/products/accounting-ai/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/products/accounting-ai/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/products/emarketing-ai/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/products/emarketing-ai/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/products/emarketing-ai/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/products/emarketing-ai/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/products/emarketing-ai/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/en/products/emarketing-ai/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/products/emarketing-ai/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/products/emarketing-ai/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/products/emarketing-ai/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/products/emarketing-ai/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/ru/products/emarketing-ai/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/products/emarketing-ai/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/products/emarketing-ai/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/products/emarketing-ai/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/products/emarketing-ai/" />
   </url>
 
   <url>
     <loc>https://mi-code.pl/products/testing-ai/</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/products/testing-ai/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/products/testing-ai/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/products/testing-ai/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/products/testing-ai/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/en/products/testing-ai/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/products/testing-ai/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/products/testing-ai/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/products/testing-ai/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/products/testing-ai/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/ru/products/testing-ai/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/products/testing-ai/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/products/testing-ai/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/products/testing-ai/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/products/testing-ai/" />
   </url>
 
   <url>
     <loc>https://mi-code.pl/blog/</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/blog/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/blog/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/en/blog/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/blog/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/blog/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/ru/blog/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/blog/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/blog/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/" />
   </url>
 
   <url>
     <loc>https://mi-code.pl/blog/scm-ai-agents-supply-chain/</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/scm-ai-agents-supply-chain/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/blog/scm-ai-agents-supply-chain/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/blog/scm-ai-agents-supply-chain/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/scm-ai-agents-supply-chain/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/en/blog/scm-ai-agents-supply-chain/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/scm-ai-agents-supply-chain/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/blog/scm-ai-agents-supply-chain/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/blog/scm-ai-agents-supply-chain/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/scm-ai-agents-supply-chain/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/ru/blog/scm-ai-agents-supply-chain/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/scm-ai-agents-supply-chain/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/blog/scm-ai-agents-supply-chain/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/blog/scm-ai-agents-supply-chain/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/scm-ai-agents-supply-chain/" />
   </url>
 
   <url>
     <loc>https://mi-code.pl/blog/ngx-open-web-ui-chat-tutorial/</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/ngx-open-web-ui-chat-tutorial/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/blog/ngx-open-web-ui-chat-tutorial/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/blog/ngx-open-web-ui-chat-tutorial/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/ngx-open-web-ui-chat-tutorial/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/en/blog/ngx-open-web-ui-chat-tutorial/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/ngx-open-web-ui-chat-tutorial/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/blog/ngx-open-web-ui-chat-tutorial/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/blog/ngx-open-web-ui-chat-tutorial/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/ngx-open-web-ui-chat-tutorial/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/ru/blog/ngx-open-web-ui-chat-tutorial/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/ngx-open-web-ui-chat-tutorial/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/blog/ngx-open-web-ui-chat-tutorial/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/blog/ngx-open-web-ui-chat-tutorial/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/ngx-open-web-ui-chat-tutorial/" />
   </url>
 
   <url>
     <loc>https://mi-code.pl/blog/accounting-ai-polish-tax-automation/</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/accounting-ai-polish-tax-automation/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/blog/accounting-ai-polish-tax-automation/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/blog/accounting-ai-polish-tax-automation/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/accounting-ai-polish-tax-automation/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/en/blog/accounting-ai-polish-tax-automation/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/accounting-ai-polish-tax-automation/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/blog/accounting-ai-polish-tax-automation/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/blog/accounting-ai-polish-tax-automation/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/accounting-ai-polish-tax-automation/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/ru/blog/accounting-ai-polish-tax-automation/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/accounting-ai-polish-tax-automation/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/blog/accounting-ai-polish-tax-automation/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/blog/accounting-ai-polish-tax-automation/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/accounting-ai-polish-tax-automation/" />
   </url>
 
   <url>
     <loc>https://mi-code.pl/blog/emarketing-ai-content-automation/</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/emarketing-ai-content-automation/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/blog/emarketing-ai-content-automation/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/blog/emarketing-ai-content-automation/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/emarketing-ai-content-automation/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/en/blog/emarketing-ai-content-automation/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/emarketing-ai-content-automation/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/blog/emarketing-ai-content-automation/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/blog/emarketing-ai-content-automation/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/emarketing-ai-content-automation/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/ru/blog/emarketing-ai-content-automation/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/emarketing-ai-content-automation/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/blog/emarketing-ai-content-automation/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/blog/emarketing-ai-content-automation/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/emarketing-ai-content-automation/" />
   </url>
 
   <url>
     <loc>https://mi-code.pl/blog/ai-budget-assistant-receipt-ocr-gpt4/</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/ai-budget-assistant-receipt-ocr-gpt4/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/blog/ai-budget-assistant-receipt-ocr-gpt4/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/blog/ai-budget-assistant-receipt-ocr-gpt4/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/ai-budget-assistant-receipt-ocr-gpt4/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/en/blog/ai-budget-assistant-receipt-ocr-gpt4/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/ai-budget-assistant-receipt-ocr-gpt4/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/blog/ai-budget-assistant-receipt-ocr-gpt4/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/blog/ai-budget-assistant-receipt-ocr-gpt4/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/ai-budget-assistant-receipt-ocr-gpt4/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/ru/blog/ai-budget-assistant-receipt-ocr-gpt4/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/ai-budget-assistant-receipt-ocr-gpt4/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/blog/ai-budget-assistant-receipt-ocr-gpt4/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/blog/ai-budget-assistant-receipt-ocr-gpt4/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/ai-budget-assistant-receipt-ocr-gpt4/" />
   </url>
 
   <url>
     <loc>https://mi-code.pl/blog/testing-ai-agent-orchestration/</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/testing-ai-agent-orchestration/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/blog/testing-ai-agent-orchestration/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/blog/testing-ai-agent-orchestration/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/testing-ai-agent-orchestration/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/en/blog/testing-ai-agent-orchestration/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/testing-ai-agent-orchestration/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/blog/testing-ai-agent-orchestration/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/blog/testing-ai-agent-orchestration/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/testing-ai-agent-orchestration/" />
+  </url>
+
+  <url>
+    <loc>https://mi-code.pl/ru/blog/testing-ai-agent-orchestration/</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+      <xhtml:link rel="alternate" hreflang="pl" href="https://mi-code.pl/blog/testing-ai-agent-orchestration/" />
+      <xhtml:link rel="alternate" hreflang="en" href="https://mi-code.pl/en/blog/testing-ai-agent-orchestration/" />
+      <xhtml:link rel="alternate" hreflang="ru" href="https://mi-code.pl/ru/blog/testing-ai-agent-orchestration/" />
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://mi-code.pl/blog/testing-ai-agent-orchestration/" />
   </url>
 
 </urlset>

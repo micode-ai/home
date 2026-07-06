@@ -1,12 +1,15 @@
 <script lang="ts">
   import { languageStore, type Language } from '../stores/languageStore';
+  import { localizedPath } from '../services/locale';
 
   const languages: Language[] = ['pl', 'en', 'ru'];
 
+  // Each locale is a real prerendered URL (/, /en/, /ru/), so switching language
+  // navigates to the localized path of the current page rather than swapping
+  // client-side. This keeps the URL, canonical and hreflang consistent for SEO.
   function selectLanguage(lang: Language) {
-    if (lang !== $languageStore) {
-      languageStore.setLanguage(lang);
-    }
+    if (lang === $languageStore) return;
+    window.location.assign(localizedPath(window.location.pathname, lang));
   }
 </script>
 
