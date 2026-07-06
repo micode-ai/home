@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { stripLocale, localizedPath } from './locale';
+import { stripLocale, localizedPath, withLocale } from './locale';
 
 describe('stripLocale', () => {
   it('returns the route path unchanged for Polish (no prefix)', () => {
@@ -39,5 +39,25 @@ describe('localizedPath', () => {
   it('is idempotent when switching to the same locale', () => {
     expect(localizedPath('/en/blog/', 'en')).toBe('/en/blog/');
     expect(localizedPath('/blog/', 'pl')).toBe('/blog/');
+  });
+});
+
+describe('withLocale', () => {
+  it('leaves internal paths unchanged for Polish', () => {
+    expect(withLocale('/', 'pl')).toBe('/');
+    expect(withLocale('/blog/', 'pl')).toBe('/blog/');
+    expect(withLocale('/#services', 'pl')).toBe('/#services');
+  });
+
+  it('prefixes root-relative paths with en/ru', () => {
+    expect(withLocale('/', 'en')).toBe('/en/');
+    expect(withLocale('/', 'ru')).toBe('/ru/');
+    expect(withLocale('/blog/', 'en')).toBe('/en/blog/');
+    expect(withLocale('/products/testing-ai/', 'ru')).toBe('/ru/products/testing-ai/');
+  });
+
+  it('keeps hash links pointing at the localized home', () => {
+    expect(withLocale('/#services', 'en')).toBe('/en/#services');
+    expect(withLocale('/#contact', 'ru')).toBe('/ru/#contact');
   });
 });

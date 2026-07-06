@@ -1,6 +1,7 @@
 <script lang="ts">
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
+  import { withLocale } from '../services/locale';
   import blogPosts from '../data/blog-posts.json';
   import products from '../data/products.json';
 
@@ -44,9 +45,9 @@
   <div class="article-hero">
     <div class="article-inner">
       <nav class="article-breadcrumb" aria-label="Breadcrumb">
-        <a href="/">{t('header.companyName', lang)}</a>
+        <a href={withLocale('/', lang)}>{t('header.companyName', lang)}</a>
         <span aria-hidden="true">›</span>
-        <a href="/blog/">{blogLabel}</a>
+        <a href={withLocale('/blog/', lang)}>{blogLabel}</a>
       </nav>
       <h1 id="article-title" class="article-title">{title}</h1>
       <p class="article-byline">
@@ -72,7 +73,7 @@
       {#if relatedProduct}
         <aside class="related-product" aria-label={relatedLabel}>
           <span class="related-label">{relatedLabel}</span>
-          <a href="/products/{relatedProduct.id}/" class="related-link">
+          <a href={withLocale(`/products/${relatedProduct.id}/`, lang)} class="related-link">
             {t(relatedProduct.nameKey, lang)}
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
           </a>
@@ -80,7 +81,7 @@
       {/if}
 
       <div class="back-link">
-        <a href="/blog/">{backLabel}</a>
+        <a href={withLocale('/blog/', lang)}>{backLabel}</a>
       </div>
     </div>
   </div>

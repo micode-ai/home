@@ -1,6 +1,7 @@
 <script lang="ts">
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
+  import { withLocale } from '../services/locale';
   import productsData from '../data/products.json';
   import type { Product } from '../types/products';
   import CommunityStatBadges from './CommunityStatBadges.svelte';
@@ -242,7 +243,7 @@
       {/if}
 
       <div class="back-link">
-        <a href="/">
+        <a href={withLocale('/', lang)}>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
           {backLabel}
         </a>

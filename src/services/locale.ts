@@ -25,3 +25,14 @@ export function localizedPath(pathname: string, lang: Language): string {
   const route = stripLocale(pathname);
   return (lang === 'pl' ? '/' : `/${lang}/`) + route;
 }
+
+/**
+ * Prefix a root-relative internal link with the active locale so navigation
+ * stays inside the same language tree. Polish has no prefix.
+ *
+ * `withLocale('/', 'en')` -> `/en/`, `withLocale('/blog/', 'ru')` -> `/ru/blog/`,
+ * `withLocale('/#services', 'en')` -> `/en/#services`.
+ */
+export function withLocale(path: string, lang: Language): string {
+  return lang === 'pl' ? path : `/${lang}${path}`;
+}

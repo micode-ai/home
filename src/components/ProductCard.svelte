@@ -1,6 +1,7 @@
 <script lang="ts">
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
+  import { withLocale } from '../services/locale';
   import type { Product } from '../types/products';
   import CommunityStatBadges from './CommunityStatBadges.svelte';
 
@@ -120,7 +121,7 @@
         {/if}
 
         <a
-          href="/products/{product.id}/"
+          href={withLocale(`/products/${product.id}/`, $languageStore)}
           class="product-page-link"
           aria-label="View {t(product.nameKey, $languageStore)} full product page"
           onclick={(e) => e.stopPropagation()}

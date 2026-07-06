@@ -2,6 +2,7 @@
   import { onMount, onDestroy } from 'svelte';
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
+  import { withLocale, stripLocale } from '../services/locale';
   import LanguageSwitcher from './LanguageSwitcher.svelte';
   import logoUrl from '../assets/images/mi_code_logo_mark.svg';
   import { darkModeStore } from '../stores/darkModeStore';
@@ -33,7 +34,9 @@
 
   function handleNavClick(e: MouseEvent, href: string) {
     closeMenu();
-    if (typeof window === 'undefined' || window.location.pathname !== '/') return;
+    // Only intercept for smooth-scroll when we're on the home page of any locale
+    // (/, /en/, /ru/). Elsewhere let the link navigate to the localized home.
+    if (typeof window === 'undefined' || stripLocale(window.location.pathname) !== '') return;
     const sectionId = href.replace('/#', '');
     const target = document.getElementById(sectionId);
     if (!target) return;
@@ -94,7 +97,7 @@
 <header class="header" class:scrolled>
   <div class="header-container">
     <div class="header-brand">
-      <a href="/" aria-label="{companyName} — home">
+      <a href={withLocale('/', $languageStore)} aria-label="{companyName} — home">
         <img src={logoUrl} alt="{companyName} logo" class="header-logo" />
       </a>
     </div>
@@ -103,7 +106,7 @@
     <nav class="header-nav" aria-label={t('nav.menu', $languageStore)}>
       {#each navLinks as link}
         <a
-          href={link.href}
+          href={withLocale(link.href, $languageStore)}
           class="nav-link"
           class:active={activeSection === link.href}
           aria-current={activeSection === link.href ? 'page' : undefined}
@@ -112,7 +115,7 @@
           {t(link.key, $languageStore)}
         </a>
       {/each}
-      <a href="/blog/" class="nav-link">{t('nav.blog', $languageStore)}</a>
+      <a href={withLocale('/blog/', $languageStore)} class="nav-link">{t('nav.blog', $languageStore)}</a>
     </nav>
 
     <div class="header-right">
@@ -171,7 +174,7 @@
     >
       {#each navLinks as link}
         <a
-          href={link.href}
+          href={withLocale(link.href, $languageStore)}
           class="mobile-nav-link"
           class:active={activeSection === link.href}
           aria-current={activeSection === link.href ? 'page' : undefined}
@@ -180,7 +183,7 @@
           {t(link.key, $languageStore)}
         </a>
       {/each}
-      <a href="/blog/" class="mobile-nav-link">{t('nav.blog', $languageStore)}</a>
+      <a href={withLocale('/blog/', $languageStore)} class="mobile-nav-link">{t('nav.blog', $languageStore)}</a>
       <!-- Language switcher at the bottom of mobile menu -->
       <div class="lang-mobile">
         <LanguageSwitcher />

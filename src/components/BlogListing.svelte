@@ -1,6 +1,7 @@
 <script lang="ts">
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
+  import { withLocale } from '../services/locale';
   import blogPosts from '../data/blog-posts.json';
 
   type Post = typeof blogPosts[number];
@@ -34,10 +35,10 @@
         <li class="post-card">
           <time class="post-date" datetime={post.date}>{post.date}</time>
           <h2 class="post-title">
-            <a href="/blog/{post.slug}/">{getTitle(post, $languageStore)}</a>
+            <a href={withLocale(`/blog/${post.slug}/`, $languageStore)}>{getTitle(post, $languageStore)}</a>
           </h2>
           <p class="post-summary">{getSummary(post, $languageStore)}</p>
-          <a href="/blog/{post.slug}/" class="read-link">{t('blog.readArticle', $languageStore)}</a>
+          <a href={withLocale(`/blog/${post.slug}/`, $languageStore)} class="read-link">{t('blog.readArticle', $languageStore)}</a>
           <div class="post-tags">
             {#each post.tags as tag}
               <span class="tag">{tag}</span>
@@ -46,7 +47,7 @@
         </li>
       {/each}
     </ul>
-    <div class="back-link"><a href="/">{getBack($languageStore)}</a></div>
+    <div class="back-link"><a href={withLocale('/', $languageStore)}>{getBack($languageStore)}</a></div>
   </div>
 </section>
 
