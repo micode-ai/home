@@ -9,6 +9,19 @@ const products = JSON.parse(readFileSync(join(root, 'src/data/products.json'), '
 const blogPosts = JSON.parse(readFileSync(join(root, 'src/data/blog-posts.json'), 'utf8'));
 const homeMeta = JSON.parse(readFileSync(join(root, 'src/data/seo-home.json'), 'utf8'));
 
+const translations = {
+  pl: JSON.parse(readFileSync(join(root, 'src/data/pl.json'), 'utf8')),
+  en: JSON.parse(readFileSync(join(root, 'src/data/en.json'), 'utf8')),
+  ru: JSON.parse(readFileSync(join(root, 'src/data/ru.json'), 'utf8')),
+};
+
+// Resolve a dot-notation i18n key for a locale (returns the key if unresolved,
+// matching src/services/i18n.ts behaviour).
+function t(key, lang) {
+  const value = key.split('.').reduce((acc, part) => (acc == null ? acc : acc[part]), translations[lang]);
+  return typeof value === 'string' ? value : key;
+}
+
 const SITE = 'https://mi-code.pl/';
 const LOCALES = ['pl', 'en', 'ru'];
 const OG_LOCALE = { pl: 'pl_PL', en: 'en_US', ru: 'ru_RU' };
@@ -57,36 +70,38 @@ function injectSeo(html, urlPath, lang) {
   return html.replace('</head>', `    ${lines.join('\n    ')}\n  </head>`);
 }
 
-// Localize the <title> / description / OG / Twitter text for the home page.
-function localizeHomeMeta(html, lang) {
-  const m = homeMeta[lang];
-  if (!m) return html;
-  return html
-    .replace(/<title>[^<]*<\/title>/, `<title>${escapeAttr(m.title)}</title>`)
-    .replace(
-      /(<meta name="description" content=")[^"]*(")/,
-      `$1${escapeAttr(m.description)}$2`
-    )
-    .replace(
-      /(<meta property="og:title" content=")[^"]*(")/,
-      `$1${escapeAttr(m.ogTitle)}$2`
-    )
-    .replace(
-      /(<meta property="og:description" content=")[^"]*(")/,
-      `$1${escapeAttr(m.ogDescription)}$2`
-    )
-    .replace(
-      /(<meta name="twitter:title" content=")[^"]*(")/,
-      `$1${escapeAttr(m.ogTitle)}$2`
-    )
-    .replace(
-      /(<meta name="twitter:description" content=")[^"]*(")/,
-      `$1${escapeAttr(m.ogDescription)}$2`
-    );
+// Replace the <title>/description and matching OG/Twitter tags. `meta` may
+// provide `ogTitle`/`ogDescription`; otherwise title/description are reused.
+// Missing tags are simply skipped (regex no-op), so it is safe on any page.
+function replaceMeta(html, meta) {
+  const title = meta.title;
+  const description = meta.description;
+  const ogTitle = meta.ogTitle ?? title;
+  const ogDescription = meta.ogDescription ?? description;
+
+  if (title != null) {
+    html = html
+      .replace(/<title>[^<]*<\/title>/, `<title>${escapeAttr(title)}</title>`)
+      .replace(/(<meta property="og:title" content=")[^"]*(")/, `$1${escapeAttr(ogTitle)}$2`)
+      .replace(/(<meta name="twitter:title" content=")[^"]*(")/, `$1${escapeAttr(ogTitle)}$2`);
+  }
+  if (description != null) {
+    html = html
+      .replace(/(<meta name="description" content=")[^"]*(")/, `$1${escapeAttr(description)}$2`)
+      .replace(
+        /(<meta property="og:description" content=")[^"]*(")/,
+        `$1${escapeAttr(ogDescription)}$2`
+      )
+      .replace(
+        /(<meta name="twitter:description" content=")[^"]*(")/,
+        `$1${escapeAttr(ogDescription)}$2`
+      );
+  }
+  return html;
 }
 
 // Render every locale variant of one route from the built (Polish) client shell.
-function processRoute({ distRoute, urlPath, render }) {
+function processRoute({ distRoute, urlPath, render, metaFor }) {
   const templatePath = join(root, 'dist', distRoute);
   const template = readFileSync(templatePath, 'utf8');
   const marker = '<div id="app"></div>';
@@ -99,7 +114,8 @@ function processRoute({ distRoute, urlPath, render }) {
     let html = template.replace(marker, `<div id="app">${appHtml}</div>`);
     html = setHtmlLang(html, lang);
     html = injectSeo(html, urlPath, lang);
-    if (urlPath === '') html = localizeHomeMeta(html, lang);
+    const meta = metaFor ? metaFor(lang) : null;
+    if (meta) html = replaceMeta(html, meta);
 
     const outRel = lang === 'pl' ? distRoute : join(lang, distRoute);
     const outPath = join(root, 'dist', outRel);
@@ -151,22 +167,57 @@ async function run() {
   const { renderPage: renderBlog } = await import('../dist-ssr/blog.js');
   const { renderPage: renderArticle } = await import('../dist-ssr/article.js');
 
+  // metaFor(lang) returns localized {title, description, ...} to inject, or null
+  // to keep the page's static (Polish) meta. Polish variants return null since
+  // their static index.html meta is already correct/bespoke.
+  const suffix = (l) => (l === 'en' ? 'En' : 'Ru'); // blog-posts.json field suffix
+
   const routes = [
-    { distRoute: 'index.html', urlPath: '', priority: '1.0', changefreq: 'monthly', render: (l) => renderHome(l) },
+    {
+      distRoute: 'index.html',
+      urlPath: '',
+      priority: '1.0',
+      changefreq: 'monthly',
+      render: (l) => renderHome(l),
+      metaFor: (l) =>
+        homeMeta[l]
+          ? {
+              title: homeMeta[l].title,
+              description: homeMeta[l].description,
+              ogTitle: homeMeta[l].ogTitle,
+              ogDescription: homeMeta[l].ogDescription,
+            }
+          : null,
+    },
     ...products.map((p) => ({
       distRoute: `products/${p.id}/index.html`,
       urlPath: `products/${p.id}/`,
       priority: '0.8',
       changefreq: 'monthly',
       render: (l) => renderProduct(p.id, l),
+      metaFor: (l) =>
+        l === 'pl'
+          ? null
+          : { title: `${t(p.nameKey, l)} — MiCode`, description: t(p.descriptionKey, l) },
     })),
-    { distRoute: 'blog/index.html', urlPath: 'blog/', priority: '0.7', changefreq: 'weekly', render: (l) => renderBlog(l) },
+    {
+      distRoute: 'blog/index.html',
+      urlPath: 'blog/',
+      priority: '0.7',
+      changefreq: 'weekly',
+      render: (l) => renderBlog(l),
+      metaFor: (l) => (l === 'pl' ? null : { title: `${t('blog.title', l)} — MiCode` }),
+    },
     ...blogPosts.map((post) => ({
       distRoute: `blog/${post.slug}/index.html`,
       urlPath: `blog/${post.slug}/`,
       priority: '0.6',
       changefreq: 'monthly',
       render: (l) => renderArticle(post.slug, l),
+      metaFor: (l) =>
+        l === 'pl'
+          ? null
+          : { title: post[`title${suffix(l)}`], description: post[`summary${suffix(l)}`] },
     })),
   ];
 
