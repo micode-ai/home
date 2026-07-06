@@ -51,6 +51,7 @@
     "name": "Michał Peraviortkin",
     "experience": "Doświadczenie",
     "experienceValue": "18+ lat w tworzeniu oprogramowania",
+    "bio": "Michał Peraviortkin to założyciel MiCode. Od ponad 18 lat tworzy oprogramowanie — od systemów enterprise w Javie i Oracle po produkty oparte na sztucznej inteligencji. Pracował przy projektach dla Nokii, budował systemy zarządzania łańcuchem dostaw z agentami AI (RAG, Text2SQL, 300+ endpointów REST) i prowadził blog techniczny oracle-adf.info z ponad 400 000 wyświetleń. Dziś w MiCode zamienia to doświadczenie w praktyczne narzędzia AI, które pomagają firmom automatyzować rutynę i podejmować decyzje w oparciu o dane.",
     "careerHighlights": "Najważniejsze osiągnięcia",
     "highlights": {
       "nokia": {

@@ -1,11 +1,25 @@
 <script lang="ts">
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
+  import founderPhoto from '../assets/images/founder.jpg';
 
   const sectionTitle = $derived(t('founder.title', $languageStore));
   const founderName = $derived(t('founder.name', $languageStore));
   const experienceValue = $derived(t('founder.experienceValue', $languageStore));
+  const founderBio = $derived(t('founder.bio', $languageStore));
   const careerHighlightsLabel = $derived(t('founder.careerHighlights', $languageStore));
+
+  const initials = $derived(
+    founderName
+      .split(' ')
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((word) => word[0])
+      .join('')
+      .toUpperCase()
+  );
+
+  let photoError = $state(false);
 
   const linkedinUrl = 'https://www.linkedin.com/in/mikhailperaviortkin/';
   const upworkUrl = 'https://www.upwork.com/freelancers/~0111066307e26807ec?mp_source=share';
@@ -47,12 +61,34 @@
     <h2 id="founder-title" class="founder-title">{sectionTitle}</h2>
 
     <div class="founder-header">
-      <h3 class="founder-name">{founderName}</h3>
-      <div class="founder-experience">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-        </svg>
-        <span class="experience-text">{experienceValue}</span>
+      <div class="founder-identity">
+        <div class="avatar-wrapper">
+          {#if !photoError}
+            <img
+              class="avatar-photo"
+              src={founderPhoto}
+              alt={founderName}
+              width="132"
+              height="132"
+              loading="lazy"
+              decoding="async"
+              onerror={() => (photoError = true)}
+            />
+          {:else}
+            <div class="avatar-monogram" aria-hidden="true">{initials}</div>
+          {/if}
+        </div>
+
+        <div class="founder-info">
+          <h3 class="founder-name">{founderName}</h3>
+          <div class="founder-experience">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            </svg>
+            <span class="experience-text">{experienceValue}</span>
+          </div>
+          <p class="founder-bio">{founderBio}</p>
+        </div>
       </div>
 
       <div class="founder-links">
@@ -136,8 +172,65 @@
     color: #ffffff;
   }
 
+  .founder-identity {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .avatar-wrapper {
+    flex-shrink: 0;
+    width: 92px;
+    height: 92px;
+  }
+
+  .avatar-photo,
+  .avatar-monogram {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: block;
+    border: 3px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+  }
+
+  .avatar-photo {
+    object-fit: cover;
+    object-position: center 30%;
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .avatar-monogram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-primary);
+    color: #ffffff;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .founder-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.85rem;
+    min-width: 0;
+  }
+
+  .founder-bio {
+    margin: 0;
+    max-width: 62ch;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.92);
+  }
+
   .founder-name {
-    margin: 0 0 1rem 0;
+    margin: 0;
     font-family: var(--font-heading);
     font-size: 1.75rem;
     font-weight: 700;
@@ -331,6 +424,10 @@
       font-size: 1.375rem;
     }
 
+    .founder-bio {
+      font-size: 0.9375rem;
+    }
+
     .career-title {
       font-size: 1.25rem;
     }
@@ -356,6 +453,34 @@
     .timeline-header {
       flex-direction: column;
       gap: 0.25rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .founder-identity {
+      flex-direction: row;
+      align-items: center;
+      gap: 2rem;
+      text-align: left;
+    }
+
+    .founder-info {
+      align-items: flex-start;
+    }
+
+    .founder-bio {
+      text-align: justify;
+      text-align-last: left;
+      hyphens: auto;
+    }
+
+    .avatar-wrapper {
+      width: 132px;
+      height: 132px;
+    }
+
+    .avatar-monogram {
+      font-size: 2.75rem;
     }
   }
 
@@ -407,6 +532,10 @@
     }
 
     .founder-name {
+      color: #000000;
+    }
+
+    .founder-bio {
       color: #000000;
     }
 

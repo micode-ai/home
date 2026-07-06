@@ -71,7 +71,18 @@
     "founder": {
       "@type": "Person",
       "name": "Michał Peraviortkin",
+      "alternateName": "Mikhail Peraviortkin",
       "jobTitle": "Founder & CEO",
+      "image": "https://mi-code.pl/founder.jpg",
+      "description": "Software engineer and founder of MiCode with 18+ years of experience building enterprise systems (Java, Oracle, Spring, Angular) and AI-powered products (RAG, Text2SQL).",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "MiCode Sp. z o.o."
+      },
+      "sameAs": [
+        "https://www.linkedin.com/in/mikhailperaviortkin/",
+        "https://www.upwork.com/freelancers/~0111066307e26807ec"
+      ],
       "alumniOf": {
         "@type": "EducationalOrganization",
         "name": "Brest State Technical University"
