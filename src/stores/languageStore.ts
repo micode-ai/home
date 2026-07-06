@@ -81,3 +81,13 @@ const createLanguageStore = (): LanguageStore => {
 };
 
 export const languageStore = createLanguageStore();
+
+/**
+ * Persist a language choice to localStorage without mutating the store. The
+ * language switcher navigates (full reload) rather than swapping in place, and
+ * the Polish home page uses this stored value to redirect a returning visitor
+ * back to their language (see scripts/prerender.mjs).
+ */
+export const persistLanguage = (lang: Language): void => {
+  setItem(STORAGE_KEY, lang);
+};

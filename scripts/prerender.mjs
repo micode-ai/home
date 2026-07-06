@@ -70,6 +70,17 @@ function injectSeo(html, urlPath, lang) {
   return html.replace('</head>', `    ${lines.join('\n    ')}\n  </head>`);
 }
 
+// Inline script (Polish home only) that redirects a returning visitor to their
+// remembered language before hydration. Crawlers have empty localStorage, so
+// they see Polish at `/` and index it normally.
+const LANGUAGE_REDIRECT_SCRIPT =
+  `<script>(function(){try{var l=localStorage.getItem('micode_language');` +
+  `if(l==='en'||l==='ru'){location.replace('/'+l+'/'+location.search+location.hash);}}catch(e){}})();</script>`;
+
+function injectLanguageRedirect(html) {
+  return html.replace('</head>', `    ${LANGUAGE_REDIRECT_SCRIPT}\n  </head>`);
+}
+
 // Replace the <title>/description and matching OG/Twitter tags. `meta` may
 // provide `ogTitle`/`ogDescription`; otherwise title/description are reused.
 // Missing tags are simply skipped (regex no-op), so it is safe on any page.
@@ -116,6 +127,7 @@ function processRoute({ distRoute, urlPath, render, metaFor }) {
     html = injectSeo(html, urlPath, lang);
     const meta = metaFor ? metaFor(lang) : null;
     if (meta) html = replaceMeta(html, meta);
+    if (urlPath === '' && lang === 'pl') html = injectLanguageRedirect(html);
 
     const outRel = lang === 'pl' ? distRoute : join(lang, distRoute);
     const outPath = join(root, 'dist', outRel);
