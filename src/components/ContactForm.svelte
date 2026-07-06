@@ -217,7 +217,7 @@
 
       <div class="alternative-contact" role="complementary" aria-label="Alternative contact information">
         <p>{t('contact.alternativeContact', $languageStore)}</p>
-        <p><strong>office@mi-code.pl</strong></p>
+        <p><strong>development@mi-code.pl</strong></p>
       </div>
     </div>
   </div>

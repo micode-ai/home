@@ -8,7 +8,7 @@ MiCode also designs and ships its own AI products: an accounting assistant for P
 
 Languages: Polish (default), English, Russian — select via `?lang=pl|en|ru` query parameter on any page (the page content is the same across locales, only UI text and copy are translated). Note: because the locale switch is client-side only and each language does not have its own prerendered URL, this site intentionally does not publish hreflang alternate tags — hreflang would incorrectly claim separate URLs per language when there are none.
 
-Contact: office@mi-code.pl — Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Poland.
+Contact: development@mi-code.pl — Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Poland.
 
 ## Company
 

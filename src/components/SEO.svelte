@@ -52,7 +52,7 @@
     "contactPoint": {
       "@type": "ContactPoint",
       "contactType": "customer service",
-      "email": "office@mi-code.pl"
+      "email": "development@mi-code.pl"
     },
     "founder": {
       "@type": "Person",
