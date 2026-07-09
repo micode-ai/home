@@ -37,10 +37,24 @@
   aria-label="{t(product.nameKey, $languageStore)} - click for details"
   style="--card-accent: {product.accentColor ?? 'var(--color-primary)'}; --card-index: {index}"
 >
+  {#snippet badgeIcon(icon: string | undefined)}
+    {#if icon === 'code'}
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+    {:else if icon === 'cloud'}
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+    {:else if icon === 'smartphone'}
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+    {:else if icon === 'message-circle'}
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+    {:else}
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" x2="12" y1="22" y2="12"/></svg>
+    {/if}
+  {/snippet}
+
   <div class="card-accent-line"></div>
 
-  {#if productImage}
-    <div class="product-image-container">
+  <div class="product-image-container">
+    {#if productImage}
       <img
         src={productImage}
         alt={t(product.nameKey, $languageStore)}
@@ -49,20 +63,18 @@
         height="900"
         loading="lazy"
       />
-      {#if product.badge}
-        <span class="product-badge">
-          {#if product.badge.icon === 'code'}
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-          {:else if product.badge.icon === 'cloud'}
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
-          {:else if product.badge.icon === 'smartphone'}
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
-          {/if}
-          {product.badge.label}
-        </span>
-      {/if}
-    </div>
-  {/if}
+    {:else}
+      <div class="product-image-placeholder" aria-hidden="true">
+        {@render badgeIcon(product.badge?.icon)}
+      </div>
+    {/if}
+    {#if product.badge}
+      <span class="product-badge">
+        {@render badgeIcon(product.badge.icon)}
+        {product.badge.label}
+      </span>
+    {/if}
+  </div>
 
   <div class="product-content">
     <h3 class="product-name">{t(product.nameKey, $languageStore)}</h3>
@@ -197,6 +209,33 @@
   }
 
   .product-card:hover .product-image {
+    transform: scale(1.05);
+  }
+
+  /* ===== Image placeholder (products without a screenshot) ===== */
+  .product-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--card-accent, var(--color-primary));
+    background: radial-gradient(
+      circle at 50% 42%,
+      color-mix(in srgb, var(--card-accent, var(--color-primary)) 16%, transparent),
+      transparent 68%
+    );
+    transition: transform var(--transition-slow);
+  }
+
+  .product-image-placeholder svg {
+    width: 72px;
+    height: 72px;
+    stroke-width: 1.6;
+    opacity: 0.9;
+  }
+
+  .product-card:hover .product-image-placeholder {
     transform: scale(1.05);
   }
 
@@ -510,6 +549,7 @@
   @media (prefers-reduced-motion: reduce) {
     .product-card,
     .product-image,
+    .product-image-placeholder,
     .product-link,
     .product-link .link-arrow,
     .card-details-hint {
@@ -520,7 +560,8 @@
       transform: none;
     }
 
-    .product-card:hover .product-image {
+    .product-card:hover .product-image,
+    .product-card:hover .product-image-placeholder {
       transform: none;
     }
 
