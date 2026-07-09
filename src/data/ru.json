@@ -112,7 +112,12 @@
       "title": "Open Source",
       "description": "Пакет ngx-open-web-ui-chat для Angular"
     },
-    "viewOnNpm": "Смотреть на npm"
+    "telegram": {
+      "title": "Telegram-бот Legalka KB",
+      "description": "Бесплатный AI-ассистент для релокантов в Польше — отвечает на вопросы о легализации пребывания"
+    },
+    "viewOnNpm": "Смотреть на npm",
+    "openInTelegram": "Открыть в Telegram"
   },
   "products": {
     "title": "Наши продукты",

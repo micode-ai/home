@@ -3,7 +3,6 @@
   import { t } from '../services/i18n';
 
   const sectionTitle = $derived(t('community.title', $languageStore));
-  const viewOnNpmLabel = $derived(t('community.viewOnNpm', $languageStore));
 
   const contributions = [
     {
@@ -12,7 +11,8 @@
       titleKey: 'community.blog.title',
       descriptionKey: 'community.blog.description',
       stats: '400,000+',
-      link: null
+      link: null,
+      linkLabelKey: null
     },
     {
       id: 'opensource',
@@ -20,7 +20,17 @@
       titleKey: 'community.opensource.title',
       descriptionKey: 'community.opensource.description',
       stats: null,
-      link: 'https://www.npmjs.com/package/ngx-open-web-ui-chat'
+      link: 'https://www.npmjs.com/package/ngx-open-web-ui-chat',
+      linkLabelKey: 'community.viewOnNpm'
+    },
+    {
+      id: 'telegram',
+      iconSvg: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22 11 13 2 9 22 2Z"/></svg>`,
+      titleKey: 'community.telegram.title',
+      descriptionKey: 'community.telegram.description',
+      stats: null,
+      link: 'https://t.me/legalka_pl_bot',
+      linkLabelKey: 'community.openInTelegram'
     }
   ];
 </script>
@@ -40,15 +50,15 @@
             <div class="contribution-stats">{contribution.stats}</div>
           {/if}
           <p class="contribution-description">{t(contribution.descriptionKey, $languageStore)}</p>
-          {#if contribution.link}
+          {#if contribution.link && contribution.linkLabelKey}
             <a
               href={contribution.link}
               class="contribution-link"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="{t(contribution.titleKey, $languageStore)} — {viewOnNpmLabel}"
+              aria-label="{t(contribution.titleKey, $languageStore)} — {t(contribution.linkLabelKey, $languageStore)}"
             >
-              {viewOnNpmLabel}
+              {t(contribution.linkLabelKey, $languageStore)}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </a>
           {/if}
@@ -82,9 +92,9 @@
 
   .contributions-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
-    max-width: 900px;
+    max-width: 1080px;
     margin: 0 auto;
   }
 
@@ -198,6 +208,14 @@
 
     .community-title {
       font-size: 1.75rem;
+    }
+
+    .contributions-grid {
+      gap: 1.25rem;
+    }
+
+    .contribution-card {
+      padding: 1.5rem;
     }
   }
 
