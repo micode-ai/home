@@ -12,7 +12,7 @@
 
   const STATS: StatConfig[] = [
     { key: 'experience', targetValue: 18, suffix: '+', labelKey: 'stats.experience.label' },
-    { key: 'products',   targetValue: 5,  suffix: '',  labelKey: 'stats.products.label' },
+    { key: 'products',   targetValue: 6,  suffix: '',  labelKey: 'stats.products.label' },
     { key: 'projects',   targetValue: 30, suffix: '+', labelKey: 'stats.projects.label' },
   ];
 
