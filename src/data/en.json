@@ -212,6 +212,29 @@
                 "q4": { "question": "Where can I download it?", "answer": "It's available on Google Play, and the source code is on GitHub." }
             }
         },
+        "legalkaKB": {
+            "name": "Legalka KB",
+            "tagline": "Relocation assistant for Poland that doesn't make things up",
+            "description": "RAG bot for people relocating to Poland. Answers strictly from a verified knowledge base — with references to laws and real applicant experience. If there's no answer — it honestly says \"I don't know\".",
+            "detailedDescription": "Legalka KB is a knowledge base and Telegram bot for legalisation in Poland. The base consists of two layers: normative (what the law requires, with references to articles) and practical (real timelines and tips from applicants). The bot only answers from the base, marks each fact as \"norm\" or \"practice — applicant observations\", and abstains if the question is not covered. No hallucinations.\n\nCurrent coverage: temporary residence and work (karta pobytu), visas, banking, employment, real estate, taxes, ZUS, citizenship, family reunification, education, international protection — all for Poland.\n\nEvery statement cites a law article or official source. The bot responds in Ukrainian, English, Russian, and Polish. Deployed on VPS via GitHub Actions, with a local review panel for the knowledge base curator.",
+            "imageAlt": "Legalka KB Telegram bot — screenshot of a conversation with answers about legalisation in Poland, with references to laws",
+            "features": {
+                "strictSources": "Strict source binding — every statement cites a law article or official source",
+                "twoLayers": "Two content layers: normative (legally verified) and practical (community experience)",
+                "abstention": "Abstention: the bot says \"I don't know\" instead of hallucinating",
+                "multiLanguage": "UA / EN / PL support — content in Russian, bot responds in any language",
+                "telegramBot": "Telegram bot deployed on VPS via GitHub Actions",
+                "reviewPanel": "Local review panel — curator sees diff, AI agent chat for editing, approve button",
+                "practicePipeline": "Practice collection pipeline from Telegram chats with PII filter and automatic staging",
+                "evalSuite": "Eval suite: citation ~99%, fact coverage ~97%, abstention 100%"
+            },
+            "faq": {
+                "q1": { "question": "What is Legalka KB?", "answer": "A Telegram bot and knowledge base for legalisation in Poland. It answers strictly from verified sources — with references to laws and real applicant experience. If there's no answer — it honestly says \"I don't know\"." },
+                "q2": { "question": "What topics does the knowledge base cover?", "answer": "Temporary residence (karta pobytu), work, visas, banking, employment, real estate, taxes, ZUS, citizenship, family reunification, education, international protection — all for Poland." },
+                "q3": { "question": "What languages does the bot support?", "answer": "The bot understands and responds in Ukrainian, English, Russian, and Polish." },
+                "q4": { "question": "How is answer accuracy ensured?", "answer": "Every fact is marked as \"norm\" (with a law article reference) or \"practice — applicant observations\". If a question is not covered by the base — the bot abstains. Eval suite shows: citation ~99%, fact coverage ~97%, abstention 100%." }
+            }
+        },
         "testingAI": {
             "name": "Testing AI Assistant",
             "description": "AI-powered test orchestration platform for automated test execution, generation, and quality assurance",
@@ -235,9 +258,11 @@
             "free": "Free and open source",
             "subscription": "Available on website with subscription plans",
             "githubFree": "Free on GitHub, subscription plans on website",
+            "telegramFree": "Free on Telegram",
             "testingFree": "Free during testing period"
         },
         "links": {
+            "telegram": "Open in Telegram",
             "npm": "View on npm",
             "storybook": "View Storybook demo",
             "website": "Visit website",
@@ -324,6 +349,7 @@
         "agentArchitecture": "Agent Architecture (LangGraph)",
         "faq": "Frequently asked questions",
         "links": "Links",
+        "relatedArticle": "Read the related article",
         "backToMicode": "Back to MiCode",
         "notFound": "Product not found."
     },

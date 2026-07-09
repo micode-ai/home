@@ -3,6 +3,7 @@
   import { t } from '../services/i18n';
   import { withLocale } from '../services/locale';
   import productsData from '../data/products.json';
+  import blogPosts from '../data/blog-posts.json';
   import type { Product } from '../types/products';
   import CommunityStatBadges from './CommunityStatBadges.svelte';
   import MermaidDiagram from './MermaidDiagram.svelte';
@@ -50,6 +51,16 @@
   const linksLabel = $derived(t('product.links', lang));
   const backLabel = $derived(t('product.backToMicode', lang));
   const notFoundLabel = $derived(t('product.notFound', lang));
+  const relatedArticleLabel = $derived(t('product.relatedArticle', lang));
+
+  const relatedArticle = $derived(
+    (blogPosts as any[]).find((p) => p.relatedProductSlug === productId)
+  );
+  const relatedArticleTitle = $derived(
+    relatedArticle
+      ? (lang === 'pl' ? relatedArticle.titlePl : lang === 'ru' ? relatedArticle.titleRu : relatedArticle.titleEn)
+      : ''
+  );
 
   const diagramDefinition = $derived(
     product?.langgraphDiagramId ? langgraphDiagrams[product.langgraphDiagramId] : undefined
@@ -178,6 +189,16 @@
           {#each detailedDescription.split('\n\n') as paragraph}
             <p class="section-paragraph">{paragraph}</p>
           {/each}
+        {/if}
+
+        {#if relatedArticle}
+          <aside class="related-article" aria-label={relatedArticleLabel}>
+            <span class="related-article-label">{relatedArticleLabel}</span>
+            <a href={withLocale(`/blog/${relatedArticle.slug}/`, lang)} class="related-article-link">
+              {relatedArticleTitle}
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+          </aside>
         {/if}
       </section>
 
@@ -458,6 +479,48 @@
   }
 
   .section-paragraph:last-child { margin-bottom: 0; }
+
+  /* ===== Related article callout ===== */
+  .related-article {
+    margin: 1.75rem 0 0;
+    padding: 1.25rem 1.5rem;
+    background: var(--color-bg-secondary, #f8fafc);
+    border: 1px solid var(--color-border, #e2e8f0);
+    border-left: 3px solid var(--card-accent, var(--color-primary, #1e3a8a));
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .related-article-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-tertiary, #64748b);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  .related-article-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--card-accent, var(--color-primary, #1e3a8a));
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.9375rem;
+    line-height: 1.4;
+  }
+
+  .related-article-link:hover { text-decoration: underline; }
+  .related-article-link:focus-visible {
+    outline: 2px solid var(--card-accent, var(--color-primary));
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+  .related-article-link svg { flex-shrink: 0; }
 
   /* ===== Features list ===== */
   .features-list {

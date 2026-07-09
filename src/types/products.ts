@@ -17,6 +17,7 @@ export interface ProductFaqItem {
 export interface Product {
   id: string;
   nameKey: string;
+  taglineKey?: string;
   descriptionKey: string;
   detailedDescriptionKey?: string;
   imageAltKey?: string;

@@ -21,6 +21,11 @@
   const backLabel = $derived(t('blog.backToMicode', lang));
   const blogLabel = $derived(t('blog.title', lang));
 
+  const tableSuffix = $derived(lang === 'pl' ? 'Pl' : lang === 'ru' ? 'Ru' : 'En');
+  const aiModelsTable = $derived((post as any)?.aiModelsTable as
+    | { modelHeader: string; rows: Record<string, string>[]; [key: string]: any }
+    | undefined);
+
   const relatedProductSlug = $derived((post as any)?.relatedProductSlug as string | undefined);
   const relatedProduct = $derived(relatedProductSlug
     ? products.find(p => p.id === relatedProductSlug)
@@ -70,6 +75,27 @@
         {/each}
       {/if}
 
+      {#if aiModelsTable}
+        <div class="article-table-wrap">
+          <table class="article-table">
+            <thead>
+              <tr>
+                <th scope="col">{aiModelsTable['taskHeader' + tableSuffix]}</th>
+                <th scope="col">{aiModelsTable.modelHeader}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {#each aiModelsTable.rows as row}
+                <tr>
+                  <td>{row['task' + tableSuffix]}</td>
+                  <td><code>{row.model}</code></td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+      {/if}
+
       {#if relatedProduct}
         <aside class="related-product" aria-label={relatedLabel}>
           <span class="related-label">{relatedLabel}</span>
@@ -110,6 +136,43 @@
   .tag { padding: 0.2rem 0.6rem; background: rgba(255,255,255,0.15); border-radius: 0.25rem; font-size: 0.75rem; }
   .article-body { padding: 3rem 2rem; background: var(--color-bg-primary, #fff); }
   .article-body p { line-height: 1.8; margin-bottom: 1.25rem; color: var(--color-text-primary, #1e293b); }
+  .article-table-wrap {
+    margin: 2rem 0;
+    overflow-x: auto;
+    border: 1px solid var(--color-border, #e2e8f0);
+    border-radius: 0.5rem;
+  }
+  .article-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+  }
+  .article-table th,
+  .article-table td {
+    text-align: left;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--color-border, #e2e8f0);
+  }
+  .article-table thead th {
+    background: var(--color-bg-secondary, #f8fafc);
+    color: var(--color-text-secondary, #475569);
+    font-weight: 600;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .article-table tbody tr:last-child td { border-bottom: none; }
+  .article-table td:first-child { color: var(--color-text-primary, #1e293b); }
+  .article-table code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.8125rem;
+    padding: 0.15rem 0.4rem;
+    background: var(--color-bg-secondary, #f1f5f9);
+    border-radius: 0.25rem;
+    white-space: nowrap;
+    color: var(--color-primary, #1e3a8a);
+  }
   .related-product {
     margin: 2.5rem 0 0;
     padding: 1.25rem 1.5rem;

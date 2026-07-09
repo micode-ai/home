@@ -198,6 +198,29 @@
         "q4": { "question": "Gdzie mogę ją pobrać?", "answer": "Jest dostępna na Google Play, a kod źródłowy znajduje się na GitHub." }
       }
     },
+    "legalkaKB": {
+      "name": "Legalka KB",
+      "tagline": "Asystent relokacyjny dla Polski, który nie wymyśla",
+      "description": "Bot RAG dla osób relokujących się do Polski. Odpowiada wyłącznie z zweryfikowanej bazy wiedzy — z odwołaniami do przepisów i realnych doświadczeń wnioskodawców. Jeśli nie ma odpowiedzi — uczciwie mówi „nie wiem\".",
+      "detailedDescription": "Legalka KB to baza wiedzy i bot Telegram do legalizacji pobytu w Polsce. Baza składa się z dwóch warstw: normatywnej (co wymaga prawo, z odwołaniami do artykułów) i praktycznej (realne terminy i wskazówki od wnioskodawców). Bot odpowiada wyłącznie z bazy, oznacza każdy fakt jako „norma\" lub „praktyka — obserwacje wnioskodawców\" i powstrzymuje się, gdy pytanie nie jest pokryte. Zero halucynacji.\n\nAktualne pokrycie: tymczasowy pobyt i praca (karta pobytu), wizy, banki, zatrudnienie, nieruchomości, podatki, ZUS, obywatelstwo, łączenie rodzin, edukacja, ochrona międzynarodowa — wszystko dla Polski.\n\nKażde stwierdzenie cytuje artykuł ustawy lub oficjalne źródło. Bot odpowiada po ukraińsku, angielsku, rosyjsku i polsku. Wdrożenie na VPS przez GitHub Actions, lokalny panel review dla kuratora bazy wiedzy.",
+      "imageAlt": "Bot Telegram Legalka KB — zrzut ekranu rozmowy z odpowiedziami na pytania o legalizację pobytu w Polsce, z odwołaniami do przepisów",
+      "features": {
+        "strictSources": "Ścisłe powiązanie ze źródłami — każde stwierdzenie cytuje artykuł ustawy lub oficjalne źródło",
+        "twoLayers": "Dwie warstwy treści: normatywna (zweryfikowana prawnie) i praktyczna (doświadczenia społeczności)",
+        "abstention": "Abstencja: bot mówi „nie wiem\" zamiast halucynować",
+        "multiLanguage": "Obsługa UA / EN / PL — treść po rosyjsku, bot odpowiada w każdym języku",
+        "telegramBot": "Bot Telegram wdrożony na VPS przez GitHub Actions",
+        "reviewPanel": "Lokalny panel review — kurator widzi diff, czat z agentem AI do edycji, przycisk „zatwierdź\"",
+        "practicePipeline": "Pipeline zbierania praktyki z czatów Telegram z filtrem PII i automatycznym stagingiem",
+        "evalSuite": "Zestaw ewaluacyjny: citation ~99%, fact coverage ~97%, abstention 100%"
+      },
+      "faq": {
+        "q1": { "question": "Czym jest Legalka KB?", "answer": "Bot Telegram i baza wiedzy do legalizacji pobytu w Polsce. Odpowiada wyłącznie z zweryfikowanych źródeł — z odwołaniami do przepisów i realnych doświadczeń wnioskodawców. Jeśli nie ma odpowiedzi — uczciwie mówi „nie wiem\"." },
+        "q2": { "question": "Jakie tematy pokrywa baza wiedzy?", "answer": "Tymczasowy pobyt (karta pobytu), praca, wizy, banki, zatrudnienie, nieruchomości, podatki, ZUS, obywatelstwo, łączenie rodzin, edukacja, ochrona międzynarodowa — wszystko dla Polski." },
+        "q3": { "question": "W jakich językach odpowiada bot?", "answer": "Bot rozumie i odpowiada po ukraińsku, angielsku, rosyjsku i polsku." },
+        "q4": { "question": "Jak zapewniana jest dokładność odpowiedzi?", "answer": "Każdy fakt oznaczony jest jako „norma\" (z odwołaniem do artykułu ustawy) lub „praktyka — obserwacje wnioskodawców\". Jeśli pytanie nie jest pokryte przez bazę — bot się powstrzymuje. Zestaw ewaluacyjny: citation ~99%, fact coverage ~97%, abstention 100%." }
+      }
+    },
     "testingAI": {
       "name": "Testing AI Assistant",
       "description": "Platforma orkiestracji testów oparta na AI do automatycznego wykonywania, generowania testów i zapewniania jakości",
@@ -221,9 +244,11 @@
       "free": "Darmowy i open source",
       "subscription": "Dostępny na stronie według planów subskrypcji",
       "githubFree": "Darmowy na GitHub, plany subskrypcji na stronie",
+      "telegramFree": "Bezpłatnie na Telegram",
       "testingFree": "Bezpłatnie w okresie testowania"
     },
     "links": {
+      "telegram": "Otwórz w Telegram",
       "npm": "Zobacz na npm",
       "storybook": "Zobacz demo Storybook",
       "website": "Odwiedź stronę",
@@ -310,6 +335,7 @@
     "agentArchitecture": "Architektura agentów (LangGraph)",
     "faq": "Najczęściej zadawane pytania",
     "links": "Linki",
+    "relatedArticle": "Przeczytaj powiązany artykuł",
     "backToMicode": "Powrót do MiCode",
     "notFound": "Produkt nie znaleziony."
   },

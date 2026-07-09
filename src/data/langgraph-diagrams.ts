@@ -86,4 +86,47 @@ export const langgraphDiagrams: Record<string, string> = {
 
     SEL --> FD[Flaky Detector Agent]
     FD --> FDA[Statistical Analysis] --> FDB[Pattern Detection] --> FDC([Recommendations])`,
+  'legalka-kb': `flowchart TD
+    U([Telegram Message]) --> BOT[Bot Front-end<br/>Language · Region · Commands]
+    BOT --> R{Message type?}
+    R -- Question --> RAG
+    R -- /suggest --> SUG[Suggestion Flow<br/>PII guard → stage]
+    R -- KB Review --> REV
+
+    subgraph RAG [RAG Assistant · rag/]
+        direction LR
+        IDX[index.json<br/>kb/ embeddings] --> RET[Retrieve<br/>cosine top-K]
+        RET --> J{Coverage?}
+        J -- No --> ABS([Abstain<br/>не знаю])
+        J -- Yes --> ANS[Answer<br/>норма · практика · citations]
+    end
+
+    subgraph REV [AI Revision Agent · LangGraph]
+        direction LR
+        L[loadPage] --> CI[classifyIntent]
+        CI -- question --> AM[answerMsg]
+        CI -- edit --> MP[makePlan]
+        MP --> RB[reviseBody]
+        RB --> CB[checkBody]
+        CB -- invalid --> RB
+        CB -- ok --> WF[writeFile]
+        CB -- abort --> AB[abort]
+    end
+
+    subgraph PIPE [Practice Ingest Pipeline · LangGraph]
+        direction LR
+        IM[ingest_messages] --> TR[thread_reconstruct]
+        TR --> EF[extract_facts · LLM]
+        EF --> PG{pii_guard<br/>fail-closed}
+        PG -- PII --> DROP([drop])
+        PG -- clean --> CT[classify_topic]
+        CT --> DM[dedup_merge]
+        DM --> SF[stage_facts<br/>inbox/facts-*.md]
+    end
+
+    ANS --> END([Response + disclaimer])
+    AM --> END
+    WF --> END
+    AB --> END
+    SUG --> END`,
 };

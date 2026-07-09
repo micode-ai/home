@@ -36,36 +36,6 @@
         ]
     },
     {
-        "id": "ngx-chat",
-        "nameKey": "products.ngxChat.name",
-        "descriptionKey": "products.ngxChat.description",
-        "detailedDescriptionKey": "products.ngxChat.detailedDescription",
-        "imageAltKey": "products.ngxChat.imageAlt",
-        "pricingKey": "products.pricing.free",
-        "badge": { "label": "Open Source", "icon": "code" },
-        "accentColor": "var(--color-primary)",
-        "features": [
-            "products.ngxChat.features.easyIntegration",
-            "products.ngxChat.features.customization",
-            "products.ngxChat.features.streaming",
-            "products.ngxChat.features.typescript",
-            "products.ngxChat.features.openWebUI"
-        ],
-        "links": [
-            {
-                "type": "npm",
-                "url": "https://www.npmjs.com/package/ngx-open-web-ui-chat",
-                "labelKey": "products.links.npm"
-            }
-        ],
-        "faq": [
-            { "questionKey": "products.ngxChat.faq.q1.question", "answerKey": "products.ngxChat.faq.q1.answer" },
-            { "questionKey": "products.ngxChat.faq.q2.question", "answerKey": "products.ngxChat.faq.q2.answer" },
-            { "questionKey": "products.ngxChat.faq.q3.question", "answerKey": "products.ngxChat.faq.q3.answer" },
-            { "questionKey": "products.ngxChat.faq.q4.question", "answerKey": "products.ngxChat.faq.q4.answer" }
-        ]
-    },
-    {
         "id": "accounting-ai",
         "nameKey": "products.accountingAI.name",
         "descriptionKey": "products.accountingAI.description",
@@ -94,6 +64,41 @@
             { "questionKey": "products.accountingAI.faq.q2.question", "answerKey": "products.accountingAI.faq.q2.answer" },
             { "questionKey": "products.accountingAI.faq.q3.question", "answerKey": "products.accountingAI.faq.q3.answer" },
             { "questionKey": "products.accountingAI.faq.q4.question", "answerKey": "products.accountingAI.faq.q4.answer" }
+        ]
+    },
+    {
+        "id": "legalka-kb",
+        "nameKey": "products.legalkaKB.name",
+        "taglineKey": "products.legalkaKB.tagline",
+        "descriptionKey": "products.legalkaKB.description",
+        "detailedDescriptionKey": "products.legalkaKB.detailedDescription",
+        "imageAltKey": "products.legalkaKB.imageAlt",
+        "pricingKey": "products.pricing.telegramFree",
+        "badge": { "label": "Telegram Bot", "icon": "message-circle" },
+        "accentColor": "var(--color-primary, #3b82f6)",
+        "features": [
+            "products.legalkaKB.features.strictSources",
+            "products.legalkaKB.features.twoLayers",
+            "products.legalkaKB.features.abstention",
+            "products.legalkaKB.features.multiLanguage",
+            "products.legalkaKB.features.telegramBot",
+            "products.legalkaKB.features.reviewPanel",
+            "products.legalkaKB.features.practicePipeline",
+            "products.legalkaKB.features.evalSuite"
+        ],
+        "links": [
+            {
+                "type": "telegram",
+                "url": "https://t.me/legalka_pl_bot",
+                "labelKey": "products.links.telegram"
+            }
+        ],
+        "langgraphDiagramId": "legalka-kb",
+        "faq": [
+            { "questionKey": "products.legalkaKB.faq.q1.question", "answerKey": "products.legalkaKB.faq.q1.answer" },
+            { "questionKey": "products.legalkaKB.faq.q2.question", "answerKey": "products.legalkaKB.faq.q2.answer" },
+            { "questionKey": "products.legalkaKB.faq.q3.question", "answerKey": "products.legalkaKB.faq.q3.answer" },
+            { "questionKey": "products.legalkaKB.faq.q4.question", "answerKey": "products.legalkaKB.faq.q4.answer" }
         ]
     },
     {
@@ -127,6 +132,36 @@
             { "questionKey": "products.emarketingAI.faq.q2.question", "answerKey": "products.emarketingAI.faq.q2.answer" },
             { "questionKey": "products.emarketingAI.faq.q3.question", "answerKey": "products.emarketingAI.faq.q3.answer" },
             { "questionKey": "products.emarketingAI.faq.q4.question", "answerKey": "products.emarketingAI.faq.q4.answer" }
+        ]
+    },
+    {
+        "id": "ngx-chat",
+        "nameKey": "products.ngxChat.name",
+        "descriptionKey": "products.ngxChat.description",
+        "detailedDescriptionKey": "products.ngxChat.detailedDescription",
+        "imageAltKey": "products.ngxChat.imageAlt",
+        "pricingKey": "products.pricing.free",
+        "badge": { "label": "Open Source", "icon": "code" },
+        "accentColor": "var(--color-primary)",
+        "features": [
+            "products.ngxChat.features.easyIntegration",
+            "products.ngxChat.features.customization",
+            "products.ngxChat.features.streaming",
+            "products.ngxChat.features.typescript",
+            "products.ngxChat.features.openWebUI"
+        ],
+        "links": [
+            {
+                "type": "npm",
+                "url": "https://www.npmjs.com/package/ngx-open-web-ui-chat",
+                "labelKey": "products.links.npm"
+            }
+        ],
+        "faq": [
+            { "questionKey": "products.ngxChat.faq.q1.question", "answerKey": "products.ngxChat.faq.q1.answer" },
+            { "questionKey": "products.ngxChat.faq.q2.question", "answerKey": "products.ngxChat.faq.q2.answer" },
+            { "questionKey": "products.ngxChat.faq.q3.question", "answerKey": "products.ngxChat.faq.q3.answer" },
+            { "questionKey": "products.ngxChat.faq.q4.question", "answerKey": "products.ngxChat.faq.q4.answer" }
         ]
     },
     {

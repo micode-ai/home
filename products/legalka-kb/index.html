@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- PRODUCT-SPECIFIC STATIC SEO -->
+    <title>Legalka KB — Immigration Assistant for Poland</title>
+    <meta name="description" content="RAG-powered Telegram bot for migrants in Poland. Answers strictly from a verified knowledge base with references to laws and real applicant experience. Says 'I don't know' instead of hallucinating." />
+    <link rel="canonical" href="https://mi-code.pl/products/legalka-kb/" />
+
+    <meta property="og:title" content="Legalka KB — Immigration Assistant for Poland" />
+    <meta property="og:description" content="RAG-powered Telegram bot for migrants in Poland. Answers strictly from a verified knowledge base with references to laws and real applicant experience. Says 'I don't know' instead of hallucinating." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mi-code.pl/products/legalka-kb/" />
+    <meta property="og:image" content="https://mi-code.pl/og-image.png" />
+    <meta property="og:site_name" content="MiCode Sp. z o.o." />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Legalka KB — Immigration Assistant for Poland" />
+    <meta name="twitter:description" content="RAG-powered Telegram bot for migrants in Poland. Answers strictly from a verified knowledge base with references to laws and real applicant experience. Says 'I don't know' instead of hallucinating." />
+    <meta name="twitter:image" content="https://mi-code.pl/og-image.png" />
+
+    <script type="application/ld+json">
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Legalka KB",
+        "url": "https://mi-code.pl/products/legalka-kb/",
+        "description": "RAG-powered Telegram bot for migrants in Poland. Answers strictly from a verified knowledge base with references to laws and real applicant experience.",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Telegram",
+        "featureList": [
+          "Strict source binding with law article citations",
+          "Two-layer knowledge base: normative and practical",
+          "Abstention instead of hallucination",
+          "UA / EN / PL / RU language support",
+          "Telegram bot deployment via GitHub Actions"
+        ],
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "PLN",
+          "description": "Free on Telegram"
+        },
+        "publisher": { "@type": "Organization", "name": "MiCode Sp. z o.o.", "url": "https://mi-code.pl/" }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "MiCode", "item": "https://mi-code.pl/" },
+          { "@type": "ListItem", "position": 2, "name": "Products", "item": "https://mi-code.pl/#products" },
+          { "@type": "ListItem", "position": 3, "name": "Legalka KB", "item": "https://mi-code.pl/products/legalka-kb/" }
+        ]
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is Legalka KB?",
+            "acceptedAnswer": { "@type": "Answer", "text": "A Telegram bot and knowledge base for legalisation in Poland. It answers strictly from verified sources with references to laws and real applicant experience. If there is no answer — it honestly says 'I don't know'." }
+          },
+          {
+            "@type": "Question",
+            "name": "What topics does the knowledge base cover?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Temporary residence (karta pobytu), work, visas, banking, employment, real estate, taxes, ZUS, citizenship, family reunification, education, international protection — all for Poland." }
+          },
+          {
+            "@type": "Question",
+            "name": "What languages does the bot support?",
+            "acceptedAnswer": { "@type": "Answer", "text": "The bot understands and responds in Ukrainian, English, Russian, and Polish." }
+          },
+          {
+            "@type": "Question",
+            "name": "How is answer accuracy ensured?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Every fact is marked as 'norm' (with a law article reference) or 'practice — applicant observations'. If a question is not covered, the bot abstains. Eval suite: citation ~99%, fact coverage ~97%, abstention 100%." }
+          }
+        ]
+      }
+    ]
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
