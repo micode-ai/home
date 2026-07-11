@@ -213,7 +213,7 @@
         "strictSources": "Ścisłe powiązanie ze źródłami — każde stwierdzenie cytuje artykuł ustawy lub oficjalne źródło",
         "twoLayers": "Dwie warstwy treści: normatywna (zweryfikowana prawnie) i praktyczna (doświadczenia społeczności)",
         "abstention": "Abstencja: bot mówi „nie wiem\" zamiast halucynować",
-        "multiLanguage": "Obsługa UA / EN / PL — treść po rosyjsku, bot odpowiada w każdym języku",
+        "multiLanguage": "Obsługa UA / BE / EN / PL — treść po rosyjsku, bot odpowiada w każdym języku",
         "telegramBot": "Bot Telegram wdrożony na VPS przez GitHub Actions",
         "reviewPanel": "Lokalny panel review — kurator widzi diff, czat z agentem AI do edycji, przycisk „zatwierdź\"",
         "practicePipeline": "Pipeline zbierania praktyki z czatów Telegram z filtrem PII i automatycznym stagingiem",

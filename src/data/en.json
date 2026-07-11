@@ -227,7 +227,7 @@
                 "strictSources": "Strict source binding — every statement cites a law article or official source",
                 "twoLayers": "Two content layers: normative (legally verified) and practical (community experience)",
                 "abstention": "Abstention: the bot says \"I don't know\" instead of hallucinating",
-                "multiLanguage": "UA / EN / PL support — content in Russian, bot responds in any language",
+                "multiLanguage": "UA / BE / EN / PL support — content in Russian, bot responds in any language",
                 "telegramBot": "Telegram bot deployed on VPS via GitHub Actions",
                 "reviewPanel": "Local review panel — curator sees diff, AI agent chat for editing, approve button",
                 "practicePipeline": "Practice collection pipeline from Telegram chats with PII filter and automatic staging",
