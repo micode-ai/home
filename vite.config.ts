@@ -35,6 +35,7 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 main: resolve(__dirname, "index.html"),
+                notFound: resolve(__dirname, "404.html"),
                 accountingAi: resolve(__dirname, "products/accounting-ai/index.html"),
                 emarketingAi: resolve(__dirname, "products/emarketing-ai/index.html"),
                 budgetAssistant: resolve(__dirname, "products/budget-assistant/index.html"),

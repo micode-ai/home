@@ -360,5 +360,11 @@
     "a3": "Tworzymy systemy w Java/Spring Boot i Angular oraz wdrażamy rozwiązania AI: RAG, Text2SQL i agentów zbudowanych na LangGraph.",
     "q4": "Czy integrujecie AI z istniejącymi systemami?",
     "a4": "Tak — integrujemy AI z systemami takimi jak ERP i CRM przez REST API; przykładem jest nasz Accounting AI Agent, który integruje się z platformą księgową wFirma."
+  },
+  "notFound": {
+    "title": "404 — strona nie znaleziona | MiCode",
+    "heading": "404",
+    "message": "Ta strona nie istnieje lub została przeniesiona. Sprawdź adres albo wróć na stronę główną.",
+    "cta": "Wróć na stronę główną"
   }
 }
