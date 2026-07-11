@@ -4,6 +4,8 @@
   import { withLocale } from '../services/locale';
   import blogPosts from '../data/blog-posts.json';
   import products from '../data/products.json';
+  import MermaidDiagram from './MermaidDiagram.svelte';
+  import { articleDiagrams } from '../data/article-diagrams';
 
   type Post = typeof blogPosts[number];
 
@@ -18,6 +20,41 @@
   const body = $derived(post
     ? (lang === 'pl' ? (post as any).bodyPl : lang === 'ru' ? (post as any).bodyRu : (post as any).bodyEn) ?? ''
     : '');
+
+  // Body is authored as `\n\n`-separated chunks. Most chunks are plain paragraphs; a few opt into
+  // light markup: `## heading`, `> callout`, and `[[diagram:id|caption]]` (renders a Mermaid figure).
+  // Inline `**bold**` is supported inside paragraphs/callouts. Plain-prose posts are unaffected.
+  type Seg = { t: string; b: boolean };
+  type Block =
+    | { kind: 'p'; segments: Seg[] }
+    | { kind: 'h2'; text: string }
+    | { kind: 'callout'; segments: Seg[] }
+    | { kind: 'diagram'; id: string; caption: string };
+
+  const DIAGRAM_RE = /^\[\[diagram:([a-z0-9-]+)(?:\|([^\]]+))?\]\]$/i;
+
+  function inlineSegments(text: string): Seg[] {
+    return text.split('**').map((t, i) => ({ t, b: i % 2 === 1 }));
+  }
+
+  // Diagrams are authored per language; fall back to Russian if a language is missing.
+  function diagramDef(id: string, l: string): string | undefined {
+    const entry = (articleDiagrams as Record<string, Record<string, string>>)[id];
+    if (!entry) return undefined;
+    return entry[l] ?? entry.ru;
+  }
+
+  const blocks = $derived.by<Block[]>(() => {
+    if (!body) return [];
+    return body.split('\n\n').map((chunk: string): Block => {
+      const c = chunk.trim();
+      const dm = c.match(DIAGRAM_RE);
+      if (dm) return { kind: 'diagram', id: dm[1], caption: (dm[2] ?? '').trim() };
+      if (c.startsWith('## ')) return { kind: 'h2', text: c.slice(3).trim() };
+      if (c.startsWith('> ')) return { kind: 'callout', segments: inlineSegments(c.replace(/^> ?/gm, '').trim()) };
+      return { kind: 'p', segments: inlineSegments(chunk) };
+    });
+  });
   const backLabel = $derived(t('blog.backToMicode', lang));
   const blogLabel = $derived(t('blog.title', lang));
 
@@ -69,11 +106,25 @@
   </div>
   <div class="article-body">
     <div class="article-inner">
-      {#if body}
-        {#each body.split('\n\n') as para}
-          <p>{para}</p>
-        {/each}
-      {/if}
+      {#each blocks as block}
+        {#if block.kind === 'h2'}
+          <h2 class="article-h2">{block.text}</h2>
+        {:else if block.kind === 'callout'}
+          <aside class="article-callout">{#each block.segments as seg}{#if seg.b}<strong>{seg.t}</strong>{:else}{seg.t}{/if}{/each}</aside>
+        {:else if block.kind === 'diagram'}
+          {@const def = diagramDef(block.id, lang)}
+          {#if def}
+            <figure class="article-figure">
+              {#key def}
+                <MermaidDiagram definition={def} />
+              {/key}
+              {#if block.caption}<figcaption>{block.caption}</figcaption>{/if}
+            </figure>
+          {/if}
+        {:else}
+          <p>{#each block.segments as seg}{#if seg.b}<strong>{seg.t}</strong>{:else}{seg.t}{/if}{/each}</p>
+        {/if}
+      {/each}
 
       {#if aiModelsTable}
         <div class="article-table-wrap">
@@ -136,6 +187,34 @@
   .tag { padding: 0.2rem 0.6rem; background: rgba(255,255,255,0.15); border-radius: 0.25rem; font-size: 0.75rem; }
   .article-body { padding: 3rem 2rem; background: var(--color-bg-primary, #fff); }
   .article-body p { line-height: 1.8; margin-bottom: 1.25rem; color: var(--color-text-primary, #1e293b); }
+  .article-body :global(strong) { font-weight: 600; color: var(--color-text-primary, #1e293b); }
+  .article-h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 2.75rem 0 1rem;
+    color: var(--color-text-primary, #1e293b);
+    scroll-margin-top: 1rem;
+  }
+  .article-callout {
+    display: block;
+    margin: 1.75rem 0;
+    padding: 1rem 1.25rem;
+    background: var(--color-bg-secondary, #f8fafc);
+    border-left: 3px solid var(--color-accent, #f97316);
+    border-radius: 0 0.5rem 0.5rem 0;
+    color: var(--color-text-secondary, #475569);
+    line-height: 1.75;
+    font-size: 0.95rem;
+  }
+  .article-figure { margin: 1.75rem 0 2rem; }
+  .article-figure figcaption {
+    margin-top: 0.65rem;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--color-text-tertiary, #64748b);
+    text-align: center;
+  }
   .article-table-wrap {
     margin: 2rem 0;
     overflow-x: auto;

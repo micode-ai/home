@@ -9,7 +9,10 @@
   const d = new Date();
   const pad = (n: number) => String(n).padStart(2, '0');
   const todayStr = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-  const publishedPosts = blogPosts.filter(p => p.date <= todayStr);
+  const publishedPosts = blogPosts
+    .filter(p => p.date <= todayStr)
+    .slice()
+    .sort((a, b) => b.date.localeCompare(a.date)); // newest first
 
   function getTitle(post: Post, lang: string): string {
     if (lang === 'pl') return post.titlePl;
