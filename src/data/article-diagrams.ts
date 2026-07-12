@@ -652,4 +652,385 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
   V --> COMMIT["Zapisz zmiany"]
   COMMIT --> REINDEX["Ponowne indeksowanie<br/>i uruchomienie testów"]`,
   },
+
+  'accounting-system-overview': {
+    ru: `flowchart TB
+  subgraph Clients["Как обращаются к агенту"]
+    WEB["Веб-кабинет<br/>(Next.js)"]
+    TG["Telegram-бот"]
+  end
+  subgraph Core["Сервер и ИИ"]
+    API["Сервер (API)<br/>вход · права · проверки"]
+    AGENT["ИИ-агент<br/>(один, на LangGraph)"]
+    OCR["Распознавание чеков<br/>(GPT-4o vision)"]
+  end
+  subgraph Integrations["Интеграции с внешним миром"]
+    WF["wFirma<br/>счета · компания · платежи"]
+    KSEF["KSeF<br/>гос. э-счета — FA(3)"]
+    REG["Польские реестры<br/>Biała Lista MF · KRS"]
+  end
+  subgraph Data["Хранение"]
+    PG["PostgreSQL<br/>данные · память ИИ"]
+    RED["Redis<br/>сессии · лимиты"]
+  end
+  WEB --> API
+  TG --> API
+  TG --> OCR
+  API --> AGENT
+  AGENT --> WF
+  AGENT --> KSEF
+  AGENT --> REG
+  API --> PG
+  API --> RED
+  WF --> PG`,
+    en: `flowchart TB
+  subgraph Clients["How users reach the agent"]
+    WEB["Web app<br/>(Next.js)"]
+    TG["Telegram bot"]
+  end
+  subgraph Core["Server & AI"]
+    API["Server (API)<br/>auth · permissions · checks"]
+    AGENT["AI agent<br/>(single, on LangGraph)"]
+    OCR["Receipt OCR<br/>(GPT-4o vision)"]
+  end
+  subgraph Integrations["Integrations with the outside world"]
+    WF["wFirma<br/>invoices · company · payments"]
+    KSEF["KSeF<br/>government e-invoices — FA(3)"]
+    REG["Polish registries<br/>Biała Lista MF · KRS"]
+  end
+  subgraph Data["Storage"]
+    PG["PostgreSQL<br/>data · AI memory"]
+    RED["Redis<br/>sessions · limits"]
+  end
+  WEB --> API
+  TG --> API
+  TG --> OCR
+  API --> AGENT
+  AGENT --> WF
+  AGENT --> KSEF
+  AGENT --> REG
+  API --> PG
+  API --> RED
+  WF --> PG`,
+    pl: `flowchart TB
+  subgraph Clients["Jak użytkownicy trafiają do agenta"]
+    WEB["Aplikacja web<br/>(Next.js)"]
+    TG["Bot Telegram"]
+  end
+  subgraph Core["Serwer i AI"]
+    API["Serwer (API)<br/>logowanie · uprawnienia · walidacja"]
+    AGENT["Agent AI<br/>(jeden, na LangGraph)"]
+    OCR["Rozpoznawanie paragonów<br/>(GPT-4o vision)"]
+  end
+  subgraph Integrations["Integracje ze światem zewnętrznym"]
+    WF["wFirma<br/>faktury · firma · płatności"]
+    KSEF["KSeF<br/>rządowe e-faktury — FA(3)"]
+    REG["Polskie rejestry<br/>Biała Lista MF · KRS"]
+  end
+  subgraph Data["Przechowywanie"]
+    PG["PostgreSQL<br/>dane · pamięć AI"]
+    RED["Redis<br/>sesje · limity"]
+  end
+  WEB --> API
+  TG --> API
+  TG --> OCR
+  API --> AGENT
+  AGENT --> WF
+  AGENT --> KSEF
+  AGENT --> REG
+  API --> PG
+  API --> RED
+  WF --> PG`,
+  },
+
+  'accounting-agent-loop': {
+    ru: `stateDiagram-v2
+  state "ИИ-агент (модель)" as A
+  state "Инструменты" as T
+  [*] --> A: сообщение пользователя
+  A --> C: ответ модели
+  state C <<choice>>
+  C --> T: есть вызовы инструментов
+  C --> [*]: готовый ответ (без вызовов)
+  T --> A: результаты добавлены в диалог
+  note right of A
+    Модель с привязанными
+    инструментами
+  end note
+  note right of T
+    Инструменты выполняются и
+    возвращают данные из wFirma,
+    KSeF и реестров
+  end note`,
+    en: `stateDiagram-v2
+  state "AI agent (model)" as A
+  state "Tools" as T
+  [*] --> A: user message
+  A --> C: model response
+  state C <<choice>>
+  C --> T: has tool calls
+  C --> [*]: final answer (no calls)
+  T --> A: results appended to the dialogue
+  note right of A
+    The model with
+    bound tools
+  end note
+  note right of T
+    Tools run and return
+    data from wFirma,
+    KSeF and registries
+  end note`,
+    pl: `stateDiagram-v2
+  state "Agent AI (model)" as A
+  state "Narzędzia" as T
+  [*] --> A: wiadomość użytkownika
+  A --> C: odpowiedź modelu
+  state C <<choice>>
+  C --> T: są wywołania narzędzi
+  C --> [*]: gotowa odpowiedź (bez wywołań)
+  T --> A: wyniki dołączone do rozmowy
+  note right of A
+    Model z podpiętymi
+    narzędziami
+  end note
+  note right of T
+    Narzędzia działają i zwracają
+    dane z wFirma,
+    KSeF i rejestrów
+  end note`,
+  },
+
+  'accounting-message-pipeline': {
+    ru: `flowchart TB
+  A["Пользователь отправил сообщение"] --> B["Взять ключ модели<br/>пользователя"]
+  B --> C["Создать модель<br/>(OpenAI или Google Gemini)"]
+  C --> D["Определить язык<br/>по тексту (ru / pl / en)"]
+  D --> E["Подгрузить долгую память<br/>о бизнесе пользователя"]
+  E --> F["Собрать системный промпт<br/>роль + язык + правила + налоги + память"]
+  F --> G["Подключить инструменты<br/>58, а с HR и KSeF — до 82"]
+  G --> H["Запустить агента<br/>(цикл рассуждение — инструменты)"]
+  H --> I["Сохранить переписку"]
+  I --> J["Обновить память<br/>(в фоне)"]
+  I --> K["Озвучить ответ<br/>(в фоне, по желанию)"]`,
+    en: `flowchart TB
+  A["User sends a message"] --> B["Take the user's<br/>model API key"]
+  B --> C["Create the model<br/>(OpenAI or Google Gemini)"]
+  C --> D["Detect language<br/>from the text (ru / pl / en)"]
+  D --> E["Load long-term memory<br/>about the user's business"]
+  E --> F["Build the system prompt<br/>role + language + rules + tax + memory"]
+  F --> G["Bind the tools<br/>58, up to 82 with HR and KSeF"]
+  G --> H["Run the agent<br/>(reason — tools loop)"]
+  H --> I["Save the conversation"]
+  I --> J["Update memory<br/>(in the background)"]
+  I --> K["Voice the answer<br/>(background, optional)"]`,
+    pl: `flowchart TB
+  A["Użytkownik wysyła wiadomość"] --> B["Pobierz klucz modelu<br/>użytkownika"]
+  B --> C["Utwórz model<br/>(OpenAI lub Google Gemini)"]
+  C --> D["Wykryj język<br/>z tekstu (ru / pl / en)"]
+  D --> E["Wczytaj pamięć długoterminową<br/>o firmie użytkownika"]
+  E --> F["Zbuduj prompt systemowy<br/>rola + język + reguły + podatki + pamięć"]
+  F --> G["Podłącz narzędzia<br/>58, a z HR i KSeF — do 82"]
+  G --> H["Uruchom agenta<br/>(pętla rozumowanie — narzędzia)"]
+  H --> I["Zapisz rozmowę"]
+  I --> J["Zaktualizuj pamięć<br/>(w tle)"]
+  I --> K["Odczytaj odpowiedź<br/>(w tle, opcjonalnie)"]`,
+  },
+
+  'accounting-tools-map': {
+    ru: `flowchart LR
+  AGENT(["ИИ-агент выбирает нужные инструменты"])
+  subgraph BASE["Всегда доступно — 58 инструментов"]
+    direction TB
+    T1["Компания и контрагенты<br/>поиск по NIP, реестры"]
+    T2["Счета и продажи<br/>создать · отправить · PDF"]
+    T3["Платежи и расходы"]
+    T4["Налоги: KPiR · JPK_VAT · PIT"]
+    T5["Календарь налоговых сроков"]
+    T6["Белый список счетов (Biała Lista)"]
+    T7["Документы · книги · авто · сроки"]
+  end
+  subgraph OPT["Подключается при наличии"]
+    direction TB
+    HR["HR и зарплата — 15"]
+    KS["KSeF — 9"]
+  end
+  AGENT --> BASE
+  AGENT -.-> OPT`,
+    en: `flowchart LR
+  AGENT(["The AI agent picks the tools it needs"])
+  subgraph BASE["Always available — 58 tools"]
+    direction TB
+    T1["Company & contractors<br/>lookup by NIP, registries"]
+    T2["Invoices & sales<br/>create · send · PDF"]
+    T3["Payments & expenses"]
+    T4["Taxes: KPiR · JPK_VAT · PIT"]
+    T5["Tax-deadline calendar"]
+    T6["Bank-account White List (Biała Lista)"]
+    T7["Documents · ledgers · vehicles · terms"]
+  end
+  subgraph OPT["Enabled when configured"]
+    direction TB
+    HR["HR & payroll — 15"]
+    KS["KSeF — 9"]
+  end
+  AGENT --> BASE
+  AGENT -.-> OPT`,
+    pl: `flowchart LR
+  AGENT(["Agent AI wybiera potrzebne narzędzia"])
+  subgraph BASE["Zawsze dostępne — 58 narzędzi"]
+    direction TB
+    T1["Firma i kontrahenci<br/>wyszukiwanie po NIP, rejestry"]
+    T2["Faktury i sprzedaż<br/>utwórz · wyślij · PDF"]
+    T3["Płatności i wydatki"]
+    T4["Podatki: KPiR · JPK_VAT · PIT"]
+    T5["Kalendarz terminów podatkowych"]
+    T6["Biała Lista rachunków"]
+    T7["Dokumenty · księgi · pojazdy · terminy"]
+  end
+  subgraph OPT["Włącza się, gdy skonfigurowane"]
+    direction TB
+    HR["HR i płace — 15"]
+    KS["KSeF — 9"]
+  end
+  AGENT --> BASE
+  AGENT -.-> OPT`,
+  },
+
+  'accounting-grounding': {
+    ru: `flowchart LR
+  Q["Вопрос или действие<br/>пользователя"] --> AGENT["ИИ-агент"]
+  AGENT --> WF["wFirma<br/>реальные счета, компания,<br/>платежи, расходы"]
+  AGENT --> REG["Публичные реестры<br/>Biała Lista MF · KRS"]
+  REG --> AF["Автозаполнение по NIP<br/>название · REGON · адрес"]
+  AGENT --> WL{"Платёж ≥ 15 000 zł?"}
+  WL -->|да| CHK["Проверить счёт по Белому<br/>списку МФ (обязательно)"]
+  WL -->|нет| SKIP["Обычная запись"]
+  WF --> ANS["Ответ на реальных данных<br/>+ официальные ссылки"]
+  CHK --> ANS
+  AF --> ANS`,
+    en: `flowchart LR
+  Q["User's question<br/>or action"] --> AGENT["AI agent"]
+  AGENT --> WF["wFirma<br/>real invoices, company,<br/>payments, expenses"]
+  AGENT --> REG["Public registries<br/>Biała Lista MF · KRS"]
+  REG --> AF["Autofill by NIP<br/>name · REGON · address"]
+  AGENT --> WL{"Payment ≥ 15,000 zł?"}
+  WL -->|yes| CHK["Verify the account against<br/>the MF White List (mandatory)"]
+  WL -->|no| SKIP["Ordinary record"]
+  WF --> ANS["Answer on real data<br/>+ official links"]
+  CHK --> ANS
+  AF --> ANS`,
+    pl: `flowchart LR
+  Q["Pytanie lub działanie<br/>użytkownika"] --> AGENT["Agent AI"]
+  AGENT --> WF["wFirma<br/>realne faktury, firma,<br/>płatności, wydatki"]
+  AGENT --> REG["Rejestry publiczne<br/>Biała Lista MF · KRS"]
+  REG --> AF["Autouzupełnianie po NIP<br/>nazwa · REGON · adres"]
+  AGENT --> WL{"Płatność ≥ 15 000 zł?"}
+  WL -->|tak| CHK["Sprawdź rachunek na Białej<br/>Liście MF (obowiązkowo)"]
+  WL -->|nie| SKIP["Zwykły zapis"]
+  WF --> ANS["Odpowiedź na realnych danych<br/>+ oficjalne linki"]
+  CHK --> ANS
+  AF --> ANS`,
+  },
+
+  'accounting-ksef': {
+    ru: `flowchart LR
+  A["Счёт из чата<br/>или из wFirma"] --> GEN["Сформировать<br/>FA(3) XML"]
+  GEN --> SEND["Отправить в KSeF"]
+  SEND --> POLL["Проверка статуса<br/>в фоне (раз в минуту)"]
+  POLL --> UPO["UPO — официальное<br/>подтверждение"]
+  subgraph Incoming["Входящие"]
+    IN["Э-счета из KSeF"] --> MATCH["Сопоставить<br/>с записями wFirma"]
+  end`,
+    en: `flowchart LR
+  A["Invoice from chat<br/>or from wFirma"] --> GEN["Generate<br/>FA(3) XML"]
+  GEN --> SEND["Send to KSeF"]
+  SEND --> POLL["Status check<br/>in background (every minute)"]
+  POLL --> UPO["UPO — official<br/>confirmation"]
+  subgraph Incoming["Incoming"]
+    IN["E-invoices from KSeF"] --> MATCH["Match against<br/>wFirma records"]
+  end`,
+    pl: `flowchart LR
+  A["Faktura z czatu<br/>lub z wFirma"] --> GEN["Wygeneruj<br/>FA(3) XML"]
+  GEN --> SEND["Wyślij do KSeF"]
+  SEND --> POLL["Sprawdzanie statusu<br/>w tle (co minutę)"]
+  POLL --> UPO["UPO — oficjalne<br/>potwierdzenie"]
+  subgraph Incoming["Przychodzące"]
+    IN["E-faktury z KSeF"] --> MATCH["Dopasuj<br/>do zapisów wFirma"]
+  end`,
+  },
+
+  'accounting-ocr': {
+    ru: `flowchart LR
+  P["Фото чека<br/>в Telegram"] --> OCR["Распознавание<br/>(GPT-4o vision)"]
+  OCR --> CARD["Структурированная карточка:<br/>продавец · сумма · дата · NIP"]
+  CARD --> EXP["Создать расход в wFirma<br/>(контрагент — по NIP автоматически)"]
+  N["Отдельный шаг в обработчике фото,<br/>ещё до ИИ-агента"] -.-> OCR`,
+    en: `flowchart LR
+  P["Receipt photo<br/>in Telegram"] --> OCR["Recognition<br/>(GPT-4o vision)"]
+  OCR --> CARD["Structured card:<br/>seller · amount · date · NIP"]
+  CARD --> EXP["Create an expense in wFirma<br/>(contractor auto-filled by NIP)"]
+  N["A separate step in the photo handler,<br/>before the AI agent"] -.-> OCR`,
+    pl: `flowchart LR
+  P["Zdjęcie paragonu<br/>w Telegramie"] --> OCR["Rozpoznawanie<br/>(GPT-4o vision)"]
+  OCR --> CARD["Ustrukturyzowana karta:<br/>sprzedawca · kwota · data · NIP"]
+  CARD --> EXP["Utwórz wydatek w wFirma<br/>(kontrahent — po NIP automatycznie)"]
+  N["Osobny krok w obsłudze zdjęcia,<br/>jeszcze przed agentem AI"] -.-> OCR`,
+  },
+
+  'accounting-memory-lifecycle': {
+    ru: `flowchart TB
+  subgraph Extract["Извлечение (в фоне, после ответа)"]
+    R["Ответ сформирован"] --> RULES["Разбор по правилам и шаблонам<br/>без LLM: «моя фирма…», «всегда…»"]
+    RULES --> USE["Учёт частых инструментов<br/>и контрагентов"]
+  end
+  subgraph Store["Хранение (PostgreSQL)"]
+    M[("Память: факты о фирме ·<br/>частые контакты · предпочтения ·<br/>рабочие шаблоны")]
+  end
+  subgraph Decay["Угасание (лениво, раз в сутки)"]
+    DEC["Не вспоминали 30 дней →<br/>снижаем уверенность"] --> HIDE["Уверенность мала →<br/>факт скрывается"]
+  end
+  subgraph Inject["Вложение в промпт"]
+    TOP["Взять до 20 самых важных<br/>(бюджет ~6000 знаков)"] --> SP["Добавить в системный промпт<br/>следующего разговора"]
+  end
+  USE --> M
+  RULES --> M
+  M --> DEC
+  M --> TOP`,
+    en: `flowchart TB
+  subgraph Extract["Extraction (background, after the answer)"]
+    R["Answer produced"] --> RULES["Parse by rules and patterns<br/>no LLM: «my company…», «always…»"]
+    RULES --> USE["Track frequent tools<br/>and contractors"]
+  end
+  subgraph Store["Storage (PostgreSQL)"]
+    M[("Memory: business facts ·<br/>frequent contacts · preferences ·<br/>workflow patterns")]
+  end
+  subgraph Decay["Decay (lazy, once a day)"]
+    DEC["Not recalled for 30 days →<br/>lower the confidence"] --> HIDE["Confidence too low →<br/>fact is hidden"]
+  end
+  subgraph Inject["Injection into the prompt"]
+    TOP["Take up to 20 most important<br/>(budget ~6000 chars)"] --> SP["Add to the system prompt<br/>of the next conversation"]
+  end
+  USE --> M
+  RULES --> M
+  M --> DEC
+  M --> TOP`,
+    pl: `flowchart TB
+  subgraph Extract["Ekstrakcja (w tle, po odpowiedzi)"]
+    R["Odpowiedź gotowa"] --> RULES["Analiza wg reguł i wzorców<br/>bez LLM: «moja firma…», «zawsze…»"]
+    RULES --> USE["Śledzenie częstych narzędzi<br/>i kontrahentów"]
+  end
+  subgraph Store["Przechowywanie (PostgreSQL)"]
+    M[("Pamięć: fakty o firmie ·<br/>częste kontakty · preferencje ·<br/>wzorce pracy")]
+  end
+  subgraph Decay["Wygasanie (leniwie, raz dziennie)"]
+    DEC["Brak użycia przez 30 dni →<br/>obniżamy pewność"] --> HIDE["Pewność zbyt niska →<br/>fakt ukrywany"]
+  end
+  subgraph Inject["Wstawienie do promptu"]
+    TOP["Weź do 20 najważniejszych<br/>(budżet ~6000 znaków)"] --> SP["Dodaj do promptu systemowego<br/>następnej rozmowy"]
+  end
+  USE --> M
+  RULES --> M
+  M --> DEC
+  M --> TOP`,
+  },
 };
