@@ -25,6 +25,16 @@
     'testing-ai': testingAiImage,
   };
 
+  // Intrinsic pixel dimensions of each hero image, so the browser can reserve layout
+  // space before the image loads (avoids CLS on this above-the-fold, loading="eager" image).
+  const productImageDimensions: Record<string, { width: number; height: number }> = {
+    'ngx-chat': { width: 929, height: 917 },
+    'accounting-ai': { width: 1909, height: 952 },
+    'emarketing-ai': { width: 1849, height: 952 },
+    'budget-assistant': { width: 415, height: 900 },
+    'testing-ai': { width: 1911, height: 952 },
+  };
+
   let { productId }: { productId: string } = $props();
 
   const product = $derived(
@@ -76,6 +86,7 @@
   );
 
   const productImage = $derived(productImages[productId]);
+  const productImageDims = $derived(productImageDimensions[productId]);
 </script>
 
 {#if product}
@@ -168,7 +179,14 @@
             aria-label="Enlarge image"
             title="Click to enlarge"
           >
-            <img src={productImage} alt={imageAlt} class="product-hero-image" loading="eager" />
+            <img
+              src={productImage}
+              alt={imageAlt}
+              class="product-hero-image"
+              loading="eager"
+              width={productImageDims?.width}
+              height={productImageDims?.height}
+            />
             <span class="zoom-hint" aria-hidden="true">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
             </span>
@@ -216,7 +234,11 @@
       {#if diagramDefinition}
         <section class="content-section" aria-labelledby="section-architecture">
           <h2 id="section-architecture" class="section-heading">{agentArchitectureLabel}</h2>
-          <MermaidDiagram definition={diagramDefinition} accentColor={product.accentColor ?? 'var(--color-primary)'} />
+          <MermaidDiagram
+            definition={diagramDefinition}
+            accentColor={product.accentColor ?? 'var(--color-primary)'}
+            description="{agentArchitectureLabel}: {name}"
+          />
         </section>
       {/if}
 

@@ -1,9 +1,13 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
 
-  let { definition, accentColor = 'var(--color-primary)' }: {
+  let { definition, accentColor = 'var(--color-primary)', description = '' }: {
     definition: string;
     accentColor?: string;
+    /** Plain-language summary of what the diagram shows — exposed as an accessible
+     * name (role="img" + aria-label) for screen readers and non-rendering crawlers,
+     * since the rendered SVG's node/edge labels alone don't convey the flow. */
+    description?: string;
   } = $props();
 
   let diagramEl: HTMLPreElement;
@@ -69,9 +73,14 @@
   style="--accent: {accentColor}"
   onclick={openLightbox}
   title="Click to enlarge"
-  aria-label="Enlarge diagram"
+  aria-label={description ? `Enlarge diagram: ${description}` : 'Enlarge diagram'}
 >
-  <pre class="mermaid" bind:this={diagramEl}>{definition}</pre>
+  <pre
+    class="mermaid"
+    bind:this={diagramEl}
+    role={description ? 'img' : undefined}
+    aria-label={description || undefined}
+  >{definition}</pre>
   <span class="zoom-hint" aria-hidden="true">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
     Enlarge

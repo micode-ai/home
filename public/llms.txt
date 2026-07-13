@@ -4,9 +4,9 @@
 
 MiCode Sp. z o.o. was incorporated in 2024; founder Michał Peraviortkin brings 18+ years of prior IT industry experience.
 
-MiCode also designs and ships its own AI products: an accounting assistant for Polish tax law, a marketing automation platform, a personal budget assistant (mobile app), an Angular AI-chat component, and an AI test orchestration platform.
+MiCode also designs and ships its own AI products: an accounting assistant for Polish tax law, a marketing automation platform, a personal budget assistant (mobile app), an Angular AI-chat component, an AI test orchestration platform, and a relocation-assistant knowledge base.
 
-Languages: Polish (default), English, Russian — select via `?lang=pl|en|ru` query parameter on any page (the page content is the same across locales, only UI text and copy are translated). Note: because the locale switch is client-side only and each language does not have its own prerendered URL, this site intentionally does not publish hreflang alternate tags — hreflang would incorrectly claim separate URLs per language when there are none.
+Languages: Polish (default), English, Russian. The site is prerendered into three separate locale trees — `/` (Polish, default), `/en/…`, and `/ru/…` — each a real, independently crawlable URL. Every page carries a self-referencing canonical and reciprocal `hreflang` tags (`x-default` points to the Polish version). For example: the homepage is `https://mi-code.pl/` (Polish), `https://mi-code.pl/en/` (English), `https://mi-code.pl/ru/` (Russian); a product page is `https://mi-code.pl/products/accounting-ai/` (Polish) and `https://mi-code.pl/en/products/accounting-ai/` (English).
 
 Contact: development@mi-code.pl — Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Poland.
 
@@ -21,6 +21,7 @@ Contact: development@mi-code.pl — Jana Heweliusza 11 lok. 811, 80-890 Gdańsk,
 - [AI Budget Assistant](https://mi-code.pl/products/budget-assistant/): Mobile personal finance app — expense tracking by voice, receipt OCR scanning, or manual entry; multi-currency budgets; a GPT-4-powered finance chat; gamified "Spending Stories" insights; shared/business accounts with role-based access. Available on Google Play and GitHub. Website: ai-budget.pl
 - [ngx-open-web-ui-chat](https://mi-code.pl/products/ngx-chat/): Open-source Angular component that adds AI chat (via Open WebUI) to any Angular application with a single npm install. Supports streaming responses, markdown rendering, and full customization. Free, available on npm.
 - [Testing AI Assistant](https://mi-code.pl/products/testing-ai/): AI-powered test orchestration platform — automated test execution with intelligent scheduling, AI-generated test cases from codebase analysis, quality checklists for releases, and continuous AI-driven test coverage monitoring.
+- [Legalka KB](https://mi-code.pl/products/legalka-kb/): Free Telegram bot (@legalka_pl_bot) that helps people relocate to and legalise their stay in Poland. Answers strictly from a verified, curated knowledge base (RAG over a two-layer "norm" + "practice" base) and honestly says "I don't know" instead of hallucinating when a topic isn't covered. Supports Russian, Ukrainian, Belarusian, Polish, and English.
 
 ## Blog
 
@@ -30,6 +31,9 @@ Contact: development@mi-code.pl — Jana Heweliusza 11 lok. 811, 80-890 Gdańsk,
 - [Inside eMarketing AI: one platform for AI-generated content, campaigns, and email](https://mi-code.pl/blog/emarketing-ai-content-automation/): Why eMarketing AI combines content generation, campaign management, email marketing, and an AI chat assistant in a single SaaS platform instead of several disconnected tools.
 - [Receipts, voice, or chat: how AI Budget Assistant tracks spending without the spreadsheet](https://mi-code.pl/blog/ai-budget-assistant-receipt-ocr-gpt4/): How AI Budget Assistant combines receipt OCR, voice input, a GPT-4 finance chat, multi-currency budgets, and gamification to keep people logging expenses.
 - [Letting AI agents own the boring parts of QA](https://mi-code.pl/blog/testing-ai-agent-orchestration/): How Testing AI Assistant generates test cases from a codebase, orchestrates execution with intelligent scheduling and retry logic, and keeps quality checklists and coverage up to date.
+- [How Legalka KB uses AI: RAG, voice, and zero hallucinations](https://mi-code.pl/blog/legalka-kb-ai-architecture/): A walkthrough of the relocation bot's entire AI stack: embeddings and retrieval, query rewriting, grounded answers with abstention, voice in/out, a practice-ingest pipeline, and an eval judge.
+- [Inside Accounting AI Agent: one agent, 80+ tools, and real wFirma data](https://mi-code.pl/blog/accounting-ai-agent-architecture/): A look under the hood of Accounting AI Agent: a single LangGraph agent, up to 82 tools, grounding in wFirma and Polish registries, KSeF, receipt OCR, and rule-based long-term memory.
+- [How AI Budget Assistant uses AI: a function-calling agent, vision, voice, and data protection](https://mi-code.pl/blog/ai-budget-assistant-ai-architecture/): A look under the hood of AI in AI Budget Assistant: one server-side key and three model "speeds", a function-calling chat agent, data isolated from instructions, vision receipt OCR, voice, bots — and where AI was deliberately skipped.
 
 ## FAQ
 
@@ -43,3 +47,5 @@ Contact: development@mi-code.pl — Jana Heweliusza 11 lok. 811, 80-890 Gdańsk,
 - **Is ngx-open-web-ui-chat free?** Yes, it's free and open source, available on npm.
 - **What is Testing AI Assistant?** An AI-powered test orchestration platform that automates test execution, generates test cases from codebase analysis, and provides quality insights from a single interface.
 - **How much does Testing AI Assistant cost?** It's free during the testing period; source code is available on GitHub.
+- **What is Legalka KB?** A Telegram bot and knowledge base for legalisation in Poland. It answers strictly from verified sources with references to laws and real applicant experience, and honestly says "I don't know" if there's no answer in the base.
+- **Is Legalka KB free?** Yes — it's a free Telegram bot at @legalka_pl_bot.

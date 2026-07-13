@@ -16,6 +16,7 @@ export default defineConfig({
                 product: resolve(__dirname, "prerender/entries/product.ts"),
                 blog: resolve(__dirname, "prerender/entries/blog.ts"),
                 article: resolve(__dirname, "prerender/entries/article.ts"),
+                privacyPolicy: resolve(__dirname, "prerender/entries/privacy-policy.ts"),
             },
             output: {
                 entryFileNames: "[name].js",

@@ -206,6 +206,10 @@
     "summaryPl": "Spojrzenie pod maskę Accounting AI Agent: jeden agent na LangGraph, do 82 narzędzi, powiązanie z wFirma i polskimi rejestrami, KSeF, rozpoznawanie paragonów i pamięć długoterminowa na regułach.",
     "summaryEn": "A look under the hood of Accounting AI Agent: a single LangGraph agent, up to 82 tools, grounding in wFirma and Polish registries, KSeF, receipt OCR, and rule-based long-term memory.",
     "summaryRu": "Разбор реализации Accounting AI Agent: один агент на LangGraph, до 82 инструментов, привязка к wFirma и польским реестрам, KSeF, распознавание чеков и долгая память на правилах.",
+    "metaTitleEn": "Inside Accounting AI Agent: architecture and wFirma",
+    "metaTitleRu": "Как устроен Accounting AI Agent: архитектура и wFirma",
+    "metaDescriptionEn": "Under the hood of Accounting AI Agent: a LangGraph agent, up to 82 tools, wFirma, Polish registries, KSeF, receipt OCR, and rule-based memory.",
+    "metaDescriptionRu": "Разбор Accounting AI Agent: агент на LangGraph, до 82 инструментов, wFirma, польские реестры, KSeF, распознавание чеков и память на правилах.",
     "date": "2026-07-13",
     "relatedProductSlug": "accounting-ai",
     "tags": [
@@ -259,6 +263,10 @@
     "summaryPl": "Spojrzenie pod maskę AI w AI Budget Assistant: jeden klucz na serwerze i trzy «prędkości» modelu, agent czatu z funkcjami, izolacja danych od instrukcji, wizyjne OCR paragonów, głos, boty — oraz to, gdzie świadomie obeszliśmy się bez AI.",
     "summaryEn": "A look under the hood of AI in AI Budget Assistant: one server-side key and three model «speeds», a function-calling chat agent, data isolated from instructions, vision receipt OCR, voice, bots — and where we deliberately skipped AI.",
     "summaryRu": "Разбор того, как в AI Budget Assistant применяется ИИ: один ключ на сервере и три «скорости» модели, ai-агент с функциями, изоляция данных от инструкций, распознавание чеков (визуальное), голос, боты — и где мы сознательно обошлись без ИИ.",
+    "metaTitleEn": "How AI Budget Assistant uses AI: agent, vision, voice",
+    "metaTitleRu": "Как AI Budget Assistant применяет ИИ: агент, голос",
+    "metaDescriptionEn": "Under the hood of AI Budget Assistant: a function-calling chat agent, data isolated from instructions, vision receipt OCR, voice, and where AI was skipped.",
+    "metaDescriptionRu": "Как AI Budget Assistant применяет ИИ: агент с функциями, изоляция данных от инструкций, распознавание чеков, голос — и где мы обошлись без ИИ.",
     "date": "2026-07-13",
     "relatedProductSlug": "budget-assistant",
     "tags": [

@@ -1,13 +1,21 @@
 <script lang="ts">
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
+  import { withLocale } from '../services/locale';
   import SocialMedia from './SocialMedia.svelte';
 
-  const { onopenPrivacyPolicy }: { onopenPrivacyPolicy?: () => void } = $props();
+  // `onopenPrivacyPolicy` is accepted (but unused) for backward compatibility with call
+  // sites that still pass it — no longer invoked internally. The privacy policy is now a
+  // real, crawlable page (see PrivacyPolicyPage.svelte) rather than a JS-only modal, so
+  // the footer links to it directly.
+  const {}: { onopenPrivacyPolicy?: () => void } = $props();
 
   const copyright = $derived(t('footer.copyright', $languageStore));
   const address = $derived(t('footer.address', $languageStore));
   const privacyPolicyLabel = $derived(t('footer.privacyPolicy', $languageStore));
+  const blogLabel = $derived(t('nav.blog', $languageStore));
+  const accountingAiLabel = $derived(t('products.accountingAI.name', $languageStore));
+  const budgetAssistantLabel = $derived(t('products.budgetAssistant.name', $languageStore));
 </script>
 
 <footer class="footer">
@@ -15,9 +23,12 @@
     <div class="footer-content">
       <p class="footer-copyright">{copyright}</p>
       <address class="footer-address">{address}</address>
-      <button class="footer-privacy-link" onclick={() => onopenPrivacyPolicy?.()}>
-        {privacyPolicyLabel}
-      </button>
+      <nav class="footer-links" aria-label={t('nav.menu', $languageStore)}>
+        <a href={withLocale('/blog/', $languageStore)}>{blogLabel}</a>
+        <a href={withLocale('/products/accounting-ai/', $languageStore)}>{accountingAiLabel}</a>
+        <a href={withLocale('/products/budget-assistant/', $languageStore)}>{budgetAssistantLabel}</a>
+        <a href={withLocale('/privacy-policy/', $languageStore)}>{privacyPolicyLabel}</a>
+      </nav>
     </div>
     <SocialMedia />
   </div>
@@ -64,25 +75,26 @@
     line-height: 1.6;
   }
 
-  .footer-privacy-link {
-    display: inline-block;
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem 1rem;
     margin-top: 0.625rem;
-    background: transparent;
-    border: none;
-    padding: 0;
+  }
+
+  .footer-links a {
     font-size: 0.875rem;
     color: rgba(255, 255, 255, 0.5);
-    cursor: pointer;
     text-decoration: underline;
     text-underline-offset: 2px;
     transition: color 0.15s;
   }
 
-  .footer-privacy-link:hover {
+  .footer-links a:hover {
     color: rgba(255, 255, 255, 0.85);
   }
 
-  .footer-privacy-link:focus {
+  .footer-links a:focus-visible {
     outline: 2px solid rgba(255, 255, 255, 0.5);
     outline-offset: 2px;
     border-radius: 2px;
@@ -94,6 +106,10 @@
       align-items: center;
       text-align: center;
       gap: 1.25rem;
+    }
+
+    .footer-links {
+      justify-content: center;
     }
 
     .footer-content {

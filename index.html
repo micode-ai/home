@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/mi_code_logo_mark.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -28,16 +29,18 @@
       })();
     </script>
 
-    <!-- Default meta tags (will be updated by SEO component) -->
-    <title>MiCode Sp. z o.o. - Profesjonalne rozwiązania IT | Gdańsk</title>
-    <meta name="description" content="MiCode - budowa systemów enterprise, integracje AI oraz oprogramowanie na zamówienie. 18+ lat doświadczenia. Gdańsk, Polska." />
+    <!-- Default meta tags — kept in sync with src/data/seo-home.json.pl (single source of
+         truth, also used by scripts/prerender.mjs for /en/ and /ru/, and by SEO.svelte
+         post-hydration). Do not edit this title/description without also updating that file. -->
+    <title>MiCode Sp. z o.o. — Systemy enterprise i integracje AI</title>
+    <meta name="description" content="MiCode — budowa systemów enterprise, integracje AI (RAG, Text2SQL) i oprogramowanie na zamówienie. 18 lat doświadczenia IT. Gdańsk, Polska." />
 
     <!-- Canonical -->
     <link rel="canonical" href="https://mi-code.pl/" />
 
     <!-- Open Graph tags -->
-    <meta property="og:title" content="MiCode Sp. z o.o. - Profesjonalne rozwiązania IT" />
-    <meta property="og:description" content="Budujemy systemy enterprise z integracjami AI. 18+ lat doświadczenia w branży IT." />
+    <meta property="og:title" content="MiCode — Systemy enterprise i integracje AI" />
+    <meta property="og:description" content="Oprogramowanie enterprise, integracja systemów IT, integracje AI. 18 lat doświadczenia w branży IT." />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="MiCode Sp. z o.o." />
     <meta property="og:url" content="https://mi-code.pl/" />
@@ -47,8 +50,8 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@micode_ai" />
-    <meta name="twitter:title" content="MiCode Sp. z o.o. - Profesjonalne rozwiązania IT" />
-    <meta name="twitter:description" content="Budujemy systemy enterprise z integracjami AI. 18+ lat doświadczenia w branży IT." />
+    <meta name="twitter:title" content="MiCode — Systemy enterprise i integracje AI" />
+    <meta name="twitter:description" content="Oprogramowanie enterprise, integracja systemów IT, integracje AI. 18 lat doświadczenia w branży IT." />
     <meta name="twitter:image" content="https://mi-code.pl/og-image.png" />
 
     <link rel="me" href="https://www.linkedin.com/in/mikhailperaviortkin/" />
@@ -111,7 +114,10 @@
         "sameAs": [
           "https://www.linkedin.com/in/mikhailperaviortkin/",
           "https://github.com/micode-ai",
-          "https://www.npmjs.com/~perevertkinma"
+          "https://www.npmjs.com/~perevertkinma",
+          "https://www.facebook.com/profile.php?id=61570771625318",
+          "https://www.instagram.com/micode.development/",
+          "https://t.me/micode_ai"
         ],
         "description": "IT services company specializing in enterprise software development, AI integrations, custom software development, IT systems integration, data analysis, and cloud solutions."
       },

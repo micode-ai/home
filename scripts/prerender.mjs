@@ -178,6 +178,7 @@ async function run() {
   const { renderPage: renderProduct } = await import('../dist-ssr/product.js');
   const { renderPage: renderBlog } = await import('../dist-ssr/blog.js');
   const { renderPage: renderArticle } = await import('../dist-ssr/article.js');
+  const { renderPage: renderPrivacyPolicy } = await import('../dist-ssr/privacyPolicy.js');
 
   // metaFor(lang) returns localized {title, description, ...} to inject, or null
   // to keep the page's static (Polish) meta. Polish variants return null since
@@ -226,11 +227,35 @@ async function run() {
       priority: '0.6',
       changefreq: 'monthly',
       render: (l) => renderArticle(post.slug, l),
+      // Prefer an explicit SERP-length meta override (metaTitle*/metaDescription*) when a
+      // post defines one — falls back to the full title/summary otherwise. The visible H1
+      // (title*) and card summary (summary*) are never touched by this.
       metaFor: (l) =>
         l === 'pl'
           ? null
-          : { title: post[`title${suffix(l)}`], description: post[`summary${suffix(l)}`] },
+          : {
+              title: post[`metaTitle${suffix(l)}`] ?? post[`title${suffix(l)}`],
+              description: post[`metaDescription${suffix(l)}`] ?? post[`summary${suffix(l)}`],
+            },
     })),
+    {
+      distRoute: 'privacy-policy/index.html',
+      urlPath: 'privacy-policy/',
+      priority: '0.3',
+      changefreq: 'yearly',
+      render: (l) => renderPrivacyPolicy(l),
+      metaFor: (l) => {
+        if (l === 'pl') return null;
+        const descriptions = {
+          en: "MiCode's privacy policy: what data we collect, the legal basis, how long we keep it, and your rights under GDPR.",
+          ru: 'Политика конфиденциальности MiCode: какие данные мы собираем, на каком основании, как долго храним и какие у вас права по GDPR.',
+        };
+        return {
+          title: `${t('legal.privacyPolicy.title', l)} — MiCode`,
+          description: descriptions[l],
+        };
+      },
+    },
   ];
 
   console.log('Prerendering all routes (pl/en/ru)...');

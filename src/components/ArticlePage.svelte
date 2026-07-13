@@ -116,7 +116,7 @@
           {#if def}
             <figure class="article-figure">
               {#key def}
-                <MermaidDiagram definition={def} />
+                <MermaidDiagram definition={def} description={block.caption} />
               {/key}
               {#if block.caption}<figcaption>{block.caption}</figcaption>{/if}
             </figure>

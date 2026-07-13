@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -46,10 +47,31 @@
           "Analytics dashboard"
         ],
         "offers": {
-          "@type": "Offer",
-          "price": "0",
+          "@type": "AggregateOffer",
           "priceCurrency": "PLN",
-          "description": "Free on GitHub"
+          "lowPrice": "0",
+          "offerCount": "3",
+          "offers": [
+            {
+              "@type": "Offer",
+              "name": "FREE",
+              "price": "0",
+              "priceCurrency": "PLN",
+              "description": "50 AI generations/month. Also free on GitHub as open source."
+            },
+            {
+              "@type": "Offer",
+              "name": "PRO",
+              "priceCurrency": "PLN",
+              "description": "500 AI generations/month, up to 5 team members. 14-day free trial, no payment details required."
+            },
+            {
+              "@type": "Offer",
+              "name": "ENTERPRISE",
+              "priceCurrency": "PLN",
+              "description": "Unlimited resources for larger teams."
+            }
+          ]
         },
         "publisher": { "@type": "Organization", "name": "MiCode Sp. z o.o.", "url": "https://mi-code.pl/" }
       },

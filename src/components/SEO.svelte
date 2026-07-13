@@ -1,6 +1,7 @@
 <script lang="ts">
   import { languageStore, type Language } from '../stores/languageStore';
   import { t } from '../services/i18n';
+  import { withLocale } from '../services/locale';
   import productsData from '../data/products.json';
   import homeMeta from '../data/seo-home.json';
   import type { Product } from '../types/products';
@@ -18,7 +19,6 @@
     ru: 'ru_RU'
   };
 
-  const SITE_URL = 'https://mi-code.pl/';
   const OG_IMAGE = 'https://mi-code.pl/og-image.png';
 
   // Structured data (JSON-LD) for organization
@@ -78,7 +78,10 @@
     "sameAs": [
       "https://www.linkedin.com/in/mikhailperaviortkin/",
       "https://github.com/micode-ai",
-      "https://www.npmjs.com/~perevertkinma"
+      "https://www.npmjs.com/~perevertkinma",
+      "https://www.facebook.com/profile.php?id=61570771625318",
+      "https://www.instagram.com/micode.development/",
+      "https://t.me/micode_ai"
     ],
     "knowsAbout": [
       "Custom Software Development",
@@ -191,19 +194,24 @@
 
   function updateMetaTags(lang: Language) {
     const content = metaContent[lang];
-    
+
+    // This component only ever renders on the homepage (route is always `/`), but the
+    // homepage itself is prerendered per locale at `/`, `/en/`, `/ru/` — so the canonical
+    // and og:url must reflect the *current* locale, not always the Polish root.
+    const currentUrl = 'https://mi-code.pl' + withLocale('/', lang);
+
     // Update title
     document.title = content.title;
-    
+
     // Update or create meta description
     updateMetaTag('name', 'description', content.description);
-    
+
     // Update Open Graph tags
     updateMetaTag('property', 'og:title', content.ogTitle);
     updateMetaTag('property', 'og:description', content.ogDescription);
     updateMetaTag('property', 'og:type', 'website');
     updateMetaTag('property', 'og:site_name', 'MiCode Sp. z o.o.');
-    updateMetaTag('property', 'og:url', SITE_URL);
+    updateMetaTag('property', 'og:url', currentUrl);
     updateMetaTag('property', 'og:image', OG_IMAGE);
     updateMetaTag('property', 'og:locale', ogLocaleMap[lang]);
 
@@ -214,7 +222,7 @@
     updateMetaTag('name', 'twitter:image', OG_IMAGE);
 
     // Update canonical link
-    updateCanonical(SITE_URL);
+    updateCanonical(currentUrl);
 
     // Update html lang attribute
     document.documentElement.lang = lang;
