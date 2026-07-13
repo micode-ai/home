@@ -1033,4 +1033,328 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
   M --> DEC
   M --> TOP`,
   },
+
+  'budget-ai-overview': {
+    ru: `flowchart TB
+  subgraph Clients["Как обращаются пользователи"]
+    APP["Мобильное приложение<br/>(Expo)"]
+    TG["Telegram-бот"]
+    WA["WhatsApp-бот"]
+  end
+  subgraph Server["Сервер (NestJS) — здесь живёт ключ"]
+    PROXY["ИИ-прокси<br/>добавляет ключ + контекст"]
+    RULES["Логика без ИИ<br/>аномалии · индекс инфляции"]
+  end
+  OPENAI["OpenAI API"]
+  subgraph Data["Хранение"]
+    PG["PostgreSQL"]
+    RED["Redis · кэш и лимиты"]
+  end
+  APP --> PROXY
+  TG --> PROXY
+  WA --> PROXY
+  PROXY --> OPENAI
+  PROXY --> PG
+  PROXY --> RED
+  RULES --> PG`,
+    en: `flowchart TB
+  subgraph Clients["How users connect"]
+    APP["Mobile app<br/>(Expo)"]
+    TG["Telegram bot"]
+    WA["WhatsApp bot"]
+  end
+  subgraph Server["Server (NestJS) — the key lives here"]
+    PROXY["AI proxy<br/>adds key + context"]
+    RULES["Logic without AI<br/>anomalies · inflation index"]
+  end
+  OPENAI["OpenAI API"]
+  subgraph Data["Storage"]
+    PG["PostgreSQL"]
+    RED["Redis · cache and limits"]
+  end
+  APP --> PROXY
+  TG --> PROXY
+  WA --> PROXY
+  PROXY --> OPENAI
+  PROXY --> PG
+  PROXY --> RED
+  RULES --> PG`,
+    pl: `flowchart TB
+  subgraph Clients["Jak łączą się użytkownicy"]
+    APP["Aplikacja mobilna<br/>(Expo)"]
+    TG["Bot Telegram"]
+    WA["Bot WhatsApp"]
+  end
+  subgraph Server["Serwer (NestJS) — tu mieszka klucz"]
+    PROXY["Proxy AI<br/>dodaje klucz + kontekst"]
+    RULES["Logika bez AI<br/>anomalie · indeks inflacji"]
+  end
+  OPENAI["OpenAI API"]
+  subgraph Data["Przechowywanie"]
+    PG["PostgreSQL"]
+    RED["Redis · cache i limity"]
+  end
+  APP --> PROXY
+  TG --> PROXY
+  WA --> PROXY
+  PROXY --> OPENAI
+  PROXY --> PG
+  PROXY --> RED
+  RULES --> PG`,
+  },
+
+  'budget-ai-request': {
+    ru: `flowchart LR
+  REQ["Запрос к ИИ<br/>чат · чек · подсказка"] --> Q{"Хватает ИИ-квоты?"}
+  Q -->|нет| STOP["Отказ +<br/>предложить тариф"]
+  Q -->|да| MUL["Списать квоту<br/>× множитель тарифа"]
+  MUL --> RES["Модель по «скорости»<br/>выбор пользователя"]
+  RES --> F["fast<br/>gpt-4o-mini · ×0.75"]
+  RES --> B["balanced по умолчанию<br/>gpt-4o · ×1.0"]
+  RES --> Qy["quality<br/>gpt-4.1 · ×1.5"]
+  F --> CALL["Вызов OpenAI<br/>ключ на сервере"]
+  B --> CALL
+  Qy --> CALL
+  CALL --> ANS["Ответ пользователю"]`,
+    en: `flowchart LR
+  REQ["AI request<br/>chat · receipt · suggestion"] --> Q{"Enough AI quota?"}
+  Q -->|no| STOP["Refuse +<br/>suggest a plan"]
+  Q -->|yes| MUL["Deduct quota<br/>× plan multiplier"]
+  MUL --> RES["Model by «speed»<br/>user's choice"]
+  RES --> F["fast<br/>gpt-4o-mini · ×0.75"]
+  RES --> B["balanced default<br/>gpt-4o · ×1.0"]
+  RES --> Qy["quality<br/>gpt-4.1 · ×1.5"]
+  F --> CALL["Call OpenAI<br/>key on the server"]
+  B --> CALL
+  Qy --> CALL
+  CALL --> ANS["Answer to the user"]`,
+    pl: `flowchart LR
+  REQ["Żądanie do AI<br/>czat · paragon · podpowiedź"] --> Q{"Wystarczy limitu AI?"}
+  Q -->|nie| STOP["Odmowa +<br/>zaproponuj plan"]
+  Q -->|tak| MUL["Odejmij limit<br/>× mnożnik planu"]
+  MUL --> RES["Model wg «prędkości»<br/>wybór użytkownika"]
+  RES --> F["fast<br/>gpt-4o-mini · ×0.75"]
+  RES --> B["balanced domyślnie<br/>gpt-4o · ×1.0"]
+  RES --> Qy["quality<br/>gpt-4.1 · ×1.5"]
+  F --> CALL["Wywołanie OpenAI<br/>klucz na serwerze"]
+  B --> CALL
+  Qy --> CALL
+  CALL --> ANS["Odpowiedź dla użytkownika"]`,
+  },
+
+  'budget-chat-agent': {
+    ru: `flowchart TB
+  MSG["Сообщение пользователя"] --> MODEL["Модель с 11 функциями<br/>создать расход, доход…"]
+  MODEL --> D{"Что вернула модель?"}
+  D -->|обычный ответ| ANS["Текстовый ответ<br/>совет, разбор"]
+  D -->|вызов функции| ACT["Предложенное действие<br/>черновик"]
+  ACT --> ROLE{"Роль пользователя?"}
+  ROLE -->|наблюдатель| BLOCK["Запись заблокирована"]
+  ROLE -->|владелец / редактор| CONF{"Подтвердить?"}
+  CONF -->|да| EXEC["Выполнить и записать"]
+  CONF -->|нет| CANCEL["Отменить"]`,
+    en: `flowchart TB
+  MSG["User message"] --> MODEL["Model with 11 functions<br/>create expense, income…"]
+  MODEL --> D{"What did the model return?"}
+  D -->|plain answer| ANS["Text reply<br/>advice, analysis"]
+  D -->|function call| ACT["Proposed action<br/>draft"]
+  ACT --> ROLE{"User role?"}
+  ROLE -->|viewer| BLOCK["Write blocked"]
+  ROLE -->|owner / editor| CONF{"Confirm?"}
+  CONF -->|yes| EXEC["Execute and save"]
+  CONF -->|no| CANCEL["Cancel"]`,
+    pl: `flowchart TB
+  MSG["Wiadomość użytkownika"] --> MODEL["Model z 11 funkcjami<br/>utwórz wydatek, przychód…"]
+  MODEL --> D{"Co zwrócił model?"}
+  D -->|zwykła odpowiedź| ANS["Odpowiedź tekstowa<br/>porada, analiza"]
+  D -->|wywołanie funkcji| ACT["Proponowane działanie<br/>szkic"]
+  ACT --> ROLE{"Rola użytkownika?"}
+  ROLE -->|obserwator| BLOCK["Zapis zablokowany"]
+  ROLE -->|właściciel / edytor| CONF{"Potwierdzić?"}
+  CONF -->|tak| EXEC["Wykonaj i zapisz"]
+  CONF -->|nie| CANCEL["Anuluj"]`,
+  },
+
+  'budget-context-injection': {
+    ru: `flowchart TB
+  subgraph Ctx["Контекст пользователя"]
+    C1["Траты за месяц"]
+    C2["Лимиты по категориям"]
+    C3["Топ-категории"]
+    C4["Недавние расходы"]
+  end
+  Ctx --> SAN["Очистка текстовых полей"]
+  SAN --> BLOCK["Изолированный блок данных<br/>--- ДАННЫЕ ПОЛЬЗОВАТЕЛЯ ---"]
+  INSTR["Инструкции ассистенту<br/>отдельно"] --> MODEL["Модель"]
+  BLOCK --> MODEL
+  MODEL --> NOTE["Данные — это данные,<br/>а не команды"]`,
+    en: `flowchart TB
+  subgraph Ctx["User context"]
+    C1["Monthly spending"]
+    C2["Category limits"]
+    C3["Top categories"]
+    C4["Recent expenses"]
+  end
+  Ctx --> SAN["Sanitize text fields"]
+  SAN --> BLOCK["Isolated data block<br/>--- USER DATA ---"]
+  INSTR["Assistant instructions<br/>separate"] --> MODEL["Model"]
+  BLOCK --> MODEL
+  MODEL --> NOTE["Data is data,<br/>not commands"]`,
+    pl: `flowchart TB
+  subgraph Ctx["Kontekst użytkownika"]
+    C1["Wydatki miesięczne"]
+    C2["Limity kategorii"]
+    C3["Najczęstsze kategorie"]
+    C4["Ostatnie wydatki"]
+  end
+  Ctx --> SAN["Czyszczenie pól tekstowych"]
+  SAN --> BLOCK["Izolowany blok danych<br/>--- DANE UŻYTKOWNIKA ---"]
+  INSTR["Instrukcje dla asystenta<br/>osobno"] --> MODEL["Model"]
+  BLOCK --> MODEL
+  MODEL --> NOTE["Dane to dane,<br/>a nie polecenia"]`,
+  },
+
+  'budget-receipt-ocr': {
+    ru: `flowchart LR
+  PHOTO["Фото чека"] --> OCR["Распознавание зрением<br/>выбранная модель"]
+  OCR --> ITEMS["Позиции: товар · цена ·<br/>дата · магазин · адрес"]
+  ITEMS --> EXP["Черновик расхода<br/>подтвердите"]
+  ITEMS --> CANON["Каноничное имя товара<br/>для индекса инфляции"]
+  ITEMS --> ADDR["Адрес магазина"]
+  ADDR --> GEO["Геокодинг: OpenStreetMap<br/>без ИИ, с кэшем"]
+  GEO --> MAP["Точка на карте"]`,
+    en: `flowchart LR
+  PHOTO["Receipt photo"] --> OCR["Vision recognition<br/>selected model"]
+  OCR --> ITEMS["Line items: product · price ·<br/>date · store · address"]
+  ITEMS --> EXP["Expense draft<br/>please confirm"]
+  ITEMS --> CANON["Canonical product name<br/>for the inflation index"]
+  ITEMS --> ADDR["Store address"]
+  ADDR --> GEO["Geocoding: OpenStreetMap<br/>no AI, cached"]
+  GEO --> MAP["Point on the map"]`,
+    pl: `flowchart LR
+  PHOTO["Zdjęcie paragonu"] --> OCR["Rozpoznawanie wizyjne<br/>wybrany model"]
+  OCR --> ITEMS["Pozycje: produkt · cena ·<br/>data · sklep · adres"]
+  ITEMS --> EXP["Szkic wydatku<br/>potwierdź"]
+  ITEMS --> CANON["Kanoniczna nazwa produktu<br/>dla indeksu inflacji"]
+  ITEMS --> ADDR["Adres sklepu"]
+  ADDR --> GEO["Geokodowanie: OpenStreetMap<br/>bez AI, z cache"]
+  GEO --> MAP["Punkt na mapie"]`,
+  },
+
+  'budget-omnichannel': {
+    ru: `flowchart TB
+  APP["Приложение"] --> S
+  TG["Telegram"] --> S
+  WA["WhatsApp"] --> S
+  subgraph S["Общие ИИ-сервисы на сервере"]
+    CHAT["Чат-агент"]
+    VOICE["Голос → текст<br/>whisper-1"]
+    OCR["Чеки — зрение"]
+  end
+  S --> OPENAI["OpenAI"]`,
+    en: `flowchart TB
+  APP["App"] --> S
+  TG["Telegram"] --> S
+  WA["WhatsApp"] --> S
+  subgraph S["Shared AI services on the server"]
+    CHAT["Chat agent"]
+    VOICE["Voice → text<br/>whisper-1"]
+    OCR["Receipts — vision"]
+  end
+  S --> OPENAI["OpenAI"]`,
+    pl: `flowchart TB
+  APP["Aplikacja"] --> S
+  TG["Telegram"] --> S
+  WA["WhatsApp"] --> S
+  subgraph S["Wspólne usługi AI na serwerze"]
+    CHAT["Agent czatu"]
+    VOICE["Głos → tekst<br/>whisper-1"]
+    OCR["Paragony — wizja"]
+  end
+  S --> OPENAI["OpenAI"]`,
+  },
+
+  'budget-suggestions': {
+    ru: `flowchart LR
+  E["Новый расход"] --> H{"Похожее уже<br/>встречалось?"}
+  H -->|да| FAST["Подсказка сразу<br/>без модели"]
+  H -->|нет| AI["ИИ / эмбеддинги"]
+  AI --> S1["Категория"]
+  AI --> S2["Теги"]
+  AI --> S3["Проект по смыслу"]
+  AI --> S4["Разбиение по категориям"]`,
+    en: `flowchart LR
+  E["New expense"] --> H{"Seen something<br/>similar before?"}
+  H -->|yes| FAST["Instant suggestion<br/>no model"]
+  H -->|no| AI["AI / embeddings"]
+  AI --> S1["Category"]
+  AI --> S2["Tags"]
+  AI --> S3["Project by meaning"]
+  AI --> S4["Split across categories"]`,
+    pl: `flowchart LR
+  E["Nowy wydatek"] --> H{"Coś podobnego<br/>już było?"}
+  H -->|tak| FAST["Podpowiedź od razu<br/>bez modelu"]
+  H -->|nie| AI["AI / embeddingi"]
+  AI --> S1["Kategoria"]
+  AI --> S2["Tagi"]
+  AI --> S3["Projekt wg sensu"]
+  AI --> S4["Podział na kategorie"]`,
+  },
+
+  'budget-insights': {
+    ru: `flowchart LR
+  DATA["Ваши финансы"] --> AI["Модель, выбранная вами"]
+  AI --> CARDS["Инсайт-карточки<br/>паттерны трат"]
+  AI --> STORY["История трат<br/>нарративная сводка"]
+  PORT["Инвест-портфель"] --> AIP["Портфельные инсайты<br/>тариф Pro+, кэш 24 ч"]
+  AIP --> RISK["Риски концентрации,<br/>отставание, комиссии…"]`,
+    en: `flowchart LR
+  DATA["Your finances"] --> AI["The model you chose"]
+  AI --> CARDS["Insight cards<br/>spending patterns"]
+  AI --> STORY["Spending story<br/>narrative summary"]
+  PORT["Investment portfolio"] --> AIP["Portfolio insights<br/>Pro+ tier, 24h cache"]
+  AIP --> RISK["Concentration risk,<br/>underperformance, fees…"]`,
+    pl: `flowchart LR
+  DATA["Twoje finanse"] --> AI["Model wybrany przez Ciebie"]
+  AI --> CARDS["Karty wglądów<br/>wzorce wydatków"]
+  AI --> STORY["Historia wydatków<br/>narracyjne podsumowanie"]
+  PORT["Portfel inwestycyjny"] --> AIP["Wglądy portfelowe<br/>plan Pro+, cache 24 h"]
+  AIP --> RISK["Ryzyko koncentracji,<br/>słabe wyniki, prowizje…"]`,
+  },
+
+  'budget-anomaly': {
+    ru: `flowchart TB
+  EXP["Расход записан"] --> RULES["4 правила — без ИИ"]
+  RULES --> R1["Всплеск категории<br/>+30% к среднему"]
+  RULES --> R2["Рост цены подписки<br/>больше 10%"]
+  RULES --> R3["Двойное списание<br/>±1 день"]
+  RULES --> R4["Похоже на регулярный платёж"]
+  R1 --> FEED["Лента алертов<br/>защита от дублей"]
+  R2 --> FEED
+  R3 --> FEED
+  R4 --> FEED
+  FEED --> PUSH["Пуш — не более 3 в день"]`,
+    en: `flowchart TB
+  EXP["Expense saved"] --> RULES["4 rules — no AI"]
+  RULES --> R1["Category spike<br/>+30% vs average"]
+  RULES --> R2["Subscription price up<br/>over 10%"]
+  RULES --> R3["Duplicate charge<br/>±1 day"]
+  RULES --> R4["Looks like a recurring payment"]
+  R1 --> FEED["Alert feed<br/>dedup protection"]
+  R2 --> FEED
+  R3 --> FEED
+  R4 --> FEED
+  FEED --> PUSH["Push — max 3 per day"]`,
+    pl: `flowchart TB
+  EXP["Wydatek zapisany"] --> RULES["4 reguły — bez AI"]
+  RULES --> R1["Skok kategorii<br/>+30% do średniej"]
+  RULES --> R2["Wzrost ceny subskrypcji<br/>ponad 10%"]
+  RULES --> R3["Podwójne obciążenie<br/>±1 dzień"]
+  RULES --> R4["Wygląda na płatność cykliczną"]
+  R1 --> FEED["Kanał alertów<br/>ochrona przed duplikatami"]
+  R2 --> FEED
+  R3 --> FEED
+  R4 --> FEED
+  FEED --> PUSH["Push — maks. 3 dziennie"]`,
+  },
 };

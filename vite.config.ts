@@ -51,6 +51,7 @@ export default defineConfig({
                 testingAiArticle: resolve(__dirname, "blog/testing-ai-agent-orchestration/index.html"),
                 legalkaKbArticle: resolve(__dirname, "blog/legalka-kb-ai-architecture/index.html"),
                 accountingAiArchitectureArticle: resolve(__dirname, "blog/accounting-ai-agent-architecture/index.html"),
+                budgetAiArchitectureArticle: resolve(__dirname, "blog/ai-budget-assistant-ai-architecture/index.html"),
             },
         },
     },
