@@ -1216,7 +1216,7 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
 
   'budget-receipt-ocr': {
     ru: `flowchart LR
-  PHOTO["Фото чека"] --> OCR["Распознавание (vision)<br/>выбранная модель"]
+  PHOTO["Фото чека"] --> OCR["Визуальное распознавание<br/>выбранная модель"]
   OCR --> ITEMS["Позиции: товар · цена ·<br/>дата · магазин · адрес"]
   ITEMS --> EXP["Черновик расхода<br/>подтвердите"]
   ITEMS --> CANON["Каноничное имя товара<br/>для индекса инфляции"]
@@ -1249,7 +1249,7 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
   subgraph S["Общие ИИ-сервисы на сервере"]
     CHAT["Чат-агент"]
     VOICE["Голос → текст<br/>whisper-1"]
-    OCR["Чеки — vision"]
+    OCR["Чеки — визуальное распознавание"]
   end
   S --> OPENAI["OpenAI"]`,
     en: `flowchart TB
