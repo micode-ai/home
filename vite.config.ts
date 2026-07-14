@@ -54,6 +54,7 @@ export default defineConfig({
                 legalkaKbArticle: resolve(__dirname, "blog/legalka-kb-ai-architecture/index.html"),
                 accountingAiArchitectureArticle: resolve(__dirname, "blog/accounting-ai-agent-architecture/index.html"),
                 budgetAiArchitectureArticle: resolve(__dirname, "blog/ai-budget-assistant-ai-architecture/index.html"),
+                emarketingAiArchitectureArticle: resolve(__dirname, "blog/emarketing-ai-agent-architecture/index.html"),
             },
         },
     },

@@ -1357,4 +1357,337 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
   R4 --> FEED
   FEED --> PUSH["Push — maks. 3 dziennie"]`,
   },
+
+  'emarketing-system-overview': {
+    ru: `flowchart TB
+  subgraph Client["Как приходит задача"]
+    UI["Веб-панель маркетолога"]
+    CRON["Расписание (cron)"]
+  end
+  subgraph App["Основное приложение"]
+    API["Сервер (API)<br/>создаёт запись о запуске"]
+    Q["Очередь заданий<br/>(на Redis)"]
+  end
+  subgraph AI["ИИ-сервис (отдельный)"]
+    SUP["Супервайзер<br/>(маршрутизатор)"]
+    AG["Агенты-специалисты"]
+  end
+  LLM["OpenAI GPT-4o"]
+  DB[("База данных<br/>контент · кампании · метрики")]
+  UI --> API
+  CRON --> API
+  API --> Q
+  Q --> SUP
+  SUP --> AG
+  AG --> LLM
+  AG --> DB
+  API --> DB`,
+    en: `flowchart TB
+  subgraph Client["How a task arrives"]
+    UI["Marketer's web dashboard"]
+    CRON["Schedule (cron)"]
+  end
+  subgraph App["Main application"]
+    API["Server (API)<br/>creates a run record"]
+    Q["Job queue<br/>(on Redis)"]
+  end
+  subgraph AI["AI service (separate)"]
+    SUP["Supervisor<br/>(router)"]
+    AG["Specialist agents"]
+  end
+  LLM["OpenAI GPT-4o"]
+  DB[("Database<br/>content · campaigns · metrics")]
+  UI --> API
+  CRON --> API
+  API --> Q
+  Q --> SUP
+  SUP --> AG
+  AG --> LLM
+  AG --> DB
+  API --> DB`,
+    pl: `flowchart TB
+  subgraph Client["Jak trafia zadanie"]
+    UI["Panel web marketera"]
+    CRON["Harmonogram (cron)"]
+  end
+  subgraph App["Aplikacja główna"]
+    API["Serwer (API)<br/>tworzy wpis o uruchomieniu"]
+    Q["Kolejka zadań<br/>(na Redis)"]
+  end
+  subgraph AI["Usługa AI (osobna)"]
+    SUP["Nadzorca<br/>(router)"]
+    AG["Wyspecjalizowani agenci"]
+  end
+  LLM["OpenAI GPT-4o"]
+  DB[("Baza danych<br/>treści · kampanie · metryki")]
+  UI --> API
+  CRON --> API
+  API --> Q
+  Q --> SUP
+  SUP --> AG
+  AG --> LLM
+  AG --> DB
+  API --> DB`,
+  },
+
+  'emarketing-supervisor-team': {
+    ru: `flowchart TB
+  SUP(["Супервайзер выбирает нужного специалиста"])
+  subgraph Team["Команда агентов"]
+    direction TB
+    C["Контент<br/>посты · статьи · письма · лендинги"]
+    CH["Чек-листы<br/>запуск · кампания · SEO"]
+    D["Документы<br/>план · отчёт · анализ конкурентов"]
+    S["SEO<br/>аудит страницы + разбор выдачи"]
+    ST["Стратегия<br/>go-to-market · позиционирование"]
+    E["Email<br/>темы · письма · цепочки"]
+    A["Аналитика<br/>инсайты по реальным метрикам"]
+  end
+  CHAT["Чат-ассистент"]
+  SUP --> Team
+  CHAT -. "поручение" .-> SUP`,
+    en: `flowchart TB
+  SUP(["The supervisor picks the right specialist"])
+  subgraph Team["The team of agents"]
+    direction TB
+    C["Content<br/>posts · articles · emails · landing pages"]
+    CH["Checklists<br/>launch · campaign · SEO"]
+    D["Documents<br/>plan · report · competitor analysis"]
+    S["SEO<br/>page audit + SERP breakdown"]
+    ST["Strategy<br/>go-to-market · positioning"]
+    E["Email<br/>subject lines · emails · sequences"]
+    A["Analytics<br/>insights over real metrics"]
+  end
+  CHAT["Chat assistant"]
+  SUP --> Team
+  CHAT -. "hands off a job" .-> SUP`,
+    pl: `flowchart TB
+  SUP(["Nadzorca wybiera właściwego specjalistę"])
+  subgraph Team["Zespół agentów"]
+    direction TB
+    C["Treści<br/>posty · artykuły · e-maile · landing pages"]
+    CH["Listy kontrolne<br/>launch · kampania · SEO"]
+    D["Dokumenty<br/>plan · raport · analiza konkurencji"]
+    S["SEO<br/>audyt strony + analiza wyników"]
+    ST["Strategia<br/>go-to-market · pozycjonowanie"]
+    E["Email<br/>tematy · e-maile · sekwencje"]
+    A["Analityka<br/>wglądy na realnych metrykach"]
+  end
+  CHAT["Asystent czatu"]
+  SUP --> Team
+  CHAT -. "przekazuje zadanie" .-> SUP`,
+  },
+
+  'emarketing-run-lifecycle': {
+    ru: `stateDiagram-v2
+  state "Ожидает" as P
+  state "В очереди" as Q
+  state "Выполняется" as R
+  state "Готово" as D
+  state "Ошибка" as F
+  [*] --> P: задача создана
+  P --> Q: поставлена в очередь
+  Q --> R: агент взял в работу
+  R --> D: результат сохранён
+  R --> F: сбой
+  D --> [*]
+  F --> [*]
+  note right of R
+    Замеряются время,
+    израсходованные токены
+    и стоимость в долларах;
+    сохраняется трейс для отладки
+  end note`,
+    en: `stateDiagram-v2
+  state "Pending" as P
+  state "Queued" as Q
+  state "Running" as R
+  state "Completed" as D
+  state "Failed" as F
+  [*] --> P: task created
+  P --> Q: put in the queue
+  Q --> R: an agent picks it up
+  R --> D: result saved
+  R --> F: error
+  D --> [*]
+  F --> [*]
+  note right of R
+    Time, tokens spent
+    and cost in dollars
+    are measured;
+    a debug trace is stored
+  end note`,
+    pl: `stateDiagram-v2
+  state "Oczekuje" as P
+  state "W kolejce" as Q
+  state "Trwa" as R
+  state "Gotowe" as D
+  state "Błąd" as F
+  [*] --> P: zadanie utworzone
+  P --> Q: trafia do kolejki
+  Q --> R: agent bierze je do pracy
+  R --> D: wynik zapisany
+  R --> F: błąd
+  D --> [*]
+  F --> [*]
+  note right of R
+    Mierzone są czas,
+    zużyte tokeny
+    i koszt w dolarach;
+    zapisywany jest ślad do debugowania
+  end note`,
+  },
+
+  'emarketing-content-multilingual': {
+    ru: `flowchart TB
+  IN["Запрос: тип · платформа · тема ·<br/>тон · длина · языки"] --> CTX["Загрузить контекст проекта<br/>голос бренда · аудитория · отрасль"]
+  CTX --> GEN["Сгенерировать текст<br/>(GPT-4o, температура 0.8)"]
+  GEN --> REV["Проверка качества"]
+  REV --> SAVE["Сохранить как отдельную запись<br/>с общим ID группы"]
+  SAVE --> MORE{"Ещё языки?"}
+  MORE -->|да| NEXT["Следующий язык"]
+  NEXT --> GEN
+  MORE -->|нет| DONE["Готово: по записи на язык,<br/>сгруппированы вместе"]`,
+    en: `flowchart TB
+  IN["Request: type · platform · topic ·<br/>tone · length · languages"] --> CTX["Load project context<br/>brand voice · audience · industry"]
+  CTX --> GEN["Generate the text<br/>(GPT-4o, temperature 0.8)"]
+  GEN --> REV["Quality review"]
+  REV --> SAVE["Save as a separate record<br/>with a shared group ID"]
+  SAVE --> MORE{"More languages?"}
+  MORE -->|yes| NEXT["Next language"]
+  NEXT --> GEN
+  MORE -->|no| DONE["Done: one record per language,<br/>grouped together"]`,
+    pl: `flowchart TB
+  IN["Zapytanie: typ · platforma · temat ·<br/>ton · długość · języki"] --> CTX["Wczytaj kontekst projektu<br/>głos marki · odbiorcy · branża"]
+  CTX --> GEN["Wygeneruj tekst<br/>(GPT-4o, temperatura 0.8)"]
+  GEN --> REV["Kontrola jakości"]
+  REV --> SAVE["Zapisz jako osobny wpis<br/>ze wspólnym ID grupy"]
+  SAVE --> MORE{"Więcej języków?"}
+  MORE -->|tak| NEXT["Następny język"]
+  NEXT --> GEN
+  MORE -->|nie| DONE["Gotowe: po wpisie na język,<br/>zgrupowane razem"]`,
+  },
+
+  'emarketing-grounding': {
+    ru: `flowchart LR
+  Q["Запрос: отчёт<br/>или вопрос по аналитике"] --> AGENT["Агент документов / аналитики"]
+  AGENT --> DATA["Только чтение реальных данных проекта<br/>контент · кампании · подписчики ·<br/>соцсети · метрики · чек-листы"]
+  DATA --> CHECK{"Данные есть?"}
+  CHECK -->|да| ANS["Отчёт и инсайты<br/>на реальных цифрах"]
+  CHECK -->|нет| HONEST["«Данных нет» +<br/>что стоит подключить"]`,
+    en: `flowchart LR
+  Q["Request: a report<br/>or an analytics question"] --> AGENT["Document / analytics agent"]
+  AGENT --> DATA["Read-only, the project's real data<br/>content · campaigns · subscribers ·<br/>socials · metrics · checklists"]
+  DATA --> CHECK{"Is there data?"}
+  CHECK -->|yes| ANS["Report and insights<br/>on real figures"]
+  CHECK -->|no| HONEST["«No data» +<br/>what to set up"]`,
+    pl: `flowchart LR
+  Q["Zapytanie: raport<br/>lub pytanie o analitykę"] --> AGENT["Agent dokumentów / analityki"]
+  AGENT --> DATA["Tylko odczyt realnych danych projektu<br/>treści · kampanie · subskrybenci ·<br/>social · metryki · listy kontrolne"]
+  DATA --> CHECK{"Czy są dane?"}
+  CHECK -->|tak| ANS["Raport i wglądy<br/>na realnych liczbach"]
+  CHECK -->|nie| HONEST["«Brak danych» +<br/>co warto podłączyć"]`,
+  },
+
+  'emarketing-chat-dispatch': {
+    ru: `stateDiagram-v2
+  state "Чат" as C
+  state Decide <<choice>>
+  state "Инструмент" as T
+  [*] --> C: сообщение пользователя
+  C --> Decide: ответ модели
+  Decide --> [*]: ответ текстом (без действия)
+  Decide --> T: нужно действие
+  T --> C: специалист отработал, есть ссылка
+  note right of T
+    Из разговора можно поручить
+    задачу любому специалисту:
+    чек-лист, контент, отчёт, SEO…
+  end note`,
+    en: `stateDiagram-v2
+  state "Chat" as C
+  state Decide <<choice>>
+  state "Tool" as T
+  [*] --> C: user message
+  C --> Decide: model response
+  Decide --> [*]: text answer (no action)
+  Decide --> T: an action is needed
+  T --> C: specialist finished, a link is ready
+  note right of T
+    From the conversation you can
+    hand a job to any specialist:
+    checklist, content, report, SEO…
+  end note`,
+    pl: `stateDiagram-v2
+  state "Czat" as C
+  state Decide <<choice>>
+  state "Narzędzie" as T
+  [*] --> C: wiadomość użytkownika
+  C --> Decide: odpowiedź modelu
+  Decide --> [*]: odpowiedź tekstem (bez akcji)
+  Decide --> T: potrzebne działanie
+  T --> C: specjalista skończył, jest link
+  note right of T
+    Z rozmowy można przekazać
+    zadanie dowolnemu specjaliście:
+    lista kontrolna, treść, raport, SEO…
+  end note`,
+  },
+
+  'emarketing-seo-flow': {
+    ru: `stateDiagram-v2
+  state "Загрузка" as S1
+  state "Аудит" as S2
+  state "Выдача" as S3
+  state "Рекомендации" as S4
+  [*] --> S1: загрузить страницу
+  S1 --> S2: аудит on-page
+  S2 --> S3: разбор конкурентов
+  S3 --> S4: приоритеты правок
+  S4 --> [*]
+  note right of S2
+    Заголовки, мета-теги,
+    плотность ключевых слов
+  end note
+  note right of S4
+    Плюс мета-заголовок, описание
+    и slug для новой страницы
+  end note`,
+    en: `stateDiagram-v2
+  state "Fetch" as S1
+  state "Audit" as S2
+  state "SERP" as S3
+  state "Recommendations" as S4
+  [*] --> S1: fetch the page
+  S1 --> S2: on-page audit
+  S2 --> S3: competitor breakdown
+  S3 --> S4: prioritized fixes
+  S4 --> [*]
+  note right of S2
+    Headings, meta tags,
+    keyword density
+  end note
+  note right of S4
+    Plus meta title, description
+    and slug for a new page
+  end note`,
+    pl: `stateDiagram-v2
+  state "Pobranie" as S1
+  state "Audyt" as S2
+  state "Wyniki" as S3
+  state "Rekomendacje" as S4
+  [*] --> S1: pobierz stronę
+  S1 --> S2: audyt on-page
+  S2 --> S3: analiza konkurencji
+  S3 --> S4: priorytety poprawek
+  S4 --> [*]
+  note right of S2
+    Nagłówki, meta-tagi,
+    gęstość słów kluczowych
+  end note
+  note right of S4
+    Plus meta-tytuł, opis
+    i slug dla nowej strony
+  end note`,
+  },
 };
