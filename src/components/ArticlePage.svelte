@@ -93,6 +93,41 @@
     : lang === 'ru' ? 'Основатель и CEO'
     : 'Founder & CEO'
   );
+
+  // FAQ (optional). Authored inline per language on the post as
+  // `faq: [{ qPl, qEn, qRu, aPl, aEn, aRu }]`. Rendered both as a visible section and as
+  // FAQPage JSON-LD emitted in-body, so the static prerender bakes it per locale (JSON-LD is
+  // valid anywhere in the document). Powers Answer-Engine Optimization (AEO).
+  type FaqItem = { q: string; a: string };
+  const faqItems = $derived.by<FaqItem[]>(() => {
+    const raw = (post as any)?.faq as Array<Record<string, string>> | undefined;
+    if (!Array.isArray(raw)) return [];
+    const qk = 'q' + tableSuffix;
+    const ak = 'a' + tableSuffix;
+    return raw
+      .map((it) => ({ q: (it[qk] ?? '').trim(), a: (it[ak] ?? '').trim() }))
+      .filter((it) => it.q && it.a);
+  });
+  const faqLabel = $derived(
+    lang === 'pl' ? 'Najczęstsze pytania'
+    : lang === 'ru' ? 'Частые вопросы'
+    : 'Frequently asked questions'
+  );
+  const faqJsonLd = $derived.by<string>(() => {
+    if (faqItems.length === 0) return '';
+    const data = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((it) => ({
+        '@type': 'Question',
+        name: it.q,
+        acceptedAnswer: { '@type': 'Answer', text: it.a },
+      })),
+    };
+    // Escape `<` so the JSON can never break out of the surrounding <script> element.
+    const json = JSON.stringify(data).replace(/</g, '\\u003c');
+    return `<script type="application/ld+json">${json}<\/script>`;
+  });
 </script>
 
 {#if post}
@@ -158,6 +193,19 @@
             </tbody>
           </table>
         </div>
+      {/if}
+
+      {#if faqItems.length > 0}
+        <section class="article-faq" aria-labelledby="article-faq-title">
+          <h2 id="article-faq-title" class="article-h2">{faqLabel}</h2>
+          <dl class="article-faq-list">
+            {#each faqItems as item}
+              <dt class="article-faq-q">{item.q}</dt>
+              <dd class="article-faq-a">{item.a}</dd>
+            {/each}
+          </dl>
+        </section>
+        {@html faqJsonLd}
       {/if}
 
       {#if relatedProduct}
@@ -266,6 +314,21 @@
     white-space: nowrap;
     color: var(--color-primary, #1e3a8a);
   }
+  .article-faq { margin: 3rem 0 0; }
+  .article-faq-list { margin: 1.25rem 0 0; }
+  .article-faq-q {
+    font-weight: 700;
+    color: var(--color-text-primary, #1e293b);
+    margin: 1.5rem 0 0.4rem;
+    line-height: 1.45;
+  }
+  .article-faq-q:first-of-type { margin-top: 0; }
+  .article-faq-a {
+    margin: 0;
+    line-height: 1.75;
+    color: var(--color-text-secondary, #475569);
+  }
+
   .related-product {
     margin: 2.5rem 0 0;
     padding: 1.25rem 1.5rem;
