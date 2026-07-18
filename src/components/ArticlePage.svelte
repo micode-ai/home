@@ -23,8 +23,8 @@
 
   // Body is authored as `\n\n`-separated chunks. Most chunks are plain paragraphs; a few opt into
   // light markup: `## heading`, `> callout`, and `[[diagram:id|caption]]` (renders a Mermaid figure).
-  // Inline `**bold**` is supported inside paragraphs/callouts. Plain-prose posts are unaffected.
-  type Seg = { t: string; b: boolean };
+  // Inline `**bold**` and `*italic*` are supported inside paragraphs/callouts. Plain-prose posts are unaffected.
+  type Seg = { t: string; b: boolean; i: boolean };
   type Block =
     | { kind: 'p'; segments: Seg[] }
     | { kind: 'h2'; text: string }
@@ -33,8 +33,21 @@
 
   const DIAGRAM_RE = /^\[\[diagram:([a-z0-9-]+)(?:\|([^\]]+))?\]\]$/i;
 
+  // `**bold**` is parsed first; within each non-bold run, single `*italic*` is parsed. The two
+  // never nest in authored content, so treating them independently is sufficient.
   function inlineSegments(text: string): Seg[] {
-    return text.split('**').map((t, i) => ({ t, b: i % 2 === 1 }));
+    const out: Seg[] = [];
+    text.split('**').forEach((part, bi) => {
+      if (bi % 2 === 1) {
+        out.push({ t: part, b: true, i: false });
+      } else {
+        part.split('*').forEach((sub, si) => {
+          if (sub === '') return;
+          out.push({ t: sub, b: false, i: si % 2 === 1 });
+        });
+      }
+    });
+    return out;
   }
 
   // Diagrams are authored per language; fall back to Russian if a language is missing.
@@ -110,7 +123,7 @@
         {#if block.kind === 'h2'}
           <h2 class="article-h2">{block.text}</h2>
         {:else if block.kind === 'callout'}
-          <aside class="article-callout">{#each block.segments as seg}{#if seg.b}<strong>{seg.t}</strong>{:else}{seg.t}{/if}{/each}</aside>
+          <aside class="article-callout">{#each block.segments as seg}{#if seg.b}<strong>{seg.t}</strong>{:else if seg.i}<em>{seg.t}</em>{:else}{seg.t}{/if}{/each}</aside>
         {:else if block.kind === 'diagram'}
           {@const def = diagramDef(block.id, lang)}
           {#if def}
@@ -122,7 +135,7 @@
             </figure>
           {/if}
         {:else}
-          <p>{#each block.segments as seg}{#if seg.b}<strong>{seg.t}</strong>{:else}{seg.t}{/if}{/each}</p>
+          <p>{#each block.segments as seg}{#if seg.b}<strong>{seg.t}</strong>{:else if seg.i}<em>{seg.t}</em>{:else}{seg.t}{/if}{/each}</p>
         {/if}
       {/each}
 
@@ -186,8 +199,9 @@
   .article-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
   .tag { padding: 0.2rem 0.6rem; background: rgba(255,255,255,0.15); border-radius: 0.25rem; font-size: 0.75rem; }
   .article-body { padding: 3rem 2rem; background: var(--color-bg-primary, #fff); }
-  .article-body p { line-height: 1.8; margin-bottom: 1.25rem; color: var(--color-text-primary, #1e293b); }
+  .article-body p { line-height: 1.8; margin-bottom: 1.25rem; color: var(--color-text-primary, #1e293b); text-align: justify; }
   .article-body :global(strong) { font-weight: 600; color: var(--color-text-primary, #1e293b); }
+  .article-body :global(em) { font-style: italic; }
   .article-h2 {
     font-size: 1.4rem;
     font-weight: 700;

@@ -1690,4 +1690,238 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
     i slug dla nowej strony
   end note`,
   },
+
+  'dreaming-team-overview': {
+    ru: `flowchart TB
+  SCHED["Планировщик<br/>ночная ротация"]
+  subgraph Repo["Кодовая база — контроль версий"]
+    AGENTS["Команда агентов<br/>роли как файлы"]
+    CODE["Исходный код"]
+    ART["Артефакты<br/>заметки · предложения · находки"]
+  end
+  HUMAN["Ревью человеком<br/>одобрить / отклонить"]
+  SCHED -->|будит агента| AGENTS
+  AGENTS -->|изучает| CODE
+  AGENTS -->|пишет| ART
+  ART -->|выносится на ревью| HUMAN
+  HUMAN -->|применяет одобренное| AGENTS`,
+    en: `flowchart TB
+  SCHED["Scheduler<br/>nightly rota"]
+  subgraph Repo["Codebase — version control"]
+    AGENTS["Agent team<br/>roles as files"]
+    CODE["Source code"]
+    ART["Artifacts<br/>notes · proposals · findings"]
+  end
+  HUMAN["Human review<br/>approve / reject"]
+  SCHED -->|wakes an agent| AGENTS
+  AGENTS -->|studies| CODE
+  AGENTS -->|writes| ART
+  ART -->|surfaced for review| HUMAN
+  HUMAN -->|applies approved changes| AGENTS`,
+    pl: `flowchart TB
+  SCHED["Harmonogram<br/>nocna rotacja"]
+  subgraph Repo["Kod bazowy — kontrola wersji"]
+    AGENTS["Zespół agentów<br/>role jako pliki"]
+    CODE["Kod źródłowy"]
+    ART["Artefakty<br/>notatki · propozycje · znaleziska"]
+  end
+  HUMAN["Przegląd człowieka<br/>zatwierdź / odrzuć"]
+  SCHED -->|budzi agenta| AGENTS
+  AGENTS -->|studiuje| CODE
+  AGENTS -->|zapisuje| ART
+  ART -->|do przeglądu| HUMAN
+  HUMAN -->|stosuje zatwierdzone| AGENTS`,
+  },
+
+  'dreaming-self-study-loop': {
+    ru: `flowchart TB
+  START(["Начало ночной смены"]) --> READ["Перечитать свою роль"]
+  READ --> SAMPLE["Выборочно изучить код<br/>строгий бюджет"]
+  SAMPLE --> NOTE["Написать заметку<br/>роль · наблюдение · вопрос"]
+  NOTE --> DRIFT{"Инструкции сходятся с реальностью?"}
+  DRIFT -->|да| DONE(["Заметка сохранена"])
+  DRIFT -->|"нет — структурный разрыв"| PROP["Набросать предложение по эволюции"]
+  PROP --> GATE{"Ревью человеком"}
+  GATE -->|одобрить| APPLY["Обновить собственное описание агента"]
+  GATE -->|отклонить| DONE
+  APPLY --> DONE`,
+    en: `flowchart TB
+  START(["Night shift begins"]) --> READ["Re-read own role"]
+  READ --> SAMPLE["Sample the codebase<br/>strict budget"]
+  SAMPLE --> NOTE["Write a learning note<br/>role · watchlist · question"]
+  NOTE --> DRIFT{"Instructions match reality?"}
+  DRIFT -->|yes| DONE(["Note saved"])
+  DRIFT -->|"no — structural gap"| PROP["Draft an evolution proposal"]
+  PROP --> GATE{"Human review"}
+  GATE -->|approve| APPLY["Update the agent's own definition"]
+  GATE -->|reject| DONE
+  APPLY --> DONE`,
+    pl: `flowchart TB
+  START(["Początek nocnej zmiany"]) --> READ["Przeczytaj rolę na nowo"]
+  READ --> SAMPLE["Zbadaj kod wyrywkowo<br/>ścisły budżet"]
+  SAMPLE --> NOTE["Napisz notatkę<br/>rola · obserwacja · pytanie"]
+  NOTE --> DRIFT{"Instrukcje zgodne z rzeczywistością?"}
+  DRIFT -->|tak| DONE(["Notatka zapisana"])
+  DRIFT -->|"nie — rozjazd strukturalny"| PROP["Naszkicuj propozycję ewolucji"]
+  PROP --> GATE{"Przegląd człowieka"}
+  GATE -->|zatwierdź| APPLY["Zaktualizuj własny opis agenta"]
+  GATE -->|odrzuć| DONE
+  APPLY --> DONE`,
+  },
+
+  'dreaming-scanner-family': {
+    ru: `flowchart LR
+  REPO["Кодовая база"] --> RUN["Один паттерн<br/>фонового запуска"]
+  RUN --> SS["Линза самообучения"]
+  RUN --> TD["Линза техдолга"]
+  RUN --> IDEA["Линза продуктовых идей"]
+  RUN --> LOOP["Линза операционных циклов"]
+  RUN --> WIKI["Линза базы знаний"]
+  SS --> STORE["Markdown-артефакты<br/>в репозитории"]
+  TD --> STORE
+  IDEA --> STORE
+  LOOP --> STORE
+  WIKI --> STORE`,
+    en: `flowchart LR
+  REPO["Codebase"] --> RUN["One background-run<br/>pattern"]
+  RUN --> SS["Self-study lens"]
+  RUN --> TD["Tech-debt lens"]
+  RUN --> IDEA["Product-idea lens"]
+  RUN --> LOOP["Operational-loop lens"]
+  RUN --> WIKI["Knowledge-base lens"]
+  SS --> STORE["Markdown artifacts<br/>in the repo"]
+  TD --> STORE
+  IDEA --> STORE
+  LOOP --> STORE
+  WIKI --> STORE`,
+    pl: `flowchart LR
+  REPO["Kod bazowy"] --> RUN["Jeden wzorzec<br/>uruchomienia w tle"]
+  RUN --> SS["Soczewka samokształcenia"]
+  RUN --> TD["Soczewka długu technicznego"]
+  RUN --> IDEA["Soczewka pomysłów produktowych"]
+  RUN --> LOOP["Soczewka pętli operacyjnych"]
+  RUN --> WIKI["Soczewka bazy wiedzy"]
+  SS --> STORE["Artefakty markdown<br/>w repozytorium"]
+  TD --> STORE
+  IDEA --> STORE
+  LOOP --> STORE
+  WIKI --> STORE`,
+  },
+
+  'dreaming-session-lifecycle': {
+    ru: `stateDiagram-v2
+  state "Запланирована" as S0
+  state "Выполняется" as S1
+  state "Успех" as S2
+  state "Таймаут" as S3
+  state "Провал" as S4
+  state "Сверена" as S5
+  [*] --> S0
+  S0 --> S1: выбрана из ротации
+  S1 --> S2: отчиталась
+  S1 --> S3: остановлено сторожем
+  S1 --> S4: ошибка или убита
+  S1 --> S5: умерла без отчёта
+  S2 --> [*]
+  S3 --> [*]
+  S4 --> [*]
+  S5 --> [*]`,
+    en: `stateDiagram-v2
+  state "Scheduled" as S0
+  state "Running" as S1
+  state "Success" as S2
+  state "Timeout" as S3
+  state "Failed" as S4
+  state "Reconciled" as S5
+  [*] --> S0
+  S0 --> S1: picked from rotation
+  S1 --> S2: reported back
+  S1 --> S3: watchdog stalled
+  S1 --> S4: error or killed
+  S1 --> S5: died silently
+  S2 --> [*]
+  S3 --> [*]
+  S4 --> [*]
+  S5 --> [*]`,
+    pl: `stateDiagram-v2
+  state "Zaplanowana" as S0
+  state "Trwa" as S1
+  state "Sukces" as S2
+  state "Timeout" as S3
+  state "Porażka" as S4
+  state "Uzgodniona" as S5
+  [*] --> S0
+  S0 --> S1: wybrana z rotacji
+  S1 --> S2: zaraportowała
+  S1 --> S3: zatrzymana przez watchdog
+  S1 --> S4: błąd lub zabita
+  S1 --> S5: umarła bez raportu
+  S2 --> [*]
+  S3 --> [*]
+  S4 --> [*]
+  S5 --> [*]`,
+  },
+
+  'dreaming-cascade-gates': {
+    ru: `flowchart TB
+  GOAL["Цель"] --> SUP["Супервайзер<br/>раскладывает на подагентов"]
+  SUP --> C["Контракт"]
+  C --> G1{"Ворота"}
+  G1 -->|одобрить| D["Дизайн"]
+  G1 -->|вернуть| C
+  D --> G2{"Ворота"}
+  G2 -->|одобрить| IMP["Реализация"]
+  G2 -->|вернуть| D
+  IMP --> G3{"Ворота"}
+  G3 -->|одобрить| R["Ревью"]
+  G3 -->|вернуть| IMP
+  R --> G4{"Ворота"}
+  G4 -->|одобрить| Q["QA"]
+  G4 -->|вернуть| R
+  Q --> DONE(["Готово"])
+  G1 -->|отклонить| STOP(["Запуск остановлен"])
+  G2 -->|отклонить| STOP
+  G3 -->|отклонить| STOP
+  G4 -->|отклонить| STOP`,
+    en: `flowchart TB
+  GOAL["Goal"] --> SUP["Supervisor<br/>decomposes into subagents"]
+  SUP --> C["Contract"]
+  C --> G1{"Gate"}
+  G1 -->|approve| D["Design"]
+  G1 -->|return| C
+  D --> G2{"Gate"}
+  G2 -->|approve| IMP["Implementation"]
+  G2 -->|return| D
+  IMP --> G3{"Gate"}
+  G3 -->|approve| R["Review"]
+  G3 -->|return| IMP
+  R --> G4{"Gate"}
+  G4 -->|approve| Q["QA"]
+  G4 -->|return| R
+  Q --> DONE(["Done"])
+  G1 -->|reject| STOP(["Run stopped"])
+  G2 -->|reject| STOP
+  G3 -->|reject| STOP
+  G4 -->|reject| STOP`,
+    pl: `flowchart TB
+  GOAL["Cel"] --> SUP["Nadzorca<br/>rozkłada na podagentów"]
+  SUP --> C["Kontrakt"]
+  C --> G1{"Bramka"}
+  G1 -->|zatwierdź| D["Projekt"]
+  G1 -->|wróć| C
+  D --> G2{"Bramka"}
+  G2 -->|zatwierdź| IMP["Implementacja"]
+  G2 -->|wróć| D
+  IMP --> G3{"Bramka"}
+  G3 -->|zatwierdź| R["Przegląd"]
+  G3 -->|wróć| IMP
+  R --> G4{"Bramka"}
+  G4 -->|zatwierdź| Q["QA"]
+  G4 -->|wróć| R
+  Q --> DONE(["Gotowe"])
+  G1 -->|odrzuć| STOP(["Uruchomienie zatrzymane"])
+  G2 -->|odrzuć| STOP
+  G3 -->|odrzuć| STOP
+  G4 -->|odrzuć| STOP`,
+  },
 };
