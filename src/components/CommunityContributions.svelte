@@ -143,7 +143,8 @@
     font-size: 1.75rem;
     font-weight: 700;
     line-height: 1;
-    color: var(--color-accent);
+    /* --color-accent (#F97316) is only 2.82:1 on white; the darker token meets WCAG AA */
+    color: var(--color-accent-dark);
   }
 
   .contribution-description {

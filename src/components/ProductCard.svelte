@@ -281,6 +281,7 @@
     align-items: center;
     gap: 0.25rem;
     margin: 0 0 0.625rem 0;
+    min-height: 24px; /* WCAG 2.5.8 minimum tap-target size */
     font-size: 0.8125rem;
     font-weight: 500;
     color: var(--color-primary);
@@ -349,7 +350,9 @@
   }
 
   .product-page-link {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px; /* WCAG 2.5.8 minimum tap-target size */
     margin: 0;
     font-size: 0.875rem;
     color: var(--color-primary);
@@ -372,7 +375,9 @@
     align-items: center;
     gap: 0.375rem;
     padding: 0.5rem 1rem;
-    background: var(--card-accent, var(--color-primary));
+    /* Light accents (orange 2.82:1, green 3.76:1) fail WCAG AA with white text.
+       Darkening the accent 28% keeps the hue while reaching ≥4.5:1. */
+    background: color-mix(in srgb, var(--card-accent, var(--color-primary)) 72%, #000);
     color: #ffffff;
     text-decoration: none;
     border-radius: var(--radius-lg);
@@ -490,6 +495,14 @@
   :global(html.dark-mode-active) .card-details-hint {
     color: var(--color-text-tertiary);
     border-color: var(--color-border);
+  }
+
+  /* Dark-theme accents are light (#FB923C, #34D399, …); white text would be ~4:1.
+     Use the full-strength accent with dark text for a comfortable AA margin. */
+  :global(html.dark-mode-active) .product-link,
+  :global(html.dark-mode-active) .product-link:visited {
+    background: var(--card-accent, var(--color-primary));
+    color: #0F172A;
   }
 
   /* ===== High Contrast ===== */

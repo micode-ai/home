@@ -124,7 +124,8 @@
     font-size: 1.0625rem;
     font-weight: 600;
     color: #ffffff;
-    background: var(--color-accent);
+    /* Vibrant --color-accent (#F97316) is only 2.80:1 with white; darkening 28% reaches AA (5.05:1) */
+    background: color-mix(in srgb, var(--color-accent) 72%, #000);
     border: none;
     border-radius: var(--radius-lg);
     cursor: pointer;
@@ -135,7 +136,7 @@
   }
 
   .hero-cta:hover {
-    background: var(--color-accent-dark);
+    background: color-mix(in srgb, var(--color-accent) 60%, #000);
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(249, 115, 22, 0.45);
   }
