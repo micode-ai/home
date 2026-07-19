@@ -98,7 +98,7 @@
   <div class="header-container">
     <div class="header-brand">
       <a href={withLocale('/', $languageStore)} aria-label="{companyName} — home">
-        <img src={logoUrl} alt="{companyName} logo" class="header-logo" />
+        <img src={logoUrl} alt="{companyName} logo" class="header-logo" width="280" height="88" />
       </a>
     </div>
 

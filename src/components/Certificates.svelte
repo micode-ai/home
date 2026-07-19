@@ -14,11 +14,11 @@
   const nextLabel = $derived(t('certificates.next', $languageStore));
 
   const certificates = [
-    { src: certNvidia, alt: 'NVIDIA Certificate of Competency — Getting Started with Deep Learning, Mikhail Peraviortkin, NVIDIA, 2026' },
-    { src: cert1, alt: 'Oracle Application Development Framework 11g Certified Implementation Specialist — Mikhail Peraviortkin, Oracle University, 2014' },
-    { src: cert2, alt: 'Hugging Face Agents Course — Fundamentals of Agents certificate, Mikhail Peraviortkin, 2025' },
-    { src: cert3, alt: 'Hugging Face LLM Course — Fundamentals of LLMs certificate, Mikhail Peraviortkin, 2025' },
-    { src: cert4, alt: 'Hugging Face MCP Course — Fundamentals of MCP certificate, Mikhail Peraviortkin, 2025' }
+    { src: certNvidia, width: 802, height: 672, alt: 'NVIDIA Certificate of Competency — Getting Started with Deep Learning, Mikhail Peraviortkin, NVIDIA, 2026' },
+    { src: cert1, width: 805, height: 610, alt: 'Oracle Application Development Framework 11g Certified Implementation Specialist — Mikhail Peraviortkin, Oracle University, 2014' },
+    { src: cert2, width: 2000, height: 1414, alt: 'Hugging Face Agents Course — Fundamentals of Agents certificate, Mikhail Peraviortkin, 2025' },
+    { src: cert3, width: 2000, height: 1414, alt: 'Hugging Face LLM Course — Fundamentals of LLMs certificate, Mikhail Peraviortkin, 2025' },
+    { src: cert4, width: 2000, height: 1414, alt: 'Hugging Face MCP Course — Fundamentals of MCP certificate, Mikhail Peraviortkin, 2025' }
   ];
 
   let sliderOffset = $state(0);
@@ -138,7 +138,7 @@
               onclick={() => openLightbox(index)}
               aria-label="Open certificate {index + 1}"
             >
-              <img src={cert.src} alt={cert.alt} class="certificate-image" loading="lazy" />
+              <img src={cert.src} alt={cert.alt} class="certificate-image" width={cert.width} height={cert.height} loading="lazy" />
             </button>
           {/each}
         </div>
@@ -192,6 +192,8 @@
     <img
       src={certificates[lightboxIndex].src}
       alt={certificates[lightboxIndex].alt}
+      width={certificates[lightboxIndex].width}
+      height={certificates[lightboxIndex].height}
       class="lightbox-image"
       onclick={(e) => e.stopPropagation()}
     />
@@ -383,6 +385,8 @@
   .lightbox-image {
     max-width: 95vw;
     max-height: 90vh;
+    width: auto;
+    height: auto;
     object-fit: contain;
     border-radius: 8px;
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
