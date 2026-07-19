@@ -1924,4 +1924,100 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
   G3 -->|odrzuć| STOP
   G4 -->|odrzuć| STOP`,
   },
+  'geo-search-shift': {
+    ru: `flowchart TB
+  subgraph SEOflow["Классический поиск · SEO"]
+    direction LR
+    Q1["Запрос"] --> L["Список ссылок"]
+    L --> CL["Клик по ссылке"]
+    CL --> P["Ваш сайт"]
+  end
+  subgraph AIflow["Ответ ИИ · AEO / GEO"]
+    direction LR
+    Q2["Запрос"] --> ENG["Движок читает<br/>много источников"]
+    ENG --> ANS["Один готовый ответ<br/>со ссылками на источники"]
+    ANS --> CIT{"Ваш контент<br/>процитирован?"}
+    CIT -->|да| VIS["Вы в ответе"]
+    CIT -->|нет| INV["Вас не видно"]
+  end`,
+    en: `flowchart TB
+  subgraph SEOflow["Classic search · SEO"]
+    direction LR
+    Q1["Query"] --> L["List of links"]
+    L --> CL["Click a link"]
+    CL --> P["Your site"]
+  end
+  subgraph AIflow["AI answer · AEO / GEO"]
+    direction LR
+    Q2["Query"] --> ENG["Engine reads<br/>many sources"]
+    ENG --> ANS["One ready-made answer<br/>with source links"]
+    ANS --> CIT{"Is your content<br/>cited?"}
+    CIT -->|yes| VIS["You are in the answer"]
+    CIT -->|no| INV["You are invisible"]
+  end`,
+    pl: `flowchart TB
+  subgraph SEOflow["Klasyczne wyszukiwanie · SEO"]
+    direction LR
+    Q1["Zapytanie"] --> L["Lista linków"]
+    L --> CL["Kliknięcie w link"]
+    CL --> P["Twoja strona"]
+  end
+  subgraph AIflow["Odpowiedź AI · AEO / GEO"]
+    direction LR
+    Q2["Zapytanie"] --> ENG["Silnik czyta<br/>wiele źródeł"]
+    ENG --> ANS["Jedna gotowa odpowiedź<br/>z linkami do źródeł"]
+    ANS --> CIT{"Czy Twoja treść<br/>jest cytowana?"}
+    CIT -->|tak| VIS["Jesteś w odpowiedzi"]
+    CIT -->|nie| INV["Jesteś niewidoczny"]
+  end`,
+  },
+  'geo-timeline': {
+    ru: `flowchart LR
+  A["Ноябрь 2022<br/>Запуск ChatGPT"] --> B["2023<br/>Google SGE —<br/>генеративный поиск"]
+  B --> C["Ноябрь 2023<br/>Научная работа<br/>«GEO»"]
+  C --> D["2024<br/>Google AI Overviews<br/>над результатами"]
+  D --> E["Сейчас<br/>Perplexity и другие<br/>«движки ответов»"]`,
+    en: `flowchart LR
+  A["November 2022<br/>ChatGPT launches"] --> B["2023<br/>Google SGE —<br/>generative search"]
+  B --> C["November 2023<br/>The «GEO»<br/>research paper"]
+  C --> D["2024<br/>Google AI Overviews<br/>above the results"]
+  D --> E["Now<br/>Perplexity and other<br/>«answer engines»"]`,
+    pl: `flowchart LR
+  A["Listopad 2022<br/>Premiera ChatGPT"] --> B["2023<br/>Google SGE —<br/>wyszukiwanie generatywne"]
+  B --> C["Listopad 2023<br/>Praca naukowa<br/>«GEO»"]
+  C --> D["2024<br/>Google AI Overviews<br/>nad wynikami"]
+  D --> E["Teraz<br/>Perplexity i inne<br/>«silniki odpowiedzi»"]`,
+  },
+  'geo-micode-recipe': {
+    ru: `flowchart LR
+  SITE["Наши сайты<br/>mi-code.pl · eksiegowyai.pl · ai-budget.pl"] --> LLMS["llms.txt<br/>+ llms-full.txt"]
+  SITE --> ROB["robots.txt<br/>впускает ИИ-ботов,<br/>закрывает приватное"]
+  SITE --> JLD["JSON-LD<br/>FAQPage · Organization"]
+  SITE --> PRE["Трёхъязычный prerender<br/>canonical + hreflang"]
+  LLMS --> CRAWL["ИИ-краулер<br/>читает сайт"]
+  ROB --> CRAWL
+  JLD --> CRAWL
+  PRE --> CRAWL
+  CRAWL --> ANS["Ответ ИИ<br/>цитирует и упоминает вас"]`,
+    en: `flowchart LR
+  SITE["Our sites<br/>mi-code.pl · eksiegowyai.pl · ai-budget.pl"] --> LLMS["llms.txt<br/>+ llms-full.txt"]
+  SITE --> ROB["robots.txt<br/>welcomes AI bots,<br/>fences off private routes"]
+  SITE --> JLD["JSON-LD<br/>FAQPage · Organization"]
+  SITE --> PRE["Trilingual prerender<br/>canonical + hreflang"]
+  LLMS --> CRAWL["AI crawler<br/>reads the site"]
+  ROB --> CRAWL
+  JLD --> CRAWL
+  PRE --> CRAWL
+  CRAWL --> ANS["AI answer<br/>cites and mentions you"]`,
+    pl: `flowchart LR
+  SITE["Nasze strony<br/>mi-code.pl · eksiegowyai.pl · ai-budget.pl"] --> LLMS["llms.txt<br/>+ llms-full.txt"]
+  SITE --> ROB["robots.txt<br/>wpuszcza boty AI,<br/>odgradza trasy prywatne"]
+  SITE --> JLD["JSON-LD<br/>FAQPage · Organization"]
+  SITE --> PRE["Trójjęzyczny prerender<br/>canonical + hreflang"]
+  LLMS --> CRAWL["Crawler AI<br/>czyta stronę"]
+  ROB --> CRAWL
+  JLD --> CRAWL
+  PRE --> CRAWL
+  CRAWL --> ANS["Odpowiedź AI<br/>cytuje i wspomina o Tobie"]`,
+  },
 };

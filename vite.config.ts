@@ -56,6 +56,7 @@ export default defineConfig({
                 budgetAiArchitectureArticle: resolve(__dirname, "blog/ai-budget-assistant-ai-architecture/index.html"),
                 emarketingAiArchitectureArticle: resolve(__dirname, "blog/emarketing-ai-agent-architecture/index.html"),
                 selfImprovingAgentTeamsArticle: resolve(__dirname, "blog/self-improving-agent-teams/index.html"),
+                geoAeoArticle: resolve(__dirname, "blog/geo-aeo-generative-answer-engine-optimization/index.html"),
             },
         },
     },
