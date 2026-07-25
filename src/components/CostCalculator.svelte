@@ -59,11 +59,19 @@
 
   const segments = $derived(
     COST_COMPONENTS
-      .map((c) => ({
-        key: c,
-        value: result.low.components[c],
-        share: pct(result.low.components[c], result.low.monthly),
-      }))
+      .map((c) => {
+        const value = result.low.components[c];
+        const total = result.low.monthly;
+        return {
+          key: c,
+          value,
+          // Rounded, for human-readable text (tooltip/legend/aria-label) only.
+          share: pct(value, total),
+          // Exact, unrounded — drives the CSS width so segments always sum to
+          // exactly 100% regardless of how the rounded `share` values round.
+          widthPct: total > 0 ? (value / total) * 100 : 0,
+        };
+      })
       .filter((s) => s.value > 0)
   );
 
@@ -118,7 +126,7 @@
           class="bar-seg"
           data-component={s.key}
           role="presentation"
-          style="width: {s.share}%; background: {SERIES_COLORS[s.key]}"
+          style="width: {s.widthPct}%; background: {SERIES_COLORS[s.key]}"
           onmouseenter={() => (hovered = s.key)}
           onmouseleave={() => (hovered = null)}
         ></span>

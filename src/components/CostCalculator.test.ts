@@ -85,4 +85,33 @@ describe('CostCalculator stacked bar', () => {
     await fireEvent.mouseEnter(seg);
     expect(getByTestId('cost-tooltip').textContent).toMatch(/Conversation history/);
   });
+
+  it('sums segment widths to ~100% on the shipped default inputs, regardless of rounding', () => {
+    const { getByTestId } = render(CostCalculator, { props: { lang: 'en' } });
+    const segs = Array.from(
+      getByTestId('cost-bar').querySelectorAll('[data-component]')
+    ) as HTMLElement[];
+    const total = segs.reduce((sum, s) => sum + parseFloat(s.style.width), 0);
+    expect(total).toBeCloseTo(100, 5);
+  });
+
+  it('still sums segment widths to ~100% for inputs whose rounded shares total 99%', async () => {
+    const { getByLabelText, getByTestId } = render(CostCalculator, { props: { lang: 'en' } });
+    await fireEvent.input(getByLabelText('Tools the agent has'), { target: { value: '70' } });
+    const segs = Array.from(
+      getByTestId('cost-bar').querySelectorAll('[data-component]')
+    ) as HTMLElement[];
+    const total = segs.reduce((sum, s) => sum + parseFloat(s.style.width), 0);
+    expect(total).toBeCloseTo(100, 5);
+  });
+
+  it('keeps displayed percentages as rounded integers, not the exact width fraction', async () => {
+    const { getByTestId } = render(CostCalculator, { props: { lang: 'en' } });
+    const seg = getByTestId('cost-bar').querySelector('[data-component="history"]') as HTMLElement;
+    await fireEvent.mouseEnter(seg);
+    const tooltipText = getByTestId('cost-tooltip').textContent ?? '';
+    expect(tooltipText).toMatch(/\(\d+%\)/);
+    expect(tooltipText).not.toMatch(/\d\.\d+%/);
+    expect(getByTestId('cost-bar').getAttribute('aria-label')).not.toMatch(/\d\.\d+%/);
+  });
 });
