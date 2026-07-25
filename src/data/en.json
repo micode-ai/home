@@ -380,5 +380,37 @@
         "heading": "404",
         "message": "This page doesn't exist or has been moved. Check the address or head back to the homepage.",
         "cta": "Back to homepage"
+    },
+    "costCalc": {
+        "title": "Run your own numbers",
+        "intro": "Enter your own figures and the estimate updates. This is a model, not our invoices.",
+        "tools": "Tools the agent has",
+        "tokensPerToolSchema": "Tokens per tool schema",
+        "systemPromptTokens": "Tokens in the system prompt",
+        "historyTokens": "History tokens per request",
+        "ragTokens": "Retrieved context tokens (RAG)",
+        "outputTokensPerStep": "Output tokens per step",
+        "stepsMin": "Steps per task, minimum",
+        "stepsMax": "Steps per task, maximum",
+        "tasksPerDay": "Tasks per day",
+        "cachedShare": "Share of prefix served from cache, %",
+        "model": "Model",
+        "euResidency": "EU data residency (+10%)",
+        "resultTitle": "Per month",
+        "perTask": "Per task",
+        "rangeNote": "The low end is minimum steps with cache; the high end is maximum steps with none.",
+        "priceNote": "Prices as of {date} — check the current ones.",
+        "monthNote": "A month is counted as {days} days.",
+        "breakdownTitle": "What the bill is made of",
+        "componentHeader": "Component",
+        "costHeader": "USD per month",
+        "shareHeader": "Share of bill",
+        "comp": {
+            "toolSchemas": "Tool schemas",
+            "systemPrompt": "System prompt",
+            "history": "Conversation history",
+            "rag": "Retrieved context (RAG)",
+            "output": "Model output"
+        }
     }
 }

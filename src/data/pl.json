@@ -366,5 +366,37 @@
     "heading": "404",
     "message": "Ta strona nie istnieje lub została przeniesiona. Sprawdź adres albo wróć na stronę główną.",
     "cta": "Wróć na stronę główną"
+  },
+  "costCalc": {
+    "title": "Policz swój przypadek",
+    "intro": "Wpisz własne liczby, a wynik przeliczy się od nowa. To model, nie nasze faktury.",
+    "tools": "Liczba narzędzi agenta",
+    "tokensPerToolSchema": "Tokenów na schemat narzędzia",
+    "systemPromptTokens": "Tokenów w prompcie systemowym",
+    "historyTokens": "Tokenów historii w zapytaniu",
+    "ragTokens": "Tokenów znalezionego kontekstu (RAG)",
+    "outputTokensPerStep": "Tokenów odpowiedzi na krok",
+    "stepsMin": "Kroków na zadanie, minimum",
+    "stepsMax": "Kroków na zadanie, maksimum",
+    "tasksPerDay": "Zadań dziennie",
+    "cachedShare": "Udział prefiksu z cache, %",
+    "model": "Model",
+    "euResidency": "Dane w UE (+10%)",
+    "resultTitle": "Miesięcznie",
+    "perTask": "Za jedno zadanie",
+    "rangeNote": "Dolna granica to minimum kroków z cache, górna to maksimum kroków bez cache.",
+    "priceNote": "Ceny na {date}, sprawdź aktualne.",
+    "monthNote": "Miesiąc liczony jako {days} dni.",
+    "breakdownTitle": "Z czego składa się rachunek",
+    "componentHeader": "Składnik",
+    "costHeader": "USD miesięcznie",
+    "shareHeader": "Udział w rachunku",
+    "comp": {
+      "toolSchemas": "Schematy narzędzi",
+      "systemPrompt": "Prompt systemowy",
+      "history": "Historia rozmowy",
+      "rag": "Znaleziony kontekst (RAG)",
+      "output": "Odpowiedź modelu"
+    }
   }
 }
