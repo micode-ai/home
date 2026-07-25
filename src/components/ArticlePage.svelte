@@ -6,6 +6,7 @@
   import products from '../data/products.json';
   import MermaidDiagram from './MermaidDiagram.svelte';
   import { articleDiagrams } from '../data/article-diagrams';
+  import { articleTables, type ArticleTable } from '../data/article-tables';
 
   type Post = typeof blogPosts[number];
 
@@ -29,9 +30,11 @@
     | { kind: 'p'; segments: Seg[] }
     | { kind: 'h2'; text: string }
     | { kind: 'callout'; segments: Seg[] }
-    | { kind: 'diagram'; id: string; caption: string };
+    | { kind: 'diagram'; id: string; caption: string }
+    | { kind: 'table'; id: string };
 
   const DIAGRAM_RE = /^\[\[diagram:([a-z0-9-]+)(?:\|([^\]]+))?\]\]$/i;
+  const TABLE_RE = /^\[\[table:([a-z0-9-]+)\]\]$/i;
 
   // `**bold**` is parsed first; within each non-bold run, single `*italic*` is parsed. The two
   // never nest in authored content, so treating them independently is sufficient.
@@ -57,12 +60,21 @@
     return entry[l] ?? entry.ru;
   }
 
+  // Tables are authored per language; fall back to Russian if a language is missing.
+  function tableDef(id: string, l: string): ArticleTable | undefined {
+    const entry = (articleTables as Record<string, Record<string, ArticleTable>>)[id];
+    if (!entry) return undefined;
+    return entry[l] ?? entry.ru;
+  }
+
   const blocks = $derived.by<Block[]>(() => {
     if (!body) return [];
     return body.split('\n\n').map((chunk: string): Block => {
       const c = chunk.trim();
       const dm = c.match(DIAGRAM_RE);
       if (dm) return { kind: 'diagram', id: dm[1], caption: (dm[2] ?? '').trim() };
+      const tm = c.match(TABLE_RE);
+      if (tm) return { kind: 'table', id: tm[1] };
       if (c.startsWith('## ')) return { kind: 'h2', text: c.slice(3).trim() };
       if (c.startsWith('> ')) return { kind: 'callout', segments: inlineSegments(c.replace(/^> ?/gm, '').trim()) };
       return { kind: 'p', segments: inlineSegments(chunk) };
@@ -168,6 +180,26 @@
               {/key}
               {#if block.caption}<figcaption>{block.caption}</figcaption>{/if}
             </figure>
+          {/if}
+        {:else if block.kind === 'table'}
+          {@const tbl = tableDef(block.id, lang)}
+          {#if tbl}
+            <div class="article-table-wrap">
+              <table class="article-table">
+                <thead>
+                  <tr>
+                    {#each tbl.headers as h}<th scope="col">{h}</th>{/each}
+                  </tr>
+                </thead>
+                <tbody>
+                  {#each tbl.rows as row}
+                    <tr>
+                      {#each row as cell}<td>{cell}</td>{/each}
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
+            </div>
           {/if}
         {:else}
           <p>{#each block.segments as seg}{#if seg.b}<strong>{seg.t}</strong>{:else if seg.i}<em>{seg.t}</em>{:else}{seg.t}{/if}{/each}</p>
