@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/mi_code_logo_mark.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    </noscript>
+    <title>Ile naprawdę kosztuje AI-agent miesięcznie? Policz, zanim wdrożysz</title>
+    <meta name="description" content="Cennik za milion tokenów nie odpowiada na pytanie „ile miesięcznie”. Rozkładamy formułę rachunku agenta AI, cztery miejsca wycieku budżetu i cztery dźwignie, liczymy konfigurację referencyjną — $188.10 wobec $74.38 z cache — i dajemy kalkulator na własne liczby. To model na jawnych założeniach, nie nasze faktury." />
+    <link rel="canonical" href="https://mi-code.pl/blog/ai-agent-cost-per-month-model/" />
+    <meta property="og:title" content="Ile naprawdę kosztuje AI-agent miesięcznie? Policz, zanim wdrożysz" />
+    <meta property="og:description" content="Cennik za milion tokenów nie odpowiada na pytanie „ile miesięcznie”. Rozkładamy formułę rachunku agenta AI, cztery miejsca wycieku budżetu i cztery dźwignie, liczymy konfigurację referencyjną — $188.10 wobec $74.38 z cache — i dajemy kalkulator na własne liczby. To model na jawnych założeniach, nie nasze faktury." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://mi-code.pl/blog/ai-agent-cost-per-month-model/" />
+    <meta property="og:image" content="https://mi-code.pl/og-image.png" />
+    <meta property="og:site_name" content="MiCode Sp. z o.o." />
+    <meta property="article:published_time" content="2026-07-25" />
+    <meta property="article:author" content="Michał Peraviortkin" />
+    <meta property="article:tag" content="AI" />
+    <meta property="article:tag" content="LLMOps" />
+    <meta property="article:tag" content="Cost" />
+    <meta property="article:tag" content="OpenAI" />
+    <meta name="twitter:site" content="@micode_ai" />
+    <meta name="twitter:creator" content="@micode_ai" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Ile naprawdę kosztuje AI-agent miesięcznie? Policz, zanim wdrożysz" />
+    <meta name="twitter:description" content="Cennik za milion tokenów nie odpowiada na pytanie „ile miesięcznie”. Rozkładamy formułę rachunku agenta AI, cztery miejsca wycieku budżetu i cztery dźwignie, liczymy konfigurację referencyjną — $188.10 wobec $74.38 z cache — i dajemy kalkulator na własne liczby. To model na jawnych założeniach, nie nasze faktury." />
+    <meta name="twitter:image" content="https://mi-code.pl/og-image.png" />
+    <script type="application/ld+json">
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Ile naprawdę kosztuje AI-agent miesięcznie? Policz, zanim wdrożysz",
+        "description": "Cennik za milion tokenów nie odpowiada na pytanie „ile miesięcznie”. Rozkładamy formułę rachunku agenta AI, cztery miejsca wycieku budżetu i cztery dźwignie, liczymy konfigurację referencyjną — $188.10 wobec $74.38 z cache — i dajemy kalkulator na własne liczby. To model na jawnych założeniach, nie nasze faktury.",
+        "image": "https://mi-code.pl/og-image.png",
+        "datePublished": "2026-07-25",
+        "dateModified": "2026-07-25",
+        "url": "https://mi-code.pl/blog/ai-agent-cost-per-month-model/",
+        "inLanguage": "pl",
+        "author": {
+          "@type": "Person",
+          "name": "Michał Peraviortkin",
+          "url": "https://www.linkedin.com/in/mikhailperaviortkin/"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "MiCode Sp. z o.o.",
+          "url": "https://mi-code.pl/"
+        },
+        "keywords": ["AI", "LLMOps", "koszty", "OpenAI", "prompt caching", "tokeny", "AI agent", "kalkulator kosztów"],
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": "https://mi-code.pl/blog/ai-agent-cost-per-month-model/"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "MiCode", "item": "https://mi-code.pl/" },
+          { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://mi-code.pl/blog/" },
+          { "@type": "ListItem", "position": 3, "name": "Ile naprawdę kosztuje AI-agent miesięcznie? Policz, zanim wdrożysz", "item": "https://mi-code.pl/blog/ai-agent-cost-per-month-model/" }
+        ]
+      }
+    ]
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
