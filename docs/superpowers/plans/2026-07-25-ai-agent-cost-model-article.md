@@ -17,7 +17,12 @@
 - **Price snapshot date is `2026-07-25`** and must be visible in the calculator UI.
 - **Model prices (USD per 1M tokens)** — from OpenAI pricing, snapshot above:
   `gpt-5.6-sol` 5.00/0.50/30.00 · `gpt-5.6-terra` 2.50/0.25/15.00 · `gpt-5.6-luna` 1.00/0.10/6.00 · `gpt-5.5` 5.00/0.50/30.00 · `gpt-5.4` 2.50/0.25/15.00 · `gpt-5.4-mini` 0.75/0.075/4.50 · `gpt-5.4-nano` 0.20/0.02/1.25 (input/cached input/output)
-- **EU data-residency uplift is +10%** for models released after 2026-03-05.
+- **EU data-residency uplift is +10%**, and the rule has two conditions, not one: it applies to
+  models released **on or after** 2026-03-05 **that are also eligible for data residency**. The
+  pricing page publishes no model release dates, so whether any given model qualifies cannot be
+  established from the source — present the uplift conditionally, never as a fact applied to the
+  reference configuration's model. (Established during execution, after a review caught the
+  unsupported assertion.)
 - **Svelte 5 runes only.** No `export let`, no legacy stores-as-props. Follow `ArticlePage.svelte`.
 - **Do not deploy the branch mid-plan.** The post appears in the blog listing from Task 8 onward; the page itself is only reachable after Task 9.
 
@@ -1372,7 +1377,13 @@ Add to `articleTables` in `src/data/article-tables.ts`. `cost-assumptions` mirro
         ['История диалога', '18.00', '18.00'],
         ['Найденный контекст', '13.50', '13.50'],
         ['Ответ модели', '16.20', '16.20'],
-        ['Итого', '188.10', '74.37'],
+        ['Итого', '188.10', '74.38'],
+        // 74.38, not 74.37: the component figures above are rounded to cents for display, and
+        // their rounded sum (74.37) is not the real total. computeAgentCost returns 74.376, which
+        // the calculator renders as $74.38. The function is the source of truth, so the article
+        // states 74.38 and explains the cent rounding in prose — otherwise the table and the
+        // widget would look like they disagree. Corrected during execution, after Task 7 verified
+        // the arithmetic against the function twice.
       ],
     },
     // Author `en` and `pl` with the same rows; only the labels and headers are translated.
@@ -1383,7 +1394,7 @@ These figures are `computeAgentCost` evaluated on the assumptions above at 8 ste
 1500 tasks/month (50/day × 30), for `gpt-5.4-mini` at $0.75 input / $0.075 cached / $4.50
 output per 1M tokens, without the EU uplift. Two things the article must say out loud: tool
 schemas are **69% of the bill** before any lever is pulled, and caching the stable prefix takes
-the total from $188.10 to $74.37 — a 2.5× cut that touches nothing but prompt layout.
+the total from $188.10 to $74.38 — a 2.5× cut that touches nothing but prompt layout.
 
 Verify these numbers against the built calculator before publishing (enter the assumptions,
 set cache share to 0 then 90). If any cell disagrees, the calculator is the source of truth and
@@ -1442,6 +1453,16 @@ Content requirements for the prose:
 - Include one paragraph on the +10% EU data-residency uplift for models released after 2026-03-05 — the direct answer to «сколько стоит держать данные в ЕС».
 - Reference the current model line (`gpt-5.6-*`, `gpt-5.5`, `gpt-5.4-*`), not legacy `gpt-4o` names.
 - Every number is introduced as «в конфигурации ниже» / «при таких допущениях».
+- **The four leaks and the four levers are two lists, not four pairs — say so explicitly.** A review
+  of the diagrams established that they do not map one-to-one: tool subsetting answers the
+  all-tools-every-request leak and history trimming answers the untrimmed-history leak, but caching
+  and model tiering answer no named leak, while over-retrieval and retry loops get no named lever.
+  The prose must not let the reader assume a pairing. Caching in particular is a **different kind of
+  lever** and must be introduced as such: it does not remove tokens from the request, it makes the
+  same tokens cheaper. That distinction is also what keeps the ~10× figure honest — it is 10× on the
+  cacheable tokens, which is 2.5× on this configuration's total bill.
+- **Exactly one `[[widget:cost-calculator]]` marker in the body.** Two markers mount two calculator
+  instances and duplicate the `id="calc-title"` that `aria-labelledby` points at.
 
 `faq` — exactly 4 items, keys exactly `qPl`, `qEn`, `qRu`, `aPl`, `aEn`, `aRu`. The questions
 (Russian shown; translate for `pl` and `en`):
@@ -1449,7 +1470,7 @@ Content requirements for the prose:
 1. «Что больше всего влияет на стоимость AI-агента?» — ответ: пересылаемый префикс, схемы
    инструментов в первую очередь.
 2. «Сколько реально экономит кэширование промпта?» — ответ: кэшированный ввод дешевле примерно
-   на 90%, на конфигурации из статьи это $188.10 → $74.37 в месяц.
+   на 90%, на конфигурации из статьи это $188.10 → $74.38 в месяц.
 3. «Агент дороже обычной SaaS-подписки?» — ответ: зависит от числа шагов и задач в день,
    формула и калькулятор в статье.
 4. «Сколько добавляет хранение данных в ЕС?» — ответ: +10% для моделей, вышедших после
