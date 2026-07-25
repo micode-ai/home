@@ -2020,4 +2020,151 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
   PRE --> CRAWL
   CRAWL --> ANS["Odpowiedź AI<br/>cytuje i wspomina o Tobie"]`,
   },
+
+  'cost-bill-anatomy': {
+    ru: `flowchart TB
+  SP["Системный промпт"] --> REQ
+  TS["Схемы всех инструментов"] --> REQ
+  H["История диалога"] --> REQ
+  RAG["Найденный контекст"] --> REQ
+  REQ["Один запрос к модели"] --> OUT["Ответ модели"]
+  OUT --> MUL["× число шагов на задачу"]
+  MUL --> BILL["Счёт за задачу"]`,
+    en: `flowchart TB
+  SP["System prompt"] --> REQ
+  TS["Schemas of every tool"] --> REQ
+  H["Conversation history"] --> REQ
+  RAG["Retrieved context"] --> REQ
+  REQ["One request to the model"] --> OUT["Model output"]
+  OUT --> MUL["x steps per task"]
+  MUL --> BILL["Cost of one task"]`,
+    pl: `flowchart TB
+  SP["Prompt systemowy"] --> REQ
+  TS["Schematy wszystkich narzędzi"] --> REQ
+  H["Historia rozmowy"] --> REQ
+  RAG["Znaleziony kontekst"] --> REQ
+  REQ["Jedno zapytanie do modelu"] --> OUT["Odpowiedź modelu"]
+  OUT --> MUL["x liczba kroków na zadanie"]
+  MUL --> BILL["Koszt jednego zadania"]`,
+  },
+
+  'cost-agent-loop': {
+    ru: `stateDiagram-v2
+  state "запрос собран" as req
+  state "модель думает" as model
+  state "вызов инструмента" as tool
+  state "ответ пользователю" as done
+  [*] --> req
+  req --> model: префикс уходит заново
+  model --> tool: нужен инструмент
+  tool --> req: результат дописан в историю
+  model --> done: ответ готов
+  done --> [*]
+  note right of req
+    Каждый круг заново пересылает
+    промпт и схемы инструментов
+  end note`,
+    en: `stateDiagram-v2
+  state "request assembled" as req
+  state "model thinking" as model
+  state "tool call" as tool
+  state "answer to user" as done
+  [*] --> req
+  req --> model: prefix re-sent
+  model --> tool: a tool is needed
+  tool --> req: result appended to history
+  model --> done: answer ready
+  done --> [*]
+  note right of req
+    Every lap re-sends the prompt
+    and all tool schemas
+  end note`,
+    pl: `stateDiagram-v2
+  state "zapytanie złożone" as req
+  state "model myśli" as model
+  state "wywołanie narzędzia" as tool
+  state "odpowiedź dla użytkownika" as done
+  [*] --> req
+  req --> model: prefiks wysyłany ponownie
+  model --> tool: potrzebne narzędzie
+  tool --> req: wynik dopisany do historii
+  model --> done: odpowiedź gotowa
+  done --> [*]
+  note right of req
+    Każde koło wysyła ponownie prompt
+    i wszystkie schematy narzędzi
+  end note`,
+  },
+
+  'cost-four-leaks': {
+    ru: `flowchart TB
+  L["Куда утекает бюджет"] --> A["Все инструменты в каждом запросе<br/>схемы не зависят от задачи"]
+  L --> B["Слишком широкий поиск в базе<br/>лишние найденные фрагменты"]
+  L --> C["Повторы после сбоя<br/>падение инструмента = ещё один круг"]
+  L --> D["История без обрезки<br/>растёт с каждым шагом"]`,
+    en: `flowchart TB
+  L["Where the budget leaks"] --> A["Every tool in every request<br/>schemas ignore the task at hand"]
+  L --> B["Retrieval set too wide<br/>chunks nobody needed"]
+  L --> C["Retries after a failure<br/>a failed tool call costs a full lap"]
+  L --> D["History never trimmed<br/>grows with every step"]`,
+    pl: `flowchart TB
+  L["Gdzie wycieka budżet"] --> A["Wszystkie narzędzia w każdym zapytaniu<br/>schematy niezależne od zadania"]
+  L --> B["Zbyt szerokie wyszukiwanie<br/>nadmiarowe fragmenty"]
+  L --> C["Ponowienia po błędzie<br/>błąd narzędzia to kolejne koło"]
+  L --> D["Historia bez obcinania<br/>rośnie z każdym krokiem"]`,
+  },
+
+  'cost-four-levers': {
+    ru: `flowchart LR
+  subgraph До
+    B1["Все схемы каждый раз"]
+    B2["Префикс не кэшируется"]
+    B3["Одна дорогая модель на всё"]
+    B4["История целиком"]
+  end
+  subgraph После
+    A1["Подмножество инструментов<br/>по намерению запроса"]
+    A2["Стабильный префикс впереди<br/>кэш дешевле примерно в десять раз"]
+    A3["Дешёвая на роутинге<br/>дорогая на решении"]
+    A4["Обрезка и сжатие истории"]
+  end
+  B1 --> A1
+  B2 --> A2
+  B3 --> A3
+  B4 --> A4`,
+    en: `flowchart LR
+  subgraph Before
+    B1["Every schema every time"]
+    B2["Prefix not cached"]
+    B3["One expensive model for everything"]
+    B4["Full history"]
+  end
+  subgraph After
+    A1["Tool subset<br/>chosen by intent"]
+    A2["Stable prefix first<br/>cache is about ten times cheaper"]
+    A3["Cheap model to route<br/>expensive one to decide"]
+    A4["History trimmed and summarised"]
+  end
+  B1 --> A1
+  B2 --> A2
+  B3 --> A3
+  B4 --> A4`,
+    pl: `flowchart LR
+  subgraph Przed
+    B1["Wszystkie schematy za każdym razem"]
+    B2["Prefiks bez cache"]
+    B3["Jeden drogi model do wszystkiego"]
+    B4["Cała historia"]
+  end
+  subgraph Po
+    A1["Podzbiór narzędzi<br/>wybrany po intencji"]
+    A2["Stabilny prefiks na początku<br/>cache tańszy około dziesięć razy"]
+    A3["Tani model do routingu<br/>drogi do decyzji"]
+    A4["Historia obcięta i streszczona"]
+  end
+  B1 --> A1
+  B2 --> A2
+  B3 --> A3
+  B4 --> A4`,
+  },
 };
