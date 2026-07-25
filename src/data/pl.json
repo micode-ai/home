@@ -381,7 +381,7 @@
     "tasksPerDay": "Zadań dziennie",
     "cachedShare": "Udział prefiksu z cache, %",
     "model": "Model",
-    "euResidency": "Dane w UE (+10%)",
+    "euResidency": "Dane w UE, jeśli model podlega (+10%)",
     "resultTitle": "Miesięcznie",
     "perTask": "Za jedno zadanie",
     "rangeNote": "Dolna granica to minimum kroków z cache, górna to maksimum kroków bez cache.",

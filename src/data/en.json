@@ -395,7 +395,7 @@
         "tasksPerDay": "Tasks per day",
         "cachedShare": "Share of prefix served from cache, %",
         "model": "Model",
-        "euResidency": "EU data residency (+10%)",
+        "euResidency": "EU data residency, if eligible (+10%)",
         "resultTitle": "Per month",
         "perTask": "Per task",
         "rangeNote": "The low end is minimum steps with cache; the high end is maximum steps with none.",

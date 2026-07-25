@@ -114,4 +114,12 @@ describe('CostCalculator stacked bar', () => {
     expect(tooltipText).not.toMatch(/\d\.\d+%/);
     expect(getByTestId('cost-bar').getAttribute('aria-label')).not.toMatch(/\d\.\d+%/);
   });
+
+  it('keeps a non-empty accessible name when every component is zero', async () => {
+    const { getByLabelText, getByTestId } = render(CostCalculator, { props: { lang: 'en' } });
+    await fireEvent.input(getByLabelText('Tasks per day'), { target: { value: '0' } });
+    const bar = getByTestId('cost-bar');
+    expect(bar.getAttribute('role')).toBe('img');
+    expect(bar.getAttribute('aria-label')).toBeTruthy();
+  });
 });

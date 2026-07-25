@@ -91,21 +91,25 @@ function replaceMeta(html, meta) {
   const ogDescription = meta.ogDescription ?? description;
 
   if (title != null) {
+    const escTitle = escapeAttr(title);
+    const escOgTitle = escapeAttr(ogTitle);
     html = html
-      .replace(/<title>[^<]*<\/title>/, `<title>${escapeAttr(title)}</title>`)
-      .replace(/(<meta property="og:title" content=")[^"]*(")/, `$1${escapeAttr(ogTitle)}$2`)
-      .replace(/(<meta name="twitter:title" content=")[^"]*(")/, `$1${escapeAttr(ogTitle)}$2`);
+      .replace(/<title>[^<]*<\/title>/, () => `<title>${escTitle}</title>`)
+      .replace(/(<meta property="og:title" content=")[^"]*(")/, (_, a, b) => a + escOgTitle + b)
+      .replace(/(<meta name="twitter:title" content=")[^"]*(")/, (_, a, b) => a + escOgTitle + b);
   }
   if (description != null) {
+    const escDescription = escapeAttr(description);
+    const escOgDescription = escapeAttr(ogDescription);
     html = html
-      .replace(/(<meta name="description" content=")[^"]*(")/, `$1${escapeAttr(description)}$2`)
+      .replace(/(<meta name="description" content=")[^"]*(")/, (_, a, b) => a + escDescription + b)
       .replace(
         /(<meta property="og:description" content=")[^"]*(")/,
-        `$1${escapeAttr(ogDescription)}$2`
+        (_, a, b) => a + escOgDescription + b
       )
       .replace(
         /(<meta name="twitter:description" content=")[^"]*(")/,
-        `$1${escapeAttr(ogDescription)}$2`
+        (_, a, b) => a + escOgDescription + b
       );
   }
   return html;

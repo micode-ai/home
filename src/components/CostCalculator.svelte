@@ -120,7 +120,7 @@
   <h4 class="calc-subtitle">{t('costCalc.breakdownTitle', lang)}</h4>
 
   <div class="bar-outer">
-    <div class="bar" data-testid="cost-bar" role="img" aria-label={barSummary}>
+    <div class="bar" data-testid="cost-bar" role="img" aria-label={barSummary || t('costCalc.breakdownTitle', lang)}>
       {#each segments as s}
         <span
           class="bar-seg"

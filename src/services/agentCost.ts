@@ -43,7 +43,13 @@ export const MODEL_IDS = Object.keys(MODEL_PRICES) as ModelId[];
 /** Billing month used for the monthly figure. Documented in the article's assumptions table. */
 export const DAYS_PER_MONTH = 30;
 
-/** Uplift for regional data-residency processing (models released after 2026-03-05). */
+/**
+ * Uplift for regional data-residency processing. Per the pricing snapshot, this applies
+ * only to models released on or after 2026-03-05 that are ALSO eligible for data residency —
+ * two conditions, not one. The pricing page publishes no release dates, so this module cannot
+ * check either condition; it applies the flat uplift to whatever model is selected whenever
+ * the caller sets `euResidency`, and leaves eligibility for the caller to establish.
+ */
 const EU_UPLIFT = 1.1;
 
 export type CostComponent = 'toolSchemas' | 'systemPrompt' | 'history' | 'rag' | 'output';
