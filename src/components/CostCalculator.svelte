@@ -42,6 +42,34 @@
   const usd = (v: number) => '$' + v.toLocaleString('en-US', { maximumFractionDigits: 2 });
   const pct = (v: number, total: number) => (total > 0 ? Math.round((v / total) * 100) : 0);
   const label = (c: CostComponent) => t(`costCalc.comp.${c}`, lang);
+
+  // Fixed palette, validated with the dataviz validator against both chart surfaces
+  // (#F8FAFC light, #1E293B dark): lightness band, chroma floor, CVD separation,
+  // normal-vision floor and >=3:1 contrast all pass. Assigned in COST_COMPONENTS order,
+  // never cycled.
+  const SERIES_COLORS: Record<CostComponent, string> = {
+    toolSchemas: '#3B82F6',
+    systemPrompt: '#EA580C',
+    history: '#0D9488',
+    rag: '#A855F7',
+    output: '#E11D48',
+  };
+
+  let hovered = $state<CostComponent | null>(null);
+
+  const segments = $derived(
+    COST_COMPONENTS
+      .map((c) => ({
+        key: c,
+        value: result.low.components[c],
+        share: pct(result.low.components[c], result.low.monthly),
+      }))
+      .filter((s) => s.value > 0)
+  );
+
+  const barSummary = $derived(
+    segments.map((s) => `${label(s.key)} ${s.share}%`).join(', ')
+  );
 </script>
 
 <section class="calc" aria-labelledby="calc-title">
@@ -82,6 +110,38 @@
   <p class="calc-note">{t('costCalc.rangeNote', lang)}</p>
 
   <h4 class="calc-subtitle">{t('costCalc.breakdownTitle', lang)}</h4>
+
+  <div class="bar-outer">
+    <div class="bar" data-testid="cost-bar" role="img" aria-label={barSummary}>
+      {#each segments as s}
+        <span
+          class="bar-seg"
+          data-component={s.key}
+          role="presentation"
+          style="width: {s.share}%; background: {SERIES_COLORS[s.key]}"
+          onmouseenter={() => (hovered = s.key)}
+          onmouseleave={() => (hovered = null)}
+        ></span>
+      {/each}
+    </div>
+    {#if hovered}
+      {@const h = segments.find((s) => s.key === hovered)}
+      {#if h}
+        <p class="bar-tooltip" data-testid="cost-tooltip">
+          {label(h.key)} — {usd(h.value)} ({h.share}%)
+        </p>
+      {/if}
+    {/if}
+  </div>
+
+  <ul class="bar-legend" data-testid="cost-legend">
+    {#each COST_COMPONENTS as c}
+      <li>
+        <span class="swatch" style="background: {SERIES_COLORS[c]}" aria-hidden="true"></span>
+        {label(c)}
+      </li>
+    {/each}
+  </ul>
 
   <div class="calc-table-wrap">
     <table class="calc-table">
@@ -138,4 +198,40 @@
   .calc-table-wrap { overflow-x: auto; }
   .calc-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
   .calc-table th, .calc-table td { padding: 0.5rem 0.6rem; text-align: left; border-bottom: 1px solid var(--color-border, #e2e8f0); color: var(--color-text-primary, #1e293b); }
+
+  .bar-outer { margin: 0 0 0.85rem; }
+  /* 2px gap in the surface colour separates segments without a border colour of its own. */
+  .bar {
+    display: flex;
+    gap: 2px;
+    height: 2.25rem;
+    width: 100%;
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--color-bg-secondary, #f8fafc);
+  }
+  .bar-seg { display: block; height: 100%; transition: width 0.2s ease; }
+  .bar-seg:first-child { border-radius: 4px 0 0 4px; }
+  .bar-seg:last-child { border-radius: 0 4px 4px 0; }
+  .bar-tooltip {
+    margin: 0.5rem 0 0;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-primary, #1e293b);
+  }
+  .bar-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.1rem;
+    list-style: none;
+    margin: 0 0 1.25rem;
+    padding: 0;
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary, #475569);
+  }
+  .bar-legend li { display: flex; align-items: center; gap: 0.4rem; }
+  .swatch { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .bar-seg { transition: none; }
+  }
 </style>

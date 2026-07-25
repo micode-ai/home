@@ -47,3 +47,42 @@ describe('CostCalculator', () => {
     expect(getByTestId('monthly-low').textContent).toMatch(/\d/);
   });
 });
+
+describe('CostCalculator stacked bar', () => {
+  it('renders one segment per component in fixed order', () => {
+    const { getByTestId } = render(CostCalculator, { props: { lang: 'en' } });
+    const bar = getByTestId('cost-bar');
+    const segs = bar.querySelectorAll('[data-component]');
+    expect(Array.from(segs).map((s) => s.getAttribute('data-component'))).toEqual([
+      'toolSchemas', 'systemPrompt', 'history', 'rag', 'output',
+    ]);
+  });
+
+  it('gives the bar an accessible summary, so it is not colour-alone', () => {
+    const { getByTestId } = render(CostCalculator, { props: { lang: 'en' } });
+    const bar = getByTestId('cost-bar');
+    expect(bar.getAttribute('role')).toBe('img');
+    expect(bar.getAttribute('aria-label')).toMatch(/Tool schemas/);
+  });
+
+  it('renders a legend entry for every component', () => {
+    const { getByTestId } = render(CostCalculator, { props: { lang: 'en' } });
+    expect(getByTestId('cost-legend').querySelectorAll('li').length).toBe(5);
+  });
+
+  it('resizes segments when the inputs change', async () => {
+    const { getByLabelText, getByTestId } = render(CostCalculator, { props: { lang: 'en' } });
+    const seg = () => getByTestId('cost-bar').querySelector('[data-component="toolSchemas"]') as HTMLElement;
+    const before = seg().style.width;
+    await fireEvent.input(getByLabelText('Tools the agent has'), { target: { value: '2' } });
+    expect(seg().style.width).not.toBe(before);
+  });
+
+  it('shows a tooltip for the hovered segment', async () => {
+    const { getByTestId, queryByTestId } = render(CostCalculator, { props: { lang: 'en' } });
+    expect(queryByTestId('cost-tooltip')).toBeNull();
+    const seg = getByTestId('cost-bar').querySelector('[data-component="history"]') as HTMLElement;
+    await fireEvent.mouseEnter(seg);
+    expect(getByTestId('cost-tooltip').textContent).toMatch(/Conversation history/);
+  });
+});
