@@ -2124,7 +2124,7 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
   end
   subgraph После
     A1["Подмножество инструментов<br/>по намерению запроса"]
-    A2["Стабильный префикс впереди<br/>кэш дешевле примерно в десять раз"]
+    A2["Стабильный префикс впереди<br/>кэшированные токены стоят примерно в десять раз дешевле"]
     A3["Дешёвая на роутинге<br/>дорогая на решении"]
     A4["Обрезка и сжатие истории"]
   end
@@ -2141,7 +2141,7 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
   end
   subgraph After
     A1["Tool subset<br/>chosen by intent"]
-    A2["Stable prefix first<br/>cache is about ten times cheaper"]
+    A2["Stable prefix first<br/>cached tokens cost about ten times less"]
     A3["Cheap model to route<br/>expensive one to decide"]
     A4["History trimmed and summarised"]
   end
@@ -2158,7 +2158,7 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
   end
   subgraph Po
     A1["Podzbiór narzędzi<br/>wybrany po intencji"]
-    A2["Stabilny prefiks na początku<br/>cache tańszy około dziesięć razy"]
+    A2["Stabilny prefiks na początku<br/>tokeny z cache kosztują około dziesięciokrotnie mniej"]
     A3["Tani model do routingu<br/>drogi do decyzji"]
     A4["Historia obcięta i streszczona"]
   end
