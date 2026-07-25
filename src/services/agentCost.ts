@@ -100,6 +100,22 @@ function clampShare(v: number): number {
   return Math.min(1, Math.max(0, v));
 }
 
+/**
+ * Resolves the low/high step counts from the two raw `stepsMin`/`stepsMax` inputs,
+ * independent of which field the user actually typed the smaller number into.
+ *
+ * A blank/zero/negative/non-finite field means "not specified", not "zero steps" — so
+ * if only one of the two is a positive number, both ends use that one value. Only when
+ * both are unspecified does the range collapse to zero.
+ */
+function resolveStepsRange(rawMin: number, rawMax: number): { lo: number; hi: number } {
+  const minV = safe(rawMin);
+  const maxV = safe(rawMax);
+  if (minV === 0) return { lo: maxV, hi: maxV };
+  if (maxV === 0) return { lo: minV, hi: minV };
+  return { lo: Math.min(minV, maxV), hi: Math.max(minV, maxV) };
+}
+
 function breakdown(i: CostInputs, rawSteps: number, rawCachedShare: number): CostBreakdown {
   const price = MODEL_PRICES[i.model] ?? MODEL_PRICES['gpt-5.4-mini'];
   const uplift = i.euResidency ? EU_UPLIFT : 1;
@@ -129,9 +145,10 @@ function breakdown(i: CostInputs, rawSteps: number, rawCachedShare: number): Cos
 }
 
 export function computeAgentCost(inputs: CostInputs): CostResult {
+  const { lo, hi } = resolveStepsRange(inputs.stepsMin, inputs.stepsMax);
   return {
-    low: breakdown(inputs, inputs.stepsMin, inputs.cachedShare),
-    high: breakdown(inputs, Math.max(safe(inputs.stepsMin), safe(inputs.stepsMax)), 0),
+    low: breakdown(inputs, lo, inputs.cachedShare),
+    high: breakdown(inputs, hi, 0),
     snapshotDate: PRICES_SNAPSHOT_DATE,
   };
 }

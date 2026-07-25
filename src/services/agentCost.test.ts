@@ -73,6 +73,47 @@ describe('computeAgentCost', () => {
     expect(over.low.monthly).toBeCloseTo(one.low.monthly, 6);
   });
 
+  it('treats an inverted stepsMin/stepsMax as order-independent', () => {
+    const inverted = computeAgentCost({ ...base, stepsMin: 12, stepsMax: 4, cachedShare: 0.9 });
+    const ordered = computeAgentCost({ ...base, stepsMin: 4, stepsMax: 12, cachedShare: 0.9 });
+    expect(inverted.low.monthly).toBeCloseTo(ordered.low.monthly, 6);
+    expect(inverted.high.monthly).toBeCloseTo(ordered.high.monthly, 6);
+    expect(inverted.low.perTask).toBeCloseTo(ordered.low.perTask, 6);
+    expect(inverted.high.perTask).toBeCloseTo(ordered.high.perTask, 6);
+  });
+
+  it('treats a cleared stepsMax as "use stepsMin for both ends", not zero', () => {
+    const clearedZero = computeAgentCost({ ...base, stepsMin: 8, stepsMax: 0, cachedShare: 0.9 });
+    const clearedNaN = computeAgentCost({ ...base, stepsMin: 8, stepsMax: NaN, cachedShare: 0.9 });
+    const explicit = computeAgentCost({ ...base, stepsMin: 8, stepsMax: 8, cachedShare: 0.9 });
+    expect(clearedZero.low.monthly).toBeCloseTo(explicit.low.monthly, 6);
+    expect(clearedZero.high.monthly).toBeCloseTo(explicit.high.monthly, 6);
+    expect(clearedNaN.low.monthly).toBeCloseTo(explicit.low.monthly, 6);
+    expect(clearedNaN.high.monthly).toBeCloseTo(explicit.high.monthly, 6);
+    expect(clearedZero.low.monthly).toBeGreaterThan(0);
+  });
+
+  it('treats a cleared stepsMin as "use stepsMax for both ends", not zero', () => {
+    const clearedZero = computeAgentCost({ ...base, stepsMin: 0, stepsMax: 8, cachedShare: 0.9 });
+    const clearedNaN = computeAgentCost({ ...base, stepsMin: NaN, stepsMax: 8, cachedShare: 0.9 });
+    const explicit = computeAgentCost({ ...base, stepsMin: 8, stepsMax: 8, cachedShare: 0.9 });
+    expect(clearedZero.low.monthly).toBeCloseTo(explicit.low.monthly, 6);
+    expect(clearedZero.high.monthly).toBeCloseTo(explicit.high.monthly, 6);
+    expect(clearedNaN.low.monthly).toBeCloseTo(explicit.low.monthly, 6);
+    expect(clearedNaN.high.monthly).toBeCloseTo(explicit.high.monthly, 6);
+    expect(clearedZero.low.monthly).toBeGreaterThan(0);
+  });
+
+  it('returns zero, finite figures when both stepsMin and stepsMax are absent', () => {
+    const r = computeAgentCost({ ...base, stepsMin: 0, stepsMax: NaN });
+    expect(r.low.monthly).toBe(0);
+    expect(r.high.monthly).toBe(0);
+    expect(r.low.perTask).toBe(0);
+    expect(r.high.perTask).toBe(0);
+    expect(Number.isFinite(r.low.perTask)).toBe(true);
+    expect(Number.isFinite(r.high.perTask)).toBe(true);
+  });
+
   it('exposes the price snapshot date and a cached price for every model', () => {
     expect(PRICES_SNAPSHOT_DATE).toBe('2026-07-25');
     for (const [id, p] of Object.entries(MODEL_PRICES)) {
