@@ -15,7 +15,7 @@ vi.mock('../data/blog-posts.json', () => ({
       date: '2026-07-25',
       tags: ['AI'],
       bodyPl: 'Akapit.\n\n[[table:fixture-table]]',
-      bodyEn: 'Paragraph.\n\n[[table:fixture-table]]',
+      bodyEn: 'Paragraph.\n\n[[table:fixture-table]]\n\n[[widget:cost-calculator]]\n\n[[widget:unknown-widget]]',
       bodyRu: 'Абзац.\n\n[[table:fixture-table]]\n\n[[table:missing-table]]',
     },
   ],
@@ -51,8 +51,9 @@ describe('ArticlePage table block', () => {
 
   it('renders the table as a real table with column headers', () => {
     languageStore.set('en');
-    const { getByRole } = render(ArticlePage, { props: { slug: 'block-fixture' } });
-    const table = getByRole('table');
+    const { getAllByRole } = render(ArticlePage, { props: { slug: 'block-fixture' } });
+    const tables = getAllByRole('table');
+    const table = tables[0]; // First table is the article table
     expect(table.querySelectorAll('thead th[scope="col"]').length).toBe(2);
     expect(table.querySelectorAll('tbody tr').length).toBe(1);
   });
@@ -68,5 +69,19 @@ describe('ArticlePage table block', () => {
     languageStore.set('ru');
     const { getByText } = render(ArticlePage, { props: { slug: 'block-fixture' } });
     expect(getByText('Абзац.')).toBeTruthy();
+  });
+});
+
+describe('ArticlePage widget block', () => {
+  it('mounts the cost calculator', () => {
+    languageStore.set('en');
+    const { getByText } = render(ArticlePage, { props: { slug: 'block-fixture' } });
+    expect(getByText('Run your own numbers')).toBeTruthy();
+  });
+
+  it('ignores an unknown widget id instead of printing the marker', () => {
+    languageStore.set('en');
+    const { queryByText } = render(ArticlePage, { props: { slug: 'block-fixture' } });
+    expect(queryByText('[[widget:unknown-widget]]')).toBeNull();
   });
 });

@@ -5,6 +5,7 @@
   import blogPosts from '../data/blog-posts.json';
   import products from '../data/products.json';
   import MermaidDiagram from './MermaidDiagram.svelte';
+  import CostCalculator from './CostCalculator.svelte';
   import { articleDiagrams } from '../data/article-diagrams';
   import { articleTables, type ArticleTable } from '../data/article-tables';
 
@@ -31,10 +32,12 @@
     | { kind: 'h2'; text: string }
     | { kind: 'callout'; segments: Seg[] }
     | { kind: 'diagram'; id: string; caption: string }
-    | { kind: 'table'; id: string };
+    | { kind: 'table'; id: string }
+    | { kind: 'widget'; id: string };
 
   const DIAGRAM_RE = /^\[\[diagram:([a-z0-9-]+)(?:\|([^\]]+))?\]\]$/i;
   const TABLE_RE = /^\[\[table:([a-z0-9-]+)\]\]$/i;
+  const WIDGET_RE = /^\[\[widget:([a-z0-9-]+)\]\]$/i;
 
   // `**bold**` is parsed first; within each non-bold run, single `*italic*` is parsed. The two
   // never nest in authored content, so treating them independently is sufficient.
@@ -75,6 +78,8 @@
       if (dm) return { kind: 'diagram', id: dm[1], caption: (dm[2] ?? '').trim() };
       const tm = c.match(TABLE_RE);
       if (tm) return { kind: 'table', id: tm[1] };
+      const wm = c.match(WIDGET_RE);
+      if (wm) return { kind: 'widget', id: wm[1] };
       if (c.startsWith('## ')) return { kind: 'h2', text: c.slice(3).trim() };
       if (c.startsWith('> ')) return { kind: 'callout', segments: inlineSegments(c.replace(/^> ?/gm, '').trim()) };
       return { kind: 'p', segments: inlineSegments(chunk) };
@@ -200,6 +205,10 @@
                 </tbody>
               </table>
             </div>
+          {/if}
+        {:else if block.kind === 'widget'}
+          {#if block.id === 'cost-calculator'}
+            <CostCalculator {lang} />
           {/if}
         {:else}
           <p>{#each block.segments as seg}{#if seg.b}<strong>{seg.t}</strong>{:else if seg.i}<em>{seg.t}</em>{:else}{seg.t}{/if}{/each}</p>
