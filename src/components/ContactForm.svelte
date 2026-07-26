@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import emailjs from '@emailjs/browser';
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
@@ -21,6 +22,20 @@
   let isSubmitting = $state(false);
   let submitError = $state(false);
   let touched = $state<Partial<Record<keyof FormData, boolean>>>({});
+
+  // Prefills the message from a `msg` query param — how the cost calculator's "Discuss this
+  // estimate" link hands its summary over. Read once, then stripped from the URL so a reload
+  // doesn't reapply/duplicate it after the visitor has edited or cleared the message.
+  onMount(() => {
+    const params = new URLSearchParams(window.location.search);
+    const msg = params.get('msg');
+    if (!msg) return;
+    formData.message = msg;
+    params.delete('msg');
+    const query = params.toString();
+    const url = `${window.location.pathname}${query ? `?${query}` : ''}${window.location.hash}`;
+    window.history.replaceState(null, '', url);
+  });
 
   function dismissSuccess() {
     isSubmitted = false;

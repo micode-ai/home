@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, vi } from 'vitest';
+import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
 import { loadTranslations } from '../services/i18n';
 import ContactForm from './ContactForm.svelte';
@@ -60,5 +60,37 @@ describe('ContactForm smoke render', () => {
     expect(screen.getByLabelText(/imię/i)).toBeTruthy();
     expect(screen.getByLabelText(/email/i)).toBeTruthy();
     expect(screen.getByLabelText(/wiadomość/i)).toBeTruthy();
+  });
+});
+
+describe('ContactForm message prefill from a msg query param', () => {
+  beforeEach(() => {
+    window.history.replaceState(null, '', '/');
+  });
+
+  it('leaves the message empty when there is no msg param', () => {
+    render(ContactForm);
+    expect((screen.getByLabelText(/wiadomość/i) as HTMLTextAreaElement).value).toBe('');
+  });
+
+  it('prefills the message from a msg query param', () => {
+    window.history.replaceState(null, '', '/?msg=' + encodeURIComponent('Mój koszt agenta: $10-$20/mies.'));
+    render(ContactForm);
+    expect((screen.getByLabelText(/wiadomość/i) as HTMLTextAreaElement).value).toBe(
+      'Mój koszt agenta: $10-$20/mies.'
+    );
+  });
+
+  it('strips the msg param from the URL after applying it, keeping the hash', () => {
+    window.history.replaceState(null, '', '/?msg=hello#contact');
+    render(ContactForm);
+    expect(window.location.search).toBe('');
+    expect(window.location.hash).toBe('#contact');
+  });
+
+  it('preserves other query params while stripping msg', () => {
+    window.history.replaceState(null, '', '/?utm_source=newsletter&msg=hello');
+    render(ContactForm);
+    expect(window.location.search).toBe('?utm_source=newsletter');
   });
 });

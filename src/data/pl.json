@@ -392,6 +392,11 @@
     "componentHeader": "Składnik",
     "costHeader": "USD miesięcznie",
     "shareHeader": "Udział w rachunku",
+    "copyLink": "Skopiuj link do tego wyliczenia",
+    "copyLinkCopied": "Link skopiowany!",
+    "copyLinkFailed": "Nie udało się skopiować — skopiuj link z paska adresu",
+    "discuss": "Omów to wyliczenie z nami",
+    "discussSummary": "Moje wyliczenie kosztu agenta: {low}–{high}/mies. ({tasksPerDay} zadań/dzień, model {model}). Link: {url}",
     "comp": {
       "toolSchemas": "Schematy narzędzi",
       "systemPrompt": "Prompt systemowy",

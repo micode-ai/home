@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { t } from '../services/i18n';
   import {
     computeAgentCost,
@@ -10,25 +11,103 @@
     type CostInputs,
     type ModelId,
   } from '../services/agentCost';
+  import {
+    applyEstimateParams,
+    decodeEstimateQuery,
+    estimateFieldsEqual,
+    hasEstimateParams,
+    type CostCalculatorFields,
+  } from '../services/costEstimateUrl';
+  import { copyToClipboard } from '../services/clipboard';
+  import { withLocale } from '../services/locale';
+  import type { Language } from '../stores/languageStore';
 
   let { lang }: { lang: string } = $props();
 
-  // Defaults describe the reference configuration from the article's assumptions table:
-  // a tool-heavy agent doing multi-step work. They are assumptions, not measurements.
-  let tools = $state(80);
-  let tokensPerToolSchema = $state(180);
-  let systemPromptTokens = $state(1200);
-  let historyTokens = $state(2000);
-  // Non-zero on purpose: the stacked bar filters empty components out, and a five-series
-  // chart is part of the spec. It is also the realistic case for a retrieval-backed agent.
-  let ragTokens = $state(1500);
-  let outputTokensPerStep = $state(300);
-  let stepsMin = $state(4);
-  let stepsMax = $state(12);
-  let tasksPerDay = $state(50);
-  let cachedSharePct = $state(0);
-  let model = $state<ModelId>('gpt-5.4-mini');
-  let euResidency = $state(false);
+  // Defaults describe the reference configuration from the article's assumptions table: a
+  // tool-heavy agent doing multi-step work. They are assumptions, not measurements. Also doubles
+  // as the drift baseline for the URL-sync "don't rewrite a clean URL" gate below — kept as plain
+  // constants (not read back off the `$state` fields) so that gate isn't reactive to itself.
+  const DEFAULT_FIELDS: CostCalculatorFields = {
+    tools: 80,
+    tokensPerToolSchema: 180,
+    systemPromptTokens: 1200,
+    historyTokens: 2000,
+    // Non-zero on purpose: the stacked bar filters empty components out, and a five-series
+    // chart is part of the spec. It is also the realistic case for a retrieval-backed agent.
+    ragTokens: 1500,
+    outputTokensPerStep: 300,
+    stepsMin: 4,
+    stepsMax: 12,
+    tasksPerDay: 50,
+    cachedSharePct: 0,
+    model: 'gpt-5.4-mini',
+    euResidency: false,
+  };
+
+  let tools = $state(DEFAULT_FIELDS.tools);
+  let tokensPerToolSchema = $state(DEFAULT_FIELDS.tokensPerToolSchema);
+  let systemPromptTokens = $state(DEFAULT_FIELDS.systemPromptTokens);
+  let historyTokens = $state(DEFAULT_FIELDS.historyTokens);
+  let ragTokens = $state(DEFAULT_FIELDS.ragTokens);
+  let outputTokensPerStep = $state(DEFAULT_FIELDS.outputTokensPerStep);
+  let stepsMin = $state(DEFAULT_FIELDS.stepsMin);
+  let stepsMax = $state(DEFAULT_FIELDS.stepsMax);
+  let tasksPerDay = $state(DEFAULT_FIELDS.tasksPerDay);
+  let cachedSharePct = $state(DEFAULT_FIELDS.cachedSharePct);
+  let model = $state<ModelId>(DEFAULT_FIELDS.model);
+  let euResidency = $state(DEFAULT_FIELDS.euResidency);
+
+  let restoredFromUrl = false;
+
+  onMount(() => {
+    const restored = decodeEstimateQuery(window.location.search, DEFAULT_FIELDS);
+    restoredFromUrl = hasEstimateParams(window.location.search);
+    tools = restored.tools;
+    tokensPerToolSchema = restored.tokensPerToolSchema;
+    systemPromptTokens = restored.systemPromptTokens;
+    historyTokens = restored.historyTokens;
+    ragTokens = restored.ragTokens;
+    outputTokensPerStep = restored.outputTokensPerStep;
+    stepsMin = restored.stepsMin;
+    stepsMax = restored.stepsMax;
+    tasksPerDay = restored.tasksPerDay;
+    cachedSharePct = restored.cachedSharePct;
+    model = restored.model;
+    euResidency = restored.euResidency;
+  });
+
+  // Keeps the URL in sync with the inputs, but only once there is something worth sharing:
+  // a visitor who never edits anything (and didn't arrive via a shared link) keeps a clean
+  // address bar. Reads (and only overwrites) the ~12 keys this feature owns, so any other
+  // query param the visitor arrived with (UTM, etc.) survives untouched.
+  $effect(() => {
+    const fields: CostCalculatorFields = {
+      tools, tokensPerToolSchema, systemPromptTokens, historyTokens, ragTokens,
+      outputTokensPerStep, stepsMin, stepsMax, tasksPerDay, cachedSharePct, model, euResidency,
+    };
+    if (!restoredFromUrl && estimateFieldsEqual(fields, DEFAULT_FIELDS)) return;
+    const params = new URLSearchParams(window.location.search);
+    applyEstimateParams(params, fields);
+    const url = `${window.location.pathname}?${params}${window.location.hash}`;
+    window.history.replaceState(null, '', url);
+  });
+
+  let copyState = $state<'idle' | 'copied' | 'error'>('idle');
+  let copyResetTimer: ReturnType<typeof setTimeout> | undefined;
+
+  async function handleCopyLink() {
+    const ok = await copyToClipboard(window.location.href);
+    copyState = ok ? 'copied' : 'error';
+    clearTimeout(copyResetTimer);
+    copyResetTimer = setTimeout(() => (copyState = 'idle'), 2000);
+  }
+
+  const copyLabel = $derived(
+    copyState === 'copied' ? t('costCalc.copyLinkCopied', lang)
+    : copyState === 'error' ? t('costCalc.copyLinkFailed', lang)
+    : t('costCalc.copyLink', lang)
+  );
 
   const inputs = $derived<CostInputs>({
     tools, tokensPerToolSchema, systemPromptTokens, historyTokens, ragTokens,
@@ -42,6 +121,20 @@
   const usd = (v: number) => '$' + v.toLocaleString('en-US', { maximumFractionDigits: 2 });
   const pct = (v: number, total: number) => (total > 0 ? Math.round((v / total) * 100) : 0);
   const label = (c: CostComponent) => t(`costCalc.comp.${c}`, lang);
+
+  // "Discuss this estimate" bridges into the contact form on the home page — the article page
+  // has no contact section of its own. `ContactForm` reads the `msg` param to prefill its message.
+  const discussSummary = $derived(
+    t('costCalc.discussSummary', lang)
+      .replace('{low}', usd(result.low.monthly))
+      .replace('{high}', usd(result.high.monthly))
+      .replace('{tasksPerDay}', String(tasksPerDay))
+      .replace('{model}', model)
+      .replace('{url}', typeof window !== 'undefined' ? window.location.href : '')
+  );
+  const discussHref = $derived(
+    `${withLocale('/', lang as Language)}?msg=${encodeURIComponent(discussSummary)}#contact`
+  );
 
   // Fixed palette, validated with the dataviz validator against both chart surfaces
   // (#F8FAFC light, #1E293B dark): lightness band, chroma floor, CVD separation,
@@ -116,6 +209,21 @@
   </p>
   <p class="calc-note">{t('costCalc.perTask', lang)}: {usd(result.low.perTask)} — {usd(result.high.perTask)}</p>
   <p class="calc-note">{t('costCalc.rangeNote', lang)}</p>
+
+  <div class="calc-actions">
+    <button
+      type="button"
+      class="calc-copy-btn"
+      data-testid="copy-link-button"
+      aria-live="polite"
+      onclick={handleCopyLink}
+    >
+      {copyLabel}
+    </button>
+    <a class="calc-discuss-link" data-testid="discuss-link" href={discussHref}>
+      {t('costCalc.discuss', lang)}
+    </a>
+  </div>
 
   <h4 class="calc-subtitle">{t('costCalc.breakdownTitle', lang)}</h4>
 
@@ -203,6 +311,19 @@
   .calc-result-label { font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-secondary, #475569); }
   .calc-range { font-size: 1.6rem; font-weight: 700; color: var(--color-text-primary, #1e293b); }
   .calc-note { font-size: 0.8125rem; margin: 0.35rem 0 0; color: var(--color-text-secondary, #475569); }
+  .calc-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.25rem; margin: 1.25rem 0 1.75rem; }
+  .calc-copy-btn {
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+    font: inherit;
+    font-weight: 600;
+    color: var(--color-text-primary, #1e293b);
+    background: var(--color-bg-primary, #fff);
+    border: 1px solid var(--color-border, #e2e8f0);
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .calc-discuss-link { font-size: 0.9375rem; font-weight: 600; color: var(--color-link, #1e40af); }
   .calc-table-wrap { overflow-x: auto; }
   .calc-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
   .calc-table th, .calc-table td { padding: 0.5rem 0.6rem; text-align: left; border-bottom: 1px solid var(--color-border, #e2e8f0); color: var(--color-text-primary, #1e293b); }

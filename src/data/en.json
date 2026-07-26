@@ -406,6 +406,11 @@
         "componentHeader": "Component",
         "costHeader": "USD per month",
         "shareHeader": "Share of bill",
+        "copyLink": "Copy link to this estimate",
+        "copyLinkCopied": "Link copied!",
+        "copyLinkFailed": "Couldn't copy — copy the address bar link instead",
+        "discuss": "Discuss this estimate with us",
+        "discussSummary": "My agent-cost estimate: {low}–{high}/month ({tasksPerDay} tasks/day, {model} model). Link: {url}",
         "comp": {
             "toolSchemas": "Tool schemas",
             "systemPrompt": "System prompt",

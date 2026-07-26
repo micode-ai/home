@@ -392,6 +392,11 @@
     "componentHeader": "Составляющая",
     "costHeader": "USD в месяц",
     "shareHeader": "Доля счёта",
+    "copyLink": "Скопировать ссылку на этот расчёт",
+    "copyLinkCopied": "Ссылка скопирована!",
+    "copyLinkFailed": "Не удалось скопировать — скопируйте ссылку из адресной строки",
+    "discuss": "Обсудить этот расчёт с нами",
+    "discussSummary": "Моя оценка стоимости агента: {low}–{high}/мес. ({tasksPerDay} задач/день, модель {model}). Ссылка: {url}",
     "comp": {
       "toolSchemas": "Схемы инструментов",
       "systemPrompt": "Системный промпт",

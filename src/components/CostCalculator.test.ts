@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest';
 import { render, fireEvent } from '@testing-library/svelte';
 import { loadTranslations } from '../services/i18n';
 import CostCalculator from './CostCalculator.svelte';
@@ -12,6 +12,10 @@ beforeAll(() => {
     en: enTranslations as Record<string, any>,
     ru: ruTranslations as Record<string, any>,
   });
+});
+
+beforeEach(() => {
+  window.history.replaceState(null, '', '/');
 });
 
 describe('CostCalculator', () => {
@@ -121,5 +125,99 @@ describe('CostCalculator stacked bar', () => {
     const bar = getByTestId('cost-bar');
     expect(bar.getAttribute('role')).toBe('img');
     expect(bar.getAttribute('aria-label')).toBeTruthy();
+  });
+});
+
+describe('CostCalculator shareable estimate URL', () => {
+  it('does not touch the URL when the visitor never edits the defaults', () => {
+    render(CostCalculator, { props: { lang: 'en' } });
+    expect(window.location.search).toBe('');
+  });
+
+  it('syncs an edited input into the URL query string', async () => {
+    const { getByLabelText } = render(CostCalculator, { props: { lang: 'en' } });
+    await fireEvent.input(getByLabelText('Tools the agent has'), { target: { value: '200' } });
+    const params = new URLSearchParams(window.location.search);
+    expect(params.get('tools')).toBe('200');
+  });
+
+  it('preserves unrelated query params (e.g. UTM) while syncing', async () => {
+    window.history.replaceState(null, '', '/?utm_source=newsletter');
+    const { getByLabelText } = render(CostCalculator, { props: { lang: 'en' } });
+    await fireEvent.input(getByLabelText('Tools the agent has'), { target: { value: '200' } });
+    const params = new URLSearchParams(window.location.search);
+    expect(params.get('utm_source')).toBe('newsletter');
+    expect(params.get('tools')).toBe('200');
+  });
+
+  it('restores inputs from a shared link on mount', () => {
+    window.history.replaceState(null, '', '/?tools=200&model=gpt-5.6-sol&euResidency=1');
+    const { getByLabelText } = render(CostCalculator, { props: { lang: 'en' } });
+    expect((getByLabelText('Tools the agent has') as HTMLInputElement).value).toBe('200');
+    expect((getByLabelText(/EU data residency/) as HTMLInputElement).checked).toBe(true);
+  });
+
+  it('keeps syncing further edits after restoring from a shared link', async () => {
+    window.history.replaceState(null, '', '/?tools=200');
+    const { getByLabelText } = render(CostCalculator, { props: { lang: 'en' } });
+    await fireEvent.input(getByLabelText('Tools the agent has'), { target: { value: '5' } });
+    const params = new URLSearchParams(window.location.search);
+    expect(params.get('tools')).toBe('5');
+  });
+
+  it('falls back to defaults for an invalid shared value', () => {
+    window.history.replaceState(null, '', '/?tools=not-a-number');
+    const { getByLabelText } = render(CostCalculator, { props: { lang: 'en' } });
+    expect((getByLabelText('Tools the agent has') as HTMLInputElement).value).toBe('80');
+  });
+});
+
+describe('CostCalculator copy-link button', () => {
+  afterEach(() => {
+    Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true });
+  });
+
+  it('copies the current URL and confirms it', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+    const { getByTestId } = render(CostCalculator, { props: { lang: 'en' } });
+
+    await fireEvent.click(getByTestId('copy-link-button'));
+
+    expect(writeText).toHaveBeenCalledWith(window.location.href);
+    expect(getByTestId('copy-link-button').textContent).toContain('Link copied!');
+  });
+
+  it('shows a failure message when copying fails', async () => {
+    const writeText = vi.fn().mockRejectedValue(new Error('denied'));
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+    document.execCommand = vi.fn().mockReturnValue(false);
+    const { getByTestId } = render(CostCalculator, { props: { lang: 'en' } });
+
+    await fireEvent.click(getByTestId('copy-link-button'));
+
+    expect(getByTestId('copy-link-button').textContent).toMatch(/Couldn't copy/);
+  });
+});
+
+describe('CostCalculator discuss link', () => {
+  it('points at the home page contact section with a prefilled summary', () => {
+    const { getByTestId } = render(CostCalculator, { props: { lang: 'en' } });
+    const href = getByTestId('discuss-link').getAttribute('href') ?? '';
+    expect(href).toContain('#contact');
+    expect(href.startsWith('/en/?msg=')).toBe(true);
+    expect(decodeURIComponent(href)).toContain('agent-cost estimate');
+  });
+
+  it('points at the Polish root for the default (pl) locale', () => {
+    const { getByTestId } = render(CostCalculator, { props: { lang: 'pl' } });
+    const href = getByTestId('discuss-link').getAttribute('href') ?? '';
+    expect(href.startsWith('/?msg=')).toBe(true);
+  });
+
+  it('locale-prefixes the link for non-Polish languages', () => {
+    const { getByTestId } = render(CostCalculator, { props: { lang: 'ru' } });
+    const href = getByTestId('discuss-link').getAttribute('href') ?? '';
+    expect(href.startsWith('/ru/?msg=')).toBe(true);
   });
 });
