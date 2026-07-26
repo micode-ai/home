@@ -348,7 +348,8 @@
     "title": "Блог",
     "backToMicode": "← На сайт MiCode",
     "readArticle": "Читать статью →",
-    "articleNotFound": "Статья не найдена."
+    "articleNotFound": "Статья не найдена.",
+    "readingTime": "~{min} мин. чтения"
   },
   "faq": {
     "title": "Частые вопросы",

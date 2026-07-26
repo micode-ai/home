@@ -348,7 +348,8 @@
     "title": "Blog",
     "backToMicode": "← Powrót do MiCode",
     "readArticle": "Czytaj artykuł →",
-    "articleNotFound": "Artykuł nie znaleziony."
+    "articleNotFound": "Artykuł nie znaleziony.",
+    "readingTime": "~{min} min czytania"
   },
   "faq": {
     "title": "Częste pytania",

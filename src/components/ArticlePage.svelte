@@ -8,6 +8,7 @@
   import CostCalculator from './CostCalculator.svelte';
   import { articleDiagrams } from '../data/article-diagrams';
   import { articleTables, type ArticleTable } from '../data/article-tables';
+  import { estimateReadingMinutes } from '../services/readingTime';
 
   type Post = typeof blogPosts[number];
 
@@ -87,6 +88,9 @@
   });
   const backLabel = $derived(t('blog.backToMicode', lang));
   const blogLabel = $derived(t('blog.title', lang));
+  const readingTimeLabel = $derived(
+    t('blog.readingTime', lang).replace('{min}', String(estimateReadingMinutes(body)))
+  );
 
   const tableSuffix = $derived(lang === 'pl' ? 'Pl' : lang === 'ru' ? 'Ru' : 'En');
   const aiModelsTable = $derived((post as any)?.aiModelsTable as
@@ -162,6 +166,8 @@
         <span aria-hidden="true"> — </span>{authorTitle}
       </p>
       <time class="article-date" datetime={post.date}>{post.date}</time>
+      <span class="article-meta-sep" aria-hidden="true"> · </span>
+      <span class="article-reading-time">{readingTimeLabel}</span>
       <div class="article-tags">
         {#each post.tags as tag}
           <span class="tag">{tag}</span>
@@ -285,6 +291,8 @@
   .article-byline a { color: inherit; font-weight: 600; text-decoration: none; }
   .article-byline a:hover { text-decoration: underline; }
   .article-date { font-size: 0.875rem; opacity: 0.7; }
+  .article-meta-sep,
+  .article-reading-time { font-size: 0.875rem; opacity: 0.7; }
   .article-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
   .tag { padding: 0.2rem 0.6rem; background: rgba(255,255,255,0.15); border-radius: 0.25rem; font-size: 0.75rem; }
   .article-body { padding: 3rem 2rem; background: var(--color-bg-primary, #fff); }

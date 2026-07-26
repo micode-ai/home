@@ -3,6 +3,7 @@
   import { t } from '../services/i18n';
   import { withLocale } from '../services/locale';
   import blogPosts from '../data/blog-posts.json';
+  import { estimateReadingMinutes } from '../services/readingTime';
 
   type Post = typeof blogPosts[number];
 
@@ -26,6 +27,17 @@
     return post.summaryEn;
   }
 
+  function getBody(post: Post, lang: string): string {
+    if (lang === 'pl') return (post as any).bodyPl ?? '';
+    if (lang === 'ru') return (post as any).bodyRu ?? '';
+    return (post as any).bodyEn ?? '';
+  }
+
+  function getReadingTimeLabel(post: Post, lang: string): string {
+    const minutes = estimateReadingMinutes(getBody(post, lang));
+    return t('blog.readingTime', lang).replace('{min}', String(minutes));
+  }
+
   function getBlogTitle(lang: string): string { return t('blog.title', lang); }
   function getBack(lang: string): string { return t('blog.backToMicode', lang); }
 </script>
@@ -37,6 +49,8 @@
       {#each publishedPosts as post}
         <li class="post-card">
           <time class="post-date" datetime={post.date}>{post.date}</time>
+          <span class="post-meta-sep" aria-hidden="true"> · </span>
+          <span class="post-reading-time">{getReadingTimeLabel(post, $languageStore)}</span>
           <h2 class="post-title">
             <a href={withLocale(`/blog/${post.slug}/`, $languageStore)}>{getTitle(post, $languageStore)}</a>
           </h2>
@@ -64,6 +78,8 @@
     border-bottom: 1px solid var(--color-border, #e2e8f0);
   }
   .post-date { font-size: 0.875rem; color: var(--color-text-tertiary, #64748b); }
+  .post-meta-sep,
+  .post-reading-time { font-size: 0.875rem; color: var(--color-text-tertiary, #64748b); }
   .post-title { font-size: 1.5rem; margin: 0.5rem 0; }
   .post-title a { color: inherit; text-decoration: none; }
   .post-title a:hover { text-decoration: underline; }
