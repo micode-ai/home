@@ -10,6 +10,7 @@
   import { articleTables, type ArticleTable } from '../data/article-tables';
   import { estimateReadingMinutes } from '../services/readingTime';
   import ShareButtons from './ShareButtons.svelte';
+  import { getRelatedPosts } from '../services/relatedArticles';
 
   type Post = typeof blogPosts[number];
 
@@ -17,6 +18,33 @@
 
   const post = $derived(blogPosts.find((p) => p.slug === slug) as Post | undefined);
   const lang = $derived($languageStore);
+
+  // Same "published" gate as `BlogListing.svelte`'s `publishedPosts` — a future-dated post stays
+  // directly reachable by URL, but never gets recommended from another post's page.
+  const d = new Date();
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const todayStr = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const publishedPosts = blogPosts
+    .filter((p) => p.date <= todayStr)
+    .slice()
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  const relatedPosts = $derived(post ? getRelatedPosts(publishedPosts, post, 3) : []);
+
+  function relatedTitle(p: Post, l: string): string {
+    if (l === 'pl') return p.titlePl;
+    if (l === 'ru') return p.titleRu;
+    return p.titleEn;
+  }
+
+  function relatedSummary(p: Post, l: string): string {
+    if (l === 'pl') return p.summaryPl;
+    if (l === 'ru') return p.summaryRu;
+    return p.summaryEn;
+  }
+
+  const relatedArticlesLabel = $derived(t('blog.relatedArticles', lang));
+  const readArticleLabel = $derived(t('blog.readArticle', lang));
 
   const title = $derived(post
     ? (lang === 'pl' ? post.titlePl : lang === 'ru' ? post.titleRu : post.titleEn)
@@ -268,6 +296,23 @@
         </aside>
       {/if}
 
+      {#if relatedPosts.length > 0}
+        <section class="related-articles" aria-labelledby="related-articles-title">
+          <h2 id="related-articles-title" class="related-articles-title">{relatedArticlesLabel}</h2>
+          <div class="related-articles-list">
+            {#each relatedPosts as related (related.slug)}
+              <article class="related-article-card">
+                <h3 class="related-article-title">
+                  <a href={withLocale(`/blog/${related.slug}/`, lang)}>{relatedTitle(related, lang)}</a>
+                </h3>
+                <p class="related-article-summary">{relatedSummary(related, lang)}</p>
+                <a href={withLocale(`/blog/${related.slug}/`, lang)} class="related-article-link">{readArticleLabel}</a>
+              </article>
+            {/each}
+          </div>
+        </section>
+      {/if}
+
       <div class="back-link">
         <a href={withLocale('/blog/', lang)}>{backLabel}</a>
       </div>
@@ -412,6 +457,54 @@
   }
   .related-link:hover { text-decoration: underline; }
   .related-link svg { flex-shrink: 0; }
+
+  .related-articles { margin: 2.5rem 0 0; }
+  .related-articles-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 1rem;
+    color: var(--color-text-primary, #1e293b);
+  }
+  .related-articles-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+  .related-article-card {
+    padding: 1.25rem;
+    background: var(--color-bg-secondary, #f8fafc);
+    border: 1px solid var(--color-border, #e2e8f0);
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+  .related-article-title {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.35;
+    margin: 0 0 0.5rem;
+  }
+  .related-article-title a {
+    color: var(--color-text-primary, #1e293b);
+    text-decoration: none;
+  }
+  .related-article-title a:hover { text-decoration: underline; }
+  p.related-article-summary {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary, #475569);
+    text-align: left;
+    margin: 0 0 0.75rem;
+    flex-grow: 1;
+  }
+  .related-article-link {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-primary, #1e3a8a);
+    text-decoration: none;
+    align-self: flex-start;
+  }
+  .related-article-link:hover { text-decoration: underline; }
 
   .back-link { margin-top: 2.5rem; }
   .back-link a { color: var(--color-primary, #1e3a8a); text-decoration: none; }

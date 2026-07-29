@@ -18,6 +18,22 @@ vi.mock('../data/blog-posts.json', () => ({
       bodyEn: 'Paragraph.\n\n[[table:fixture-table]]\n\n[[widget:cost-calculator]]\n\n[[widget:unknown-widget]]',
       bodyRu: 'Абзац.\n\n[[table:fixture-table]]\n\n[[table:missing-table]]',
     },
+    {
+      slug: 'related-overlap-fixture',
+      titlePl: 'Powiązany', titleEn: 'Related Overlap', titleRu: 'Похожий',
+      summaryPl: 'ps', summaryEn: 'Overlap summary', summaryRu: 'рс',
+      date: '2026-07-20',
+      tags: ['AI', 'QA'],
+      bodyPl: 'P.', bodyEn: 'P.', bodyRu: 'P.',
+    },
+    {
+      slug: 'future-fixture',
+      titlePl: 'Przyszły', titleEn: 'Future Unpublished', titleRu: 'Будущий',
+      summaryPl: 'fs', summaryEn: 'Future summary', summaryRu: 'фс',
+      date: '2099-01-01',
+      tags: ['AI'],
+      bodyPl: 'P.', bodyEn: 'P.', bodyRu: 'P.',
+    },
   ],
 }));
 
@@ -83,5 +99,28 @@ describe('ArticlePage widget block', () => {
     languageStore.set('en');
     const { queryByText } = render(ArticlePage, { props: { slug: 'block-fixture' } });
     expect(queryByText('[[widget:unknown-widget]]')).toBeNull();
+  });
+});
+
+describe('ArticlePage related articles', () => {
+  it('shows a published, tag-overlapping post with its title, summary, and a link', () => {
+    languageStore.set('en');
+    const { getByText, getByRole } = render(ArticlePage, { props: { slug: 'block-fixture' } });
+    expect(getByText('Related articles')).toBeTruthy();
+    expect(getByText('Overlap summary')).toBeTruthy();
+    const link = getByRole('link', { name: 'Related Overlap' });
+    expect(link.getAttribute('href')).toContain('/blog/related-overlap-fixture/');
+  });
+
+  it('never surfaces a future-dated (unpublished) post as a recommendation', () => {
+    languageStore.set('en');
+    const { queryByText } = render(ArticlePage, { props: { slug: 'block-fixture' } });
+    expect(queryByText('Future Unpublished')).toBeNull();
+  });
+
+  it('translates the section heading per locale', () => {
+    languageStore.set('pl');
+    const { getByText } = render(ArticlePage, { props: { slug: 'block-fixture' } });
+    expect(getByText('Powiązane artykuły')).toBeTruthy();
   });
 });

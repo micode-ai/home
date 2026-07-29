@@ -362,6 +362,7 @@
         "title": "Blog",
         "backToMicode": "← Back to MiCode",
         "readArticle": "Read article →",
+        "relatedArticles": "Related articles",
         "articleNotFound": "Article not found.",
         "readingTime": "~{min} min read",
         "share": {
