@@ -1,0 +1,27 @@
+[
+  {
+    "id": "discovery",
+    "titleKey": "process.step1.title",
+    "descriptionKey": "process.step1.description"
+  },
+  {
+    "id": "proposal",
+    "titleKey": "process.step2.title",
+    "descriptionKey": "process.step2.description"
+  },
+  {
+    "id": "development",
+    "titleKey": "process.step3.title",
+    "descriptionKey": "process.step3.description"
+  },
+  {
+    "id": "delivery",
+    "titleKey": "process.step4.title",
+    "descriptionKey": "process.step4.description"
+  },
+  {
+    "id": "support",
+    "titleKey": "process.step5.title",
+    "descriptionKey": "process.step5.description"
+  }
+]

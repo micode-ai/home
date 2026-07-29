@@ -377,6 +377,29 @@
     "q4": "Czy integrujecie AI z istniejącymi systemami?",
     "a4": "Tak — integrujemy AI z systemami takimi jak ERP i CRM przez REST API; przykładem jest nasz Accounting AI Agent, który integruje się z platformą księgową wFirma."
   },
+  "process": {
+    "title": "Jak działamy",
+    "step1": {
+      "title": "Rozmowa wstępna",
+      "description": "Poznajemy Twoje cele, ograniczenia i harmonogram podczas bezpłatnej 30-minutowej rozmowy."
+    },
+    "step2": {
+      "title": "Oferta",
+      "description": "Otrzymujesz pisemny zakres prac, harmonogram i wycenę w ciągu 3 dni roboczych."
+    },
+    "step3": {
+      "title": "Realizacja",
+      "description": "Budujemy iteracyjnie, z regularnymi demo i Twoją informacją zwrotną na każdym etapie."
+    },
+    "step4": {
+      "title": "Wdrożenie",
+      "description": "Pełne przekazanie projektu wraz z dokumentacją, testami i wsparciem przy wdrożeniu."
+    },
+    "step5": {
+      "title": "Wsparcie",
+      "description": "Bieżące utrzymanie i rozwój funkcji dostępne po uruchomieniu."
+    }
+  },
   "notFound": {
     "title": "404 — strona nie znaleziona | MiCode",
     "heading": "404",

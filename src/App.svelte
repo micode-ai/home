@@ -11,6 +11,7 @@
   import OwnProducts from './components/OwnProducts.svelte';
   import Certificates from './components/Certificates.svelte';
   import Faq from './components/Faq.svelte';
+  import ProcessTimeline from './components/ProcessTimeline.svelte';
   import ContactForm from './components/ContactForm.svelte';
   import Footer from './components/Footer.svelte';
   import SEO from './components/SEO.svelte';
@@ -56,6 +57,7 @@
   <Certificates />
   <CompanyInfo />
   <Faq />
+  <ProcessTimeline />
   <ContactForm />
 </main>
 
@@ -80,7 +82,8 @@
    * Background rhythm — landing page section order is:
    * Hero (dark) → Services (secondary, native) → OwnProducts → FounderProfile →
    * StatsStrip (fixed blue, native) → CommunityContributions → Certificates (primary, native) →
-   * CompanyInfo → Faq (primary, native) → ContactForm (tertiary, native)
+   * CompanyInfo → Faq (primary, native) → ProcessTimeline (secondary, native) →
+   * ContactForm (tertiary, native)
    * Each component owns its own background token; these overrides only retune
    * the alternation for sections whose native default would repeat their neighbor's band.
    */
