@@ -184,3 +184,20 @@ describe('ArticlePage table of contents', () => {
     expect(getByText('Na tej stronie')).toBeTruthy();
   });
 });
+
+describe('ArticlePage reading progress bar', () => {
+  it('hides the bar on an article with fewer than 3 h2 sections (same gate as the TOC)', () => {
+    languageStore.set('en');
+    const { container } = render(ArticlePage, { props: { slug: 'short-fixture' } });
+    expect(container.querySelector('.reading-progress-bar')).toBeNull();
+  });
+
+  it('shows an aria-hidden bar with a width style on an article with 3 or more h2 sections', () => {
+    languageStore.set('en');
+    const { container } = render(ArticlePage, { props: { slug: 'long-fixture' } });
+    const bar = container.querySelector('.reading-progress-bar');
+    expect(bar).toBeTruthy();
+    expect(bar?.getAttribute('aria-hidden')).toBe('true');
+    expect(bar?.getAttribute('style')).toMatch(/width:\s*[\d.]+%/);
+  });
+});

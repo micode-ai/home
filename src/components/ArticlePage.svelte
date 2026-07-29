@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import { withLocale } from '../services/locale';
@@ -12,6 +13,7 @@
   import ShareButtons from './ShareButtons.svelte';
   import { getRelatedPosts } from '../services/relatedArticles';
   import { buildToc } from '../services/articleToc';
+  import { computeReadingProgress } from '../services/readingProgress';
 
   type Post = typeof blogPosts[number];
 
@@ -136,6 +138,21 @@
   const showToc = $derived(tocHeadings.length >= 3);
   const tocLabel = $derived(t('blog.tableOfContents', lang));
 
+  // Reading-progress bar. Gated behind `showToc` — the same "long article" threshold, not a
+  // second heuristic; see docs/contracts/blog-reading-progress-bar.md.
+  let articleBodyEl: HTMLElement | undefined = $state();
+  let readingProgress = $state(0);
+
+  function updateReadingProgress() {
+    if (!articleBodyEl) return;
+    const rect = articleBodyEl.getBoundingClientRect();
+    readingProgress = computeReadingProgress(rect.top, rect.height, window.innerHeight);
+  }
+
+  onMount(() => {
+    updateReadingProgress();
+  });
+
   const blocks = $derived.by<Block[]>(() => {
     let h2Index = 0;
     return rawBlocks.map((b): Block => (b.kind === 'h2' ? { ...b, id: tocHeadings[h2Index++].id } : b));
@@ -206,8 +223,13 @@
   });
 </script>
 
+<svelte:window onscroll={updateReadingProgress} onresize={updateReadingProgress} />
+
 {#if post}
 <article class="article-page" aria-labelledby="article-title">
+  {#if showToc}
+    <div class="reading-progress-bar" style="width: {readingProgress}%" aria-hidden="true"></div>
+  {/if}
   <div class="article-hero">
     <div class="article-inner">
       <nav class="article-breadcrumb" aria-label="Breadcrumb">
@@ -231,7 +253,7 @@
       <ShareButtons url={shareUrl} {title} {lang} />
     </div>
   </div>
-  <div class="article-body">
+  <div class="article-body" bind:this={articleBodyEl}>
     <div class="article-inner">
       {#if showToc}
         <nav class="article-toc" aria-label={tocLabel}>
@@ -359,6 +381,14 @@
 {/if}
 
 <style>
+  .reading-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: var(--color-primary, #1e3a8a);
+    z-index: 40; /* above --z-sticky (30, the sticky header) per the scale in app.css */
+  }
   .article-hero {
     background: var(--color-bg-hero, #0f172a);
     color: #fff;
@@ -425,7 +455,9 @@
     line-height: 1.3;
     margin: 2.75rem 0 1rem;
     color: var(--color-text-primary, #1e293b);
-    scroll-margin-top: 1rem;
+    /* Clear the sticky header, otherwise a table-of-contents jump leaves the heading hidden
+       behind it and the reader lands ~3 lines into the section. */
+    scroll-margin-top: calc(var(--header-height, 89px) + 1rem);
   }
   .article-callout {
     display: block;
