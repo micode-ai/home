@@ -4,7 +4,6 @@
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import { validateForm, type FormData } from '../services/validation';
-  import { BOOKING_URL } from '../services/booking';
 
   const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
   const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
@@ -231,18 +230,6 @@
         </button>
       </form>
 
-      <div class="book-call">
-        <a
-          class="book-call-button"
-          href={BOOKING_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={t('contact.bookCallAriaLabel', $languageStore)}
-        >
-          {t('contact.bookCall', $languageStore)}
-        </a>
-      </div>
-
       <div class="alternative-contact" role="complementary" aria-label="Alternative contact information">
         <p>{t('contact.alternativeContact', $languageStore)}</p>
         <p><strong>development@mi-code.pl</strong></p>
@@ -457,40 +444,6 @@
     transform: none;
   }
 
-  .book-call {
-    display: flex;
-    justify-content: center;
-    margin-top: 1.25rem;
-  }
-
-  .book-call-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.75rem 2rem;
-    background: transparent;
-    color: var(--color-accent);
-    border: 2px solid var(--color-accent);
-    border-radius: var(--radius-full);
-    font-size: 1rem;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background-color var(--transition-base), color var(--transition-base);
-    min-height: 44px;
-    min-width: 44px;
-  }
-
-  .book-call-button:hover {
-    background: var(--color-accent);
-    color: #ffffff;
-  }
-
-  .book-call-button:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
-  }
-
   .alternative-contact {
     margin-top: 2rem;
     padding-top: 1.5rem;
@@ -522,10 +475,6 @@
     }
 
     .submit-button {
-      width: 100%;
-    }
-
-    .book-call-button {
       width: 100%;
     }
   }
@@ -621,16 +570,6 @@
       color: #000000;
       border: 2px solid #000000;
     }
-
-    .book-call-button {
-      color: #000000;
-      border: 2px solid #000000;
-    }
-
-    .book-call-button:hover {
-      background: #000000;
-      color: #ffffff;
-    }
   }
 
   @media print {
@@ -661,10 +600,6 @@
       display: none;
     }
 
-    .book-call {
-      display: none;
-    }
-
     .alternative-contact {
       border-top: 1px solid #000000;
       color: #000000;
@@ -674,8 +609,7 @@
   @media (prefers-reduced-motion: reduce) {
     input,
     textarea,
-    .submit-button,
-    .book-call-button {
+    .submit-button {
       transition: none;
     }
 

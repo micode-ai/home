@@ -7,7 +7,6 @@ interface ImportMetaEnv {
   readonly VITE_GA_MEASUREMENT_ID: string;
   readonly VITE_MKTAI_SCRIPT_URL: string;
   readonly VITE_MKTAI_TRACKING_ID: string;
-  readonly VITE_BOOKING_URL: string;
 }
 
 interface ImportMeta {

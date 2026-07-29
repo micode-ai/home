@@ -1,14 +1,11 @@
 <script lang="ts">
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
-  import { BOOKING_URL } from '../services/booking';
 
   const headline = $derived(t('hero.headline', $languageStore));
   const subheadline = $derived(t('hero.subheadline', $languageStore));
   const ctaText = $derived(t('hero.cta', $languageStore));
   const ctaAriaLabel = $derived(t('hero.ctaAriaLabel', $languageStore));
-  const secondaryCtaText = $derived(t('hero.secondaryCta', $languageStore));
-  const secondaryCtaAriaLabel = $derived(t('hero.secondaryCtaAriaLabel', $languageStore));
 
   function scrollToContact() {
     const contactSection = document.getElementById('contact');
@@ -36,28 +33,17 @@
     <div class="hero-content">
       <h1 class="hero-headline" id="hero-headline">{headline}</h1>
       <p class="hero-subheadline">{subheadline}</p>
-      <div class="hero-ctas">
-        <button
-          class="hero-cta"
-          onclick={scrollToContact}
-          onkeydown={handleKeydown}
-          aria-label={ctaAriaLabel}
-        >
-          {ctaText}
-          <svg class="cta-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
-          </svg>
-        </button>
-        <a
-          class="hero-secondary-cta"
-          href={BOOKING_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={secondaryCtaAriaLabel}
-        >
-          {secondaryCtaText}
-        </a>
-      </div>
+      <button
+        class="hero-cta"
+        onclick={scrollToContact}
+        onkeydown={handleKeydown}
+        aria-label={ctaAriaLabel}
+      >
+        {ctaText}
+        <svg class="cta-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+        </svg>
+      </button>
     </div>
   </div>
 </section>
@@ -129,13 +115,6 @@
     max-width: 560px;
   }
 
-  .hero-ctas {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1.25rem;
-  }
-
   .hero-cta {
     display: inline-flex;
     align-items: center;
@@ -180,32 +159,6 @@
     transform: translateX(3px);
   }
 
-  .hero-secondary-cta {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.875rem 1.5rem;
-    font-family: var(--font-heading);
-    font-size: 1rem;
-    font-weight: 600;
-    color: #ffffff;
-    background: transparent;
-    border: 2px solid rgba(255, 255, 255, 0.6);
-    border-radius: var(--radius-lg);
-    text-decoration: none;
-    transition: background-color var(--transition-base), border-color var(--transition-base);
-    min-height: 44px;
-  }
-
-  .hero-secondary-cta:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: #ffffff;
-  }
-
-  .hero-secondary-cta:focus-visible {
-    outline: 3px solid rgba(255, 255, 255, 0.6);
-    outline-offset: 4px;
-  }
-
   @media (max-width: 767px) {
     .hero {
       min-height: 420px;
@@ -231,23 +184,12 @@
       max-width: 100%;
     }
 
-    .hero-ctas {
-      flex-direction: column;
-      width: 100%;
-    }
-
     .hero-cta {
       width: 100%;
       max-width: 300px;
       justify-content: center;
       padding: 0.875rem 1.75rem;
       font-size: 1rem;
-    }
-
-    .hero-secondary-cta {
-      width: 100%;
-      max-width: 300px;
-      justify-content: center;
     }
   }
 
@@ -288,8 +230,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero-cta,
-    .hero-secondary-cta {
+    .hero-cta {
       transition: none;
     }
 
@@ -315,11 +256,6 @@
       border: 2px solid #000000;
       font-weight: 700;
     }
-
-    .hero-secondary-cta {
-      border: 2px solid #ffffff;
-      font-weight: 700;
-    }
   }
 
   @media print {
@@ -339,8 +275,7 @@
       color: #000000;
     }
 
-    .hero-cta,
-    .hero-secondary-cta {
+    .hero-cta {
       display: none;
     }
   }
