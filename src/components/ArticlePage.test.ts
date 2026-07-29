@@ -34,6 +34,26 @@ vi.mock('../data/blog-posts.json', () => ({
       tags: ['AI'],
       bodyPl: 'P.', bodyEn: 'P.', bodyRu: 'P.',
     },
+    {
+      slug: 'short-fixture',
+      titlePl: 'Krótki', titleEn: 'Short', titleRu: 'Короткий',
+      summaryPl: 's', summaryEn: 's', summaryRu: 's',
+      date: '2026-07-18',
+      tags: ['AI'],
+      bodyPl: 'Akapit.\n\n## Jedna sekcja\n\nWięcej.',
+      bodyEn: 'Paragraph.\n\n## One section\n\nMore.',
+      bodyRu: 'Абзац.\n\n## Один раздел\n\nЕще.',
+    },
+    {
+      slug: 'long-fixture',
+      titlePl: 'Długi', titleEn: 'Long', titleRu: 'Длинный',
+      summaryPl: 's', summaryEn: 's', summaryRu: 's',
+      date: '2026-07-19',
+      tags: ['AI'],
+      bodyPl: 'Wstęp.\n\n## Pierwsza\n\nA.\n\n## Druga\n\nB.\n\n## Trzecia\n\nC.',
+      bodyEn: 'Intro.\n\n## First section\n\nA.\n\n## Second section\n\nB.\n\n## Third section\n\nC.',
+      bodyRu: 'Введение.\n\n## Первый\n\nA.\n\n## Второй\n\nB.\n\n## Третий\n\nC.',
+    },
   ],
 }));
 
@@ -122,5 +142,45 @@ describe('ArticlePage related articles', () => {
     languageStore.set('pl');
     const { getByText } = render(ArticlePage, { props: { slug: 'block-fixture' } });
     expect(getByText('Powiązane artykuły')).toBeTruthy();
+  });
+});
+
+describe('ArticlePage table of contents', () => {
+  it('hides the TOC on an article with fewer than 3 h2 sections', () => {
+    languageStore.set('en');
+    const { queryByText } = render(ArticlePage, { props: { slug: 'short-fixture' } });
+    expect(queryByText('On this page')).toBeNull();
+  });
+
+  it('shows the TOC on an article with 3 or more h2 sections, one link per heading', () => {
+    languageStore.set('en');
+    const { getByText, getAllByRole } = render(ArticlePage, { props: { slug: 'long-fixture' } });
+    expect(getByText('On this page')).toBeTruthy();
+    const links = getAllByRole('link', { name: /First section|Second section|Third section/ });
+    expect(links).toHaveLength(3);
+  });
+
+  it('links each TOC entry to its heading via a matching #id anchor', () => {
+    languageStore.set('en');
+    const { getByRole } = render(ArticlePage, { props: { slug: 'long-fixture' } });
+    const link = getByRole('link', { name: 'Second section' });
+    const href = link.getAttribute('href');
+    expect(href).toMatch(/^#/);
+    const heading = document.querySelector(href!);
+    expect(heading?.tagName).toBe('H2');
+    expect(heading?.textContent).toBe('Second section');
+  });
+
+  it('gives an all-Cyrillic heading a stable section-N id instead of an empty one', () => {
+    languageStore.set('ru');
+    const { getByRole } = render(ArticlePage, { props: { slug: 'long-fixture' } });
+    const link = getByRole('link', { name: 'Второй' });
+    expect(link.getAttribute('href')).toBe('#section-2');
+  });
+
+  it('translates the "On this page" label per locale', () => {
+    languageStore.set('pl');
+    const { getByText } = render(ArticlePage, { props: { slug: 'long-fixture' } });
+    expect(getByText('Na tej stronie')).toBeTruthy();
   });
 });

@@ -11,6 +11,7 @@
   import { estimateReadingMinutes } from '../services/readingTime';
   import ShareButtons from './ShareButtons.svelte';
   import { getRelatedPosts } from '../services/relatedArticles';
+  import { buildToc } from '../services/articleToc';
 
   type Post = typeof blogPosts[number];
 
@@ -57,9 +58,19 @@
   // light markup: `## heading`, `> callout`, and `[[diagram:id|caption]]` (renders a Mermaid figure).
   // Inline `**bold**` and `*italic*` are supported inside paragraphs/callouts. Plain-prose posts are unaffected.
   type Seg = { t: string; b: boolean; i: boolean };
-  type Block =
+  // `RawBlock` is what the split/regex pass below produces — an `h2` has heading text but no id
+  // yet, since ids are derived from *all* headings in the article at once (see `tocHeadings`).
+  // `Block` is the final per-render shape used by the template, with that id filled in.
+  type RawBlock =
     | { kind: 'p'; segments: Seg[] }
     | { kind: 'h2'; text: string }
+    | { kind: 'callout'; segments: Seg[] }
+    | { kind: 'diagram'; id: string; caption: string }
+    | { kind: 'table'; id: string }
+    | { kind: 'widget'; id: string };
+  type Block =
+    | { kind: 'p'; segments: Seg[] }
+    | { kind: 'h2'; text: string; id: string }
     | { kind: 'callout'; segments: Seg[] }
     | { kind: 'diagram'; id: string; caption: string }
     | { kind: 'table'; id: string }
@@ -100,9 +111,9 @@
     return entry[l] ?? entry.ru;
   }
 
-  const blocks = $derived.by<Block[]>(() => {
+  const rawBlocks = $derived.by<RawBlock[]>(() => {
     if (!body) return [];
-    return body.split('\n\n').map((chunk: string): Block => {
+    return body.split('\n\n').map((chunk: string): RawBlock => {
       const c = chunk.trim();
       const dm = c.match(DIAGRAM_RE);
       if (dm) return { kind: 'diagram', id: dm[1], caption: (dm[2] ?? '').trim() };
@@ -114,6 +125,20 @@
       if (c.startsWith('> ')) return { kind: 'callout', segments: inlineSegments(c.replace(/^> ?/gm, '').trim()) };
       return { kind: 'p', segments: inlineSegments(chunk) };
     });
+  });
+
+  // "On this page" entries — one per `h2` block, in document order. A heading with no
+  // Latin/digit characters (e.g. an all-Cyrillic Russian heading) still gets a stable
+  // `section-N` id from `buildToc`; see docs/contracts/blog-article-table-of-contents.md.
+  const tocHeadings = $derived.by(() =>
+    buildToc(rawBlocks.filter((b): b is Extract<RawBlock, { kind: 'h2' }> => b.kind === 'h2').map((b) => b.text))
+  );
+  const showToc = $derived(tocHeadings.length >= 3);
+  const tocLabel = $derived(t('blog.tableOfContents', lang));
+
+  const blocks = $derived.by<Block[]>(() => {
+    let h2Index = 0;
+    return rawBlocks.map((b): Block => (b.kind === 'h2' ? { ...b, id: tocHeadings[h2Index++].id } : b));
   });
   const shareUrl = $derived(typeof window !== 'undefined' ? window.location.href : '');
   const backLabel = $derived(t('blog.backToMicode', lang));
@@ -208,9 +233,19 @@
   </div>
   <div class="article-body">
     <div class="article-inner">
+      {#if showToc}
+        <nav class="article-toc" aria-label={tocLabel}>
+          <p class="article-toc-title">{tocLabel}</p>
+          <ol>
+            {#each tocHeadings as heading}
+              <li><a href={`#${heading.id}`}>{heading.text}</a></li>
+            {/each}
+          </ol>
+        </nav>
+      {/if}
       {#each blocks as block}
         {#if block.kind === 'h2'}
-          <h2 class="article-h2">{block.text}</h2>
+          <h2 class="article-h2" id={block.id}>{block.text}</h2>
         {:else if block.kind === 'callout'}
           <aside class="article-callout">{#each block.segments as seg}{#if seg.b}<strong>{seg.t}</strong>{:else if seg.i}<em>{seg.t}</em>{:else}{seg.t}{/if}{/each}</aside>
         {:else if block.kind === 'diagram'}
@@ -347,6 +382,43 @@
   .article-body p { line-height: 1.8; margin-bottom: 1.25rem; color: var(--color-text-primary, #1e293b); text-align: justify; }
   .article-body :global(strong) { font-weight: 600; color: var(--color-text-primary, #1e293b); }
   .article-body :global(em) { font-style: italic; }
+  .article-toc {
+    margin: 0 0 2.5rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--color-bg-secondary, #f8fafc);
+    border: 1px solid var(--color-border, #e2e8f0);
+    border-radius: 0.5rem;
+  }
+  .article-toc-title {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-secondary, #475569);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 0.75rem;
+  }
+  .article-toc ol {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    counter-reset: toc-item;
+  }
+  .article-toc li {
+    counter-increment: toc-item;
+  }
+  .article-toc li::before {
+    content: counter(toc-item) '. ';
+    color: var(--color-text-tertiary, #64748b);
+    font-weight: 600;
+  }
+  .article-toc a {
+    color: var(--color-primary, #1e3a8a);
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.9375rem;
+  }
+  .article-toc a:hover { text-decoration: underline; }
   .article-h2 {
     font-size: 1.4rem;
     font-weight: 700;
