@@ -349,7 +349,15 @@
     "backToMicode": "← Powrót do MiCode",
     "readArticle": "Czytaj artykuł →",
     "articleNotFound": "Artykuł nie znaleziony.",
-    "readingTime": "~{min} min czytania"
+    "readingTime": "~{min} min czytania",
+    "share": {
+      "label": "Udostępnij",
+      "linkedin": "Udostępnij na LinkedIn",
+      "twitter": "Udostępnij na X",
+      "copyLink": "Kopiuj link",
+      "copyLinkCopied": "Link skopiowany!",
+      "copyLinkFailed": "Nie udało się skopiować"
+    }
   },
   "faq": {
     "title": "Częste pytania",

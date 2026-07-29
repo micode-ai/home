@@ -9,6 +9,7 @@
   import { articleDiagrams } from '../data/article-diagrams';
   import { articleTables, type ArticleTable } from '../data/article-tables';
   import { estimateReadingMinutes } from '../services/readingTime';
+  import ShareButtons from './ShareButtons.svelte';
 
   type Post = typeof blogPosts[number];
 
@@ -86,6 +87,7 @@
       return { kind: 'p', segments: inlineSegments(chunk) };
     });
   });
+  const shareUrl = $derived(typeof window !== 'undefined' ? window.location.href : '');
   const backLabel = $derived(t('blog.backToMicode', lang));
   const blogLabel = $derived(t('blog.title', lang));
   const readingTimeLabel = $derived(
@@ -173,6 +175,7 @@
           <span class="tag">{tag}</span>
         {/each}
       </div>
+      <ShareButtons url={shareUrl} {title} {lang} />
     </div>
   </div>
   <div class="article-body">

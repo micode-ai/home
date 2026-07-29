@@ -363,7 +363,15 @@
         "backToMicode": "← Back to MiCode",
         "readArticle": "Read article →",
         "articleNotFound": "Article not found.",
-        "readingTime": "~{min} min read"
+        "readingTime": "~{min} min read",
+        "share": {
+            "label": "Share",
+            "linkedin": "Share on LinkedIn",
+            "twitter": "Share on X",
+            "copyLink": "Copy link",
+            "copyLinkCopied": "Link copied!",
+            "copyLinkFailed": "Couldn't copy"
+        }
     },
     "faq": {
         "title": "FAQ",

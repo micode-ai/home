@@ -349,7 +349,15 @@
     "backToMicode": "← На сайт MiCode",
     "readArticle": "Читать статью →",
     "articleNotFound": "Статья не найдена.",
-    "readingTime": "~{min} мин. чтения"
+    "readingTime": "~{min} мин. чтения",
+    "share": {
+      "label": "Поделиться",
+      "linkedin": "Поделиться в LinkedIn",
+      "twitter": "Поделиться в X",
+      "copyLink": "Скопировать ссылку",
+      "copyLinkCopied": "Ссылка скопирована!",
+      "copyLinkFailed": "Не удалось скопировать"
+    }
   },
   "faq": {
     "title": "Частые вопросы",
