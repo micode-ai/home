@@ -357,6 +357,12 @@
       "copyLink": "Kopiuj link",
       "copyLinkCopied": "Link skopiowany!",
       "copyLinkFailed": "Nie udało się skopiować"
+    },
+    "filter": {
+      "all": "Wszystkie",
+      "resultsCount": "{count} wpisów",
+      "empty": "Brak wpisów z tym tagiem.",
+      "tagAriaLabel": "Filtruj według tagu {tag}"
     }
   },
   "faq": {

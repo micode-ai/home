@@ -371,6 +371,12 @@
             "copyLink": "Copy link",
             "copyLinkCopied": "Link copied!",
             "copyLinkFailed": "Couldn't copy"
+        },
+        "filter": {
+            "all": "All",
+            "resultsCount": "{count} posts",
+            "empty": "No posts match this tag.",
+            "tagAriaLabel": "Filter by {tag}"
         }
     },
     "faq": {

@@ -357,6 +357,12 @@
       "copyLink": "Скопировать ссылку",
       "copyLinkCopied": "Ссылка скопирована!",
       "copyLinkFailed": "Не удалось скопировать"
+    },
+    "filter": {
+      "all": "Все",
+      "resultsCount": "{count} статей",
+      "empty": "Нет статей с этим тегом.",
+      "tagAriaLabel": "Фильтр по тегу {tag}"
     }
   },
   "faq": {
