@@ -21,6 +21,8 @@ beforeAll(() => {
         sending: 'Wysyłanie...',
         success: 'Wysłano!',
         alternativeContact: 'Możesz też napisać na:',
+        bookCall: 'Zarezerwuj rozmowę',
+        bookCallAriaLabel: 'Zarezerwuj bezpłatną konsultację w kalendarzu (otwiera się w nowej karcie)',
         errors: {
           nameRequired: 'Imię wymagane',
           emailRequired: 'Email wymagany',
@@ -60,6 +62,15 @@ describe('ContactForm smoke render', () => {
     expect(screen.getByLabelText(/imię/i)).toBeTruthy();
     expect(screen.getByLabelText(/email/i)).toBeTruthy();
     expect(screen.getByLabelText(/wiadomość/i)).toBeTruthy();
+  });
+
+  it('renders a "book a call" link opening in a new tab', () => {
+    render(ContactForm);
+    const link = screen.getByRole('link', { name: /zarezerwuj bezpłatną konsultację/i });
+    expect(link).toBeTruthy();
+    expect(link.getAttribute('target')).toBe('_blank');
+    expect(link.getAttribute('rel')).toBe('noopener noreferrer');
+    expect(link.getAttribute('href')).toMatch(/^https?:\/\//);
   });
 });
 

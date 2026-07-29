@@ -15,7 +15,9 @@
         "headline": "We build enterprise software with AI integrations",
         "subheadline": "18+ years of IT experience — Gdańsk, Poland. Java, Angular, AI solutions.",
         "cta": "Contact us",
-        "ctaAriaLabel": "Go to the contact form"
+        "ctaAriaLabel": "Go to the contact form",
+        "secondaryCta": "Book a free 30-min call →",
+        "secondaryCtaAriaLabel": "Book a free 30-minute consultation (opens in a new tab)"
     },
     "company": {
         "title": "About the company",
@@ -290,6 +292,8 @@
         "success": "Thank you for your message! We'll be in touch soon.",
         "responsePromise": "We typically respond within 1 business day.",
         "alternativeContact": "Or contact us directly:",
+        "bookCall": "Book a call",
+        "bookCallAriaLabel": "Book a free consultation on our calendar (opens in a new tab)",
         "sending": "Sending...",
         "errors": {
             "nameRequired": "Full name is required",

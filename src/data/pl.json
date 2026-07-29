@@ -15,7 +15,9 @@
     "headline": "Budujemy systemy enterprise z integracjami AI",
     "subheadline": "18 lat doświadczenia w IT — Gdańsk, Polska. Java, Angular, rozwiązania AI.",
     "cta": "Skontaktuj się z nami",
-    "ctaAriaLabel": "Przejdź do formularza kontaktowego"
+    "ctaAriaLabel": "Przejdź do formularza kontaktowego",
+    "secondaryCta": "Zarezerwuj bezpłatną rozmowę (30 min) →",
+    "secondaryCtaAriaLabel": "Zarezerwuj bezpłatną 30-minutową konsultację (otwiera się w nowej karcie)"
   },
   "company": {
     "title": "O firmie",
@@ -276,6 +278,8 @@
     "success": "Dziękujemy za wiadomość! Skontaktujemy się wkrótce.",
     "responsePromise": "Zazwyczaj odpowiadamy w ciągu 1 dnia roboczego.",
     "alternativeContact": "Lub napisz do nas bezpośrednio:",
+    "bookCall": "Zarezerwuj rozmowę",
+    "bookCallAriaLabel": "Zarezerwuj bezpłatną konsultację w kalendarzu (otwiera się w nowej karcie)",
     "sending": "Wysyłanie...",
     "errors": {
       "nameRequired": "Imię i nazwisko jest wymagane",

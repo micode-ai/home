@@ -11,6 +11,8 @@ beforeAll(() => {
         headline: 'Test headline',
         subheadline: 'Test subheadline',
         cta: 'Contact us',
+        secondaryCta: 'Book a free 30-min call →',
+        secondaryCtaAriaLabel: 'Book a free 30-minute consultation (opens in a new tab)',
       },
     },
   });
@@ -35,6 +37,15 @@ describe('Hero smoke render', () => {
   it('renders the CTA button', () => {
     render(Hero);
     expect(screen.getByRole('button')).toBeTruthy();
+  });
+
+  it('renders the secondary booking link opening in a new tab', () => {
+    render(Hero);
+    const link = screen.getByRole('link', { name: /book a free 30-minute consultation/i });
+    expect(link).toBeTruthy();
+    expect(link.getAttribute('target')).toBe('_blank');
+    expect(link.getAttribute('rel')).toBe('noopener noreferrer');
+    expect(link.getAttribute('href')).toMatch(/^https?:\/\//);
   });
 });
 
