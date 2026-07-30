@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node scripts/fetch-github-npm-stats.js",
+    "prebuild": "node scripts/fetch-github-npm-stats.js && node scripts/generate-og-images.mjs",
     "build": "vite build && vite build --config vite.ssr.config.ts && node scripts/prerender.mjs",
     "preview": "vite preview",
     "test": "vitest",
@@ -13,12 +13,14 @@
     "test:run": "vitest run"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@sveltejs/vite-plugin-svelte": "^6.2.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/svelte": "^5.3.1",
     "@tsconfig/svelte": "^5.0.6",
     "fast-check": "^4.5.3",
     "jsdom": "^27.4.0",
+    "satori": "^0.29.0",
     "svelte": "^5.43.8",
     "svelte-check": "^4.3.5",
     "typescript": "^5.9.3",
