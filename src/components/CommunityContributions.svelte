@@ -1,8 +1,14 @@
 <script lang="ts">
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
+  import communityStatsData from '../data/community-stats.json';
+  import type { CommunityStats } from '../types/products';
+  import CommunityStatBadges from './CommunityStatBadges.svelte';
 
   const sectionTitle = $derived(t('community.title', $languageStore));
+
+  const ngxChatStats: CommunityStats | null =
+    (communityStatsData.stats as Record<string, CommunityStats>)['ngx-chat'] ?? null;
 
   const contributions = [
     {
@@ -11,6 +17,7 @@
       titleKey: 'community.blog.title',
       descriptionKey: 'community.blog.description',
       stats: '400,000+',
+      communityStats: null as CommunityStats | null,
       link: null,
       linkLabelKey: null
     },
@@ -20,6 +27,7 @@
       titleKey: 'community.opensource.title',
       descriptionKey: 'community.opensource.description',
       stats: null,
+      communityStats: ngxChatStats,
       link: 'https://www.npmjs.com/package/ngx-open-web-ui-chat',
       linkLabelKey: 'community.viewOnNpm'
     },
@@ -29,6 +37,7 @@
       titleKey: 'community.telegram.title',
       descriptionKey: 'community.telegram.description',
       stats: null,
+      communityStats: null as CommunityStats | null,
       link: 'https://t.me/legalka_pl_bot',
       linkLabelKey: 'community.openInTelegram'
     }
@@ -46,7 +55,9 @@
             {@html contribution.iconSvg}
           </div>
           <h3 class="contribution-title">{t(contribution.titleKey, $languageStore)}</h3>
-          {#if contribution.stats}
+          {#if contribution.communityStats}
+            <CommunityStatBadges stats={contribution.communityStats} size="md" />
+          {:else if contribution.stats}
             <div class="contribution-stats">{contribution.stats}</div>
           {/if}
           <p class="contribution-description">{t(contribution.descriptionKey, $languageStore)}</p>
