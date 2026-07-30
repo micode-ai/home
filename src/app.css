@@ -129,6 +129,10 @@
   --max-width-xl: 1200px;
   --max-width-2xl: 1400px;
 
+  /* Height of the sticky header (1rem padding + 56px logo + 1px border); in-page anchor
+     targets add this to their scroll-margin so they don't land underneath it. */
+  --header-height: 89px;
+
   /* Z-index scale */
   --z-base: 0;
   --z-above: 10;
@@ -149,6 +153,13 @@
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+}
+
+/* The header shrinks on mobile (0.75rem padding + 40px logo + 1px border) */
+@media (max-width: 767px) {
+  :root {
+    --header-height: 65px;
+  }
 }
 
 /* Reset and base styles */
