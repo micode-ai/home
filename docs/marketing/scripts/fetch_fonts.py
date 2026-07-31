@@ -75,7 +75,16 @@ def export_open_sans_statics() -> None:
             axis.axisTag: named_instance.coordinates[axis.axisTag]
             for axis in fvar.axes
         }
-        static_font = instantiateVariableFont(font, axes)
+        # updateFontNames=True is required: without it, instantiateVariableFont
+        # leaves the name table's family/subfamily/PostScript/unique-ID fields
+        # pointing at the source variable font, so every exported instance
+        # (Regular, SemiBold, ...) claims the SAME name-table identity. PIL
+        # loads by file path and never notices, but PDF/font-embedding tooling
+        # (e.g. the LinkedIn carousel PDF export) commonly keys embedded font
+        # resources off the PostScript name (nameID 6) or unique ID (nameID 3)
+        # — two files both self-identifying as "OpenSans-Regular" risk one
+        # silently shadowing the other.
+        static_font = instantiateVariableFont(font, axes, updateFontNames=True)
         target = FONTS_DIR / filename
         static_font.save(str(target))
         print(f"  {filename}  <-  {OPEN_SANS_VARIABLE_URL} @ {instance_name} {axes}")

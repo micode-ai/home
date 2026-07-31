@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from fontTools.ttLib import TTFont
 from PIL import Image, ImageDraw, ImageFont
 
 ASSETS = Path(__file__).resolve().parents[1] / "assets"
@@ -48,3 +49,28 @@ def test_fonts_render_polish_diacritics():
 def test_font_licenses_shipped():
     licenses = list(FONTS.glob("*LICENSE*")) + list(FONTS.glob("*OFL*"))
     assert licenses, "ship the font licence files alongside the fonts"
+
+
+def test_font_postscript_names_are_distinct():
+    """Each font file must self-identify with its own PostScript name.
+
+    instantiateVariableFont() without updateFontNames=True leaves every
+    exported static instance pointing at the source variable font's name
+    table, so e.g. OpenSans-Regular.ttf and OpenSans-SemiBold.ttf could both
+    claim nameID 6 (PostScript name) "OpenSans-Regular". PIL loads fonts by
+    file path and would not notice, but PDF/font-embedding tooling commonly
+    keys embedded font resources off the PostScript name or unique ID — a
+    collision risks one weight silently shadowing the other in the LinkedIn
+    carousel PDF.
+    """
+    seen: dict[str, str] = {}
+    for name in REQUIRED_FONTS:
+        font = TTFont(str(FONTS / name))
+        postscript_name = font["name"].getDebugName(6)
+        colliding_file = seen.get(postscript_name)
+        assert colliding_file is None, (
+            f"{name} and {colliding_file} share PostScript name "
+            f"{postscript_name!r} — one would shadow the other when both "
+            f"are embedded in the same PDF"
+        )
+        seen[postscript_name] = name
