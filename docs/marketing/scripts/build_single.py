@@ -36,23 +36,31 @@ def build(campaign_id: str, langs: list[str]) -> list[Path]:
             # slide's copy still overflows the footer band at the minimum type
             # scale — a real risk on these short/wide canvases (see slides.py's
             # `_fit_box`). Left as a bare Python warning, that is easy to miss
-            # in a real build run; catch it here so a single overflowing
-            # format still gets an unmissable, campaign/language/format-
-            # specific line on stderr, in addition to (not instead of) the
-            # warning itself.
+            # in a real build run. `simplefilter("always")` here only lifts
+            # this block's *own* filter so the warning is reliably captured
+            # rather than deduped away — it must not leak out and override a
+            # caller's filter (e.g. a CI gate running with `-W
+            # error::RuntimeWarning`). So: capture, add the operator-facing
+            # line, then step back outside this block (where the caller's own
+            # filters are back in force) and re-emit via `warn_explicit` so
+            # *that* filter — not this block's — decides whether it prints,
+            # is ignored, or raises. This runs before `image.save()` so a
+            # caller whose filter turns it into an exception still never gets
+            # a saved file for this format, matching plain
+            # `slides.render(...).save(path)` semantics.
             with warnings.catch_warnings(record=True) as caught:
                 warnings.simplefilter("always")
                 image = slides.render(campaign, hook, lang, size)
-            image.save(path)
-            written.append(path)
             for w in caught:
-                warnings.showwarning(w.message, w.category, w.filename, w.lineno)
                 print(
                     f"  WARNING: {campaign_id} ({lang}): '{name}' at "
                     f"{size[0]}x{size[1]} overflowed its footer band even at the "
                     "minimum type scale — shorten this campaign's hook copy",
                     file=sys.stderr,
                 )
+                warnings.warn_explicit(w.message, w.category, w.filename, w.lineno)
+            image.save(path)
+            written.append(path)
         print(f"  {lang}: {len(CANVASES)} singles -> {out}")
 
     return written

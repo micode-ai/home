@@ -1,5 +1,6 @@
 import hashlib
 import json
+import warnings
 from pathlib import Path
 
 import pytest
@@ -176,15 +177,19 @@ OVERFLOWING_HOOK = {
 }
 
 
+def _write_overflowing_campaign(workspace: Path) -> None:
+    overflowing = json.loads(json.dumps(PAYLOAD))
+    overflowing["slides"][0]["pl"] = OVERFLOWING_HOOK
+    (workspace / "campaigns" / "demo" / "campaign.json").write_text(
+        json.dumps(overflowing), encoding="utf-8")
+
+
 def test_operator_is_warned_when_copy_overflows_the_footer_band(workspace, capsys):
     """build() must convert slides.py's bare RuntimeWarning into an
     unmissable, campaign/language/format-specific line on stderr — not
     swallow it, and not leave it as something only visible under
     `pytest.warns` or `-W error`."""
-    overflowing = json.loads(json.dumps(PAYLOAD))
-    overflowing["slides"][0]["pl"] = OVERFLOWING_HOOK
-    (workspace / "campaigns" / "demo" / "campaign.json").write_text(
-        json.dumps(overflowing), encoding="utf-8")
+    _write_overflowing_campaign(workspace)
     build_single.build("demo", ["pl"])
     captured = capsys.readouterr()
     assert "WARNING" in captured.err
@@ -199,3 +204,41 @@ def test_normal_copy_length_produces_no_overflow_warning(workspace, capsys):
     build_single.build("demo", ["pl"])
     captured = capsys.readouterr()
     assert "WARNING" not in captured.err
+
+
+def test_overflow_raises_when_the_caller_treats_runtimewarning_as_an_error(workspace):
+    """Fix round 1 caught the RuntimeWarning in a block that forced
+    `simplefilter("always")` and only ever *displayed* it afterwards
+    (`warnings.showwarning`), which never re-enters the filter/raise
+    machinery — so a caller running with `-W error::RuntimeWarning` (e.g. a
+    CI gate that wants any overflow to fail the build) silently stopped
+    seeing the exception it used to get from a bare `slides.render()` call.
+    The fix must let the *caller's* filter decide again."""
+    _write_overflowing_campaign(workspace)
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        with pytest.raises(RuntimeWarning):
+            build_single.build("demo", ["pl"])
+
+
+def test_overflow_warns_and_prints_exactly_once_per_overflowing_format(workspace, capsys):
+    """Re-emitting the captured warning must not double it up: under default
+    filters, a caller must see exactly one RuntimeWarning and exactly one
+    operator-facing stderr line per format that actually overflowed — not
+    zero (suppressed) and not two (the original display plus a duplicate
+    re-emit). `OVERFLOWING_HOOK` overflows all three declared canvases
+    (confirmed directly against `slides.render` before this fixture was
+    written), so both counts must equal `len(build_single.CANVASES)`."""
+    _write_overflowing_campaign(workspace)
+    with pytest.warns(RuntimeWarning) as caught:
+        build_single.build("demo", ["pl"])
+    runtime_warnings = [w for w in caught if issubclass(w.category, RuntimeWarning)]
+    assert len(runtime_warnings) == len(build_single.CANVASES), (
+        f"expected exactly one RuntimeWarning per overflowing format, got "
+        f"{len(runtime_warnings)} — a dropped or duplicated re-emit would show up here"
+    )
+    captured = capsys.readouterr()
+    assert captured.err.count("WARNING") == len(build_single.CANVASES), (
+        f"expected exactly one operator message per overflowing format, got "
+        f"{captured.err.count('WARNING')}"
+    )
