@@ -118,10 +118,21 @@ def paste_badge(img: Image.Image, height: int = 56) -> None:
 
 
 def footer(img: Image.Image, lang: str) -> None:
-    """Domain strip along the bottom edge."""
+    """Domain strip along the bottom edge.
+
+    Font size scales with canvas *width* (bigger canvases get bigger type)
+    while the bottom margin is a fixed function of canvas *height* — on a
+    wide/short canvas (e.g. the 1200x627 LinkedIn post or 1200x630 OG card)
+    those two used to decouple and push the glyph's descenders (the "p" in
+    ".pl") past the bottom edge. Anchoring off the actual rendered bbox
+    (which includes descenders) rather than the font's top-left draw origin
+    keeps the ink fully inside the canvas at any aspect ratio.
+    """
     draw = ImageDraw.Draw(img)
     font = heading(max(img.width // 34, 20), "semibold")
     label = SITE
-    draw.text(((img.width - draw.textlength(label, font=font)) // 2,
-               img.height - int(img.height * 0.06)),
-              label, font=font, fill=ORANGE_LIGHT)
+    margin = max(int(img.height * 0.025), 14)
+    left, top, right, bottom = draw.textbbox((0, 0), label, font=font)
+    x = (img.width - (right - left)) // 2 - left
+    y = img.height - margin - bottom
+    draw.text((x, y), label, font=font, fill=ORANGE_LIGHT)

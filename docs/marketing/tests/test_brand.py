@@ -1,4 +1,5 @@
-from PIL import Image
+import pytest
+from PIL import Image, ImageChops
 
 import brand  # noqa: E402
 
@@ -77,8 +78,39 @@ def test_browser_frame_wraps_the_screenshot():
     assert framed.height > 900 * 900 // 1600, "frame adds a chrome bar above the shot"
 
 
-def test_footer_writes_the_domain():
-    img = Image.new("RGB", (1080, 1350), brand.DARK)
-    before = img.tobytes()
-    brand.footer(img, "pl")
-    assert img.tobytes() != before
+@pytest.mark.parametrize(
+    "size",
+    [(1080, 1350), (1200, 627), (1080, 1920), (1200, 630)],
+    ids=lambda s: f"{s[0]}x{s[1]}",
+)
+def test_footer_writes_the_domain(size):
+    """The footer's ink (including descenders, e.g. the "p" in ".pl") must
+    stay fully inside the canvas at every aspect ratio the factory renders,
+    not just the tall 1080x1350/1080x1920 ones — regression test for a bug
+    where font size (derived from width) and bottom margin (derived from
+    height) decoupled on wide/short canvases and clipped the label."""
+    width, height = size
+    before = brand.background(size)
+    after = before.copy()
+    brand.footer(after, "pl")
+
+    diff = ImageChops.difference(before, after)
+    bbox = diff.getbbox()
+    assert bbox is not None, f"{size}: footer drew nothing"
+
+    # PIL silently clips anything drawn past the canvas edge, so the diff's
+    # own bbox can never report top < 0 or bottom > height — both bounds are
+    # tautologically satisfied by construction and would not have caught the
+    # bug. What *does* reveal clipping: PIL's bbox "lower" bound is exclusive
+    # (1 + the last non-zero row), so it only ever equals `height` exactly
+    # when the very last pixel row of the canvas is part of the ink — i.e.
+    # the label was cut off by the edge rather than sitting above it with
+    # room to spare. A strict "<" is the real assertion; "<=" would pass on
+    # both clipped and unclipped renders.
+    top, bottom = bbox[1], bbox[3]
+    assert top >= 0, f"{size}: footer ink starts above the canvas (top={top})"
+    assert bottom < height, (
+        f"{size}: footer ink is clipped by the bottom edge — its last row "
+        f"of ink coincides with the canvas's last pixel row "
+        f"(ink bottom={bottom}, canvas height={height})"
+    )
