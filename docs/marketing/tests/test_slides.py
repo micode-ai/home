@@ -45,6 +45,12 @@ def campaign(tmp_path, monkeypatch):
     shot_dir = tmp_path / "creatives" / "demo" / "src"
     shot_dir.mkdir(parents=True)
     Image.new("RGB", (1600, 900), (255, 255, 255)).save(shot_dir / "calculator.png")
+    # Two per-language captures of the same page, differing only in ink: the
+    # real pair differs the same way (a Polish table vs an English one), and a
+    # size difference alone would be indistinguishable from a resize bug.
+    for name, fill in (("calculator-pl.png", (255, 255, 255)),
+                       ("calculator-en.png", (0, 0, 0))):
+        Image.new("RGB", (1600, 900), fill).save(shot_dir / name)
     monkeypatch.setattr(spec, "MARKETING", tmp_path)
     return spec.Campaign.load("demo")
 
@@ -119,6 +125,57 @@ def test_numbers_slide_falls_back_to_slide_level_rows_when_language_has_none(cam
     blank_rows = dict(slide, rows=[])
     without_rows = slides.render(campaign, blank_rows, "pl", (1080, 1350))
     assert img.tobytes() != without_rows.tobytes()
+
+
+def test_diagram_slide_uses_the_screenshot_its_own_language_declares(campaign):
+    """A screenshot of a page that renders its own text is not language-
+    neutral: the article's cost table draws its headers and row labels from the
+    site's i18n dictionaries, so one shared capture puts a Polish table on the
+    English slide. Each language block may name its own `asset`, exactly as it
+    may name its own `rows`."""
+    slide = dict(campaign.slides[3])
+    slide.pop("asset", None)
+    slide["pl"] = dict(slide["pl"], asset="src/calculator-pl.png")
+    slide["en"] = dict(slide["en"], asset="src/calculator-en.png")
+    # Hold the *copy* identical across the two renders so the only thing that
+    # can differ is which screenshot was pasted in.
+    slide["en"] = dict(slide["en"], **{k: v for k, v in slide["pl"].items()
+                                       if k != "asset"})
+    pl = slides.render(campaign, slide, "pl", (1080, 1350))
+    en = slides.render(campaign, slide, "en", (1080, 1350))
+    assert pl.tobytes() != en.tobytes(), (
+        "both languages rendered the same bytes from identical copy — the "
+        "per-language asset was ignored and one capture served both decks"
+    )
+
+
+def test_diagram_slide_falls_back_to_the_slide_level_screenshot(campaign):
+    """A language-neutral diagram (a mermaid graph, a product screenshot with
+    no copy in it) declares its asset once at slide level and both decks use
+    it — the fallback half of the same precedence rule."""
+    slide = campaign.slides[3]
+    assert "asset" not in slide["pl"] and "asset" not in slide["en"]
+    with_asset = slides.render(campaign, slide, "pl", (1080, 1350))
+    missing = dict(slide, asset="src/does-not-exist.png")
+    without = slides.render(campaign, missing, "pl", (1080, 1350))
+    assert with_asset.tobytes() != without.tobytes(), (
+        "the slide-level asset stopped being used when no language declares one"
+    )
+
+
+def test_language_asset_wins_over_the_slide_level_one(campaign):
+    """Isolates the precedence direction. With the language block naming a real
+    capture, the slide-level value must have no effect at all — swapping it for
+    a file that does not exist must not change a single byte. If the slide level
+    were preferred (or merged, or used as a fallback when the language file is
+    simply *different*), these two renders would diverge."""
+    base = dict(campaign.slides[3])
+    base["pl"] = dict(base["pl"], asset="src/calculator-en.png")
+    a = slides.render(campaign, dict(base, asset="src/calculator.png"),
+                      "pl", (1080, 1350))
+    b = slides.render(campaign, dict(base, asset="src/does-not-exist.png"),
+                      "pl", (1080, 1350))
+    assert a.tobytes() == b.tobytes()
 
 
 def test_cta_slide_carries_the_contact_address(campaign):

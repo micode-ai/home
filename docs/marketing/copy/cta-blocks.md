@@ -57,7 +57,8 @@ CTA пишется без схемы: `mi-code.pl`.
 
 Мягкий CTA говорит про опыт основателя (18+ лет в IT), а не про возраст
 компании: MiCode основана в 2024 году, и формулировка «делаем это 18 лет»
-была бы неправдой — см. `src/data/pl.json` → `about.foundedNote`.
+была бы неправдой — см. `src/data/pl.json` → `company.foundedNote`
+(«Firma założona w 2024 roku przez inżyniera z 18-letnim doświadczeniem w IT»).
 
 ## Хэштеги
 

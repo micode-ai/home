@@ -112,10 +112,17 @@ class Campaign:
         ])
         return urlunsplit((parts.scheme, parts.netloc, path, urlencode(query), parts.fragment))
 
-    def asset(self, slide: dict) -> Path | None:
-        """Absolute path to a slide's screenshot. The file may not exist yet —
-        callers check, so a missing capture degrades instead of crashing."""
-        rel = slide.get("asset")
+    def asset(self, block: dict) -> Path | None:
+        """Absolute path to the screenshot a block declares. The file may not
+        exist yet — callers check, so a missing capture degrades instead of
+        crashing.
+
+        `block` is any mapping that may carry an `"asset"` key: a slide, or one
+        of its `pl`/`en` language blocks. Keeping it duck-typed is what lets a
+        caller write `asset(text) or asset(slide)` and get per-language
+        screenshots with a slide-level fallback, exactly as `rows` already
+        works — see `slides._place_diagram_frame`."""
+        rel = block.get("asset")
         if not rel:
             return None
         return MARKETING / "creatives" / self.id / rel

@@ -99,9 +99,9 @@ Pierwsze pytanie o agenta AI brzmi zawsze tak samo: ile to będzie kosztować
 miesięcznie? I prawie zawsze pada odpowiedź „to zależy”.
 
 Da się policzyć. W naszej konfiguracji referencyjnej wychodzi $74.38
-miesięcznie — a przy tej samej pracy sam wybór modelu robi 25 razy różnicy,
-od $50.34 do $1254.00. To wyliczenie na jawnych założeniach, nie nasza
-faktura: zmieni się założenie, zmieni się liczba.
+miesięcznie — a przy tej samej pracy sam wybór modelu zmienia rachunek
+25-krotnie, od $50.34 do $1254.00. To wyliczenie na jawnych założeniach, nie
+nasza faktura: zmieni się założenie, zmieni się liczba.
 
 Rozłożyliśmy cały rachunek na czynniki i dołożyliśmy kalkulator, w który
 wstawisz własne liczby:
@@ -131,18 +131,24 @@ Pricing an AI agent for your company? Write to development@mi-code.pl.
 
 ## Stories
 
-Шесть кадров под `renders/<lang>/story-9x16-01..06.png` — они повторяют
-слайды карусели один в один. По одной фразе на кадр, не длиннее шести слов;
-ссылка только на последнем, свайпом вверх. Тот же проход есть видео:
-`renders/<lang>/reel.mp4` (и `reel.gif` для превью).
+Шесть кадров под `renders/<lang>/story-9x16-01..06.png`. Кадры рендерятся из
+тех же слайдов, что и карусель (`build_reel.py` → `slides.render`), поэтому
+**на самом кадре уже напечатан полный текст слайда** — надзаголовок, заголовок
+и подзаголовок. Тот же проход есть видео: `renders/<lang>/reel.mp4`
+(и `reel.gif` для превью).
+
+Строки ниже — **не текст кадра, а сопроводительная подпись**: то, что
+набирается стикером поверх стори или произносится за кадром в Reels. Одна
+фраза на кадр, не длиннее шести слов; ссылка — только на последнем кадре,
+свайпом вверх.
 
 ### PL
 
 1. `story-9x16-01.png` — Agent AI: $74.38 miesięcznie
 2. `story-9x16-02.png` — „To zależy” to nie odpowiedź
-3. `story-9x16-03.png` — Ta sama praca, 25 razy różnicy
+3. `story-9x16-03.png` — Ta sama praca, 25× drożej
 4. `story-9x16-04.png` — Płacisz za przesyłanie, nie inteligencję
-5. `story-9x16-05.png` — Schematy narzędzi: 69% rachunku
+5. `story-9x16-05.png` — Rachunek rozbity na pięć składników
 6. `story-9x16-06.png` — Policzymy to na Twoich danych →
    https://mi-code.pl/blog/ai-agent-cost-per-month-model/?utm_source=instagram&utm_medium=social&utm_campaign=cost-of-ai-agent
 
@@ -150,8 +156,8 @@ Pricing an AI agent for your company? Write to development@mi-code.pl.
 
 1. `story-9x16-01.png` — An AI agent: $74.38 per month
 2. `story-9x16-02.png` — "It depends" is not an answer
-3. `story-9x16-03.png` — Same work, 25 times apart
+3. `story-9x16-03.png` — Same work, 25× apart
 4. `story-9x16-04.png` — You pay for re-sending, not intelligence
-5. `story-9x16-05.png` — Tool schemas: 69% of the bill
+5. `story-9x16-05.png` — The bill, split into five components
 6. `story-9x16-06.png` — We will price it on your data →
    https://mi-code.pl/en/blog/ai-agent-cost-per-month-model/?utm_source=instagram&utm_medium=social&utm_campaign=cost-of-ai-agent

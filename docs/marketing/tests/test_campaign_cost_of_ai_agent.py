@@ -8,6 +8,7 @@ own.
 import json
 import re
 from pathlib import Path
+from urllib.parse import parse_qsl, urlsplit
 
 from PIL import Image
 
@@ -17,8 +18,28 @@ MARKETING = Path(__file__).resolve().parents[1]
 CAMPAIGN_ID = "cost-of-ai-agent"
 
 # Verbatim from the article; a creative quoting a number the article does not
-# make is a credibility problem, not a typo.
+# make is a credibility problem, not a typo. The `$`-amounts are also covered
+# by the regex scan below, but the rest — token counts and percentages — carry
+# no marker a regex can find them by, so they are listed here and asserted by
+# `test_every_article_figure_is_still_quoted_in_the_deck`.
 ARTICLE_FIGURES = ["$74.38", "$50.34", "$1254.00", "15 600", "19 100", "98,5", "82"]
+
+
+def _article() -> dict:
+    posts = json.loads((MARKETING.parents[1] / "src" / "data" / "blog-posts.json")
+                       .read_text(encoding="utf-8"))
+    posts = posts if isinstance(posts, list) else posts["posts"]
+    return next(p for p in posts if p["slug"] == "ai-agent-cost-per-month-model")
+
+
+def _article_corpus() -> str:
+    article = _article()
+    return (article["bodyPl"] or "") + (article["bodyEn"] or "")
+
+
+def _campaign_json() -> str:
+    return (MARKETING / "campaigns" / CAMPAIGN_ID / "campaign.json").read_text(
+        encoding="utf-8")
 
 
 def test_campaign_spec_loads_and_validates():
@@ -53,14 +74,85 @@ def test_hook_number_comes_from_the_article():
 
 def test_every_figure_in_the_spec_appears_in_the_article():
     """No invented numbers: each $-amount in the deck must exist in the post."""
-    posts = json.loads((MARKETING.parents[1] / "src" / "data" / "blog-posts.json")
-                       .read_text(encoding="utf-8"))
-    posts = posts if isinstance(posts, list) else posts["posts"]
-    article = next(p for p in posts if p["slug"] == "ai-agent-cost-per-month-model")
-    corpus = (article["bodyPl"] or "") + (article["bodyEn"] or "")
-    raw = (MARKETING / "campaigns" / CAMPAIGN_ID / "campaign.json").read_text(encoding="utf-8")
+    corpus = _article_corpus()
+    raw = _campaign_json()
     for amount in set(re.findall(r"\$[0-9][0-9.,]*", raw)):
         assert amount in corpus, f"{amount} appears in the deck but not in the article"
+
+
+def test_every_article_figure_is_still_quoted_in_the_deck():
+    """The other direction, and the non-`$` figures.
+
+    The regex above can only scan what looks like a dollar amount, so a token
+    count or a percentage in the deck is unguarded: mutating `98,5%` to `95,8%`
+    in campaign.json leaves it green. `ARTICLE_FIGURES` names exactly those
+    figures — assert both ends of each one, so the deck cannot drift from the
+    article and the article cannot be edited out from under the deck.
+    """
+    corpus = _article_corpus()
+    raw = _campaign_json()
+    for figure in ARTICLE_FIGURES:
+        assert figure in corpus, (
+            f"{figure!r} is listed as an article figure but no longer appears "
+            "in the article — the deck is quoting something the post dropped"
+        )
+        assert figure in raw, (
+            f"{figure!r} is an article figure the deck is built on but it no "
+            "longer appears in campaign.json"
+        )
+
+
+def _diagram_slide(campaign) -> dict:
+    return next(s for s in campaign.slides if s["type"] == "diagram")
+
+
+def test_the_calculator_shot_reproduces_the_articles_reference_configuration():
+    """The screenshot must show the bill the deck's cover claims.
+
+    The calculator's table renders `result.low.components`, and its *defaults*
+    are 4 steps with no cache — a $94.05 bill. The deck's cover says $74.38.
+    The article names the exact fields that reproduce its own reference
+    calculation ("set both step fields to 8 and the cache share to 90"), so the
+    capture URL must carry them; without that the slide shows a third number to
+    an audience that will add the column up.
+    """
+    campaign = spec.Campaign.load(CAMPAIGN_ID)
+    slide = _diagram_slide(campaign)
+    reference = {"stepsMin": "8", "stepsMax": "8", "cachedSharePct": "90",
+                 "model": "gpt-5.4-mini", "tasksPerDay": "50", "euResidency": "0"}
+    for lang in ("pl", "en"):
+        shot = slide[lang].get("shot") or slide.get("shot")
+        assert shot, f"the {lang} diagram slide declares no shot"
+        query = dict(parse_qsl(urlsplit(shot["path"]).query))
+        for key, value in reference.items():
+            assert query.get(key) == value, (
+                f"{lang} capture URL has {key}={query.get(key)!r}, but the "
+                f"article's reference calculation needs {key}={value!r}"
+            )
+
+
+def test_the_diagram_slide_captures_each_language_from_its_own_locale():
+    """The calculator's table draws its headers and row labels from the site's
+    own i18n dictionaries, so one capture cannot serve both decks: a single
+    shared screenshot puts a Polish table (`Skladnik / USD miesiecznie /
+    Udzial w rachunku`) on the English slide whose whole job is to look
+    rigorous. Each language must name its own file and its own locale URL."""
+    campaign = spec.Campaign.load(CAMPAIGN_ID)
+    slide = _diagram_slide(campaign)
+    pl_path = (slide["pl"].get("shot") or slide.get("shot", {}))["path"]
+    en_path = (slide["en"].get("shot") or slide.get("shot", {}))["path"]
+    assert pl_path.startswith("/blog/"), pl_path
+    assert en_path.startswith("/en/blog/"), en_path
+
+    pl_asset = campaign.asset(slide["pl"]) or campaign.asset(slide)
+    en_asset = campaign.asset(slide["en"]) or campaign.asset(slide)
+    assert pl_asset and en_asset, "the diagram slide resolves no screenshot"
+    assert pl_asset != en_asset, (
+        f"both decks resolve to the same capture ({pl_asset.name}) — the "
+        "English slide would ship a Polish table"
+    )
+    for path in (pl_asset, en_asset):
+        assert path.is_file(), f"{path} was never captured"
 
 
 def test_copy_file_covers_both_languages_and_all_channels():

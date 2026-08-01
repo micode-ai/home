@@ -254,7 +254,17 @@ def _fit_box(size: tuple[int, int], slide: dict, text: dict):
 
 
 def _place_diagram_frame(img, box, slide, campaign, lang, y: int) -> None:
-    path = campaign.asset(slide)
+    # Per-language asset wins over the slide-level one, mirroring `rows` in
+    # `_plan_numbers`. A screenshot of a page that renders its own text — the
+    # article's cost table, whose headers and row labels come from the site's
+    # i18n dictionaries — is not language-neutral, so the English deck must be
+    # able to point at an English capture instead of shipping a Polish table
+    # under an English headline. Declaration is what decides, not existence: a
+    # language block that names a file which was never captured degrades to a
+    # text slide (with the warning below), rather than silently substituting
+    # the other language's screenshot.
+    text = campaign.text(slide, lang)
+    path = campaign.asset(text) or campaign.asset(slide)
     if not path or not path.is_file():
         return  # degrade to a text slide rather than break a batch render
     with Image.open(path) as raw:
@@ -267,8 +277,9 @@ def _place_diagram_frame(img, box, slide, campaign, lang, y: int) -> None:
         # instead so a too-tall header/sub combination gets noticed and
         # trimmed, rather than shipping a diagram card with no diagram.
         warnings.warn(
-            f"slides: no room left for the '{slide.get('asset')}' screenshot on the "
-            f"diagram slide of campaign {getattr(campaign, 'id', '?')!r} at "
+            f"slides: no room left for the '{text.get('asset') or slide.get('asset')}' "
+            f"screenshot on the diagram slide of campaign "
+            f"{getattr(campaign, 'id', '?')!r} at "
             f"{img.width}x{img.height} ({lang}); rendering without it",
             RuntimeWarning,
         )

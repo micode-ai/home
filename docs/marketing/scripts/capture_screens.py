@@ -13,7 +13,7 @@ Requires: pip install playwright && playwright install chromium
 import sys
 from pathlib import Path
 
-from spec import Campaign, SpecError
+from spec import LANGS, Campaign, SpecError
 
 VIEWPORT = {"width": 1600, "height": 1000}
 DEFAULT_BASE = "http://localhost:4173"
@@ -51,17 +51,42 @@ _SUPPRESS_CHROME_CSS = """
 
 
 def shots_for(campaign: Campaign) -> list[dict]:
-    """Every slide that declares a `shot` block, in deck order."""
-    shots = []
+    """Every capture the campaign needs, in deck order.
+
+    `asset` and `shot` may each be declared inside a slide's `pl`/`en` block,
+    with the slide level as the fallback — the same precedence `rows` already
+    has in `slides._plan_numbers`. That is what a screenshot of a page which
+    renders its own text needs: the article's cost table draws its headers and
+    row labels from the site's i18n dictionaries, so the Polish and the English
+    deck need two different captures of two different URLs.
+
+    Resolutions that come out identical collapse to a single entry, so a
+    language-neutral diagram (a mermaid graph, a product screenshot with no
+    copy in it) still costs exactly one browser round-trip and one file, and a
+    campaign that declares nothing per language behaves as it always did.
+    """
+    shots: list[dict] = []
+    seen: set[tuple] = set()
     for slide in campaign.slides:
-        shot = slide.get("shot")
-        if not shot or not slide.get("asset"):
-            continue
-        shots.append({
-            "asset": slide["asset"],
-            "path": shot["path"],
-            "selector": shot.get("selector"),
-        })
+        for lang in LANGS:
+            text = slide.get(lang) or {}
+            shot = text.get("shot") or slide.get("shot")
+            asset = text.get("asset") or slide.get("asset")
+            # A `shot` with no `asset` has nowhere to save the file, and an
+            # `asset` with no `shot` has no page to photograph — neither is
+            # capturable.
+            if not shot or not asset:
+                continue
+            entry = {
+                "asset": asset,
+                "path": shot["path"],
+                "selector": shot.get("selector"),
+            }
+            key = (entry["asset"], entry["path"], entry["selector"])
+            if key in seen:
+                continue
+            seen.add(key)
+            shots.append(entry)
     return shots
 
 
