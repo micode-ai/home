@@ -77,17 +77,28 @@ def wrap(text: str, font: ImageFont.FreeTypeFont, max_width: int) -> list[str]:
     return lines
 
 
+PILL_PAD_X = 26
+PILL_PAD_Y = 14
+
+
+def pill_height(font: ImageFont.FreeTypeFont) -> int:
+    """The height `pill()` draws at for this font — exposed so a caller that
+    needs to reserve vertical space for a pill *before* drawing it (to check
+    whether it fits, say) doesn't have to re-derive `pill()`'s internal
+    padding as a separate, driftable copy."""
+    return font.size + PILL_PAD_Y * 2
+
+
 def pill(img: Image.Image, xy: tuple[int, int], text: str,
          font: ImageFont.FreeTypeFont) -> int:
     """Draw an orange outlined tag. Returns the pill's right edge in px."""
     draw = ImageDraw.Draw(img)
     x, y = xy
-    pad_x, pad_y = 26, 14
-    width = int(font.getlength(text)) + pad_x * 2
-    height = font.size + pad_y * 2
+    width = int(font.getlength(text)) + PILL_PAD_X * 2
+    height = pill_height(font)
     draw.rounded_rectangle([x, y, x + width, y + height],
                            radius=height // 2, outline=ORANGE, width=3)
-    draw.text((x + pad_x, y + pad_y - 2), text, font=font, fill=ORANGE_LIGHT)
+    draw.text((x + PILL_PAD_X, y + PILL_PAD_Y - 2), text, font=font, fill=ORANGE_LIGHT)
     return x + width
 
 

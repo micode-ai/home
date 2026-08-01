@@ -196,13 +196,146 @@ def test_long_copy_never_bleeds_into_the_footer_band(campaign, slide_type, extra
     )
 
 
-def test_diagram_slide_with_long_copy_still_shows_a_frame_at_a_short_canvas(campaign):
-    """A long headline/sub must not silently crowd the screenshot out on a
-    short canvas — the frame should shrink to fit rather than disappear."""
-    slide = {"type": "diagram", "asset": "src/calculator.png", "pl": LONG_PL, "en": LONG_PL}
-    img = slides.render(campaign, slide, "pl", (1200, 627))
+def _white_px(img: Image.Image) -> int:
     # getcolors() returns (count, color) pairs; keyed by color, not count.
     colors = {color: count for count, color in (img.getcolors(maxcolors=1_000_000) or [])}
-    # The fixture screenshot is solid white; its presence in meaningful
-    # quantity means the browser frame actually got drawn, not dropped.
-    assert colors.get((255, 255, 255), 0) > 500
+    return colors.get((255, 255, 255), 0)
+
+
+def test_diagram_slide_with_long_copy_still_shows_a_frame_at_a_short_canvas(campaign):
+    """A long headline/sub must not silently crowd the screenshot out on a
+    short canvas — the frame should shrink to fit rather than disappear.
+
+    Counting raw white pixels against a fixed threshold is not enough: the
+    brand chrome (badge, pill outlines, background glow) alone can clear a
+    few-hundred-pixel bar with no screenshot drawn at all. Isolate the
+    frame's actual contribution by rendering the identical slide twice —
+    once with its screenshot asset present, once with the asset missing —
+    and require the asset-present render to carry substantially more white
+    ink. Everything else about the two renders (text, badge, footer) is
+    identical, so any large difference must come from the frame itself."""
+    slide = {"type": "diagram", "asset": "src/calculator.png", "pl": LONG_PL, "en": LONG_PL}
+    with_asset = slides.render(campaign, slide, "pl", (1200, 627))
+    missing = dict(slide, asset="src/does-not-exist.png")
+    without_asset = slides.render(campaign, missing, "pl", (1200, 627))
+    frame_contribution = _white_px(with_asset) - _white_px(without_asset)
+    assert frame_contribution > 500, (
+        f"diagram frame contributed only {frame_contribution} white px at 1200x627 "
+        f"(with={_white_px(with_asset)}, without={_white_px(without_asset)}) — the "
+        "screenshot may have been silently dropped"
+    )
+
+
+# A sub long enough that, combined with LONG_PL's headline, the header+sub
+# text alone leaves less than `slides._MIN_DIAGRAM_HEIGHT` px for the
+# screenshot at 1200x627 — the genuinely-no-room case, not just the
+# needs-to-shrink case the test above covers.
+LONG_PL_NO_ROOM_FOR_DIAGRAM = dict(
+    LONG_PL,
+    sub=LONG_PL["sub"] + " Wielu klientow porownuje tylko cene za token, nie rzeczywisty "
+        "rachunek. Sprawdz to zanim podpiszesz umowe z dostawca modelu.",
+)
+
+
+def test_diagram_slide_warns_when_there_is_genuinely_no_room_for_the_screenshot(campaign):
+    """When even a maximally-shrunk header/sub leaves no meaningful room for
+    the screenshot, the operator must be told — not left with a diagram
+    slide that silently rendered as a text-only slide instead."""
+    slide = {"type": "diagram", "asset": "src/calculator.png",
+             "pl": LONG_PL_NO_ROOM_FOR_DIAGRAM, "en": LONG_PL_NO_ROOM_FOR_DIAGRAM}
+    with pytest.warns(RuntimeWarning) as caught:
+        slides.render(campaign, slide, "pl", (1200, 627))
+    messages = [str(w.message) for w in caught]
+    assert any("demo" in m and "diagram" in m and "1200x627" in m for m in messages), (
+        f"expected a warning naming the campaign, slide type, and canvas; got {messages}"
+    )
+
+
+# A cta-specific long-copy fixture, tuned so the header+sub alone lands
+# just under the footer-band budget at 1200x627 *when the pill's own
+# height is correctly counted toward that budget* — but overflows into the
+# real footer ink if the pill's height is ever left out of the fitting
+# decision (as `_measure_cta` briefly did in an earlier round). Picked by
+# measurement, not guesswork: shorter copy either fits under both
+# accountings or fails under both, so it can't tell them apart.
+LONG_PL_CTA_TIGHT = {
+    "eyebrow": "AI DLA BIZNESU",
+    "headline": "Dlaczego rachunek za agenta AI bywa dziesiec razy wyzszy niz cena z "
+                "cennika dostawcy modelu, a jak to sprawdzic zanim podpiszesz umowe na "
+                "produkcyjne wdrozenie",
+    "sub": ("Cennik podaje stawke za milion tokenow, ale Twoja miesieczna faktura zalezy "
+            "od tego, ile tokenow faktycznie zuzywa caly przeplyw pracy produkcyjnego "
+            "agenta w typowym miesiacu obslugi klientow i integracji z systemami "
+            "zewnetrznymi firmy.") + (
+        " Wiele zespolow o tym zapomina, dopoki nie zobaczy pierwszej faktury "
+        "koncowej i notatki od dzialu finansowego."
+    ) * 7,
+}
+
+
+def test_cta_pill_height_counts_toward_the_footer_band_budget(campaign):
+    """The pill is the last thing a `cta` slide draws, so whether its own
+    height is counted toward the vertical-budget check is what determines
+    whether the *fitting* decision — not just the header/sub text — keeps
+    it clear of the footer. `LONG_PL_CTA_TIGHT` is tuned so header+sub alone
+    fits the budget only when the pill's height is also counted; if it were
+    ever dropped from the count again (`brand.pill_height()` stopped being
+    called, or its result stopped being added), the real pill would land
+    ~850px deep into the footer band while this same check reported a fit."""
+    slide = {"type": "cta", "pl": LONG_PL_CTA_TIGHT, "en": LONG_PL_CTA_TIGHT}
+    img = slides.render(campaign, slide, "pl", (1200, 627))
+    overlap = _footer_band_overlap(img, "pl")
+    assert overlap == 0, (
+        f"cta slide at 1200x627 draws {overlap} px of body content (the pill, most "
+        "likely) inside the footer band — the pill's own height may not be counted "
+        "toward the fit"
+    )
+
+
+# --- margin/alignment guard -----------------------------------------------
+
+def _leftmost_ink_x(actual: Image.Image, plain: Image.Image):
+    """The smallest x at which `actual` differs from a plain, contentless
+    background of the same size — the left edge every left-aligned element
+    (eyebrow, headline, row label, pill) actually starts drawing at."""
+    bbox = ImageChops.difference(actual, plain).getbbox()
+    return bbox[0] if bbox else None
+
+
+def test_left_margin_is_constant_regardless_of_copy_length(campaign):
+    """Task 5 builds a carousel deck where slides at the same canvas can
+    carry very different copy lengths. If the left margin scaled down along
+    with the type when a slide's copy needed shrinking, that slide's text
+    would sit at a different left edge than its neighbours in the deck —
+    visibly wrong in a document people swipe straight down. A short-copy and
+    a long-copy render of the same slide type and canvas must start their
+    ink at the same x, even though the long one needs a smaller type scale
+    to fit (confirmed separately: LONG_PL's headline alone drops 1080x1350's
+    title font from 77px to 69px, i.e. shrink < 1.0)."""
+    size = (1080, 1350)
+    short_slide = campaign.slides[0]  # fixture's short copy: shrink stays 1.0
+    long_slide = dict(short_slide, pl=LONG_PL, en=LONG_PL)
+    plain = brand.background(size)
+    short_x = _leftmost_ink_x(slides.render(campaign, short_slide, "pl", size), plain)
+    long_x = _leftmost_ink_x(slides.render(campaign, long_slide, "pl", size), plain)
+    assert short_x == long_x, (
+        f"left edge moved from {short_x}px (short copy) to {long_x}px (long copy) "
+        f"at {size[0]}x{size[1]} — slides in the same deck would no longer line up"
+    )
+
+
+def test_fit_box_warns_when_copy_still_overflows_at_the_minimum_type_scale(campaign):
+    """Past a certain point, no amount of shrinking makes copy fit (every
+    font is already at its floor size) and `_fit_box` gives up. That must be
+    loud, not silent — 20 `numbers` rows is far more than any real campaign
+    table, chosen specifically to blow through the footer band even at the
+    smallest type scale."""
+    slide = {"type": "numbers",
+             "rows": [[f"model-name-{i}", f"${i}.00"] for i in range(20)],
+             "pl": {"headline": "x", "sub": "y"}, "en": {"headline": "x", "sub": "y"}}
+    with pytest.warns(RuntimeWarning) as caught:
+        slides.render(campaign, slide, "pl", (1200, 627))
+    messages = [str(w.message) for w in caught]
+    assert any("numbers" in m and "1200x627" in m for m in messages), (
+        f"expected a warning naming the slide type and canvas; got {messages}"
+    )

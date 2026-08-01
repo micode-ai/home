@@ -46,19 +46,28 @@ _ROW_HEIGHT_FACTOR = 1.6
 
 def _layout(size: tuple[int, int], shrink: float = 1.0) -> dict:
     width, height = size
-    # Font sizes and margins were tuned against the 1080x1350 carousel page
-    # (aspect ratio _REFERENCE_ASPECT) and scale off canvas *width* below.
-    # That is safe on a tall canvas, but a short/wide one — the 1200x627
-    # LinkedIn banner or the 1200x630 OG card (aspect ~1.9) — has far less
-    # vertical budget per unit of width, so naive width-driven sizing eats
-    # into that budget fast. Scaling off the smaller of the actual width and
-    # a width *equivalent to the reference aspect ratio* derived from height
-    # keeps the proven proportions untouched on tall canvases while raising
-    # the amount of copy a short canvas can carry before it needs to shrink
-    # further. `shrink` is an additional multiplier `_fit_box` uses to make
-    # a specific slide's actual (possibly much longer) copy fit.
-    scale = min(width, height / _REFERENCE_ASPECT) * shrink
-    margin = int(scale * 0.085)
+    # Font sizes were tuned against the 1080x1350 carousel page (aspect ratio
+    # _REFERENCE_ASPECT) and scale off canvas *width* below. That is safe on
+    # a tall canvas, but a short/wide one — the 1200x627 LinkedIn banner or
+    # the 1200x630 OG card (aspect ~1.9) — has far less vertical budget per
+    # unit of width, so naive width-driven sizing eats into that budget fast.
+    # Scaling off the smaller of the actual width and a width *equivalent to
+    # the reference aspect ratio* derived from height keeps the proven
+    # proportions untouched on tall canvases while raising the amount of
+    # copy a short canvas can carry before it needs to shrink further.
+    #
+    # `base_scale` depends only on the canvas — never on this slide's copy —
+    # so `margin`/`content_width` (and therefore the left edge every slide
+    # at this canvas draws from) stay identical across slides regardless of
+    # how much any one of them needs to shrink its type. `shrink` is an
+    # additional multiplier applied only to font sizes: `_fit_box` reduces
+    # it to make a specific slide's actual (possibly much longer) copy fit
+    # vertically, without moving where anything *starts* horizontally — a
+    # carousel deck built from slides of varying copy length must still line
+    # up down the page.
+    base_scale = min(width, height / _REFERENCE_ASPECT)
+    scale = base_scale * shrink
+    margin = int(base_scale * 0.085)
     return {
         "margin": margin,
         "content_width": width - margin * 2,
@@ -71,64 +80,104 @@ def _layout(size: tuple[int, int], shrink: float = 1.0) -> dict:
     }
 
 
-def _draw_block(img, lines, font, fill, x, y, spacing=1.25) -> int:
+# --- draw plans -----------------------------------------------------------
+#
+# Each `_plan_*` function below computes a slide's layout exactly once, as a
+# list of positioned draw operations plus the bottom y the content reaches.
+# `_fit_box` uses the *same* function, at successively smaller `shrink`
+# values, purely to read off that bottom y — "measuring" is just not
+# executing the ops yet. `render()` then executes the ops the fitting loop
+# already settled on. There is deliberately no second, parallel arithmetic
+# path here: a spacing factor (1.25, 1.45, 0.6, 2.1, 1.15, 0.2, 0.9, 1.1)
+# appears exactly once, in the plan function that owns it, so a draw
+# function and a "measure" function can never quietly drift apart.
+
+def _text_op(xy, s, font, fill):
+    return ("text", xy, s, font, fill)
+
+
+def _line_op(p1, p2, fill, width):
+    return ("line", p1, p2, fill, width)
+
+
+def _pill_op(xy, s, font):
+    return ("pill", xy, s, font)
+
+
+def _execute(img: Image.Image, ops: list) -> None:
     draw = ImageDraw.Draw(img)
-    for line in lines:
-        draw.text((x, y), line, font=font, fill=fill)
-        y += int(font.size * spacing)
-    return y
+    for op in ops:
+        kind = op[0]
+        if kind == "text":
+            _, xy, s, font, fill = op
+            draw.text(xy, s, font=font, fill=fill)
+        elif kind == "line":
+            _, p1, p2, fill, width = op
+            draw.line([p1, p2], fill=fill, width=width)
+        elif kind == "pill":
+            _, xy, s, font = op
+            brand.pill(img, xy, s, font)
+        else:
+            raise ValueError(f"slides: unknown draw op {kind!r}")
 
 
-def _header(img, box, text: dict) -> int:
+def _plan_header(box, text: dict):
+    ops = []
     y = box["top"]
     if text.get("eyebrow"):
-        draw = ImageDraw.Draw(img)
-        draw.text((box["margin"], y), text["eyebrow"].upper(),
-                  font=box["eyebrow"], fill=brand.ORANGE_LIGHT)
+        ops.append(_text_op((box["margin"], y), text["eyebrow"].upper(),
+                            box["eyebrow"], brand.ORANGE_LIGHT))
         y += int(box["eyebrow"].size * 2.1)
     if text.get("headline"):
-        y = _draw_block(img, brand.wrap(text["headline"], box["title"], box["content_width"]),
-                        box["title"], brand.WHITE, box["margin"], y)
-    return y
+        for line in brand.wrap(text["headline"], box["title"], box["content_width"]):
+            ops.append(_text_op((box["margin"], y), line, box["title"], brand.WHITE))
+            y += int(box["title"].size * 1.25)
+    return ops, y
 
 
-def _sub(img, box, text: dict, y: int) -> int:
+def _plan_sub(box, text: dict, y: int):
     if not text.get("sub"):
-        return y
+        return [], y
+    ops = []
     y += int(box["sub"].size * 0.6)
-    return _draw_block(img, brand.wrap(text["sub"], box["sub"], box["content_width"]),
-                       box["sub"], brand.MUTED, box["margin"], y, 1.45)
+    for line in brand.wrap(text["sub"], box["sub"], box["content_width"]):
+        ops.append(_text_op((box["margin"], y), line, box["sub"], brand.MUTED))
+        y += int(box["sub"].size * 1.45)
+    return ops, y
 
 
-def _hook(img, box, slide, text, campaign, lang):
-    y = _header(img, box, text)
+def _plan_hook(box, slide, text):
+    ops, y = _plan_header(box, text)
     if slide.get("bigNumber"):
         y += int(box["huge"].size * 0.2)
-        ImageDraw.Draw(img).text((box["margin"], y), slide["bigNumber"],
-                                 font=box["huge"], fill=brand.ORANGE)
+        ops.append(_text_op((box["margin"], y), slide["bigNumber"], box["huge"], brand.ORANGE))
         y += int(box["huge"].size * 1.15)
-    _sub(img, box, text, y)
+    sub_ops, y = _plan_sub(box, text, y)
+    return ops + sub_ops, y
 
 
-def _problem(img, box, slide, text, campaign, lang):
-    _sub(img, box, text, _header(img, box, text))
+def _plan_problem(box, slide, text):
+    ops, y = _plan_header(box, text)
+    sub_ops, y = _plan_sub(box, text, y)
+    return ops + sub_ops, y
 
 
-def _numbers(img, box, slide, text, campaign, lang):
+def _plan_numbers(box, slide, text):
     # Per-language rows win over slide-level rows: this keeps a language-
     # neutral table (model names, dollar amounts) simple at the slide level
     # while letting localised labels (e.g. "Staly prefiks" vs "Fixed prefix")
     # live per language instead of being crammed onto one bilingual line.
+    ops, y = _plan_header(box, text)
+    sub_ops, y = _plan_sub(box, text, y)
+    ops += sub_ops
     rows = text.get("rows") or slide.get("rows", [])
-    y = _sub(img, box, text, _header(img, box, text))
     y += int(box["row"].size * 0.9)
-    draw = ImageDraw.Draw(img)
     right = box["margin"] + box["content_width"]
     row_height = int(box["row"].size * _ROW_HEIGHT_FACTOR)
     for label, value in rows:
-        draw.text((box["margin"], y), str(label), font=box["row"], fill=brand.MUTED)
-        value_width = draw.textlength(str(value), font=box["row"])
-        draw.text((right - value_width, y), str(value), font=box["row"], fill=brand.ORANGE_LIGHT)
+        ops.append(_text_op((box["margin"], y), str(label), box["row"], brand.MUTED))
+        value_width = box["row"].getlength(str(value))
+        ops.append(_text_op((right - value_width, y), str(value), box["row"], brand.ORANGE_LIGHT))
         # A label's descenders (the "p"/"g" in a model name) sit at roughly
         # 1.31-1.33x the font's nominal size below its draw origin, fairly
         # consistently across sizes — measured directly via textbbox, not
@@ -137,12 +186,74 @@ def _numbers(img, box, slide, text, campaign, lang):
         # next row's own top-bearing, so the rule reads as a separator
         # between rows rather than a strike-through of the row above it.
         line_y = y + int(box["row"].size * _LINE_Y_FACTOR)
-        draw.line([(box["margin"], line_y), (right, line_y)], fill=brand.NAVY, width=2)
+        ops.append(_line_op((box["margin"], line_y), (right, line_y), brand.NAVY, 2))
         y += row_height
+    return ops, y
 
 
-def _diagram(img, box, slide, text, campaign, lang):
-    y = _sub(img, box, text, _header(img, box, text))
+def _plan_diagram(box, slide, text):
+    # The screenshot itself is placed separately by `_place_diagram_frame`,
+    # after the fitting loop below has settled on a box — it fits into (or,
+    # at worst, warns about not fitting into) whatever room is left below
+    # this plan's `y`, rather than being part of the fitted plan itself.
+    ops, y = _plan_header(box, text)
+    sub_ops, y = _plan_sub(box, text, y)
+    return ops + sub_ops, y
+
+
+def _plan_cta(box, slide, text):
+    ops, y = _plan_header(box, text)
+    sub_ops, y = _plan_sub(box, text, y)
+    ops += sub_ops
+    y += int(box["row"].size * 1.1)
+    ops.append(_pill_op((box["margin"], y), brand.CONTACT, box["row"]))
+    y += brand.pill_height(box["row"])
+    return ops, y
+
+
+_PLANNERS = {
+    "hook": _plan_hook,
+    "problem": _plan_problem,
+    "numbers": _plan_numbers,
+    "diagram": _plan_diagram,
+    "cta": _plan_cta,
+}
+
+
+def _fit_box(size: tuple[int, int], slide: dict, text: dict):
+    """The largest `_layout` box (i.e. the least amount of font shrinking)
+    whose planned content stays clear of the footer band for this slide's
+    actual copy, plus the plan itself (so `render()` never has to compute it
+    a second time). Tall canvases (1080x1350, 1080x1920) have enough
+    vertical budget that most realistic copy needs no shrinking at all, but
+    that is not a hard guarantee — e.g. a hook slide with a ~92-char headline
+    and a ~175-char sub (this module's own `LONG_PL` test fixture) already
+    drops 1080x1350's title font from 77px to 69px (shrink ~0.9). Below
+    `_MIN_SHRINK`, further iterations stop changing anything (every font
+    size is already at its floor), so if the plan still doesn't fit at that
+    point, warn instead of returning a box that quietly overflows the
+    footer with no signal."""
+    width, height = size
+    max_bottom = height - int(height * _FOOTER_RESERVE)
+    plan = _PLANNERS[slide["type"]]
+    shrink = 1.0
+    box = _layout(size, shrink)
+    ops, y = plan(box, slide, text)
+    while y > max_bottom and shrink > _MIN_SHRINK:
+        shrink = round(shrink - 0.05, 2)
+        box = _layout(size, shrink)
+        ops, y = plan(box, slide, text)
+    if y > max_bottom:
+        warnings.warn(
+            f"slides: '{slide['type']}' slide content still overflows the footer band at "
+            f"{width}x{height} even at the minimum type scale ({_MIN_SHRINK}x); the copy is "
+            "too long for this canvas",
+            RuntimeWarning,
+        )
+    return box, ops, y
+
+
+def _place_diagram_frame(img, box, slide, campaign, lang, y: int) -> None:
     path = campaign.asset(slide)
     if not path or not path.is_file():
         return  # degrade to a text slide rather than break a batch render
@@ -170,122 +281,14 @@ def _diagram(img, box, slide, text, campaign, lang):
     img.paste(framed, ((img.width - framed.width) // 2, y + int(img.height * 0.02)))
 
 
-def _cta(img, box, slide, text, campaign, lang):
-    y = _sub(img, box, text, _header(img, box, text))
-    y += int(box["row"].size * 1.1)
-    brand.pill(img, (box["margin"], y), brand.CONTACT, box["row"])
-
-
-_RENDERERS = {
-    "hook": _hook,
-    "problem": _problem,
-    "numbers": _numbers,
-    "diagram": _diagram,
-    "cta": _cta,
-}
-
-
-# --- vertical-budget fitting -------------------------------------------
-#
-# `_layout` alone only accounts for canvas shape. It says nothing about how
-# tall a *particular* slide's actual copy will render, so a long enough
-# headline/sub (or enough `numbers` rows) can still walk past the footer
-# band on a short canvas even after `_layout` raised the length budget. The
-# functions below mirror each renderer's drawing arithmetic to estimate the
-# bottom y a slide's text content will reach *without drawing anything*, so
-# `_fit_box` can shrink the type scale just enough to keep that estimate
-# clear of the footer, then hand the *drawing* functions above the resulting
-# box. Renderers never need to know this happened — they just get smaller
-# fonts on demand.
-
-
-def _measure_header(box, text) -> int:
-    y = box["top"]
-    if text.get("eyebrow"):
-        y += int(box["eyebrow"].size * 2.1)
-    if text.get("headline"):
-        lines = brand.wrap(text["headline"], box["title"], box["content_width"])
-        y += int(box["title"].size * 1.25) * len(lines)
-    return y
-
-
-def _measure_sub(box, text, y: int) -> int:
-    if not text.get("sub"):
-        return y
-    y += int(box["sub"].size * 0.6)
-    lines = brand.wrap(text["sub"], box["sub"], box["content_width"])
-    y += int(box["sub"].size * 1.45) * len(lines)
-    return y
-
-
-def _measure_hook(box, slide, text) -> int:
-    y = _measure_header(box, text)
-    if slide.get("bigNumber"):
-        y += int(box["huge"].size * 0.2)
-        y += int(box["huge"].size * 1.15)
-    return _measure_sub(box, text, y)
-
-
-def _measure_problem(box, slide, text) -> int:
-    return _measure_sub(box, text, _measure_header(box, text))
-
-
-def _measure_numbers(box, slide, text) -> int:
-    rows = text.get("rows") or slide.get("rows", [])
-    y = _measure_sub(box, text, _measure_header(box, text))
-    y += int(box["row"].size * 0.9)
-    y += int(box["row"].size * _ROW_HEIGHT_FACTOR) * len(rows)
-    return y
-
-
-def _measure_diagram(box, slide, text) -> int:
-    # The screenshot itself is fit into whatever remains by `_diagram` (which
-    # shrinks or, at worst, warns and omits it — see `_MIN_DIAGRAM_HEIGHT`
-    # above — never overflows on its own). Only the header/sub text needs to
-    # be kept clear of the footer band here.
-    return _measure_sub(box, text, _measure_header(box, text))
-
-
-def _measure_cta(box, slide, text) -> int:
-    y = _measure_sub(box, text, _measure_header(box, text))
-    y += int(box["row"].size * 1.1)
-    y += box["row"].size + 28  # brand.pill()'s own height: font.size + 2*pad_y (pad_y=14)
-    return y
-
-
-_MEASURERS = {
-    "hook": _measure_hook,
-    "problem": _measure_problem,
-    "numbers": _measure_numbers,
-    "diagram": _measure_diagram,
-    "cta": _measure_cta,
-}
-
-
-def _fit_box(size: tuple[int, int], slide: dict, text: dict) -> dict:
-    """The largest `_layout` box (i.e. the least amount of shrinking) whose
-    estimated content stays clear of the footer band, for this slide's
-    actual copy. Tall canvases (1080x1350, 1080x1920) have enough vertical
-    budget that shrink stays at 1.0 for any realistic copy length, so their
-    renders are unaffected — this only engages on the short canvases
-    (1200x627, 1200x630) once copy runs long enough to need it."""
-    width, height = size
-    max_bottom = height - int(height * _FOOTER_RESERVE)
-    measure = _MEASURERS[slide["type"]]
-    shrink = 1.0
-    box = _layout(size, shrink)
-    while measure(box, slide, text) > max_bottom and shrink > _MIN_SHRINK:
-        shrink = round(shrink - 0.05, 2)
-        box = _layout(size, shrink)
-    return box
-
-
 def render(campaign: Campaign, slide: dict, lang: str,
            size: tuple[int, int]) -> Image.Image:
     text = campaign.text(slide, lang)
-    box = _fit_box(size, slide, text)
+    box, ops, y = _fit_box(size, slide, text)
     img = brand.background(size)
-    _RENDERERS[slide["type"]](img, box, slide, text, campaign, lang)
+    _execute(img, ops)
+    if slide["type"] == "diagram":
+        _place_diagram_frame(img, box, slide, campaign, lang, y)
     brand.paste_badge(img, height=max(size[0] // 20, 34))
     brand.footer(img, lang)
     return img
