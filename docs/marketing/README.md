@@ -37,9 +37,13 @@ docs/marketing/
     └── capture_screens.py
 ```
 
-На момент этого коммита реализован только каркас: `assets/fonts/`,
-`assets/micode-badge.png`, `scripts/fetch_fonts.py` и тесты в `tests/`.
-`brand.py` и генераторы — предмет последующих задач.
+На момент этого коммита реализованы весь `scripts/` (`spec.py`, `brand.py`,
+`fetch_fonts.py`, `capture_screens.py` и все три генератора —
+`build_carousel.py`, `build_single.py`, `build_reel.py`), `assets/fonts/`,
+`assets/micode-badge.png` и полный набор тестов под `tests/`. Ни одной
+реальной кампании (`campaigns/<id>/campaign.json`) в репозитории ещё нет —
+это, вместе с `strategy.md`/`content-plan.md`/`copy/`, предмет последующих
+задач.
 
 ## Установка
 
