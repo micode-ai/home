@@ -40,10 +40,23 @@ docs/marketing/
 На момент этого коммита реализованы весь `scripts/` (`spec.py`, `brand.py`,
 `fetch_fonts.py`, `capture_screens.py` и все три генератора —
 `build_carousel.py`, `build_single.py`, `build_reel.py`), `assets/fonts/`,
-`assets/micode-badge.png` и полный набор тестов под `tests/`. Ни одной
-реальной кампании (`campaigns/<id>/campaign.json`) в репозитории ещё нет —
-это, вместе с `strategy.md`/`content-plan.md`/`copy/`, предмет последующих
-задач.
+`assets/micode-badge.png` и полный набор тестов под `tests/`, а также
+`strategy.md`, `content-plan.md` и первая настоящая кампания —
+`cost-of-ai-agent`: `campaigns/cost-of-ai-agent/campaign.json`, тексты
+`copy/funnel-cost-of-ai-agent.md` + `copy/cta-blocks.md` и все пять форматов
+в `creatives/cost-of-ai-agent/renders/{pl,en}/`. Остальные 10 кампаний из
+`strategy.md` — следующая фаза; кода она не требует, только `campaign.json`
+и файл в `copy/`.
+
+Рендеры лежат в git намеренно. Во-первых, `tests/test_campaign_<id>.py`
+проверяет, что они существуют и имеют нужный размер, — иначе набор тестов
+краснеет на чистом клоне. Во-вторых, это и есть тот файл, который оператор
+загружает в LinkedIn: пересобрать его можно только подняв `npm run build &&
+npm run preview` и headless-браузер, а фабрика существует ровно для того,
+чтобы этого не требовалось перед каждой публикацией. Цена — около 11 МБ на
+кампанию (из них ~2,7 МБ — `reel.mp4` + `reel.gif`); на 11 кампаний это
+~120 МБ, и к этому решению стоит вернуться до того, как приземлятся
+оставшиеся десять.
 
 ## Установка
 

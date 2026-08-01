@@ -1,0 +1,108 @@
+{
+  "id": "cost-of-ai-agent",
+  "track": "funnel-top",
+  "target": "https://mi-code.pl/blog/ai-agent-cost-per-month-model/",
+  "utm": { "campaign": "cost-of-ai-agent" },
+  "slides": [
+    {
+      "type": "hook",
+      "bigNumber": "$74.38",
+      "pl": {
+        "eyebrow": "Agent AI dla biznesu",
+        "headline": "Ile agent AI kosztuje miesięcznie?",
+        "sub": "Tyle wychodzi w konfiguracji referencyjnej: 8 kroków na zadanie, 1500 zadań, gpt-5.4-mini, cache na prefiksie. Model wyliczeniowy na jawnych założeniach, nie nasze faktury."
+      },
+      "en": {
+        "eyebrow": "AI agents for business",
+        "headline": "What does an AI agent cost per month?",
+        "sub": "That is our reference configuration: 8 steps per task, 1500 tasks, gpt-5.4-mini, prefix caching. A calculation model on declared assumptions, not our invoices."
+      }
+    },
+    {
+      "type": "problem",
+      "pl": {
+        "eyebrow": "Problem",
+        "headline": "„To zależy” nie jest odpowiedzią",
+        "sub": "Cennik podaje cenę jednostkową, a nie kwotę rachunku. Brakuje w nim trzech wielkości: ile tokenów idzie w jednym zapytaniu, ile zapytań przypada na jedno zadanie i jaka część wejścia jest podana z cache."
+      },
+      "en": {
+        "eyebrow": "The problem",
+        "headline": "“It depends” is not an answer",
+        "sub": "A price list gives a unit price, not your bill. Three quantities are missing from it: tokens per request, requests per task, and what share of the input is served from cache."
+      }
+    },
+    {
+      "type": "numbers",
+      "rows": [
+        ["gpt-5.4-nano", "$50.34"],
+        ["gpt-5.6-sol", "$1254.00"]
+      ],
+      "pl": {
+        "eyebrow": "Rozrzut",
+        "headline": "Ta sama praca, 25 razy różnicy",
+        "sub": "Identyczna liczba tokenów, ten sam miesiąc, dwa modele. Dopóki założenia nie są ustalone, spór o to, czy model jest drogi, nie prowadzi donikąd."
+      },
+      "en": {
+        "eyebrow": "The spread",
+        "headline": "Same work, 25× apart",
+        "sub": "Identical token volume, the same month, two models. Until the assumptions are pinned down, arguing about whether a model is expensive leads nowhere."
+      }
+    },
+    {
+      "type": "numbers",
+      "pl": {
+        "eyebrow": "Anatomia rachunku",
+        "headline": "Płacisz za przesyłanie, nie za inteligencję",
+        "sub": "Model nie pamięta poprzedniego kroku — dostaje go opowiedzianego od nowa. 98,5% tokenów wymiany to wejście, a wejście z cache jest tańsze o około 90%.",
+        "rows": [
+          ["Stały prefiks", "15 600"],
+          ["Wejście na krok", "19 100"],
+          ["Wyjście na krok", "300"],
+          ["Wejście cache'owalne", "82%"]
+        ]
+      },
+      "en": {
+        "eyebrow": "Anatomy of the bill",
+        "headline": "You pay for re-sending, not for intelligence",
+        "sub": "The model remembers nothing between calls — every step retells it in full. 98.5% of the exchange is input, and cached input is about 90% cheaper.",
+        "rows": [
+          ["Stable prefix", "15,600"],
+          ["Input per step", "19,100"],
+          ["Output per step", "300"],
+          ["Cacheable input", "82%"]
+        ]
+      }
+    },
+    {
+      "type": "diagram",
+      "asset": "src/calculator.png",
+      "shot": {
+        "path": "/blog/ai-agent-cost-per-month-model/",
+        "selector": ".calc-table-wrap"
+      },
+      "pl": {
+        "eyebrow": "Kalkulator",
+        "headline": "Rachunek rozbity na składniki",
+        "sub": "Schematy narzędzi to 69% rachunku, zanim pociągniesz którąkolwiek dźwignię. Kalkulator w artykule przelicza to na Twoich liczbach."
+      },
+      "en": {
+        "eyebrow": "Calculator",
+        "headline": "The bill, broken into parts",
+        "sub": "Tool schemas are 69% of the bill before a single lever is pulled. The calculator in the article recomputes it on your numbers."
+      }
+    },
+    {
+      "type": "cta",
+      "pl": {
+        "eyebrow": "MICODE",
+        "headline": "Policzymy to na Twoich danych",
+        "sub": "Model kosztu na Twoich narzędziach, Twoich zadaniach i Twojej polityce danych — razem z uczciwą oceną, które dźwignie są u Ciebie realnie dostępne, a które rozbijają się o architekturę."
+      },
+      "en": {
+        "eyebrow": "MICODE",
+        "headline": "We will price it on your data",
+        "sub": "A cost model on your tools, your tasks and your data policy — with an honest read on which levers you can actually pull and which ones run into the architecture."
+      }
+    }
+  ]
+}
