@@ -9,6 +9,7 @@ Usage:
     python docs/marketing/scripts/build_single.py cost-of-ai-agent pl en
 """
 import sys
+import warnings
 from pathlib import Path
 
 import slides
@@ -31,8 +32,27 @@ def build(campaign_id: str, langs: list[str]) -> list[Path]:
         out = campaign.render_dir(lang)
         for name, size in CANVASES.items():
             path = out / f"{name}.png"
-            slides.render(campaign, hook, lang, size).save(path)
+            # `slides.render` raises a RuntimeWarning (not an exception) when a
+            # slide's copy still overflows the footer band at the minimum type
+            # scale — a real risk on these short/wide canvases (see slides.py's
+            # `_fit_box`). Left as a bare Python warning, that is easy to miss
+            # in a real build run; catch it here so a single overflowing
+            # format still gets an unmissable, campaign/language/format-
+            # specific line on stderr, in addition to (not instead of) the
+            # warning itself.
+            with warnings.catch_warnings(record=True) as caught:
+                warnings.simplefilter("always")
+                image = slides.render(campaign, hook, lang, size)
+            image.save(path)
             written.append(path)
+            for w in caught:
+                warnings.showwarning(w.message, w.category, w.filename, w.lineno)
+                print(
+                    f"  WARNING: {campaign_id} ({lang}): '{name}' at "
+                    f"{size[0]}x{size[1]} overflowed its footer band even at the "
+                    "minimum type scale — shorten this campaign's hook copy",
+                    file=sys.stderr,
+                )
         print(f"  {lang}: {len(CANVASES)} singles -> {out}")
 
     return written
