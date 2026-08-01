@@ -1,0 +1,34 @@
+# Python dependencies for the mi-code.pl marketing creatives factory
+# (docs/marketing/scripts/ + docs/marketing/tests/).
+#
+# Pinned to the versions verified working in the reference dev environment
+# (`pip show <pkg>`), so a render produced on a CI runner matches one produced
+# locally. Install with:
+#
+#   pip install -r docs/marketing/requirements.txt
+#   python -m playwright install chromium   # browser binary; see README
+#
+# --- used directly by scripts/ -----------------------------------------
+Pillow==12.1.1        # brand.py, slides.py, fetch_fonts.py — all raster drawing
+numpy==2.3.1          # build_reel.py — frame arrays / cross-fade blending
+fonttools==4.58.4      # fetch_fonts.py — pins the Open Sans variable font to
+                       # static Regular/SemiBold instances
+playwright==1.58.0     # capture_screens.py — headless-browser screenshots
+
+# imageio dispatches build_reel.py's reel.mp4 (imageio.mimwrite(..., codec=
+# "libx264")) and reel.gif writes to a plugin. Without a video backend
+# installed this does NOT fail with a clear "install a video backend"
+# message: depending on what else is on the machine it instead raises either
+# a wrong-plugin TypeError, or (if neither imageio-ffmpeg nor av is present)
+# an opaque TiffWriter error with no mention of video at all. Install both of
+# the packages below — do not substitute one for "imageio[pyav]" and assume
+# that alone fixes an mp4-writing failure; imageio's actual production write
+# path here goes through imageio-ffmpeg, not pyav.
+imageio==2.37.0
+imageio-ffmpeg==0.6.0  # ffmpeg backend imageio.mimwrite() needs to write reel.mp4/gif
+
+# --- used only by docs/marketing/tests/ --------------------------------
+av==18.0.0             # test_build_reel.py reads reel.mp4 back with
+                       # iio.imread(mp4, plugin="pyav") to assert on frame
+                       # content/count/order; not used by any script.
+pytest==9.0.2          # runs docs/marketing/tests/
