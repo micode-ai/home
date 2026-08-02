@@ -110,9 +110,12 @@ class Campaign:
                 f"got {type(data).__name__}"
             )
 
-        for field in ("id", "track", "target", "slides"):
-            if not data.get(field):
-                raise SpecError(f"{campaign_id}: missing required field {field!r}")
+        # Not `field`: that name is the `dataclasses.field` imported above, and
+        # a loop variable shadowing it inside the class body is one refactor
+        # away from a confusing NameError.
+        for required in ("id", "track", "target", "slides"):
+            if not data.get(required):
+                raise SpecError(f"{campaign_id}: missing required field {required!r}")
 
         slides = data["slides"]
         for index, slide in enumerate(slides):

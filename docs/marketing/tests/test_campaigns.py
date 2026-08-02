@@ -183,6 +183,44 @@ def _copy_sections(campaign_id: str) -> list[tuple[str, str, str]]:
     return out
 
 
+# Three things a publishable line legitimately carries that no reader reads as
+# a claim: an inline code span (`story-9x16-01.png`, `content-plan.md`), the
+# tagged link, and the "1." of a Stories caption list. They are *stripped* from
+# the line rather than used to skip it, which is the difference between
+# covering campaign 1's Stories captions and dropping them: every one of those
+# captions shares its line with a backticked filename, so a line-level skip
+# would silently exempt the six lines most likely to be retyped by hand.
+_CODE_SPAN = re.compile(r"`[^`]*`")
+_URL = re.compile(r"https?://\S+")
+_LIST_MARKER = re.compile(r"^\s*\d+[.)]\s")
+
+
+def _post_lines(campaign_id: str) -> list[tuple[str, str]]:
+    """(language, line) for every line of publishable prose in the copy file.
+
+    Only `### PL` / `### EN` blocks. Everything else in a copy file — the
+    Russian briefing at the top, the per-channel format notes — is an
+    instruction to the operator, not text that goes into a post, and it
+    legitimately names render filenames, page counts and calendar rows.
+    """
+    out: list[tuple[str, str]] = []
+    language = None
+    for line in _copy_path(campaign_id).read_text(encoding="utf-8").splitlines():
+        heading = line.strip()
+        if heading.startswith("## ") and not heading.startswith("### "):
+            language = None
+            continue
+        if heading in ("### PL", "### EN"):
+            language = heading[4:]
+            continue
+        if not language:
+            continue
+        prose = _URL.sub(" ", _CODE_SPAN.sub(" ", _LIST_MARKER.sub("", line)))
+        if prose.strip():
+            out.append((language, prose))
+    return out
+
+
 def _font_cmap(path: Path) -> set[int]:
     font = TTFont(str(path))
     covered: set[int] = set()
@@ -477,6 +515,41 @@ def test_every_link_in_the_copy_is_the_one_spec_would_build_for_its_section(
         f"only {checked} link(s) checked in funnel-{campaign_id}.md — a copy "
         "file with no tagged link cannot be attributed at all"
     )
+
+
+@pytest.mark.parametrize("campaign_id", CAMPAIGN_IDS)
+def test_every_number_in_the_post_text_appears_in_the_articles_own_text(campaign_id):
+    """`strategy.md` states the no-invented-figures rule as covering the
+    creative *and the post text*. Until this test the enforced half was the
+    creative only — `test_every_number_a_reader_sees...` scans `campaign.json`
+    — so the document claimed a guarantee the code did not make, and the post
+    text was author-enforced with nothing to catch a typo in a figure that a
+    reader will check against the article one click away.
+
+    Scans the publishable prose only (`### PL` / `### EN`), with code spans,
+    links and list markers stripped — see `_post_lines`. Measured against both
+    campaigns as written: 23 numbers extracted, zero false positives.
+    """
+    campaign = _campaign(campaign_id)
+    if not campaign.source_slug:
+        pytest.skip(f"{campaign_id} declares no source article")
+    corpus = _article_corpus(campaign.source_slug)
+    lines = _post_lines(campaign_id)
+    # Anti-vacuity: the scan is driven by heading parsing, so a copy file that
+    # renames or reflows its language headings would empty it out and leave
+    # this test green while checking nothing at all.
+    assert {lang for lang, _ in lines} == {"PL", "EN"}, (
+        f"the post-text scan found prose under {sorted({l for l, _ in lines})} "
+        f"in funnel-{campaign_id}.md, not both languages"
+    )
+    numbers = _numbers_in([line for _, line in lines])
+    assert numbers, f"{campaign_id}'s post text states no numbers at all"
+    for number in sorted(numbers):
+        offending = next(line for _, line in lines if number in line)
+        assert _quotes(number, corpus), (
+            f"funnel-{campaign_id}.md states {number!r}, which does not appear "
+            f"in {campaign.source_slug}:\n  {offending.strip()}"
+        )
 
 
 @pytest.mark.parametrize("campaign_id", CAMPAIGN_IDS)

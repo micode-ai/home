@@ -38,7 +38,7 @@ LinkedIn** — карусель PL + EN, вторник 2026-08-11. Поэтом
 ### PL
 
 Zwykły chatbot zapytany o urząd nie milczy. Odpowiada — pewnie, płynnie i
-z detalami: numer konta, termin, adres. Część z nich nie istnieje.
+ze szczegółami: numer konta, termin, adres. Część z nich nie istnieje.
 
 W większości zastosowań to koszt zerowy. W prawie, medycynie, administracji
 i finansach pewna siebie pomyłka jest droższa niż brak odpowiedzi, bo brak
@@ -49,9 +49,9 @@ odpowiada wyłącznie ze zweryfikowanej bazy wiedzy i wstrzymuje się, gdy w
 bazie odpowiedzi nie ma. Trzy rzeczy, które warto z tego zapamiętać:
 
 → Wstrzymanie się przy pytaniach spoza bazy — 100%. To wynik zmierzony przez
-osobny model-sędzia na zestawie 109 „złotych” pytań, przy cytowalności około
-99% i pokryciu faktów około 97%. Każda nowa strona bazy dokłada do zestawu co
-najmniej jedno pytanie.
+osobny model w roli sędziego na zestawie 109 „złotych” pytań, przy
+cytowalności około 99% i pokryciu faktów około 97%. Każda nowa strona bazy
+dokłada do zestawu co najmniej jedno pytanie.
 → Baza jest produktem, nie model. Kolektor przepuścił około 2,4 mln
 wiadomości, uznał 28 091 za istotne i wyodrębnił z nich 17 284 fakty
 praktyczne — ale przeniesienie faktu do bazy to zawsze ręczny krok kuratora,
@@ -96,8 +96,8 @@ answer. Three things worth taking away:
 model over a set of 109 "golden" questions, alongside citation accuracy of
 about 99% and fact coverage of about 97%. Every new page in the base adds at
 least one more question to that set.
-→ The base is the product, not the model. The collector has taken around 2.4
-million messages, judged 28,091 of them relevant and extracted 17,284
+→ The base is the product, not the model. The collector has processed around
+2.4 million messages, judged 28,091 of them relevant and extracted 17,284
 practical facts — but moving a fact into the base is always a manual step by
 the curator, never automatic. The "norm" layer is re-checked at least once
 every 60 days, and a "practice" fact carries an expiry no later than +90 days.
