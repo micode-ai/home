@@ -48,7 +48,8 @@ CAMPAIGN_IDS = sorted(path.parent.name for path in CAMPAIGNS.glob("*/campaign.js
 # a glob that stops matching turns every parametrised test in this file into a
 # vacuous pass. Pinned so the sweep cannot quietly shrink; extend it when a
 # campaign lands, which is the one moment a human is looking at this file.
-KNOWN_CAMPAIGNS = {"cost-of-ai-agent", "rag-without-hallucinations"}
+KNOWN_CAMPAIGNS = {"cost-of-ai-agent", "rag-without-hallucinations",
+                   "accounting-ai"}
 
 # The keys of a language block that end up as ink on a slide. `slides.py`
 # reads exactly these (`_plan_header` -> eyebrow/headline, `_plan_sub` -> sub,
@@ -92,8 +93,40 @@ def _article_corpus(slug: str) -> str:
     return (article.get("bodyPl") or "") + (article.get("bodyEn") or "")
 
 
+# A campaign's copy file goes by one of two names, and `README.md`'s own tree
+# declares both: `funnel-<id>.md` for the five top-of-funnel decks,
+# `product-<id>.md` for the six mid-funnel "product as proof" posts — which is
+# also the name `content-plan.md`'s Текст column gives for every one of those
+# six rows. This helper hardcoded `funnel-`, so the file's headline claim (a
+# campaign is covered the moment its spec exists, with no code edit) held for
+# exactly the half of the plan that had shipped. Content-plan row 5 is the
+# first mid-funnel campaign and it is where that broke: four tests below read
+# the copy file, and every one of them died on a path that was never going to
+# exist. Resolved by asking which of the two names is on disk instead of
+# assuming, and by refusing to guess when both are.
+_COPY_PREFIXES = ("funnel-", "product-")
+
+
+def _copy_candidates(campaign_id: str) -> list[Path]:
+    return [MARKETING / "copy" / f"{prefix}{campaign_id}.md"
+            for prefix in _COPY_PREFIXES]
+
+
 def _copy_path(campaign_id: str) -> Path:
-    return MARKETING / "copy" / f"funnel-{campaign_id}.md"
+    found = [path for path in _copy_candidates(campaign_id) if path.is_file()]
+    if len(found) == 1:
+        return found[0]
+    names = " or ".join(path.name for path in _copy_candidates(campaign_id))
+    if not found:
+        raise AssertionError(
+            f"{campaign_id} has no copy file — expected {names} under "
+            f"{MARKETING / 'copy'}"
+        )
+    raise AssertionError(
+        f"{campaign_id} has two copy files ({', '.join(p.name for p in found)}); "
+        "every scan below would read one of them while the calendar sends the "
+        "operator to the other, so pick one and delete the other"
+    )
 
 
 def _slide_strings(slide: dict) -> list[str]:
@@ -421,6 +454,69 @@ def test_every_glyph_in_the_deck_copy_exists_in_the_brand_fonts(campaign_id):
     )
 
 
+@pytest.mark.parametrize("campaign_id", CAMPAIGN_IDS)
+def test_no_numbers_row_runs_into_its_own_value(campaign_id):
+    """A `numbers` row draws its label from the left margin and its value
+    right-aligned to the other edge. Nothing stops the two overlapping.
+
+    This is not hypothetical and it is not a style question: campaign three's
+    first render put `Contractor from the NIP alone` straight through
+    `Biała Lista MF and KRS` — 145 px of overlap, two rows of solid mush on the
+    published carousel page — with the whole suite green and no warning from
+    any generator. `_fit_box` only ever shrinks type for *vertical* overflow,
+    so a row that is too wide is simply drawn on top of itself. It was caught
+    by opening the PDF, which is exactly the review step a test is supposed to
+    stop depending on. The defect was noted as a deferred minor when `slides`
+    was built ("right-aligned values go negative and collide with their own
+    label at ~76 chars") and stayed unguarded until a campaign hit it.
+
+    The floor is one em of the row font: below that the two columns stop
+    reading as two columns. Measured on the decks as shipped — campaign one's
+    tightest row is 9.46 em, campaign two's is 1.68 em, campaign three's is
+    3.73 em — so one em is well under everything that has ever looked right
+    and well over touching.
+
+    Checked at the canvases a deck is actually published at. `build_single`
+    renders the hook slide and nothing else, so a `numbers` slide never
+    reaches 1200x627 or 1200x630, and failing a campaign for a canvas it is
+    never drawn on is how a guard earns the habit of being ignored.
+    """
+    campaign = _campaign(campaign_id)
+    rows = [s for s in campaign.slides if s["type"] == "numbers"]
+    if not rows:
+        pytest.skip(f"{campaign_id} has no numbers slide")
+    checked = 0
+    for index, slide in enumerate(rows, 1):
+        for lang in spec.LANGS:
+            for size in (CAROUSEL_SIZE, STORY_SIZE):
+                text = campaign.text(slide, lang)
+                box, ops, _ = slides._fit_box(size, slide, text)
+                # Read the gap off the plan `render()` will execute rather
+                # than re-deriving `_plan_numbers`' arithmetic here: the two
+                # would be free to drift, which is the whole reason `_plan_*`
+                # exists. A row is the pair of text ops sharing a baseline.
+                by_y: dict[int, list] = {}
+                for op in ops:
+                    if op[0] == "text":
+                        _, (x, y), string, font, _fill = op
+                        by_y.setdefault(y, []).append((x, string, font))
+                for y, drawn in sorted(by_y.items()):
+                    if len(drawn) != 2:
+                        continue  # eyebrow, headline and sub lines draw alone
+                    drawn.sort()
+                    (left_x, label, label_font), (right_x, value, _) = drawn
+                    gap = right_x - (left_x + label_font.getlength(label))
+                    checked += 1
+                    assert gap >= box["row"].size, (
+                        f"{campaign_id} slide {index} ({lang}) at "
+                        f"{size[0]}x{size[1]}: {label!r} and {value!r} are "
+                        f"{gap:.0f} px apart, under the {box['row'].size} px "
+                        "(one em) this canvas needs to read as two columns"
+                        + (" — they overlap" if gap < 0 else "")
+                    )
+    assert checked, f"{campaign_id} has numbers slides but no rows were measured"
+
+
 def test_every_slide_type_that_carries_a_picture_is_checked_here():
     """The two tests below are keyed to a slide type each, and a third
     picture-bearing type would get neither.
@@ -534,12 +630,32 @@ def test_the_campaign_is_on_the_calendar(campaign_id):
 
 
 @pytest.mark.parametrize("campaign_id", CAMPAIGN_IDS)
+def test_each_campaign_has_exactly_one_copy_file(campaign_id):
+    """One campaign, one file of post text — under whichever of the two names
+    its funnel level uses.
+
+    Missing is caught by every scan below anyway (they all read the file).
+    *Two* is the case worth its own assertion, because it is the quiet one:
+    with both `funnel-<id>.md` and `product-<id>.md` on disk — say a campaign
+    renamed from one convention to the other with the old file left behind —
+    every scan here would happily check whichever the resolver picked first
+    while `content-plan.md` sends the operator to the other, so a stale post
+    text with a stale link ships past a green suite. Naming both here is also
+    the only place a reader learns that the two conventions exist at all.
+    """
+    found = [path.name for path in _copy_candidates(campaign_id) if path.is_file()]
+    assert len(found) == 1, (
+        f"{campaign_id} resolves {len(found)} copy files {found}; expected "
+        f"exactly one of {[p.name for p in _copy_candidates(campaign_id)]}"
+    )
+
+
+@pytest.mark.parametrize("campaign_id", CAMPAIGN_IDS)
 def test_the_copy_file_carries_a_section_for_every_scheduled_channel(campaign_id):
     """The calendar tells the operator which channel to publish on and which
     copy file to publish from; if that file has no section for the channel,
     the operator is holding a render with nothing to post under it."""
-    path = _copy_path(campaign_id)
-    assert path.is_file(), f"{path} does not exist"
+    path = _copy_path(campaign_id)  # raises, naming both names, if absent
     copy = path.read_text(encoding="utf-8")
     channels = _scheduled_channels(campaign_id)
     assert channels, f"{campaign_id} schedules no recognised channel"
@@ -579,8 +695,8 @@ def test_every_link_in_the_copy_is_the_one_spec_would_build_for_its_section(
             )
             checked += 1
     assert checked >= 2, (
-        f"only {checked} link(s) checked in funnel-{campaign_id}.md — a copy "
-        "file with no tagged link cannot be attributed at all"
+        f"only {checked} link(s) checked in {_copy_path(campaign_id).name} — a "
+        "copy file with no tagged link cannot be attributed at all"
     )
 
 
@@ -607,15 +723,15 @@ def test_every_number_in_the_post_text_appears_in_the_articles_own_text(campaign
     # this test green while checking nothing at all.
     assert {lang for lang, _ in lines} == {"PL", "EN"}, (
         f"the post-text scan found prose under {sorted({l for l, _ in lines})} "
-        f"in funnel-{campaign_id}.md, not both languages"
+        f"in {_copy_path(campaign_id).name}, not both languages"
     )
     numbers = _numbers_in([line for _, line in lines])
     assert numbers, f"{campaign_id}'s post text states no numbers at all"
     for number in sorted(numbers):
         offending = next(line for _, line in lines if number in line)
         assert _quotes(number, corpus), (
-            f"funnel-{campaign_id}.md states {number!r}, which does not appear "
-            f"in {campaign.source_slug}:\n  {offending.strip()}"
+            f"{_copy_path(campaign_id).name} states {number!r}, which does not "
+            f"appear in {campaign.source_slug}:\n  {offending.strip()}"
         )
 
 

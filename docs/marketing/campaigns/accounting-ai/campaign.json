@@ -1,0 +1,126 @@
+{
+  "id": "accounting-ai",
+  "track": "funnel-mid",
+  "target": "https://mi-code.pl/blog/accounting-ai-agent-architecture/",
+  "utm": { "campaign": "accounting-ai" },
+  "source": {
+    "slug": "accounting-ai-agent-architecture",
+    "figures": [
+      "82", "58", "15", "9", "25", "117",
+      "15 000", "15,000"
+    ]
+  },
+  "slides": [
+    {
+      "type": "hook",
+      "bigNumber": "82",
+      "pl": {
+        "eyebrow": "Agent AI dla polskiej księgowości",
+        "headline": "Jeden agent, do 82 narzędzi",
+        "sub": "Tyle umiejętności ma pod ręką nasz agent księgowy: 58 dostępnych zawsze, plus 15 dla kadr i płac oraz 9 dla KSeF, gdy te moduły są skonfigurowane. Zbudowaliśmy go u siebie — i ten sam wzorzec przenosimy na systemy klienta."
+      },
+      "en": {
+        "eyebrow": "An AI agent for Polish accounting",
+        "headline": "One agent, up to 82 tools",
+        "sub": "That is what our accounting agent has at hand: 58 available to everyone, plus 15 for HR and payroll and 9 for KSeF once those capabilities are configured. We built it for ourselves — and the same pattern moves onto a client's systems."
+      }
+    },
+    {
+      "type": "problem",
+      "pl": {
+        "eyebrow": "Problem",
+        "headline": "Pewny siebie chatbot kosztuje",
+        "sub": "Zwykły model poda nieistniejący termin, wymyśli numer rachunku albo „przypomni sobie” zeszłoroczną stawkę — i wszystko to brzmi przekonująco. W polskiej księgowości cena takiej pomyłki liczona jest w realnych pieniądzach i karach."
+      },
+      "en": {
+        "eyebrow": "The problem",
+        "headline": "A confident chatbot is expensive",
+        "sub": "A generic model will name a deadline that does not exist, invent an account number or “recall” last year's rate — and all of it sounds convincing. In Polish accounting the price of that mistake is measured in real money and penalties."
+      }
+    },
+    {
+      "type": "tall-diagram",
+      "pl": {
+        "eyebrow": "Architektura",
+        "headline": "Jeden agent zamiast roju",
+        "asset": "src/agent-loop-pl.png",
+        "shot": {
+          "path": "/blog/accounting-ai-agent-architecture/",
+          "selector": "figure.article-figure:has(figcaption:has-text(\"Pętla agenta\")) pre.mermaid svg"
+        }
+      },
+      "en": {
+        "eyebrow": "Architecture",
+        "headline": "One agent, not a swarm",
+        "asset": "src/agent-loop-en.png",
+        "shot": {
+          "path": "/en/blog/accounting-ai-agent-architecture/",
+          "selector": "figure.article-figure:has(figcaption:has-text(\"either answers or calls tools\")) pre.mermaid svg"
+        }
+      }
+    },
+    {
+      "type": "numbers",
+      "pl": {
+        "eyebrow": "Narzędzia",
+        "headline": "Model decyduje, kod wykonuje",
+        "sub": "Narzędzie to konkretna umiejętność: pobierz listę faktur, utwórz kontrahenta, policz wynagrodzenie, wyślij fakturę do KSeF. Model wybiera tylko, które wywołać — wykonuje je sprawdzony kod.",
+        "rows": [
+          ["Dostępne każdemu", "58"],
+          ["Kadry i płace, gdy skonfigurowane", "+15"],
+          ["KSeF, gdy skonfigurowany", "+9"],
+          ["Twardy limit kroków na zapytanie", "25"]
+        ]
+      },
+      "en": {
+        "eyebrow": "Tools",
+        "headline": "The model decides, the code executes",
+        "sub": "A tool is a specific ability: get the list of invoices, create a contractor, calculate payroll, send an invoice to KSeF. The model only picks which one to call — vetted code runs it.",
+        "rows": [
+          ["Available to every user", "58"],
+          ["HR and payroll, once configured", "+15"],
+          ["KSeF, once configured", "+9"],
+          ["Hard step cap per request", "25"]
+        ]
+      }
+    },
+    {
+      "type": "numbers",
+      "pl": {
+        "eyebrow": "Dane zamiast domysłów",
+        "headline": "Agent nie zgaduje, tylko sięga po źródło",
+        "sub": "Odpowiedzi powstają na Twoich fakturach w wFirma, na polskich rejestrach publicznych i na oficjalnym kalendarzu terminów. Przy płatności od 15 000 zł prawo wymaga sprawdzenia rachunku kontrahenta na „Białej Liście” — agent robi to sam, bez przypominania.",
+        "rows": [
+          ["Faktury i płatności", "wFirma"],
+          ["Kontrahent po NIP", "Biała Lista, KRS"],
+          ["Podstawa kontroli", "art. 117ba"],
+          ["Paragon ze zdjęcia", "GPT-4o"]
+        ]
+      },
+      "en": {
+        "eyebrow": "Data instead of guesswork",
+        "headline": "It checks the source, it does not guess",
+        "sub": "Answers are built on your invoices in wFirma, on the Polish public registries and on the official deadline calendar. Above 15,000 zł the law requires a “White List” check on the contractor's account — the agent runs it unprompted.",
+        "rows": [
+          ["Invoices and payments", "wFirma"],
+          ["Contractor from a NIP", "Biała Lista, KRS"],
+          ["Legal basis for the check", "Art. 117ba"],
+          ["Receipt from a photo", "GPT-4o"]
+        ]
+      }
+    },
+    {
+      "type": "cta",
+      "pl": {
+        "eyebrow": "MICODE",
+        "headline": "Zbudujemy takiego agenta w Twoich systemach",
+        "sub": "Ten sam wzorzec — jeden agent, sprawdzone narzędzia, dane z Twoich systemów zamiast wiedzy z głowy — przenosi się na Twoje procesy i Twoje integracje. Zaczynamy od rozmowy o tym, co realnie warto oddać agentowi, a co lepiej zostawić człowiekowi."
+      },
+      "en": {
+        "eyebrow": "MICODE",
+        "headline": "We will build one inside your systems",
+        "sub": "The same pattern — one agent, vetted tools, data from your systems instead of knowledge off the top of the head — carries over to your processes and your integrations. We start with a conversation about what is genuinely worth handing to an agent, and what is better left to a person."
+      }
+    }
+  ]
+}

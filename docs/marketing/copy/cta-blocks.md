@@ -103,3 +103,20 @@ CTA пишется без схемы: `mi-code.pl`. Оба зашиты в `bran
 Оговорка этой кампании идёт вместе с цифрой: 100% — это воздержание на
 вопросах вне базы, а не непогрешимость. Подробнее — в шапке
 `funnel-rag-without-hallucinations.md`.
+
+### `accounting-ai`
+
+Первая кампания **середины воронки**, поэтому и предложение другое: не «мы
+посчитаем/соберём вам это», а «мы уже это построили — построим и на ваших
+системах». Контакт, домен и UTM-схема — те же.
+
+- **Rozmowa:** Potrzebujesz agenta wbudowanego w Twoje systemy i dane? Napisz na development@mi-code.pl.
+- **Artykuł:** Cała architektura opisana od środka, ze schematami z wewnętrznej dokumentacji: `<link>`
+- **Conversation:** Need an agent embedded in your own systems and data? Write to development@mi-code.pl.
+- **Article:** The whole architecture from the inside, with the diagrams from our internal documentation: `<link>`
+- **Хэштеги:** PL `#LangGraph #ksiegowosc #KSeF` · EN `#LangGraph #accounting #KSeF`
+
+Оговорка этой кампании идёт вместе с цифрой: «до 82 narzędzi» — это максимум
+(58 базовых плюс 15 и 9, включающиеся при настройке), а не типичное число, и
+сам агент не заменяет бухгалтера. Подробнее — в шапке
+`product-accounting-ai.md`.
