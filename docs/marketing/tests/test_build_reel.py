@@ -379,7 +379,7 @@ def test_the_command_line_default_renders_both_languages(workspace, monkeypatch)
     `build_reel.py <id>` (and the README command copied from it) silently
     produced a Polish-only reel and Polish-only story posters, leaving the
     committed English ones stale on a clean clone. The committed artifacts and
-    `test_campaign_<id>.py`'s size checks expect both."""
+    `test_campaigns.py`'s per-slide poster checks expect both."""
     seen = {}
     monkeypatch.setattr(build_reel, "build",
                         lambda campaign_id, langs: seen.setdefault("langs", langs) or [])

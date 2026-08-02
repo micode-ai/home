@@ -3,6 +3,14 @@
   "track": "funnel-top",
   "target": "https://mi-code.pl/blog/ai-agent-cost-per-month-model/",
   "utm": { "campaign": "cost-of-ai-agent" },
+  "source": {
+    "slug": "ai-agent-cost-per-month-model",
+    "figures": [
+      "$74.38", "$50.34", "$1254.00",
+      "15 600", "15,600", "19 100", "19,100",
+      "98,5", "98.5", "82"
+    ]
+  },
   "slides": [
     {
       "type": "hook",

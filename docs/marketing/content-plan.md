@@ -33,7 +33,7 @@ LinkedIn, а не два поста подряд для одних и тех ж�
 | 1 | 2026-08-04 | вт | `cost-of-ai-agent` | верх | LinkedIn (карусель) | PL + EN | `creatives/cost-of-ai-agent/renders/{pl,en}/carousel.pdf` | `copy/funnel-cost-of-ai-agent.md` → `## LinkedIn` |
 | 2 | 2026-08-06 | чт | `cost-of-ai-agent` | верх | Facebook + Instagram фид | PL | `creatives/cost-of-ai-agent/renders/pl/feed-4x5.png` | `copy/funnel-cost-of-ai-agent.md` → `## Facebook` |
 | 3 | 2026-08-07 | пт | `cost-of-ai-agent` | верх | Stories + Reels | PL | `creatives/cost-of-ai-agent/renders/pl/story-9x16-01..06.png`, `reel.mp4` | `copy/funnel-cost-of-ai-agent.md` → `## Stories` |
-| 4 | 2026-08-11 | вт | `rag-without-hallucinations` | верх | LinkedIn (карусель) | PL + EN | `creatives/rag-without-hallucinations/renders/{pl,en}/carousel.pdf` | `copy/funnel-rag-without-hallucinations.md` |
+| 4 | 2026-08-11 | вт | `rag-without-hallucinations` | верх | LinkedIn (карусель) | PL + EN | `creatives/rag-without-hallucinations/renders/{pl,en}/carousel.pdf` | `copy/funnel-rag-without-hallucinations.md` → `## LinkedIn` |
 | 5 | 2026-08-13 | чт | `accounting-ai` | середина | LinkedIn (карусель) | PL | `creatives/accounting-ai/renders/pl/carousel.pdf` | `copy/product-accounting-ai.md` |
 | 6 | 2026-08-18 | вт | `geo-aeo` | верх | LinkedIn (карусель) | PL + EN | `creatives/geo-aeo/renders/{pl,en}/carousel.pdf` | `copy/funnel-geo-aeo.md` |
 | 7 | 2026-08-20 | чт | `legalka-kb` | середина | LinkedIn (одиночный) | PL | `creatives/legalka-kb/renders/pl/li-single.png` | `copy/product-legalka-kb.md` |
@@ -49,9 +49,24 @@ LinkedIn, а не два поста подряд для одних и тех ж�
 (строки 12–13) верха уже не осталось — там только продуктовый четверг. Это не
 пропуск в плане: одиннадцатая кампания заканчивается раньше, чем календарь.
 
-Строки 1–3 готовы к публикации. Строки 4–13 — план: `campaign.json` и тексты
-для них ещё не написаны, это следующая фаза (по спеке — механическая, кода
-она не требует).
+Строки 1–4 готовы к публикации. Строки 5–13 — план: `campaign.json` и тексты
+для них ещё не написаны.
+
+Кампания `rag-without-hallucinations` (строка 4) стоит только в LinkedIn, и
+её `copy/funnel-rag-without-hallucinations.md` содержит только раздел
+`## LinkedIn` — это не пропуск: `tests/test_campaigns.py` выводит список
+обязательных разделов файла текстов из **этой таблицы**, так что появление
+строки с Facebook или Stories для кампании сразу потребует и соответствующего
+раздела в текстах. Остальные форматы (`feed-4x5`, `story-9x16`, `reel`, `og`)
+для неё отрендерены и лежат в репозитории — не хватает только слота в
+календаре.
+
+Оговорка про «фазу 2 механическая, кода она не требует»: для верха воронки это
+подтвердилось — кампания 2 не потребовала ни строчки нового кода в
+`scripts/`, кроме одного нового поля `source` в `spec.py`, добавленного
+намеренно, чтобы кампания 12 его тоже не потребовала. Для середины воронки
+(строки 5, 7, 9, 11, 12, 13) это **не подтверждено** — см. блок про слайд
+`diagram` в `strategy.md`.
 
 `ngx-chat` идёт только на EN намеренно: продукт — опенсорсная библиотека,
 её аудитория живёт в англоязычном GitHub, а не в польском LinkedIn.

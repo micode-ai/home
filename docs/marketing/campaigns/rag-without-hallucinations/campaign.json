@@ -1,0 +1,127 @@
+{
+  "id": "rag-without-hallucinations",
+  "track": "funnel-top",
+  "target": "https://mi-code.pl/blog/legalka-kb-ai-architecture/",
+  "utm": { "campaign": "rag-without-hallucinations" },
+  "source": {
+    "slug": "legalka-kb-ai-architecture",
+    "figures": [
+      "109", "99", "97", "100",
+      "2,4", "2.4", "28 091", "28,091", "17 284", "17,284",
+      "51", "23", "60", "90"
+    ]
+  },
+  "slides": [
+    {
+      "type": "hook",
+      "bigNumber": "100%",
+      "pl": {
+        "eyebrow": "Asystent AI na Twojej bazie wiedzy",
+        "headline": "Bot, który mówi „nie wiem”",
+        "sub": "Tyle wynosi wstrzymanie się przy pytaniach spoza bazy. Wynik zmierzony przez osobny model-sędzia na zestawie 109 „złotych” pytań, a nie obietnica ze slajdu."
+      },
+      "en": {
+        "eyebrow": "An AI assistant on your knowledge base",
+        "headline": "A bot that says “I don't know”",
+        "sub": "That is abstention on out-of-base questions. A number measured by a separate judge model over a set of 109 “golden” questions, not a promise on a slide."
+      }
+    },
+    {
+      "type": "problem",
+      "pl": {
+        "eyebrow": "Problem",
+        "headline": "Pewny siebie kłamca",
+        "sub": "Zwykły chatbot odpowiada z pełną pewnością — zmyślając numery kont, terminy i adresy urzędów, które nie istnieją. W prawie, medycynie, administracji i finansach pewna siebie pomyłka kosztuje więcej niż uczciwe „nie wiem”."
+      },
+      "en": {
+        "eyebrow": "The problem",
+        "headline": "A confident liar",
+        "sub": "A generic chatbot answers with confident fiction — inventing account numbers, deadlines and office addresses that do not exist. In law, medicine, public services and finance, a confidently wrong answer costs more than an honest “I don't know”."
+      }
+    },
+    {
+      "type": "numbers",
+      "pl": {
+        "eyebrow": "Jakość mierzona, nie zakładana",
+        "headline": "Cztery liczby zamiast zapewnień",
+        "sub": "Model-sędzia przepuszcza cały zestaw i sprawdza dwie rzeczy: czy odpowiedź oddała istotę oczekiwanych faktów i czy nie twierdzi jako fakt czegoś zakazanego.",
+        "rows": [
+          ["Zestaw „złotych” pytań", "109"],
+          ["Cytowalność", "≈99%"],
+          ["Pokrycie faktów", "≈97%"],
+          ["Uczciwe „nie wiem”", "100%"]
+        ]
+      },
+      "en": {
+        "eyebrow": "Quality measured, not assumed",
+        "headline": "Four numbers instead of assurances",
+        "sub": "A judge model runs the whole set and checks two things: did the answer convey the substance of the expected facts, and does it assert anything forbidden as fact.",
+        "rows": [
+          ["“Golden” question set", "109"],
+          ["Citation accuracy", "≈99%"],
+          ["Fact coverage", "≈97%"],
+          ["Honest “I don't know”", "100%"]
+        ]
+      }
+    },
+    {
+      "type": "numbers",
+      "pl": {
+        "eyebrow": "Baza wiedzy to produkt",
+        "headline": "Bot nie jest mądry sam z siebie",
+        "sub": "Kolektor zamienia otwarte czaty w zanonimizowane fakty, a udział źle sklasyfikowanych „śmieci” spadł przy tym z 51% do 23%. Przeniesienie faktu do bazy to zawsze ręczny krok kuratora, nigdy automat.",
+        "rows": [
+          ["Wiadomości przez kolektor", "2,4 mln"],
+          ["Uznane za istotne", "28 091"],
+          ["Fakty praktyczne", "17 284"]
+        ]
+      },
+      "en": {
+        "eyebrow": "The knowledge base is the product",
+        "headline": "The bot is not smart on its own",
+        "sub": "The collector turns open chats into anonymised facts, and the share of misfiled “junk” fell from 51% to 23% along the way. Moving a fact into the base is always a manual step by the curator, never automatic.",
+        "rows": [
+          ["Messages through the collector", "2.4 million"],
+          ["Judged relevant", "28,091"],
+          ["Practical facts", "17,284"]
+        ]
+      }
+    },
+    {
+      "type": "numbers",
+      "pl": {
+        "eyebrow": "Dyscyplina, nie rozmiar modelu",
+        "headline": "Sekret nie tkwi w modelu",
+        "sub": "Ścisłe powiązanie ze zweryfikowaną bazą, obowiązkowe źródła i daty, mierzalna jakość na wyjściu. Każdy model podmienisz na lokalny jednym ustawieniem — cały stos może stać na Twoim serwerze.",
+        "rows": [
+          ["Warstwa „norma”", "weryfikacja co 60 dni"],
+          ["Warstwa „praktyka”", "wygasa do +90 dni"],
+          ["Wszystkie modele", "wymienne na lokalne"]
+        ]
+      },
+      "en": {
+        "eyebrow": "Discipline, not model size",
+        "headline": "The secret is not the model",
+        "sub": "A strict tie to a verified base, mandatory sources and dates, measurable quality on the way out. Every model swaps for a local one with a single setting — so the whole stack can run on your own server.",
+        "rows": [
+          ["The “norm” layer", "re-checked every 60 days"],
+          ["The “practice” layer", "expires by +90 days"],
+          ["Every model", "swappable for a local one"]
+        ]
+      }
+    },
+    {
+      "type": "cta",
+      "pl": {
+        "eyebrow": "MICODE",
+        "headline": "Zbudujemy takiego asystenta na Twoich danych",
+        "sub": "Asystent, który odpowiada wyłącznie z Twojej bazy, podaje źródło do każdego faktu i uczciwie mówi „nie wiem”, gdy odpowiedzi w niej nie ma — razem z zestawem pytań, na którym da się to sprawdzić."
+      },
+      "en": {
+        "eyebrow": "MICODE",
+        "headline": "We will build one on your data",
+        "sub": "An assistant that answers strictly from your own base, cites a source for every fact, and honestly says “I don't know” when the answer is not there — with the question set that lets you check the claim."
+      }
+    }
+  ]
+}

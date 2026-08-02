@@ -5,7 +5,7 @@ A campaign is one campaign.json. Generators read it and hardcode nothing,
 so adding the twelfth campaign never means writing a twelfth script.
 """
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
@@ -41,6 +41,46 @@ def check_langs(langs) -> list[str]:
     return list(langs)
 
 
+def _source(campaign_id: str, data: dict) -> tuple[str | None, list[str]]:
+    """The article a campaign summarises, and the figures it is built on.
+
+    Top-of-funnel campaigns are a distilled blog article, and `strategy.md`
+    promises that every number in a creative stands verbatim in that article.
+    That promise is only enforceable if the spec says *which* article — which
+    is what `source.slug` is for — and `source.figures` names the figures
+    whose disappearance from either side should break the build.
+
+    Declared here rather than in a table inside the test suite so that adding
+    the twelfth campaign stays what the spec says it is: a `campaign.json`
+    and a file in `copy/`, with no test module to edit. Optional, because a
+    mid-funnel product campaign points at a product page, not an article.
+    """
+    source = data.get("source", {})
+    if not isinstance(source, dict):
+        raise SpecError(
+            f"{campaign_id}: 'source' must be an object, "
+            f"got {type(source).__name__}"
+        )
+    slug = source.get("slug")
+    if slug is not None and not (isinstance(slug, str) and slug.strip()):
+        raise SpecError(
+            f"{campaign_id}: source.slug must be a non-empty string, got {slug!r}"
+        )
+    figures = source.get("figures", [])
+    if not isinstance(figures, list):
+        raise SpecError(
+            f"{campaign_id}: source.figures must be a list, "
+            f"got {type(figures).__name__}"
+        )
+    for figure in figures:
+        if not (isinstance(figure, str) and figure.strip()):
+            raise SpecError(
+                f"{campaign_id}: source.figures entries must be non-empty "
+                f"strings, got {figure!r}"
+            )
+    return slug, list(figures)
+
+
 @dataclass
 class Campaign:
     id: str
@@ -49,6 +89,8 @@ class Campaign:
     utm_campaign: str
     slides: list[dict]
     root: Path
+    source_slug: str | None = None
+    source_figures: list[str] = field(default_factory=list)
 
     @classmethod
     def load(cls, campaign_id: str) -> "Campaign":
@@ -98,6 +140,8 @@ class Campaign:
         if not any(slide["type"] == "cta" for slide in slides):
             raise SpecError(f"{campaign_id}: no 'cta' slide — the deck cannot convert")
 
+        source_slug, source_figures = _source(campaign_id, data)
+
         return cls(
             id=data["id"],
             track=data["track"],
@@ -105,6 +149,8 @@ class Campaign:
             utm_campaign=data.get("utm", {}).get("campaign", data["id"]),
             slides=slides,
             root=path.parent,
+            source_slug=source_slug,
+            source_figures=source_figures,
         )
 
     def text(self, slide: dict, lang: str) -> dict:

@@ -95,7 +95,7 @@ def main(argv: list[str]) -> int:
         # `["pl"]` alone, which made a bare `build_reel.py <id>` (and the
         # README command that copied it) quietly produce a Polish-only reel
         # and Polish-only story posters, while the committed artifacts — and
-        # `tests/test_campaign_<id>.py`'s size checks — expect both languages.
+        # `tests/test_campaigns.py`'s poster checks — expect both languages.
         build(argv[1], argv[2:] or ["pl", "en"])
     except SpecError as exc:
         print(f"spec error: {exc}", file=sys.stderr)

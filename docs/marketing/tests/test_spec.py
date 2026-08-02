@@ -217,6 +217,89 @@ def test_load_rejects_a_language_block_that_is_not_an_object(tmp_path, monkeypat
         spec.Campaign.load("demo")
 
 
+# --- source article and its figures ---------------------------------------
+#
+# `source` is what lets `tests/test_campaigns.py` check every campaign's
+# numbers against its own article without a per-campaign test module. It is
+# optional (a mid-funnel product campaign points at a product page, not an
+# article), so a malformed one must not degrade to "absent" — that would turn
+# the whole figure guard off for that campaign with everything still green.
+
+def test_load_reads_the_source_article_and_its_figures(tmp_path, monkeypatch):
+    payload = json.loads(json.dumps(VALID))
+    payload["source"] = {"slug": "ai-agent-cost-per-month-model",
+                         "figures": ["$74.38", "82"]}
+    write_campaign(tmp_path, payload)
+    monkeypatch.setattr(spec, "MARKETING", tmp_path)
+    campaign = spec.Campaign.load("demo")
+    assert campaign.source_slug == "ai-agent-cost-per-month-model"
+    assert campaign.source_figures == ["$74.38", "82"]
+
+
+def test_a_campaign_without_a_source_block_loads_with_empty_source(tmp_path, monkeypatch):
+    write_campaign(tmp_path, VALID)
+    monkeypatch.setattr(spec, "MARKETING", tmp_path)
+    campaign = spec.Campaign.load("demo")
+    assert campaign.source_slug is None
+    assert campaign.source_figures == []
+
+
+def test_source_figures_do_not_leak_between_campaigns(tmp_path, monkeypatch):
+    """`source_figures` defaults to a list. A mutable default shared across
+    instances would let one campaign's figures show up as another's, and the
+    figure guard would then "prove" that campaign two quotes campaign one's
+    numbers."""
+    payload = json.loads(json.dumps(VALID))
+    write_campaign(tmp_path, payload)
+    other = json.loads(json.dumps(VALID))
+    other["id"] = "other"
+    write_campaign(tmp_path, other)
+    monkeypatch.setattr(spec, "MARKETING", tmp_path)
+    first = spec.Campaign.load("demo")
+    first.source_figures.append("$999.99")
+    assert spec.Campaign.load("other").source_figures == []
+
+
+def test_load_rejects_a_source_that_is_not_an_object(tmp_path, monkeypatch):
+    payload = json.loads(json.dumps(VALID))
+    payload["source"] = "ai-agent-cost-per-month-model"
+    write_campaign(tmp_path, payload)
+    monkeypatch.setattr(spec, "MARKETING", tmp_path)
+    with pytest.raises(spec.SpecError, match="source"):
+        spec.Campaign.load("demo")
+
+
+def test_load_rejects_an_empty_source_slug(tmp_path, monkeypatch):
+    """An empty slug is worse than a missing one: `test_campaigns.py` treats a
+    missing slug as "this campaign declares no article" and says so, while an
+    empty string would sail through that check and then match every article
+    lookup on nothing."""
+    payload = json.loads(json.dumps(VALID))
+    payload["source"] = {"slug": "  "}
+    write_campaign(tmp_path, payload)
+    monkeypatch.setattr(spec, "MARKETING", tmp_path)
+    with pytest.raises(spec.SpecError, match="slug"):
+        spec.Campaign.load("demo")
+
+
+def test_load_rejects_figures_that_are_not_a_list_of_strings(tmp_path, monkeypatch):
+    """`"figures": "82"` is the natural typo, and a string is iterable — the
+    figure guard would then check the characters '8' and '2' separately and
+    pass on any article containing a digit."""
+    payload = json.loads(json.dumps(VALID))
+    payload["source"] = {"slug": "x", "figures": "82"}
+    write_campaign(tmp_path, payload)
+    monkeypatch.setattr(spec, "MARKETING", tmp_path)
+    with pytest.raises(spec.SpecError, match="figures"):
+        spec.Campaign.load("demo")
+
+    payload["source"] = {"slug": "x", "figures": ["82", 74.38]}
+    write_campaign(tmp_path / "second", payload)
+    monkeypatch.setattr(spec, "MARKETING", tmp_path / "second")
+    with pytest.raises(spec.SpecError, match="figures"):
+        spec.Campaign.load("demo")
+
+
 def test_render_dir_is_per_language(tmp_path, monkeypatch):
     write_campaign(tmp_path, VALID)
     monkeypatch.setattr(spec, "MARKETING", tmp_path)
