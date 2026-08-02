@@ -169,6 +169,75 @@ def test_browser_frame_wraps_the_screenshot():
     assert framed.height > 900 * 900 // 1600, "frame adds a chrome bar above the shot"
 
 
+# --- geometry other modules ask about instead of re-deriving ---------------
+#
+# `frame_size`, `badge_bottom` and `footer_top` all exist so that
+# `slides._place_tall_frame` can plan around the badge, the frame and the
+# footer without keeping a second copy of their arithmetic. Each is only
+# worth having if it agrees with what actually gets drawn — a reporter that
+# drifts from the drawing is worse than no reporter, because the caller
+# trusts it. These are the three agreements, asserted on the pixels.
+
+FRAME_WIDTHS = [120, 400, 617, 618, 900, 1006]
+CANVAS_SIZES = [(1080, 1350), (1080, 1920), (1200, 627), (1200, 630)]
+
+
+@pytest.mark.parametrize("width", FRAME_WIDTHS, ids=lambda w: f"{w}px")
+@pytest.mark.parametrize("shot_size", [(1600, 2560), (1340, 474), (800, 800)],
+                         ids=lambda s: f"{s[0]}x{s[1]}")
+def test_frame_size_reports_what_browser_frame_actually_builds(shot_size, width):
+    """`slides._tall_frame_width` searches for the largest frame width whose
+    frame still fits the height it has, and it does that by asking
+    `frame_size` rather than by building candidate frames. If the two ever
+    disagreed the search would settle on a width whose real frame is taller
+    than the budget, and the visual would run into the footer with nothing
+    reporting it. 617/618 bracket the knee where the title bar stops being
+    the 34px floor and starts scaling with the frame."""
+    shot = Image.new("RGB", shot_size, (255, 255, 255))
+    framed = brand.browser_frame(shot, width, brand.SITE)
+    assert brand.frame_size(shot_size, width) == (framed.width, framed.height)
+
+
+@pytest.mark.parametrize("size", CANVAS_SIZES, ids=lambda s: f"{s[0]}x{s[1]}")
+def test_badge_bottom_is_where_the_badge_ink_actually_ends(size):
+    """`slides._layout`'s `tall_top` starts a `tall-diagram` header just below
+    this, so that the one slide type which pushes its header up the canvas to
+    buy height still clears the badge. A `badge_bottom` that under-reported
+    would put a full-width headline straight through the badge."""
+    img = Image.new("RGB", size, brand.DARK)
+    before = img.copy()
+    brand.paste_badge(img, height=brand.badge_height(size[0]))
+    bbox = ImageChops.difference(img, before).getbbox()
+    assert bbox is not None, "paste_badge drew nothing"
+    # bbox's lower bound is exclusive, so the last inked row is bbox[3] - 1.
+    assert bbox[1] == brand.BADGE_TOP, (
+        f"badge ink starts at y={bbox[1]}, not at BADGE_TOP={brand.BADGE_TOP}"
+    )
+    assert bbox[3] - 1 <= brand.badge_bottom(size[0]), (
+        f"badge ink reaches y={bbox[3] - 1} but badge_bottom() reports "
+        f"{brand.badge_bottom(size[0])} — a header starting there would run "
+        "under the badge"
+    )
+
+
+@pytest.mark.parametrize("size", CANVAS_SIZES, ids=lambda s: f"{s[0]}x{s[1]}")
+def test_footer_top_is_where_the_footer_ink_actually_starts(size):
+    """`slides._place_tall_frame` sizes its visual against this instead of
+    against `slides._FOOTER_RESERVE`'s flat 14%, precisely because the flat
+    reserve leaves 123px of empty canvas on 1080x1350 that a tall picture
+    could have used. That only holds if this really is the first footer
+    pixel: over-report and the visual is drawn through the domain label."""
+    before = brand.background(size)
+    after = before.copy()
+    brand.footer(after, "pl")
+    bbox = ImageChops.difference(before, after).getbbox()
+    assert bbox is not None, "footer drew nothing"
+    assert brand.footer_top(size) == bbox[1], (
+        f"footer_top() reports y={brand.footer_top(size)} but the footer's "
+        f"first inked row is y={bbox[1]}"
+    )
+
+
 @pytest.mark.parametrize(
     "size",
     [(1080, 1350), (1200, 627), (1080, 1920), (1200, 630)],

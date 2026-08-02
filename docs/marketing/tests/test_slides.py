@@ -31,11 +31,29 @@ PAYLOAD = {
         {"type": "diagram", "asset": "src/calculator.png",
          "pl": {"headline": "Kalkulator w artykule", "sub": "Wstaw wlasne liczby."},
          "en": {"headline": "A calculator in the article", "sub": "Plug in your own numbers."}},
+        {"type": "tall-diagram", "asset": "src/tall-graph.png",
+         "pl": {"eyebrow": "ARCHITEKTURA", "headline": "Jak dziala agent"},
+         "en": {"eyebrow": "ARCHITECTURE", "headline": "How the agent works"}},
         {"type": "cta",
          "pl": {"headline": "Policzymy to na Twoich danych", "sub": "Przed rozpoczeciem pracy."},
          "en": {"headline": "We will price it on your data", "sub": "Before the work starts."}},
     ],
 }
+
+# The shape of a real product LangGraph capture: `flowchart TD` photographed
+# by `capture_screens.py` at device_scale_factor=2 comes out 1600x2560,
+# aspect 0.625. Measured on the live accounting-ai page, not assumed.
+TALL_SHOT = (1600, 2560)
+# The same aspect ratio at a size small enough that every canvas renders it
+# above `slides._TALL_MIN_SCALE` — the readable half of the legibility guard.
+SMALL_TALL_SHOT = (500, 800)
+# Wider than it is tall, so the *width* budget binds instead of the height
+# budget: this is the shot that can tell `visual_width` from `content_width`.
+WIDE_SHOT = (1200, 600)
+# The worst any canvas does with `TALL_SHOT`: measured 200px at 1200x627, the
+# shortest canvas this factory renders. A floor, not a target — it exists so
+# "degrades sanely" is a number rather than an adjective.
+_MIN_VISUAL_WIDTH = 180
 
 
 @pytest.fixture
@@ -52,11 +70,15 @@ def campaign(tmp_path, monkeypatch):
     for name, fill in (("calculator-pl.png", (255, 255, 255)),
                        ("calculator-en.png", (0, 0, 0))):
         Image.new("RGB", (1600, 900), fill).save(shot_dir / name)
+    for name, size in (("tall-graph.png", TALL_SHOT),
+                       ("small-tall-graph.png", SMALL_TALL_SHOT),
+                       ("wide-visual.png", WIDE_SHOT)):
+        Image.new("RGB", size, (255, 255, 255)).save(shot_dir / name)
     monkeypatch.setattr(spec, "MARKETING", tmp_path)
     return spec.Campaign.load("demo")
 
 
-@pytest.mark.parametrize("index", range(5))
+@pytest.mark.parametrize("index", range(len(PAYLOAD["slides"])))
 @pytest.mark.parametrize("size", CANVASES)
 @pytest.mark.parametrize("lang", ["pl", "en"])
 def test_every_slide_type_renders_at_every_canvas(campaign, index, size, lang):
@@ -180,9 +202,251 @@ def test_language_asset_wins_over_the_slide_level_one(campaign):
 
 
 def test_cta_slide_carries_the_contact_address(campaign):
-    img = slides.render(campaign, campaign.slides[4], "pl", (1080, 1350))
+    img = slides.render(campaign, campaign.slides[5], "pl", (1080, 1350))
     assert img.size == (1080, 1350)
     assert len(img.getcolors(maxcolors=1_000_000) or []) > 50
+
+
+# --- tall-diagram ---------------------------------------------------------
+#
+# Everything below is about one number: how wide the visual comes out. A
+# capture with aspect a placed in H px of height is a*H px wide, and the node
+# labels inside it scale with the frame, so "how much height did the layout
+# leave the picture" and "can anyone read the picture" are the same question.
+# The measurements these tests are pinned to come from the real accounting-ai
+# capture (1600x2560) rendered through `slides.render`, not from arithmetic.
+
+def _frame_bbox(campaign, slide, lang, size):
+    """The bbox of the screenshot this slide pastes, isolated by rendering the
+    same slide with a missing asset and diffing: the text, badge and footer
+    are identical between the two, so every differing pixel is the frame."""
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        drawn = slides.render(campaign, slide, lang, size)
+        blank = slides.render(campaign, dict(slide, asset="src/does-not-exist.png"),
+                              lang, size)
+    return ImageChops.difference(drawn, blank).getbbox()
+
+
+# What a mid-funnel product slide actually says: the eyebrow and headline the
+# compact header is designed around, plus the sub a `diagram` slide would set
+# at 36px and this one sets at 25px. Length is in the same range as the two
+# shipped campaigns' `diagram` subs (198 and 172 characters).
+MID_FUNNEL_PL = {
+    "eyebrow": "ARCHITEKTURA",
+    "headline": "Jak dziala agent ksiegowy",
+    "sub": "Petla agenta LangGraph z ponad dwudziestoma narzedziami "
+           "ksiegowymi: faktury i KSeF, kadry i place, platnosci i podatki, "
+           "kontrahenci oraz ksiega i deklaracje.",
+}
+
+
+def _tall_slide(asset="src/tall-graph.png", **copy):
+    text = {"eyebrow": "ARCHITEKTURA", "headline": "Jak dziala agent", **copy}
+    return {"type": "tall-diagram", "asset": asset, "pl": text, "en": text}
+
+
+def test_every_slide_type_in_the_spec_has_a_planner(campaign):
+    """`spec.SLIDE_TYPES` is what a campaign.json is validated against and
+    `slides._PLANNERS` is what actually draws. A type in the first and not the
+    second loads fine and dies with a `KeyError` inside `_fit_box` on the
+    first render — after `capture_screens.py` has already run. A type in the
+    second and not the first can never be spec'd at all."""
+    assert set(spec.SLIDE_TYPES) == set(slides._PLANNERS)
+
+
+def test_tall_diagram_gives_a_tall_visual_far_more_room_than_a_diagram_slide(campaign):
+    """The whole point of the type, measured on the shape it exists for.
+
+    Same copy, same 1600x2560 capture, same canvas — only the slide type
+    differs, so the difference is the layout and nothing else. `diagram`
+    spends its height on a headline inset at 0.17 of the canvas and a 36px sub
+    at 1.45 leading, then fits the picture into what is left: 273px of frame,
+    which is `strategy.md`'s measured 271px and the reason this type exists.
+    The compact header leaves 532px. Measured 1.95x.
+
+    `MID_FUNNEL_PL` matters as much as the floor does. With a bare eyebrow and
+    headline the same comparison is only 1.27x, because a `diagram` slide with
+    no sub is not spending its height either — so a fixture without a sub
+    would put the floor below what a reverted header still scores, and pass on
+    the bug. This is the copy a mid-funnel product slide actually carries.
+
+    The second assertion is the one that does most of the mutation-killing,
+    because "better than `diagram`" is a low bar that several partial
+    reversions clear. Every constant this layout owns was reverted in turn and
+    the visual measured as a share of the canvas: shipped 49.3%, header inset
+    back to `top`'s 0.17 42.9%, headline back to `title` 45.9%, caption back
+    to `sub` 43.5%, footer clearance back to `_FOOTER_RESERVE` 44.1%, header
+    gap tripled 46.6%. The 48% floor is under the shipped value and over all
+    six. It is a tight budget on purpose: there is no measurement noise here
+    (the renders are deterministic), and a change that costs the visual more
+    than a percent of the canvas is one a person should be looking at.
+    """
+    tall = _tall_slide(**MID_FUNNEL_PL)
+    as_diagram = dict(tall, type="diagram")
+    size = (1080, 1350)
+    tall_bbox = _frame_bbox(campaign, tall, "pl", size)
+    diagram_bbox = _frame_bbox(campaign, as_diagram, "pl", size)
+    assert tall_bbox is not None and diagram_bbox is not None
+    tall_width = tall_bbox[2] - tall_bbox[0]
+    diagram_width = diagram_bbox[2] - diagram_bbox[0]
+    assert tall_width >= diagram_width * 1.5, (
+        f"a tall capture renders {tall_width}px wide as 'tall-diagram' against "
+        f"{diagram_width}px as 'diagram' ({tall_width / diagram_width:.2f}x) — "
+        "the compact header is not buying the visual any room"
+    )
+    assert tall_width >= size[0] * 0.48, (
+        f"a tall capture renders {tall_width}px wide on a {size[0]}px canvas "
+        f"({100 * tall_width / size[0]:.1f}%), under the 48% this layout was "
+        "measured at — some of the height the compact header frees up is being "
+        "spent again somewhere else"
+    )
+
+
+def test_tall_diagram_fits_its_visual_to_the_visual_column_not_the_text_column(campaign):
+    """When a capture's aspect makes *width* the binding constraint rather
+    than height, the frame must use the wider visual column (canvas minus
+    `_TALL_VISUAL_MARGIN`) and not the text column every headline wraps to.
+
+    Measured at 1080x1920 with a 2:1 capture: the height budget would allow a
+    frame far wider than the canvas, so the frame lands at the visual column's
+    1006px. `content_width` there is 898px, and the difference is the whole
+    reason the constant exists — for a capture whose width binds it is worth
+    12% of the glyph size. A shot that is *taller* than it is wide can never
+    tell the two columns apart, because it never reaches either.
+    """
+    slide = _tall_slide(asset="src/wide-visual.png")
+    bbox = _frame_bbox(campaign, slide, "pl", (1080, 1920))
+    assert bbox is not None
+    width = bbox[2] - bbox[0]
+    box = slides._layout((1080, 1920))
+    assert width > box["content_width"], (
+        f"a width-bound visual came out {width}px wide, no wider than the "
+        f"{box['content_width']}px text column — the visual is being fitted to "
+        "the column headlines wrap to"
+    )
+    assert width == box["visual_width"], (
+        f"a width-bound visual came out {width}px wide against a "
+        f"{box['visual_width']}px visual column"
+    )
+
+
+def test_tall_diagram_warns_when_its_visual_lands_below_the_legibility_floor(campaign):
+    """The defect this slide type was built to fix, in its own words.
+
+    `_MIN_DIAGRAM_HEIGHT` is a floor on whether a frame is worth drawing, not
+    on whether anyone can read it: a real 1600x2560 product graph clears it by
+    an order of magnitude on every canvas while rendering its node labels at
+    4-9px. Nothing fired. The operator's fix is a spec change — a tighter
+    capture — so the warning has to carry the numbers that make the case:
+    which capture, which canvas, what scale it got, and what it needed.
+    """
+    with pytest.warns(RuntimeWarning) as caught:
+        slides.render(campaign, _tall_slide(), "pl", (1080, 1350))
+    messages = [str(w.message) for w in caught]
+    assert any("tall-graph.png" in m and "demo" in m and "tall-diagram" in m
+               and "1080x1350" in m and "1600x2560" in m and "0.57" in m
+               for m in messages), (
+        f"expected a warning naming the capture, campaign, slide type, canvas, "
+        f"source size and the floor it missed; got {messages}"
+    )
+
+
+def test_tall_diagram_says_nothing_when_its_visual_clears_the_legibility_floor(campaign):
+    """The other half, and the half that makes the warning worth reading. A
+    guard that fires on every render is one an operator learns to scroll past,
+    and this one has to survive being right: `slides.render` emits it from the
+    same channel as the missing-screenshot warning the generators relay to
+    stderr on every build."""
+    slide = _tall_slide(asset="src/small-tall-graph.png")
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        slides.render(campaign, slide, "pl", (1080, 1350))
+    assert [str(w.message) for w in caught] == []
+
+
+@pytest.mark.parametrize("size", CANVASES, ids=lambda s: f"{s[0]}x{s[1]}")
+def test_tall_diagram_keeps_its_visual_clear_of_the_footer_band(campaign, size):
+    """This type sizes its visual against `brand.footer_top` rather than
+    `_FOOTER_RESERVE`, precisely to use the 123px of empty canvas the flat
+    reserve leaves on 1080x1350. That trade is only safe if the gap it keeps
+    is real — the failure mode is a diagram drawn straight through the domain
+    label, and only the pixels can say."""
+    img = slides.render(campaign, _tall_slide(), "pl", size)
+    overlap = _footer_band_overlap(img, "pl")
+    assert overlap == 0, (
+        f"tall-diagram at {size[0]}x{size[1]} draws {overlap}px of visual "
+        "inside the footer band"
+    )
+
+
+@pytest.mark.parametrize("size", CANVASES, ids=lambda s: f"{s[0]}x{s[1]}")
+def test_tall_diagram_starts_its_header_below_the_badge(campaign, size):
+    """The compact header buys its height by starting as high on the canvas as
+    it can, and the badge is what "as high as it can" means. `_layout`'s
+    `tall_top` is `brand.badge_bottom` plus a gap for exactly this reason; if
+    it were raised any further, a headline wide enough to reach the right-hand
+    margin would run under the badge."""
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        img = slides.render(campaign, _tall_slide(headline="Jak dziala agent "
+                                                  "ksiegowy w architekturze "
+                                                  "wielu narzedzi"), "pl", size)
+        bare = slides.render(campaign, {"type": "tall-diagram", "pl": {}, "en": {}},
+                             "pl", size)
+    # Diff against a slide with no copy and no visual. Both carry the same
+    # badge and the same footer, so the topmost differing row is the header's
+    # first ink row — the visual this slide also draws sits below it.
+    bbox = ImageChops.difference(img, bare).getbbox()
+    assert bbox is not None, "the header drew nothing"
+    assert bbox[1] >= brand.badge_bottom(size[0]), (
+        f"tall-diagram's header ink starts at y={bbox[1]} at {size[0]}x{size[1]}, "
+        f"above the badge's bottom edge at y={brand.badge_bottom(size[0])}"
+    )
+
+
+@pytest.mark.parametrize("size", CANVASES, ids=lambda s: f"{s[0]}x{s[1]}")
+def test_tall_diagram_still_draws_something_on_a_canvas_with_no_height_to_give(
+        campaign, size):
+    """`slides.render`'s contract is exactly the requested size at any canvas,
+    never raising, and this type is optimised for the two portrait ones. The
+    wide pair is where it has to degrade rather than break: a 1600x2560
+    capture on a 627px-tall canvas gets ~350px of height, and a frame 17% of
+    the canvas wide with a warning attached is the right answer — an
+    exception, or quietly dropping the visual, is not.
+
+    Deliberately not asserting the frame is inside the canvas: PIL clips every
+    draw to the canvas bounds, so a diff bbox can never report otherwise and
+    the assertion would pass on a frame pasted at y=10000. Where it must not
+    reach is the footer, and that is
+    `test_tall_diagram_keeps_its_visual_clear_of_the_footer_band`.
+    """
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        img = slides.render(campaign, _tall_slide(), "pl", size)
+    assert img.size == size and img.mode == "RGB"
+    bbox = _frame_bbox(campaign, _tall_slide(), "pl", size)
+    assert bbox is not None, "the visual was dropped entirely"
+    assert bbox[2] - bbox[0] >= _MIN_VISUAL_WIDTH, (
+        f"the visual came out {bbox[2] - bbox[0]}px wide at "
+        f"{size[0]}x{size[1]} — smaller than the 1200x627 measurement this "
+        "degradation was checked at"
+    )
+
+
+def test_tall_diagram_warns_when_its_screenshot_was_never_captured(campaign):
+    """The missing-capture warning `diagram` has, on the new type too — both
+    resolve their screenshot through the same `_resolve_shot`, and this is
+    what pins that they still do. A type that grew its own copy of the lookup
+    would be free to drop the warning."""
+    with pytest.warns(RuntimeWarning) as caught:
+        slides.render(campaign, _tall_slide(asset="src/never-captured.png"),
+                      "pl", (1080, 1350))
+    messages = [str(w.message) for w in caught]
+    assert any("never-captured.png" in m and "tall-diagram" in m for m in messages), (
+        f"expected a missing-capture warning naming the file and slide type; "
+        f"got {messages}"
+    )
 
 
 # --- long-copy overflow guards -------------------------------------------

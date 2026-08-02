@@ -63,6 +63,30 @@ def _load(payload, tmp_path, monkeypatch):
     return spec.Campaign.load("demo")
 
 
+def test_a_tall_diagram_slide_is_captured_like_any_other_picture_slide(
+        tmp_path, monkeypatch):
+    """`shots_for` walks slides, not slide *types*, and it has to keep doing
+    that: `tall-diagram` is the type the six mid-funnel campaigns photograph
+    the product pages' LangGraph graphs with, and a type filter here would
+    leave every one of them with a spec that declares a capture, a capture run
+    that reports nothing to do, and six decks rendering a picture slide with
+    no picture — the exact silent-degradation shape `slides._resolve_shot`
+    warns about, but one step earlier where nothing warns at all."""
+    payload = json.loads(json.dumps(PAYLOAD))
+    payload["slides"][1] = dict(
+        payload["slides"][1], type="tall-diagram",
+        asset="src/accounting-ai-graph.png",
+        shot={"path": "/products/accounting-ai/",
+              "selector": ".diagram-wrap:has(pre.mermaid svg)"})
+    campaign = _load(payload, tmp_path, monkeypatch)
+    shots = capture_screens.shots_for(campaign)
+    assert {"asset": "src/accounting-ai-graph.png",
+            "path": "/products/accounting-ai/",
+            "selector": ".diagram-wrap:has(pre.mermaid svg)"} in shots
+    assert capture_screens.target_for(campaign, shots[0]) == (
+        tmp_path / "creatives" / "demo" / "src" / "accounting-ai-graph.png")
+
+
 def test_a_language_neutral_slide_is_captured_once_not_once_per_language(campaign):
     """The precedence walk visits every slide once per language. A slide that
     declares nothing per language resolves identically both times, and those

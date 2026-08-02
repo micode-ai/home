@@ -11,7 +11,14 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 MARKETING = Path(__file__).resolve().parents[1]
 
-SLIDE_TYPES = ("hook", "problem", "diagram", "numbers", "cta")
+# `diagram` and `tall-diagram` differ only in the shape of the picture they
+# carry, and that difference is the whole point: `diagram` spends its height
+# on a headline and a full sub and gives the leftovers to a wide, low visual
+# (campaign one's 2.83:1 calculator table); `tall-diagram` keeps the header to
+# a label so a tall, narrow visual (the product pages' `flowchart TD` graphs,
+# ~0.62:1) gets every pixel of height the canvas can spare. See
+# `slides._plan_tall_diagram` for the measurements.
+SLIDE_TYPES = ("hook", "problem", "diagram", "tall-diagram", "numbers", "cta")
 LANGS = ("pl", "en")
 
 

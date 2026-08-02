@@ -35,6 +35,7 @@ from fontTools.ttLib import TTFont
 from PIL import Image
 
 import brand
+import slides
 import spec
 
 MARKETING = Path(__file__).resolve().parents[1]
@@ -418,6 +419,72 @@ def test_every_glyph_in_the_deck_copy_exists_in_the_brand_fonts(campaign_id):
         f"{campaign_id}'s copy uses {missing} — not in every brand font, so "
         "the slide would render a blank box where the character should be"
     )
+
+
+def test_every_slide_type_that_carries_a_picture_is_checked_here():
+    """The two tests below are keyed to a slide type each, and a third
+    picture-bearing type would get neither.
+
+    That is not hypothetical — `tall-diagram` is exactly how the second one
+    came to exist, and until it was written a deck could declare a capture,
+    resolve it to a path that was never written, and pass every test in this
+    file: the checks are the only thing standing between a spec and a slide
+    that renders brand chrome with a hole where the picture should be.
+    `slides._PLACERS` is the authoritative list of types that paste one, so
+    ask it rather than restating it.
+    """
+    assert set(slides._PLACERS) == {"diagram", "tall-diagram"}, (
+        "a slide type gained (or lost) a picture; give it a capture check in "
+        "this file and update this list"
+    )
+
+
+@pytest.mark.parametrize("campaign_id", CAMPAIGN_IDS)
+def test_a_tall_diagram_slide_captures_something_that_exists(campaign_id):
+    """A `tall-diagram` deck's captures must be on disk and locale-correct.
+
+    Deliberately *not* the sibling test's "one distinct capture per language"
+    rule. That rule is right for `diagram`, whose captures are of pages that
+    render their own text — campaign one photographs the article's cost table,
+    whose headers come from `src/data/{pl,en}.json`, so a shared capture would
+    put a Polish table under an English headline. It is wrong here: the five
+    product LangGraph graphs are defined once in
+    `src/data/langgraph-diagrams.ts` with English node labels and no i18n
+    lookup at all, so one capture legitimately serves both decks, and
+    `capture_screens.shots_for` is built to collapse it to a single browser
+    round-trip. Requiring two would force a campaign to photograph the same
+    pixels twice under different filenames.
+
+    What still has to hold: every language resolves a capture, that file
+    exists, and *if* a deck does declare two, each comes from its own locale.
+    """
+    campaign = _campaign(campaign_id)
+    talls = [s for s in campaign.slides if s["type"] == "tall-diagram"]
+    if not talls:
+        pytest.skip(f"{campaign_id} has no tall-diagram slide")
+    for index, slide in enumerate(talls):
+        assets = {}
+        for lang in spec.LANGS:
+            block = slide[lang]
+            shot = block.get("shot") or slide.get("shot")
+            assert shot, f"{campaign_id} tall-diagram {index} declares no {lang} shot"
+            path = campaign.asset(block) or campaign.asset(slide)
+            assert path, (
+                f"{campaign_id} tall-diagram {index} resolves no {lang} asset"
+            )
+            assert path.is_file(), f"{path} was never captured"
+            assets[lang] = path
+        if len(set(assets.values())) > 1:
+            for lang in spec.LANGS:
+                shot = slide[lang].get("shot") or slide.get("shot")
+                prefix = "/en/" if lang == "en" else "/"
+                assert shot["path"].startswith(prefix), (
+                    f"{campaign_id} tall-diagram {index} declares a per-language "
+                    f"capture but takes the {lang} one from {shot['path']}, "
+                    "which is not that locale"
+                )
+                if lang == "pl":
+                    assert not shot["path"].startswith("/en/")
 
 
 @pytest.mark.parametrize("campaign_id", CAMPAIGN_IDS)

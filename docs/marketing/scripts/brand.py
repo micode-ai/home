@@ -102,9 +102,28 @@ def pill(img: Image.Image, xy: tuple[int, int], text: str,
     return x + width
 
 
+def bar_height(width: int) -> int:
+    """Height of `browser_frame`'s title bar at this frame width."""
+    return max(int(width * 0.055), 34)
+
+
+def frame_size(shot_size: tuple[int, int], width: int) -> tuple[int, int]:
+    """The exact size `browser_frame` returns for a shot of `shot_size`.
+
+    Exposed so a caller can ask "how tall would the frame be at this width?"
+    without building the frame — `slides._place_tall_frame` searches for the
+    largest width whose frame still fits the height it has, and doing that by
+    re-deriving this arithmetic on its side would be the same measure-vs-draw
+    duplication `slides._plan_*` exists to prevent. `browser_frame` below is
+    the only other caller, so the two cannot drift.
+    """
+    shot_width, shot_height = shot_size
+    return width, max(int(width * shot_height / shot_width), 1) + bar_height(width)
+
+
 def browser_frame(shot: Image.Image, width: int, url: str) -> Image.Image:
     """Put a screenshot inside a browser window chrome with the URL shown."""
-    bar = max(int(width * 0.055), 34)
+    bar = bar_height(width)
     scaled = shot.resize((width, max(int(width * shot.height / shot.width), 1)),
                          Image.LANCZOS)
     frame = Image.new("RGB", (width, scaled.height + bar), (0x23, 0x2B, 0x3B))
@@ -119,13 +138,63 @@ def browser_frame(shot: Image.Image, width: int, url: str) -> Image.Image:
     return frame
 
 
+# Top edge of the badge, in px from the top of any canvas.
+BADGE_TOP = 40
+
+
+def badge_height(canvas_width: int) -> int:
+    """The badge height `slides.render` draws at on a canvas this wide."""
+    return max(canvas_width // 20, 34)
+
+
+def badge_bottom(canvas_width: int) -> int:
+    """The y below which a slide may draw without running under the badge.
+
+    The badge is drawn top-right and left-aligned copy normally clears it by
+    starting far enough down the canvas that the question never comes up. A
+    slide type that deliberately pushes its header *up* to buy height for a
+    visual (`slides._plan_tall_diagram`) has to know where the badge ends, and
+    re-deriving `BADGE_TOP + max(width // 20, 34)` on its side would be a
+    second copy of a number this module owns.
+    """
+    return BADGE_TOP + badge_height(canvas_width)
+
+
 def paste_badge(img: Image.Image, height: int = 56) -> None:
     """MICODE badge, top-right, matching the app factory's placement."""
     with Image.open(BADGE) as raw:
         badge = raw.convert("RGBA")
     scaled = badge.resize((max(int(height * badge.width / badge.height), 1), height),
                           Image.LANCZOS)
-    img.paste(scaled, (img.width - scaled.width - 48, 40), scaled)
+    img.paste(scaled, (img.width - scaled.width - 48, BADGE_TOP), scaled)
+
+
+def _footer_font(canvas_width: int) -> ImageFont.FreeTypeFont:
+    return heading(max(canvas_width // 34, 20), "semibold")
+
+
+def _footer_margin(canvas_height: int) -> int:
+    return max(int(canvas_height * 0.025), 14)
+
+
+def footer_top(size: tuple[int, int]) -> int:
+    """The y at which `footer()`'s own ink starts on a canvas this size.
+
+    `slides.py`'s `_FOOTER_RESERVE` is a flat 14% of canvas height, chosen to
+    be comfortably clear of this without having to ask. Comfortably is the
+    problem for a slide type whose whole job is to spend height on a picture:
+    on 1080x1350 the reserve bottoms out at y=1161 while the first footer
+    pixel is at y=1284, so 123 px of canvas are being left empty for a
+    guarantee that only needs a gap. Exposed so `slides._place_tall_frame`
+    can ask where the footer really is instead of re-deriving the placement
+    below — which `tests/test_slides.py::_footer_ink_top` already does once,
+    and says in its own docstring that it is a replica.
+    """
+    width, height = size
+    font = _footer_font(width)
+    probe = ImageDraw.Draw(Image.new("RGB", (1, 1)))
+    left, top, right, bottom = probe.textbbox((0, 0), SITE, font=font)
+    return height - _footer_margin(height) - bottom + top
 
 
 def footer(img: Image.Image, lang: str) -> None:
@@ -140,9 +209,9 @@ def footer(img: Image.Image, lang: str) -> None:
     keeps the ink fully inside the canvas at any aspect ratio.
     """
     draw = ImageDraw.Draw(img)
-    font = heading(max(img.width // 34, 20), "semibold")
+    font = _footer_font(img.width)
     label = SITE
-    margin = max(int(img.height * 0.025), 14)
+    margin = _footer_margin(img.height)
     left, top, right, bottom = draw.textbbox((0, 0), label, font=font)
     x = (img.width - (right - left)) // 2 - left
     y = img.height - margin - bottom
