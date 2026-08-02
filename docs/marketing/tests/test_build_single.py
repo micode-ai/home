@@ -242,3 +242,23 @@ def test_overflow_warns_and_prints_exactly_once_per_overflowing_format(workspace
         f"expected exactly one operator message per overflowing format, got "
         f"{captured.err.count('WARNING')}"
     )
+
+
+def test_an_unknown_language_is_rejected_by_name(workspace):
+    """`build_single.py cost-of-ai-agent ru` used to die with a bare
+    `KeyError: 'ru'` raised deep inside spec.py. The factory renders pl and
+    en; anything else must be a `SpecError` naming both the bad value and the
+    supported ones, so `main()` prints one actionable line."""
+    with pytest.raises(spec.SpecError) as exc:
+        build_single.build("demo", ["ru"])
+    message = str(exc.value)
+    assert "'ru'" in message and "'pl'" in message and "'en'" in message, message
+
+
+def test_an_unknown_language_is_rejected_before_anything_is_written(workspace):
+    """`pl ru` must not leave a half-built set of Polish singles behind."""
+    with pytest.raises(spec.SpecError):
+        build_single.build("demo", ["pl", "ru"])
+    assert not list((workspace / "creatives").rglob("*.png")), (
+        "images were written before the language check ran"
+    )

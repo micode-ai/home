@@ -21,8 +21,11 @@ MIDDLE = "середина"  # product post
 
 # LinkedIn is the one feed where both funnel levels compete for the same
 # audience, so it is the feed the Tue/Thu rule is written for. Facebook,
-# Instagram and Stories repackage the same top-of-funnel campaign on their own
-# platform in the same week and are deliberately outside the rule.
+# Instagram and Stories are outside the rule because they are different feeds
+# with a different audience — a post there takes nothing away from the next
+# LinkedIn post — and not because of what they carry: rows 2 and 3 do
+# repackage the same top-of-funnel campaign, but rows 9 and 11 are product
+# posts (`середина`) and repackage nothing.
 LINKEDIN_WEEKDAY = {TOP: 1, MIDDLE: 3}  # Monday is 0
 
 
@@ -88,3 +91,22 @@ def test_the_schedule_runs_forward():
     dates = [row["date"] for row in _rows()]
     assert dates == sorted(dates), dates
     assert len(set(dates)) == len(dates), "two posts scheduled on the same day"
+
+
+def test_the_exempt_rows_are_a_feed_rule_not_a_funnel_rule():
+    """The document used to justify exempting the non-LinkedIn rows by saying
+    they repackage the same top-of-funnel campaign. Two of the four do not:
+    rows 9 (`emarketing-ai`) and 11 (`budget-assistant`) are product posts,
+    labelled `середина` in the table right below the claim. The exemption is
+    correct — those are different feeds with a different audience, so they
+    take nothing away from the next LinkedIn post — but the stated reason was
+    not. Pinned here so the table and the paragraph cannot drift apart again:
+    if every exempt row ever really did become top-of-funnel, the paragraph
+    needs rewriting along with the schedule."""
+    exempt = [row for row in _rows() if not row["channel"].startswith("LinkedIn")]
+    assert exempt, "no non-LinkedIn rows parsed — the table changed shape"
+    assert MIDDLE in {row["level"] for row in exempt}, (
+        "every row exempt from the Tue/Thu rule is now top-of-funnel, so the "
+        "paragraph's feed-based reasoning should be re-checked against the table"
+    )
+    assert TOP in {row["level"] for row in exempt}

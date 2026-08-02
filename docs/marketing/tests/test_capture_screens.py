@@ -127,3 +127,116 @@ def test_shots_for_skips_a_slide_with_shot_but_no_asset_declared(tmp_path, monke
     monkeypatch.setattr(spec, "MARKETING", tmp_path)
     shots = capture_screens.shots_for(spec.Campaign.load("demo"))
     assert [s["asset"] for s in shots] == ["src/hero.png"]
+
+
+def test_one_asset_captured_from_two_pages_is_a_spec_error(tmp_path, monkeypatch):
+    """`asset` is the filename, so two captures that resolve to the same one
+    are not two captures — they are one file written twice.
+
+    The dedupe key used to be the whole (asset, path, selector) triple, which
+    treated this as two distinct pieces of work: two entries, one filename,
+    the second `element.screenshot()` overwriting the first, and the Polish
+    deck shipping the English table (or the other way round, depending on
+    `LANGS` order) with nothing anywhere saying so. The per-language `asset`
+    that Task 9 added is exactly what makes this reachable — before it, a
+    single slide could only name one asset.
+    """
+    payload = json.loads(json.dumps(PAYLOAD))
+    slide = payload["slides"][1]
+    slide.pop("asset")
+    slide.pop("shot")
+    slide["pl"] = {"headline": "b", "asset": "src/calc.png",
+                   "shot": {"path": "/blog/x/", "selector": ".calc-table-wrap"}}
+    slide["en"] = {"headline": "b", "asset": "src/calc.png",
+                   "shot": {"path": "/en/blog/x/", "selector": ".calc-table-wrap"}}
+    with pytest.raises(spec.SpecError) as exc:
+        capture_screens.shots_for(_load(payload, tmp_path, monkeypatch))
+    message = str(exc.value)
+    assert "demo" in message, f"the error must name the campaign: {message}"
+    assert "src/calc.png" in message, f"the error must name the asset: {message}"
+    assert "/blog/x/" in message and "/en/blog/x/" in message, (
+        f"the error must name both pages that would write it: {message}"
+    )
+
+
+def test_one_asset_captured_from_one_page_with_two_selectors_is_a_spec_error(
+        tmp_path, monkeypatch):
+    """Same clobber, arrived at from the other direction: same page, same
+    filename, two different elements photographed into it."""
+    payload = json.loads(json.dumps(PAYLOAD))
+    slide = payload["slides"][1]
+    slide.pop("asset")
+    slide.pop("shot")
+    slide["pl"] = {"headline": "b", "asset": "src/calc.png",
+                   "shot": {"path": "/blog/x/", "selector": ".calc-table-wrap"}}
+    slide["en"] = {"headline": "b", "asset": "src/calc.png",
+                   "shot": {"path": "/blog/x/", "selector": ".bar-outer"}}
+    with pytest.raises(spec.SpecError, match="src/calc.png"):
+        capture_screens.shots_for(_load(payload, tmp_path, monkeypatch))
+
+
+def test_the_same_asset_from_the_same_page_still_collapses_to_one_capture(campaign):
+    """The legitimate half of the same rule, restated so the fix above cannot
+    be "implemented" by simply rejecting every repeat: a language-neutral
+    diagram declares its asset once at slide level, is visited once per
+    language, resolves identically both times, and must still cost exactly one
+    browser round-trip and one file."""
+    shots = capture_screens.shots_for(campaign)
+    assert len(shots) == 2, [s["asset"] for s in shots]
+    assert len({s["asset"] for s in shots}) == 2
+
+
+def test_capture_writes_exactly_where_the_renderer_reads(campaign):
+    """The writer and the reader must resolve an asset the same way.
+
+    They did not: `capture()` wrote to `creatives/<id>/src/` +
+    `Path(asset).name` while `spec.Campaign.asset()` — which
+    `slides._place_diagram_frame` calls — resolves `creatives/<id>/` + the
+    whole relative path. Identical for the `src/x.png` assets this campaign
+    happens to declare, and silently divergent for anything else. The fix is
+    that there is now only one resolver; this asserts that, using an asset
+    whose directory is *not* `src/` so the old two-resolver behaviour is
+    distinguishable from the new one."""
+    shot = {"asset": "screens/graph.png", "path": "/products/x/", "selector": None}
+    assert capture_screens.target_for(campaign, shot) == campaign.asset(shot)
+    assert capture_screens.target_for(campaign, shot).parent.name == "screens", (
+        "capture writes into src/ while the renderer looks in screens/"
+    )
+
+
+def test_capture_target_matches_the_renderer_for_the_assets_in_use(campaign):
+    """And for the shape every campaign actually declares today, so the fix
+    is proven not to have moved the existing captures."""
+    for shot in capture_screens.shots_for(campaign):
+        assert capture_screens.target_for(campaign, shot) == campaign.asset(shot)
+        assert capture_screens.target_for(campaign, shot).parent.name == "src"
+
+
+def test_main_reports_a_capture_failure_as_a_message_not_a_traceback(
+        campaign, monkeypatch, capsys):
+    """`capture()` raises `RuntimeError` with an operator-facing message for
+    all three of its failure modes (preview server not running, page never
+    went quiet, selector never appeared). `main()` caught only `SpecError`, so
+    every one of those carefully-written messages reached the console as a
+    traceback with the message buried at the bottom — which is exactly what
+    writing them was meant to avoid."""
+    def explode(campaign_id, base_url=capture_screens.DEFAULT_BASE):
+        raise RuntimeError(
+            "demo: could not load http://localhost:4173/ — the preview server "
+            "does not appear to be running")
+
+    monkeypatch.setattr(capture_screens, "capture", explode)
+    assert capture_screens.main(["capture_screens.py", "demo"]) == 1
+    captured = capsys.readouterr()
+    assert "preview server" in captured.err, captured.err
+    assert "Traceback" not in captured.err and "Traceback" not in captured.out
+
+
+def test_main_still_reports_a_spec_error_as_a_message(campaign, monkeypatch, capsys):
+    """The clause added for RuntimeError must not have displaced this one."""
+    def explode(campaign_id, base_url=capture_screens.DEFAULT_BASE):
+        raise spec.SpecError("demo: no campaign spec")
+
+    monkeypatch.setattr(capture_screens, "capture", explode)
+    assert capture_screens.main(["capture_screens.py", "demo"]) == 1
+    assert "no campaign spec" in capsys.readouterr().err

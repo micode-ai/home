@@ -1,4 +1,5 @@
 import json
+import warnings
 
 import pytest
 from PIL import Image, ImageChops, ImageDraw
@@ -236,20 +237,80 @@ def _footer_band_overlap(actual: Image.Image, lang: str) -> int:
 @pytest.mark.parametrize("size", [(1200, 627), (1200, 630)])
 @pytest.mark.parametrize(("slide_type", "extra"), [
     ("hook", {"bigNumber": "$74.38"}),
+    ("problem", {}),
     ("numbers", {"rows": [["gpt-5.4-nano", "$50.34"], ["gpt-5.6-sol", "$1254.00"]]}),
+    ("diagram", {"asset": "src/calculator.png"}),
     ("cta", {}),
 ])
 def test_long_copy_never_bleeds_into_the_footer_band(campaign, slide_type, extra, size):
-    """hook/numbers/cta must keep their text (and, for cta, the pill) clear
-    of the footer band even with much longer copy than this module's compact
-    fixture — previously measured to overlap the footer by thousands of ink
-    pixels on these exact canvases."""
+    """Every slide type must keep its content — text, the `numbers` table,
+    the `cta` pill, the `diagram` screenshot — clear of the footer band even
+    with much longer copy than this module's compact fixture; previously
+    measured to overlap the footer by thousands of ink pixels on these exact
+    canvases.
+
+    `problem` and `diagram` were both missing from this list. `diagram`
+    reaches the footer band by a different mechanism than every other type —
+    its screenshot is placed by `_place_diagram_frame` out of its own
+    `available` budget, entirely outside the `_fit_box` loop the other four
+    are guarded by — so it needs its own entry rather than inheriting
+    `problem`'s (verified: dropping `_FOOTER_RESERVE` from that budget fails
+    both `diagram` cases here and nothing else in this file).
+
+    `problem` here is a general guard only, and deliberately not the guard for
+    the known `_plan_problem` drift (reporting the header's bottom while also
+    drawing the sub). Measured against that exact mutation: with `LONG_PL` the
+    bleed is 0 px at both canvases, because `LONG_PL`'s header *and* sub fit at
+    shrink 1.0 (484 px against a 540 px budget at 1200x627), so the drift
+    changes nothing it can see. `LONG_PL_PROBLEM_TIGHT` and
+    `test_problem_slide_counts_its_sub_toward_the_footer_band_budget` below are
+    the fixture and test that actually express it.
+    """
     slide = {"type": slide_type, "pl": LONG_PL, "en": LONG_PL, **extra}
     img = slides.render(campaign, slide, "pl", size)
     overlap = _footer_band_overlap(img, "pl")
     assert overlap == 0, (
         f"{slide_type} slide at {size[0]}x{size[1]} draws {overlap} px of body "
         f"content inside the footer band"
+    )
+
+
+# A `problem`-specific long-copy fixture, tuned by measurement so its header
+# alone still fits the footer-band budget at shrink 1.0 (358 px against 540 px
+# at 1200x627) while its header *plus* sub does not (632 px). That gap is the
+# only place `_plan_problem`'s "reported bottom" and "drawn bottom" can be
+# told apart: if the reported bottom is the header's, `_fit_box` sees a fit,
+# never shrinks, and the sub is drawn straight through the footer. Shorter
+# copy — including this module's own `LONG_PL` — fits under both accountings
+# and cannot distinguish them.
+LONG_PL_PROBLEM_TIGHT = dict(
+    LONG_PL,
+    sub=LONG_PL["sub"] + (
+        " Wielu klientow porownuje tylko cene za token, a nie rzeczywisty "
+        "rachunek na koniec miesiaca."
+    ) * 4,
+)
+
+
+@pytest.mark.parametrize("size", [(1200, 627), (1200, 630)])
+def test_problem_slide_counts_its_sub_toward_the_footer_band_budget(campaign, size):
+    """`_plan_problem` must report the bottom of everything it drew.
+
+    A `_plan_*` returning a `y` inconsistent with the ops it emitted is the
+    one drift the single-plan-function refactor cannot rule out structurally,
+    and `problem` is where it is cheapest to introduce: the function is three
+    lines, and dropping the sub's contribution from the returned `y` looks
+    like a harmless rename. Measured against exactly that mutation with this
+    fixture: 8726 px of body ink inside the real footer band at 1200x627 and
+    7982 px at 1200x630, with the rest of this suite green.
+    """
+    slide = {"type": "problem", "pl": LONG_PL_PROBLEM_TIGHT,
+             "en": LONG_PL_PROBLEM_TIGHT}
+    img = slides.render(campaign, slide, "pl", size)
+    overlap = _footer_band_overlap(img, "pl")
+    assert overlap == 0, (
+        f"problem slide at {size[0]}x{size[1]} draws {overlap} px of body content "
+        "inside the footer band — the sub may not be counted toward the fit"
     )
 
 
@@ -395,4 +456,102 @@ def test_fit_box_warns_when_copy_still_overflows_at_the_minimum_type_scale(campa
     messages = [str(w.message) for w in caught]
     assert any("numbers" in m and "1200x627" in m for m in messages), (
         f"expected a warning naming the slide type and canvas; got {messages}"
+    )
+
+
+def _load_campaign(tmp_path, monkeypatch, payload):
+    root = tmp_path / "campaigns" / "demo"
+    root.mkdir(parents=True, exist_ok=True)
+    (root / "campaign.json").write_text(json.dumps(payload), encoding="utf-8")
+    monkeypatch.setattr(spec, "MARKETING", tmp_path)
+    return spec.Campaign.load("demo")
+
+
+def test_diagram_slide_warns_when_its_screenshot_was_never_captured(tmp_path, monkeypatch):
+    """A declared screenshot that isn't on disk must not degrade in silence.
+
+    `_place_diagram_frame` returned with no signal at all when the asset file
+    was absent — eight lines above a branch that *does* warn for the
+    no-room-left case. For a brand-new campaign the single likeliest operator
+    mistake is not having run `capture_screens.py` (or having renamed the file
+    since), and the result is a slide that looks entirely deliberate: brand
+    chrome, headline, sub, and no diagram — on the one slide type whose whole
+    job is to show something. The warning must name the campaign, which slide,
+    and the path it actually looked at, because "spelt differently from where
+    the capture landed" is the other half of this failure mode and only the
+    path distinguishes the two.
+    """
+    payload = json.loads(json.dumps(PAYLOAD))
+    payload["slides"][3]["asset"] = "src/never-captured.png"
+    campaign = _load_campaign(tmp_path, monkeypatch, payload)
+    slide = campaign.slides[3]
+
+    with pytest.warns(RuntimeWarning) as caught:
+        img = slides.render(campaign, slide, "pl", (1080, 1350))
+
+    # Still degrades to a text slide rather than breaking a batch render.
+    assert img.size == (1080, 1350)
+    expected_path = tmp_path / "creatives" / "demo" / "src" / "never-captured.png"
+    messages = [str(w.message) for w in caught]
+    assert any("demo" in m and "slide 4" in m and str(expected_path) in m
+               for m in messages), (
+        f"expected a warning naming the campaign, the slide and the path it "
+        f"looked for ({expected_path}); got {messages}"
+    )
+
+
+def test_a_captured_screenshot_produces_no_missing_asset_warning(tmp_path, monkeypatch):
+    """The other half: the warning must be a signal, not something every
+    normal render emits — otherwise the generators relay it on every build and
+    an operator learns to ignore it."""
+    payload = json.loads(json.dumps(PAYLOAD))
+    campaign = _load_campaign(tmp_path, monkeypatch, payload)
+    shot_dir = tmp_path / "creatives" / "demo" / "src"
+    shot_dir.mkdir(parents=True, exist_ok=True)
+    Image.new("RGB", (1600, 900), (255, 255, 255)).save(shot_dir / "calculator.png")
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        slides.render(campaign, campaign.slides[3], "pl", (1080, 1350))
+    assert [str(w.message) for w in caught] == []
+
+
+def test_a_diagram_slide_that_declares_no_screenshot_is_not_warned_about(
+        tmp_path, monkeypatch):
+    """Declaring no `asset` at all is a spec choice, not a mistake — a
+    diagram slide can legitimately be text-only — so it must stay silent. A
+    warning here would fire on a valid campaign and devalue the one above."""
+    payload = json.loads(json.dumps(PAYLOAD))
+    payload["slides"][3].pop("asset")
+    campaign = _load_campaign(tmp_path, monkeypatch, payload)
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        slides.render(campaign, campaign.slides[3], "pl", (1080, 1350))
+    assert [str(w.message) for w in caught] == []
+
+
+def test_the_missing_screenshot_warning_names_the_language_that_declared_it(
+        tmp_path, monkeypatch):
+    """Per-language assets mean only one of the two decks can be broken. The
+    warning has to say which, or an operator re-runs a capture that was
+    already fine."""
+    payload = json.loads(json.dumps(PAYLOAD))
+    slide = payload["slides"][3]
+    slide.pop("asset")
+    slide["pl"] = dict(slide["pl"], asset="src/calculator.png")
+    slide["en"] = dict(slide["en"], asset="src/calculator-never-captured.png")
+    campaign = _load_campaign(tmp_path, monkeypatch, payload)
+    shot_dir = tmp_path / "creatives" / "demo" / "src"
+    shot_dir.mkdir(parents=True, exist_ok=True)
+    Image.new("RGB", (1600, 900), (255, 255, 255)).save(shot_dir / "calculator.png")
+
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        slides.render(campaign, campaign.slides[3], "pl", (1080, 1350))
+    assert [str(w.message) for w in caught] == [], "the Polish capture exists"
+
+    with pytest.warns(RuntimeWarning) as caught:
+        slides.render(campaign, campaign.slides[3], "en", (1080, 1350))
+    messages = [str(w.message) for w in caught]
+    assert any("calculator-never-captured.png" in m and "(en)" in m for m in messages), (
+        f"expected a warning naming the English asset and language; got {messages}"
     )

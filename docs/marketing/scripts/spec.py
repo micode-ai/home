@@ -16,7 +16,29 @@ LANGS = ("pl", "en")
 
 
 class SpecError(Exception):
-    """A campaign.json that would render a broken or misleading creative."""
+    """A render request that would produce a broken or misleading creative —
+    a campaign.json this module refuses to load, or a language this factory
+    does not carry."""
+
+
+def check_langs(langs) -> list[str]:
+    """Validate the languages a generator was asked to render.
+
+    All three generators take languages straight off the command line and
+    hand them to `slide[lang]`, so `build_carousel.py <id> ru` used to die
+    with a bare `KeyError: 'ru'` raised from inside this module — a traceback
+    that names neither the offending argument as an *argument* nor the two
+    languages that would have worked. Raised as a `SpecError` so each
+    generator's existing `except SpecError` prints one actionable line.
+    """
+    unknown = [lang for lang in langs if lang not in LANGS]
+    if unknown:
+        raise SpecError(
+            f"unsupported language{'s' if len(unknown) > 1 else ''} "
+            f"{', '.join(repr(lang) for lang in unknown)}; this factory "
+            f"renders {', '.join(repr(lang) for lang in LANGS)}"
+        )
+    return list(langs)
 
 
 @dataclass

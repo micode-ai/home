@@ -71,6 +71,97 @@ def test_paste_badge_marks_the_top_right():
     assert img.crop((820, 20, 1060, 110)).tobytes() != before
 
 
+# --- pill geometry --------------------------------------------------------
+#
+# `pill()` had no direct test at all, and nothing anywhere asserted that it
+# and `pill_height()` agree. They have to: `slides._plan_cta` reserves
+# `brand.pill_height(font)` of vertical budget for a pill it then asks
+# `brand.pill()` to draw, and that reservation is what keeps the CTA slide's
+# contact address out of the footer band. If `pill()` ever drew taller than
+# `pill_height()` reports, `_plan_cta` would report a fit while the real pill
+# sat inside the footer — and every slide-level test would still pass,
+# because they all measure the *plan*, not the ink.
+
+PILL_SIZES = [18, 24, 32, 48]
+
+
+def _pill_ink_bbox(font, origin=(60, 80), text=brand.CONTACT):
+    """The bbox of everything `pill()` actually draws, and its return value."""
+    img = Image.new("RGB", (1200, 400), brand.DARK)
+    before = img.copy()
+    right_edge = brand.pill(img, origin, text, font)
+    bbox = ImageChops.difference(img, before).getbbox()
+    return bbox, right_edge
+
+
+@pytest.mark.parametrize("size", PILL_SIZES, ids=lambda s: f"{s}px")
+def test_pill_draws_a_visible_tag(size):
+    font = brand.body(size, "semibold")
+    bbox, _ = _pill_ink_bbox(font)
+    assert bbox is not None, "pill() drew nothing"
+
+
+@pytest.mark.parametrize("size", PILL_SIZES, ids=lambda s: f"{s}px")
+def test_pill_ink_height_is_exactly_what_pill_height_reports(size):
+    """The agreement `slides._plan_cta` depends on, asserted on the pixels.
+
+    Both directions matter. Drawing *taller* than reported means a caller
+    that reserved the reported height overflows whatever came after it (for
+    `_plan_cta`, the footer band). Drawing *shorter* means the caller wastes
+    budget and shrinks type it did not need to shrink. PIL's bbox lower bound
+    is exclusive — the last row of ink is `bbox[3] - 1` — so the drawn height
+    is `bbox[3] - bbox[1] - 1` against a box drawn from `y` to `y + height`
+    inclusive.
+    """
+    font = brand.body(size, "semibold")
+    origin = (60, 80)
+    bbox, _ = _pill_ink_bbox(font, origin)
+    assert bbox[1] == origin[1], (
+        f"pill ink starts at y={bbox[1]}, not at the requested y={origin[1]}"
+    )
+    drawn = bbox[3] - bbox[1] - 1
+    reported = brand.pill_height(font)
+    assert drawn == reported, (
+        f"pill() draws {drawn}px tall at font size {size} but pill_height() "
+        f"reports {reported}px — a caller reserving the reported height would "
+        f"be off by {drawn - reported}px"
+    )
+
+
+@pytest.mark.parametrize("size", PILL_SIZES, ids=lambda s: f"{s}px")
+def test_pill_height_accounts_for_the_vertical_padding(size):
+    """Not just "they agree" — the reported height must actually include the
+    padding above and below the text, so a mutation reducing it to the bare
+    font size is caught even if `pill()` were changed to match."""
+    font = brand.body(size, "semibold")
+    assert brand.pill_height(font) == size + brand.PILL_PAD_Y * 2
+
+
+@pytest.mark.parametrize("size", PILL_SIZES, ids=lambda s: f"{s}px")
+def test_pill_returns_its_own_right_edge(size):
+    """The return value is documented as "the pill's right edge in px" — a
+    caller placing anything after the pill relies on it. Assert it against
+    the ink rather than against `pill()`'s own arithmetic."""
+    font = brand.body(size, "semibold")
+    origin = (60, 80)
+    bbox, right_edge = _pill_ink_bbox(font, origin)
+    assert bbox[0] == origin[0], f"pill ink starts at x={bbox[0]}, not {origin[0]}"
+    # bbox[2] is exclusive, so the last inked column is bbox[2] - 1.
+    assert bbox[2] - 1 == right_edge, (
+        f"pill() reports its right edge at x={right_edge} but its last inked "
+        f"column is x={bbox[2] - 1}"
+    )
+
+
+def test_pill_width_follows_its_text():
+    """A pill that ignored its `text` argument would still satisfy every
+    height assertion above."""
+    font = brand.body(32, "semibold")
+    short, _ = _pill_ink_bbox(font, text="a")
+    wide, _ = _pill_ink_bbox(font, text=brand.CONTACT)
+    assert wide[2] > short[2], "pill width does not depend on the text drawn"
+
+
 def test_browser_frame_wraps_the_screenshot():
     shot = Image.new("RGB", (1600, 900), (255, 255, 255))
     framed = brand.browser_frame(shot, 900, "mi-code.pl")

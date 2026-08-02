@@ -9,11 +9,11 @@ Usage:
     python docs/marketing/scripts/build_single.py cost-of-ai-agent pl en
 """
 import sys
-import warnings
 from pathlib import Path
 
+import render_warnings
 import slides
-from spec import Campaign, SpecError
+from spec import Campaign, SpecError, check_langs
 
 CANVASES = {
     "li-single": (1200, 627),
@@ -23,6 +23,7 @@ CANVASES = {
 
 
 def build(campaign_id: str, langs: list[str]) -> list[Path]:
+    check_langs(langs)
     campaign = Campaign.load(campaign_id)
     hook = next((s for s in campaign.slides if s["type"] == "hook"),
                 campaign.slides[0])
@@ -32,33 +33,20 @@ def build(campaign_id: str, langs: list[str]) -> list[Path]:
         out = campaign.render_dir(lang)
         for name, size in CANVASES.items():
             path = out / f"{name}.png"
-            # `slides.render` raises a RuntimeWarning (not an exception) when a
-            # slide's copy still overflows the footer band at the minimum type
-            # scale — a real risk on these short/wide canvases (see slides.py's
-            # `_fit_box`). Left as a bare Python warning, that is easy to miss
-            # in a real build run. `simplefilter("always")` here only lifts
-            # this block's *own* filter so the warning is reliably captured
-            # rather than deduped away — it must not leak out and override a
-            # caller's filter (e.g. a CI gate running with `-W
-            # error::RuntimeWarning`). So: capture, add the operator-facing
-            # line, then step back outside this block (where the caller's own
-            # filters are back in force) and re-emit via `warn_explicit` so
-            # *that* filter — not this block's — decides whether it prints,
-            # is ignored, or raises. This runs before `image.save()` so a
-            # caller whose filter turns it into an exception still never gets
-            # a saved file for this format, matching plain
-            # `slides.render(...).save(path)` semantics.
-            with warnings.catch_warnings(record=True) as caught:
-                warnings.simplefilter("always")
+            # `slides.render` reports a slide it could not lay out properly —
+            # copy that still overflows the footer band at the minimum type
+            # scale (a real risk on these short/wide canvases; see slides.py's
+            # `_fit_box`), a screenshot it could not find — as a bare
+            # RuntimeWarning, which is easy to miss in a real build run.
+            # `render_warnings.surfaced` adds the operator-facing line and
+            # hands the warning back to the caller's own filters; its
+            # docstring has the full contract. Re-emission happens as the
+            # `with` exits, i.e. before `image.save()`, so a caller running
+            # with `-W error::RuntimeWarning` still never gets a saved file
+            # for this format — the same semantics as a plain
+            # `slides.render(...).save(path)`.
+            with render_warnings.surfaced(campaign_id, lang, f"'{name}'", size):
                 image = slides.render(campaign, hook, lang, size)
-            for w in caught:
-                print(
-                    f"  WARNING: {campaign_id} ({lang}): '{name}' at "
-                    f"{size[0]}x{size[1]} overflowed its footer band even at the "
-                    "minimum type scale — shorten this campaign's hook copy",
-                    file=sys.stderr,
-                )
-                warnings.warn_explicit(w.message, w.category, w.filename, w.lineno)
             image.save(path)
             written.append(path)
         print(f"  {lang}: {len(CANVASES)} singles -> {out}")

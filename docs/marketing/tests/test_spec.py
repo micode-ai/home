@@ -222,3 +222,47 @@ def test_render_dir_is_per_language(tmp_path, monkeypatch):
     monkeypatch.setattr(spec, "MARKETING", tmp_path)
     campaign = spec.Campaign.load("demo")
     assert campaign.render_dir("pl").as_posix().endswith("creatives/demo/renders/pl")
+
+
+# --- language validation --------------------------------------------------
+#
+# Every generator takes its languages straight off the command line and hands
+# them to `slide[lang]`. Unvalidated, `build_carousel.py cost-of-ai-agent ru`
+# died with a bare `KeyError: 'ru'` raised from inside this module — a
+# traceback naming neither the argument nor the two languages that work.
+
+def test_check_langs_accepts_the_languages_the_factory_renders():
+    assert spec.check_langs(["pl", "en"]) == ["pl", "en"]
+    assert spec.check_langs(["en"]) == ["en"]
+    assert spec.check_langs([]) == []
+
+
+def test_check_langs_rejects_an_unknown_language_by_name():
+    with pytest.raises(spec.SpecError) as exc:
+        spec.check_langs(["ru"])
+    message = str(exc.value)
+    assert "'ru'" in message, f"the error must name the offending value: {message}"
+    assert "'pl'" in message and "'en'" in message, (
+        f"the error must name what would have worked: {message}"
+    )
+
+
+def test_check_langs_rejects_an_unknown_language_mixed_in_with_valid_ones():
+    """The realistic typo is `pl en ry`, not a lone bad argument — a check
+    that only looked at the first language would let that through and then
+    fail three quarters of the way into a render run."""
+    with pytest.raises(spec.SpecError, match="'ry'"):
+        spec.check_langs(["pl", "en", "ry"])
+
+
+def test_check_langs_names_every_unknown_language_not_just_the_first():
+    with pytest.raises(spec.SpecError) as exc:
+        spec.check_langs(["ru", "de"])
+    assert "'ru'" in str(exc.value) and "'de'" in str(exc.value)
+
+
+def test_langs_is_the_pair_the_factory_declares():
+    """`check_langs` is only as good as the tuple it checks against, and that
+    tuple is also what `Campaign.load` validates every slide's copy against
+    and what `capture_screens.shots_for` walks."""
+    assert spec.LANGS == ("pl", "en")

@@ -253,6 +253,24 @@ def _fit_box(size: tuple[int, int], slide: dict, text: dict):
     return box, ops, y
 
 
+def _slide_position(campaign, slide: dict) -> str:
+    """Which slide of the deck this is, 1-based, for a warning message.
+
+    `render()` is handed a slide dict, not an index, and tests routinely pass
+    a modified copy of one, so this is best-effort: identity first, equality
+    second, `'?'` when the slide is not part of the loaded deck at all. A
+    warning is worth emitting either way — a missing position is a smaller
+    loss than no warning."""
+    deck = getattr(campaign, "slides", None) or []
+    for index, candidate in enumerate(deck, start=1):
+        if candidate is slide:
+            return str(index)
+    for index, candidate in enumerate(deck, start=1):
+        if candidate == slide:
+            return str(index)
+    return "?"
+
+
 def _place_diagram_frame(img, box, slide, campaign, lang, y: int) -> None:
     # Per-language asset wins over the slide-level one, mirroring `rows` in
     # `_plan_numbers`. A screenshot of a page that renders its own text — the
@@ -264,9 +282,31 @@ def _place_diagram_frame(img, box, slide, campaign, lang, y: int) -> None:
     # text slide (with the warning below), rather than silently substituting
     # the other language's screenshot.
     text = campaign.text(slide, lang)
+    declared = text.get("asset") or slide.get("asset")
     path = campaign.asset(text) or campaign.asset(slide)
-    if not path or not path.is_file():
-        return  # degrade to a text slide rather than break a batch render
+    if not path:
+        # No screenshot declared at all: this diagram slide is text-only by
+        # the spec's own choice, so there is nothing to report.
+        return
+    if not path.is_file():
+        # Still degrade to a text slide rather than break a batch render —
+        # but never silently. For a new campaign the likeliest operator
+        # mistake by far is not having run capture_screens.py (or having
+        # renamed the file since), and the result is a slide that looks
+        # deliberate: brand chrome, headline, sub, no diagram. Naming the
+        # path this looked for is what turns "why is the diagram missing"
+        # into a one-glance answer, including for the case where the path is
+        # simply spelt differently from where the capture landed.
+        warnings.warn(
+            f"slides: the {declared!r} screenshot for slide "
+            f"{_slide_position(campaign, slide)} ('{slide['type']}') of campaign "
+            f"{getattr(campaign, 'id', '?')!r} ({lang}) does not exist at "
+            f"{path}; rendering the slide without it — capture it first with "
+            f"`python docs/marketing/scripts/capture_screens.py "
+            f"{getattr(campaign, 'id', '?')}`",
+            RuntimeWarning,
+        )
+        return
     with Image.open(path) as raw:
         shot = raw.convert("RGB")
     available = img.height - y - int(img.height * _FOOTER_RESERVE)
@@ -277,10 +317,10 @@ def _place_diagram_frame(img, box, slide, campaign, lang, y: int) -> None:
         # instead so a too-tall header/sub combination gets noticed and
         # trimmed, rather than shipping a diagram card with no diagram.
         warnings.warn(
-            f"slides: no room left for the '{text.get('asset') or slide.get('asset')}' "
-            f"screenshot on the diagram slide of campaign "
-            f"{getattr(campaign, 'id', '?')!r} at "
-            f"{img.width}x{img.height} ({lang}); rendering without it",
+            f"slides: no room left for the {declared!r} screenshot on slide "
+            f"{_slide_position(campaign, slide)} ('{slide['type']}') of campaign "
+            f"{getattr(campaign, 'id', '?')!r} ({lang}) at "
+            f"{img.width}x{img.height}; rendering without it",
             RuntimeWarning,
         )
         return

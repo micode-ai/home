@@ -349,3 +349,39 @@ def test_overflow_warns_and_prints_exactly_once(workspace, capsys):
     assert captured.err.count("WARNING") == 1, (
         f"expected exactly one operator message, got {captured.err.count('WARNING')}"
     )
+
+
+def test_an_unknown_language_is_rejected_by_name(workspace):
+    """`build_reel.py cost-of-ai-agent ru` used to die with a bare
+    `KeyError: 'ru'` raised deep inside spec.py. The factory renders pl and
+    en; anything else must be a `SpecError` naming both the bad value and the
+    supported ones, so `main()` prints one actionable line."""
+    with pytest.raises(spec.SpecError) as exc:
+        build_reel.build("demo", ["ru"])
+    message = str(exc.value)
+    assert "'ru'" in message and "'pl'" in message and "'en'" in message, message
+
+
+def test_an_unknown_language_is_rejected_before_anything_is_written(workspace):
+    """`pl ru` must not leave a half-built Polish reel behind — a reel is the
+    slowest artefact this factory produces, so failing after it is also the
+    most expensive place to fail."""
+    with pytest.raises(spec.SpecError):
+        build_reel.build("demo", ["pl", "ru"])
+    assert not list((workspace / "creatives").rglob("*")), (
+        "files were written before the language check ran"
+    )
+
+
+def test_the_command_line_default_renders_both_languages(workspace, monkeypatch):
+    """`main()`'s default used to be `["pl"]` alone while build_carousel.py
+    and build_single.py both defaulted to `["pl", "en"]` — so a bare
+    `build_reel.py <id>` (and the README command copied from it) silently
+    produced a Polish-only reel and Polish-only story posters, leaving the
+    committed English ones stale on a clean clone. The committed artifacts and
+    `test_campaign_<id>.py`'s size checks expect both."""
+    seen = {}
+    monkeypatch.setattr(build_reel, "build",
+                        lambda campaign_id, langs: seen.setdefault("langs", langs) or [])
+    assert build_reel.main(["build_reel.py", "demo"]) == 0
+    assert seen["langs"] == ["pl", "en"]

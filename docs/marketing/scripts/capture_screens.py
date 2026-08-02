@@ -66,7 +66,7 @@ def shots_for(campaign: Campaign) -> list[dict]:
     campaign that declares nothing per language behaves as it always did.
     """
     shots: list[dict] = []
-    seen: set[tuple] = set()
+    by_asset: dict[str, dict] = {}
     for slide in campaign.slides:
         for lang in LANGS:
             text = slide.get(lang) or {}
@@ -82,12 +82,53 @@ def shots_for(campaign: Campaign) -> list[dict]:
                 "path": shot["path"],
                 "selector": shot.get("selector"),
             }
-            key = (entry["asset"], entry["path"], entry["selector"])
-            if key in seen:
-                continue
-            seen.add(key)
+            # `asset` is the filename, so it — not the whole (asset, path,
+            # selector) triple — is what has to be unique. Deduping on the
+            # triple looked like it collapsed identical work, and it did, but
+            # it also let two language blocks name the SAME asset at DIFFERENT
+            # paths: two entries, one filename, the second capture silently
+            # overwriting the first, and one language shipping the other's
+            # screenshot with nothing anywhere reporting it. Identical
+            # resolutions still collapse; conflicting ones are a spec error.
+            previous = by_asset.get(asset)
+            if previous is not None:
+                if previous == entry:
+                    continue
+                raise SpecError(
+                    f"{campaign.id}: asset {asset!r} is captured from more than "
+                    f"one page — {previous['path']!r} (selector "
+                    f"{previous['selector']!r}) and {entry['path']!r} (selector "
+                    f"{entry['selector']!r}). Both write the same file, so "
+                    "whichever runs second wins and one language would ship the "
+                    "other's screenshot; give each capture its own 'asset' "
+                    "filename."
+                )
+            by_asset[asset] = entry
             shots.append(entry)
     return shots
+
+
+def target_for(campaign: Campaign, shot: dict) -> Path:
+    """The file `capture()` writes this shot to.
+
+    Deliberately `spec.Campaign.asset()` — the *same* resolver the renderer
+    reads the screenshot back with — so the writer and the reader cannot
+    disagree about where a capture lives. They used to: this function's code
+    was `creatives/<id>/src/` + `Path(asset).name`, while `Campaign.asset()`
+    resolves `creatives/<id>/` + the whole relative path. Identical for the
+    `src/x.png` assets this factory happens to declare today, and silently
+    wrong for anything else: `screens/x.png` was captured to
+    `creatives/<id>/src/x.png` and looked for at `creatives/<id>/screens/x.png`,
+    so the capture run reported success and the deck rendered a diagram slide
+    with no diagram in it.
+    """
+    target = campaign.asset(shot)
+    if target is None:  # shots_for never yields a shot without an asset
+        raise SpecError(
+            f"{campaign.id}: the shot for {shot.get('path')!r} declares no "
+            "'asset', so there is no filename to capture it into"
+        )
+    return target
 
 
 def capture(campaign_id: str, base_url: str = DEFAULT_BASE) -> list[Path]:
@@ -103,8 +144,6 @@ def capture(campaign_id: str, base_url: str = DEFAULT_BASE) -> list[Path]:
         print(f"{campaign_id}: no diagram slides declare a screenshot")
         return []
 
-    src_dir = campaign.root.parents[1] / "creatives" / campaign_id / "src"
-    src_dir.mkdir(parents=True, exist_ok=True)
     written: list[Path] = []
 
     with sync_playwright() as pw:
@@ -113,7 +152,8 @@ def capture(campaign_id: str, base_url: str = DEFAULT_BASE) -> list[Path]:
         page.add_init_script(_CONSENT_INIT_SCRIPT)
         for shot in shots:
             url = f"{base_url.rstrip('/')}{shot['path']}"
-            target = src_dir / Path(shot["asset"]).name
+            target = target_for(campaign, shot)
+            target.parent.mkdir(parents=True, exist_ok=True)
             try:
                 page.goto(url, wait_until="networkidle")
             except PlaywrightTimeoutError as exc:
@@ -171,6 +211,15 @@ def main(argv: list[str]) -> int:
         capture(argv[1], argv[2] if len(argv) > 2 else DEFAULT_BASE)
     except SpecError as exc:
         print(f"spec error: {exc}", file=sys.stderr)
+        return 1
+    except RuntimeError as exc:
+        # `capture()` raises RuntimeError with a written-for-an-operator
+        # message for all three of its failure modes (preview server not
+        # running, page never went quiet, selector never appeared). Without
+        # this clause every one of them reached the console as a traceback
+        # with that message buried at the bottom, which is exactly what
+        # writing the messages was meant to avoid.
+        print(f"capture error: {exc}", file=sys.stderr)
         return 1
     return 0
 

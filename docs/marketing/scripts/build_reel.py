@@ -6,18 +6,18 @@ never drift apart. Cross-fade between slides keeps the clip watchable
 without any motion design work per campaign.
 
 Usage:
-    python docs/marketing/scripts/build_reel.py cost-of-ai-agent pl
+    python docs/marketing/scripts/build_reel.py cost-of-ai-agent pl en
 """
 import sys
-import warnings
 from pathlib import Path
 
 import imageio.v2 as imageio
 import numpy as np
 from PIL import Image
 
+import render_warnings
 import slides
-from spec import Campaign, SpecError
+from spec import Campaign, SpecError, check_langs
 
 CANVAS = (1080, 1920)
 FPS = 24
@@ -41,6 +41,7 @@ def _frames(pages: list[Image.Image]) -> list[np.ndarray]:
 
 
 def build(campaign_id: str, langs: list[str]) -> list[Path]:
+    check_langs(langs)
     campaign = Campaign.load(campaign_id)
     written: list[Path] = []
 
@@ -51,30 +52,18 @@ def build(campaign_id: str, langs: list[str]) -> list[Path]:
 
         pages = []
         for index, slide in enumerate(campaign.slides, start=1):
-            # `slides.render` raises a RuntimeWarning (not an exception) when
-            # this slide's copy still overflows the footer band at the
-            # minimum type scale. Left as a bare Python warning, that is easy
-            # to miss in a real build run. `simplefilter("always")` here only
-            # lifts this block's *own* filter so the warning is reliably
-            # captured rather than deduped away — it must not leak out and
-            # override a caller's filter (e.g. a CI gate running with `-W
-            # error::RuntimeWarning`). So: capture, print the operator-facing
-            # line, then step back outside this block (where the caller's own
-            # filters are back in force) and re-emit via `warn_explicit` so
-            # *that* filter — not this block's — decides whether it prints,
-            # is ignored, or raises. See build_single.py for the same shape.
-            with warnings.catch_warnings(record=True) as caught:
-                warnings.simplefilter("always")
+            # `slides.render` reports a slide it could not lay out properly —
+            # copy that still overflows the footer band at the minimum type
+            # scale, a screenshot it could not find — as a bare
+            # RuntimeWarning, which is easy to miss in a real build run.
+            # `render_warnings.surfaced` adds the operator-facing line and
+            # hands the warning back to the caller's own filters; its
+            # docstring has the full contract, and build_carousel.py /
+            # build_single.py use the same one.
+            with render_warnings.surfaced(
+                    campaign_id, lang,
+                    f"story-9x16 slide {index} ('{slide['type']}')", CANVAS):
                 page = slides.render(campaign, slide, lang, CANVAS)
-            for w in caught:
-                print(
-                    f"  WARNING: {campaign_id} ({lang}): story-9x16 slide {index} "
-                    f"('{slide['type']}') at {CANVAS[0]}x{CANVAS[1]} overflowed its "
-                    "footer band even at the minimum type scale — shorten this "
-                    "campaign's copy",
-                    file=sys.stderr,
-                )
-                warnings.warn_explicit(w.message, w.category, w.filename, w.lineno)
             path = out / f"story-9x16-{index:02d}.png"
             page.save(path)
             pages.append(page)
@@ -102,7 +91,12 @@ def main(argv: list[str]) -> int:
         print(__doc__)
         return 2
     try:
-        build(argv[1], argv[2:] or ["pl"])
+        # Same default as build_carousel.py and build_single.py. It used to be
+        # `["pl"]` alone, which made a bare `build_reel.py <id>` (and the
+        # README command that copied it) quietly produce a Polish-only reel
+        # and Polish-only story posters, while the committed artifacts — and
+        # `tests/test_campaign_<id>.py`'s size checks — expect both languages.
+        build(argv[1], argv[2:] or ["pl", "en"])
     except SpecError as exc:
         print(f"spec error: {exc}", file=sys.stderr)
         return 1
