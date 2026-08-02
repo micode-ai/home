@@ -50,6 +50,17 @@ _MIN_DIAGRAM_HEIGHT = 50
 # both tighter and more honest than a second magic fraction, and a framed
 # image can sit closer to the footer than a paragraph can without the page
 # reading as crowded, because the frame draws its own edge.
+#
+# Precondition on that clearance: it holds as long as `_tall_frame_width` can
+# find a width whose frame fits the budget. It searches down to a 1 px frame
+# and returns that floor without a post-condition, and `_place_tall_frame`
+# pastes what it returns — so a source narrow enough that even a 1 px-wide
+# frame is taller than the budget (aspect below roughly 1:1000) would be drawn
+# straight through the footer. Unreachable from anything `capture_screens.py`
+# can produce: it shoots a viewport-width element, so the narrowest realistic
+# capture is hundreds of px wide. `test_tall_diagram_keeps_its_visual_clear_
+# of_the_footer_band` exercises aspect 0.625 only, so the tested guarantee is
+# narrower than that test's name suggests.
 _TALL_FOOTER_GAP = 0.025
 
 # Gap between the bottom of the compact header and the top of the frame.
@@ -66,31 +77,44 @@ _TALL_HEADER_GAP = 0.015
 # labels from 22 px to 25 px.
 _TALL_VISUAL_MARGIN = 0.035
 
-# How tall a line of the site's own body-size text is, in source pixels, in
-# any screenshot this factory takes. Every capture goes through
-# `capture_screens.py` at `device_scale_factor=2`, so ~16 px CSS type always
-# lands as a ~24-30 px ink band — measured on both captures this repo holds:
-# 28 px for every row of campaign one's calculator table (which carries
-# descenders), 23-24 px for the LangGraph node labels that do not and 30 px
-# for the ones that do.
+# How tall a line of text is, in source pixels, in the screenshots this
+# factory has actually taken. Measured on both captures this repo holds:
+# 28 px for every row of campaign one's calculator table, 23-24 px for the
+# LangGraph node labels without descenders and 30 px for the ones with.
+#
+# This is an observation about two captures, not a law. `capture_screens.py`
+# shoots at `device_scale_factor=2`, which doubles whatever the page set — and
+# the two pages did not set the same thing: 28 px of ink at DSF 2 is ~14 CSS
+# px, the LangGraph labels are ~12-15. They land in one band by coincidence of
+# two similar small type sizes, not because the site has a single body size
+# that this range follows from. A page that typesets its text smaller (a dense
+# table, a mermaid theme with a 10 px `fontSize`) would sit below the band
+# while `_TALL_MIN_SCALE` — which infers glyph size from scale alone — passes
+# it. That is why README.md tells an operator to look at the type size on a
+# capture the factory has not photographed before.
 _CAPTURE_INK_BAND = (24, 30)
 
 # Below this source-pixels-to-slide-pixels scale, a capture taken by this
 # factory is no longer readable.
 #
-# Anchored to this project's own ruling rather than to a fresh opinion: Task
-# 9 rejected `.calc` at 0.293x ("~8.2 px, illegible") and accepted
-# `.calc-table-wrap` at 0.670x and 0.572x ("~18.8 px" and "~16.0 px"). Those
-# glyph numbers are that capture's 28 px ink bands times the scale, so the
-# accepted floor is 16/28 = 0.571.
+# Anchored to this project's own ruling rather than to a fresh opinion: Task 9
+# rejected `.calc` at 0.293x ("~8.2 px, illegible") and accepted
+# `.calc-table-wrap`, quoting 0.670x/"~18.8 px" and 0.572x/"~16.0 px". The
+# first of those pair reproduces exactly — campaign one's diagram renders at
+# 0.670x on both canvases it is published at, and 28 px ink bands x 0.670 is
+# 18.8 px — so 16/28 = 0.571 is the floor that ruling's own arithmetic
+# implies. The 0.572x half is *not* a second measured datapoint: it does not
+# correspond to any canvas as the factory renders today (that slide comes out
+# at 0.427 pl / 0.359 en at 1200x627, which `build_single` never renders it
+# at anyway). The threshold stands on the 0.670x anchor.
 #
-# It is one threshold for every source because `_CAPTURE_INK_BAND` is the
-# same in every source. It is still a proxy, and it fails in both directions:
-# a capture of something typeset much larger than body copy (a hero heading,
-# a chart title) stays readable below it and gets warned about anyway, and a
-# capture of something smaller is unreadable at it without a word said. For
-# the five product `flowchart TD` graphs this slide type exists to carry, it
-# is the right ruler.
+# It is one threshold for every source because `_CAPTURE_INK_BAND` happened to
+# be the same in both sources — see the caveat there. It is a proxy, and it
+# fails in both directions: a capture of something typeset much larger than
+# body copy (a hero heading, a chart title) stays readable below it and gets
+# warned about anyway, and a capture of something smaller is unreadable at it
+# without a word said. For the five product `flowchart TD` graphs this slide
+# type exists to carry, it is the right ruler.
 _TALL_MIN_SCALE = 0.57
 
 # A `numbers` row's separator line, and the vertical step to the next row,
