@@ -14,13 +14,10 @@ export const langgraphDiagrams: Record<string, string> = {
         T3[Payments & Tax]
         T4[Contractors]
         T5[Ledger & Declarations]
+        T1 ~~~ T2 ~~~ T3 ~~~ T4 ~~~ T5
     end
 
-    T --> T1
-    T --> T2
-    T --> T3
-    T --> T4
-    T --> T5`,
+    T --> TOOLS`,
 
   'budget-assistant': `flowchart TD
     U([User Message]) --> CTX[Build Financial Context<br/>Balances · Transactions · Goals]
