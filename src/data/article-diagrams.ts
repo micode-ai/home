@@ -155,12 +155,13 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
   state "проверено — практика" as vp
   state "проверено — норма" as vn
   [*] --> draft: создаёт куратор
-  draft --> draft: правки (ИИ или вручную)
+  draft --> draft: правки
   draft --> vp: ревью куратора
   draft --> vn: ревью юриста
   vp --> [*]
   vn --> [*]
   note right of draft
+    Правки вносит ИИ или куратор вручную.
     Черновики бот тоже показывает,
     но честно помечает их
     как ещё не проверенные
@@ -170,12 +171,13 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
   state "verified — practice" as vp
   state "verified — norm" as vn
   [*] --> draft: created by curator
-  draft --> draft: edits (AI or manual)
+  draft --> draft: edits
   draft --> vp: curator review
   draft --> vn: lawyer review
   vp --> [*]
   vn --> [*]
   note right of draft
+    Edits come from the AI or the curator by hand.
     The bot still shows drafts,
     but honestly marks them
     as not yet verified
@@ -185,12 +187,13 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
   state "zweryfikowane — praktyka" as vp
   state "zweryfikowane — norma" as vn
   [*] --> draft: tworzy kurator
-  draft --> draft: poprawki (AI lub ręcznie)
+  draft --> draft: poprawki
   draft --> vp: recenzja kuratora
   draft --> vn: recenzja prawnika
   vp --> [*]
   vn --> [*]
   note right of draft
+    Poprawki wprowadza AI albo kurator ręcznie.
     Bot pokazuje też szkice,
     ale uczciwie oznacza je
     jako jeszcze niezweryfikowane
