@@ -217,13 +217,18 @@ def test_load_rejects_a_language_block_that_is_not_an_object(tmp_path, monkeypat
         spec.Campaign.load("demo")
 
 
-# --- source article and its figures ---------------------------------------
+# --- the source corpus and its figures -------------------------------------
 #
 # `source` is what lets `tests/test_campaigns.py` check every campaign's
-# numbers against its own article without a per-campaign test module. It is
-# optional (a mid-funnel product campaign points at a product page, not an
-# article), so a malformed one must not degrade to "absent" — that would turn
-# the whole figure guard off for that campaign with everything still green.
+# numbers against the material it links to, without a per-campaign test
+# module. Two shapes: `slug` for a blog article, `product` for a product page.
+# Every campaign on disk must declare exactly one — that mandate is enforced
+# unconditionally in `test_campaigns.py`, which sweeps the campaigns that can
+# actually ship; this module validates the shape only, so the two-slide
+# in-memory fixtures the generator tests build keep loading. A malformed
+# source must not degrade to "absent" either way: that would turn the whole
+# figure guard off for a campaign with everything still green, which is
+# exactly what a `track`-gated mandate let a mid-funnel campaign do.
 
 def test_load_reads_the_source_article_and_its_figures(tmp_path, monkeypatch):
     payload = json.loads(json.dumps(VALID))
@@ -233,14 +238,63 @@ def test_load_reads_the_source_article_and_its_figures(tmp_path, monkeypatch):
     monkeypatch.setattr(spec, "MARKETING", tmp_path)
     campaign = spec.Campaign.load("demo")
     assert campaign.source_slug == "ai-agent-cost-per-month-model"
+    assert campaign.source_product is None
     assert campaign.source_figures == ["$74.38", "82"]
 
 
+def test_load_reads_a_product_page_source(tmp_path, monkeypatch):
+    """The mid-funnel corpus. A product campaign has no article, and before
+    this field that was taken as licence to declare no source at all — which
+    switched the figure guard off for the campaign."""
+    payload = json.loads(json.dumps(VALID))
+    payload["track"] = "funnel-mid"
+    payload["source"] = {"product": "accounting-ai", "figures": ["58"]}
+    write_campaign(tmp_path, payload)
+    monkeypatch.setattr(spec, "MARKETING", tmp_path)
+    campaign = spec.Campaign.load("demo")
+    assert campaign.source_product == "accounting-ai"
+    assert campaign.source_slug is None
+    assert campaign.source_figures == ["58"]
+
+
+def test_load_rejects_a_source_that_names_both_an_article_and_a_product(
+        tmp_path, monkeypatch):
+    """Which corpus wins would be the resolver's guess, and the guess is
+    invisible: the figures would silently be checked against one page while
+    the author believed they were checked against the other."""
+    payload = json.loads(json.dumps(VALID))
+    payload["source"] = {"slug": "ai-agent-cost-per-month-model",
+                         "product": "accounting-ai", "figures": ["58"]}
+    write_campaign(tmp_path, payload)
+    monkeypatch.setattr(spec, "MARKETING", tmp_path)
+    with pytest.raises(spec.SpecError, match="both"):
+        spec.Campaign.load("demo")
+
+
+def test_load_rejects_an_empty_source_product(tmp_path, monkeypatch):
+    """Same reasoning as the empty slug below: an empty string is not a
+    missing declaration, it is a declaration that resolves to nothing."""
+    payload = json.loads(json.dumps(VALID))
+    payload["source"] = {"product": "   "}
+    write_campaign(tmp_path, payload)
+    monkeypatch.setattr(spec, "MARKETING", tmp_path)
+    with pytest.raises(spec.SpecError, match="product"):
+        spec.Campaign.load("demo")
+
+
 def test_a_campaign_without_a_source_block_loads_with_empty_source(tmp_path, monkeypatch):
+    """Shape-only here, on purpose, and this is the seam worth being explicit
+    about. `test_slides.py` and the three generator test modules build
+    two-slide `demo` decks with no `source`; refusing them at load time would
+    make every one of those modules carry a corpus declaration that checks
+    nothing. The mandate therefore lives one level up, in `test_campaigns.py`,
+    parametrised over `campaigns/*/campaign.json` — the campaigns that can
+    ship — where it is unconditional and cannot be skipped."""
     write_campaign(tmp_path, VALID)
     monkeypatch.setattr(spec, "MARKETING", tmp_path)
     campaign = spec.Campaign.load("demo")
     assert campaign.source_slug is None
+    assert campaign.source_product is None
     assert campaign.source_figures == []
 
 

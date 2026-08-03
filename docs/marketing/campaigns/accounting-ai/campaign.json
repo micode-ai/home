@@ -22,7 +22,7 @@
       "en": {
         "eyebrow": "An AI agent for Polish accounting",
         "headline": "One agent, up to 82 tools",
-        "sub": "That is what our accounting agent has at hand: 58 available to everyone, plus 15 for HR and payroll and 9 for KSeF once those capabilities are configured. We built it for ourselves — and the same pattern moves onto a client's systems."
+        "sub": "That is what our accounting agent has at hand: 58 available to everyone, plus 15 for HR and payroll and 9 for KSeF once those capabilities are configured. We built it in-house — and the same pattern carries over to a client's systems."
       }
     },
     {
@@ -89,7 +89,7 @@
       "pl": {
         "eyebrow": "Dane zamiast domysłów",
         "headline": "Agent nie zgaduje, tylko sięga po źródło",
-        "sub": "Odpowiedzi powstają na Twoich fakturach w wFirma, na polskich rejestrach publicznych i na oficjalnym kalendarzu terminów. Przy płatności od 15 000 zł prawo wymaga sprawdzenia rachunku kontrahenta na „Białej Liście” — agent robi to sam, bez przypominania.",
+        "sub": "Odpowiedzi opierają się na Twoich fakturach w wFirma, na polskich rejestrach publicznych i na oficjalnym kalendarzu terminów podatkowych. Przy płatności od 15 000 zł prawo wymaga sprawdzenia rachunku kontrahenta na „Białej Liście” — agent robi to sam, bez przypominania.",
         "rows": [
           ["Faktury i płatności", "wFirma"],
           ["Kontrahent po NIP", "Biała Lista, KRS"],
@@ -100,7 +100,7 @@
       "en": {
         "eyebrow": "Data instead of guesswork",
         "headline": "It checks the source, it does not guess",
-        "sub": "Answers are built on your invoices in wFirma, on the Polish public registries and on the official deadline calendar. Above 15,000 zł the law requires a “White List” check on the contractor's account — the agent runs it unprompted.",
+        "sub": "Answers are built on your invoices in wFirma, on the Polish public registries and on the official tax-deadline calendar. For any payment of 15,000 zł or more, the law requires a “White List” check on the contractor's account — the agent runs it unprompted.",
         "rows": [
           ["Invoices and payments", "wFirma"],
           ["Contractor from a NIP", "Biała Lista, KRS"],
@@ -119,7 +119,7 @@
       "en": {
         "eyebrow": "MICODE",
         "headline": "We will build one inside your systems",
-        "sub": "The same pattern — one agent, vetted tools, data from your systems instead of knowledge off the top of the head — carries over to your processes and your integrations. We start with a conversation about what is genuinely worth handing to an agent, and what is better left to a person."
+        "sub": "The same pattern — one agent, vetted tools, answers from your data rather than off the top of the head — carries over to your processes and your integrations. We start with a conversation about what is genuinely worth handing to an agent, and what is better left to a person."
       }
     }
   ]

@@ -48,19 +48,47 @@ def check_langs(langs) -> list[str]:
     return list(langs)
 
 
-def _source(campaign_id: str, data: dict) -> tuple[str | None, list[str]]:
-    """The article a campaign summarises, and the figures it is built on.
+def _source(campaign_id: str, data: dict) -> tuple[str | None, str | None, list[str]]:
+    """The corpus a campaign's figures are checked against, and those figures.
 
-    Top-of-funnel campaigns are a distilled blog article, and `strategy.md`
-    promises that every number in a creative stands verbatim in that article.
-    That promise is only enforceable if the spec says *which* article — which
-    is what `source.slug` is for — and `source.figures` names the figures
-    whose disappearance from either side should break the build.
+    `strategy.md` promises that every number in a creative stands verbatim in
+    the material the campaign links to. That promise is only enforceable if
+    the spec says *which* material — which is what `source` is for — and
+    `source.figures` names the figures whose disappearance from either side
+    should break the build.
+
+    Two shapes of corpus, exactly one per campaign:
+
+    - `source.slug` — a blog article, checked against its `bodyPl` + `bodyEn`
+      in `src/data/blog-posts.json`. Top-of-funnel decks are a distilled
+      article, and campaign three (mid-funnel) also photographs and quotes
+      one, so the slug is not a top-of-funnel-only field.
+    - `source.product` — a product id from `src/data/products.json`, checked
+      against the i18n strings that product's page renders out of
+      `src/data/pl.json` / `en.json`.
+
+    **Every campaign must declare one of the two**, whatever its track. This
+    docstring used to say the block was "optional, because a mid-funnel
+    product campaign points at a product page, not an article", and
+    `test_campaigns.py` used to gate the mandate on `track == "funnel-top"`.
+    Between them, a mid-funnel campaign could delete `source` and opt out of
+    the entire figure guard *silently* — five SKIPPED lines where the checks
+    should have been, and invented numbers on the cover, the rows and the post
+    text all shipping past a green suite. Proven on a throwaway campaign, so
+    it is not a hypothetical; five product rows of the calendar remain.
+
+    The mandate itself lives in `test_campaigns.py::test_every_campaign_
+    declares_the_corpus_its_figures_are_checked_against`, which sweeps
+    `campaigns/*/campaign.json` — that is the set of campaigns that can ship.
+    This function stays shape-only so the in-memory two-slide fixtures in
+    `test_slides.py` and the three generator test modules keep loading, but it
+    refuses the two shapes that would make the mandate unenforceable: a
+    `source` that is not an object, and a campaign declaring both a slug and a
+    product (which corpus wins would then be the resolver's guess).
 
     Declared here rather than in a table inside the test suite so that adding
     the twelfth campaign stays what the spec says it is: a `campaign.json`
-    and a file in `copy/`, with no test module to edit. Optional, because a
-    mid-funnel product campaign points at a product page, not an article.
+    and a file in `copy/`, with no test module to edit.
     """
     source = data.get("source", {})
     if not isinstance(source, dict):
@@ -72,6 +100,18 @@ def _source(campaign_id: str, data: dict) -> tuple[str | None, list[str]]:
     if slug is not None and not (isinstance(slug, str) and slug.strip()):
         raise SpecError(
             f"{campaign_id}: source.slug must be a non-empty string, got {slug!r}"
+        )
+    product = source.get("product")
+    if product is not None and not (isinstance(product, str) and product.strip()):
+        raise SpecError(
+            f"{campaign_id}: source.product must be a non-empty string, "
+            f"got {product!r}"
+        )
+    if slug and product:
+        raise SpecError(
+            f"{campaign_id}: source declares both slug {slug!r} and product "
+            f"{product!r}; a campaign's figures are checked against one corpus, "
+            "so declare the article or the product page, not both"
         )
     figures = source.get("figures", [])
     if not isinstance(figures, list):
@@ -85,7 +125,7 @@ def _source(campaign_id: str, data: dict) -> tuple[str | None, list[str]]:
                 f"{campaign_id}: source.figures entries must be non-empty "
                 f"strings, got {figure!r}"
             )
-    return slug, list(figures)
+    return slug, product, list(figures)
 
 
 @dataclass
@@ -97,6 +137,7 @@ class Campaign:
     slides: list[dict]
     root: Path
     source_slug: str | None = None
+    source_product: str | None = None
     source_figures: list[str] = field(default_factory=list)
 
     @classmethod
@@ -150,7 +191,7 @@ class Campaign:
         if not any(slide["type"] == "cta" for slide in slides):
             raise SpecError(f"{campaign_id}: no 'cta' slide — the deck cannot convert")
 
-        source_slug, source_figures = _source(campaign_id, data)
+        source_slug, source_product, source_figures = _source(campaign_id, data)
 
         return cls(
             id=data["id"],
@@ -160,6 +201,7 @@ class Campaign:
             slides=slides,
             root=path.parent,
             source_slug=source_slug,
+            source_product=source_product,
             source_figures=source_figures,
         )
 

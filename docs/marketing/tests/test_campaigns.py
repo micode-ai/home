@@ -12,12 +12,25 @@ one campaign, and the criterion was false for the test suite.
 
 So the campaign-agnostic half is parametrised over every
 `campaigns/*/campaign.json` on disk, and the two pieces of per-campaign data
-it needs — which article the deck summarises, and which figures it is built
-on — live in that campaign.json under `source` (see `spec._source`). A new
-campaign is therefore covered the moment its spec exists, and a campaign that
-forgets to declare its article fails `test_a_top_of_funnel_campaign_declares_
-the_article_it_summarises` rather than silently opting out of the figure
-guard.
+it needs — which material the deck is built out of, and which figures it is
+built on — live in that campaign.json under `source` (see `spec._source`). A
+new campaign is therefore covered the moment its spec exists, and a campaign
+that forgets to declare its corpus fails `test_every_campaign_declares_the_
+corpus_its_figures_are_checked_against` rather than silently opting out of the
+figure guard.
+
+That mandate is unconditional across tracks, and it was not always. It used to
+be gated on `track == "funnel-top"` — with every downstream figure check
+written as `if not campaign.source_slug: pytest.skip(...)` — so a mid-funnel
+campaign could simply omit the `source` block and opt out of the whole guard.
+Reconstructed on a throwaway funnel-mid campaign with invented numbers on the
+cover, in the rows and in both post-text blocks: the sweep went **100% green**,
+with five SKIPPED lines where the checks should have been. Campaign three
+escaped only because its target happens to be an article. So: two shapes of
+corpus (`source.slug` for an article, `source.product` for a product page),
+exactly one required of every campaign, and nothing below skips on its
+absence — a campaign that declares neither fails, loudly, in every scan that
+would have read it.
 
 What stays campaign-specific lives in `test_campaign_<id>.py` next to this
 file: rulings that are about one deck, not about decks in general.
@@ -40,7 +53,9 @@ import spec
 
 MARKETING = Path(__file__).resolve().parents[1]
 CAMPAIGNS = MARKETING / "campaigns"
-POSTS = MARKETING.parents[1] / "src" / "data" / "blog-posts.json"
+SITE_DATA = MARKETING.parents[1] / "src" / "data"
+POSTS = SITE_DATA / "blog-posts.json"
+PRODUCTS = SITE_DATA / "products.json"
 
 CAMPAIGN_IDS = sorted(path.parent.name for path in CAMPAIGNS.glob("*/campaign.json"))
 
@@ -91,6 +106,109 @@ def _article(slug: str) -> dict:
 def _article_corpus(slug: str) -> str:
     article = _article(slug)
     return (article.get("bodyPl") or "") + (article.get("bodyEn") or "")
+
+
+def _products() -> list[dict]:
+    data = json.loads(PRODUCTS.read_text(encoding="utf-8"))
+    return data if isinstance(data, list) else data["products"]
+
+
+def _product(product_id: str) -> dict:
+    for product in _products():
+        if product.get("id") == product_id:
+            return product
+    raise AssertionError(
+        f"{product_id!r} is not a product in {PRODUCTS.name}; known ids are "
+        f"{sorted(p.get('id') for p in _products())}"
+    )
+
+
+def _i18n(lang: str) -> dict:
+    return json.loads((SITE_DATA / f"{lang}.json").read_text(encoding="utf-8"))
+
+
+def _lookup(tree: dict, dotted: str):
+    """`t(key, lang)` from `src/services/i18n.ts`, in eight lines."""
+    node = tree
+    for part in dotted.split("."):
+        if not isinstance(node, dict) or part not in node:
+            return None
+        node = node[part]
+    return node
+
+
+def _translation_keys(node) -> list[str]:
+    """Every i18n key a `products.json` entry references, at any depth.
+
+    `products.json` names its copy indirectly and in three different shapes —
+    `nameKey`/`descriptionKey`/`pricingKey` at the top level, bare key strings
+    in `features`, `questionKey`/`answerKey` inside `faq` — so walk the whole
+    entry and keep the strings that resolve, rather than listing the shapes.
+    """
+    if isinstance(node, dict):
+        return [key for value in node.values() for key in _translation_keys(value)]
+    if isinstance(node, list):
+        return [key for value in node for key in _translation_keys(value)]
+    return [node] if isinstance(node, str) and "." in node else []
+
+
+def _product_corpus(product_id: str) -> str:
+    """What a reader of the product page can check a figure against.
+
+    The mid-funnel counterpart of `_article_corpus`. A product page has no
+    `body*`: `ProductPage.svelte` looks the product up in `products.json` and
+    renders it generically, taking every string it shows through `t(key, lang)`
+    against `src/data/{pl,en}.json`. So the corpus is exactly those resolved
+    strings, in both published languages.
+
+    Deliberately narrow in two directions. Only *resolved* translations count,
+    not the raw literals in `products.json` (urls, `accentColor`, the badge
+    label) — a corpus is only a guard while it is small. And the page's
+    LangGraph diagram is **excluded** even though it is ink on the same page:
+    it comes from `src/data/langgraph-diagrams.ts`, which is where the known
+    "20+ Accounting Tools" error lives, roughly 4x under the article's audited
+    58. Admitting it would let a campaign cite a number the site itself is
+    wrong about, which is the opposite of what this corpus is for.
+    """
+    product = _product(product_id)
+    texts: list[str] = []
+    for lang in spec.LANGS:
+        tree = _i18n(lang)
+        for key in _translation_keys(product):
+            value = _lookup(tree, key)
+            if isinstance(value, str):
+                texts.append(value)
+    return "\n".join(texts)
+
+
+def _require_source(campaign: spec.Campaign) -> None:
+    """Refuse to proceed on a campaign that named no corpus.
+
+    Every figure check below used to open with `if not campaign.source_slug:
+    pytest.skip(...)`, which is precisely how a campaign opted out of all of
+    them at once. They now open with this, which raises. A skip reads as "not
+    applicable"; here it meant "unchecked".
+    """
+    if not (campaign.source_slug or campaign.source_product):
+        raise AssertionError(
+            f"{campaign.id} declares neither source.slug nor source.product, "
+            "so there is nothing to check its figures against — see "
+            "test_every_campaign_declares_the_corpus_its_figures_are_checked_"
+            "against"
+        )
+
+
+def _corpus(campaign: spec.Campaign) -> str:
+    """The text `campaign`'s every figure has to stand in, verbatim."""
+    _require_source(campaign)
+    if campaign.source_slug:
+        return _article_corpus(campaign.source_slug)
+    return _product_corpus(campaign.source_product)
+
+
+def _source_name(campaign: spec.Campaign) -> str:
+    _require_source(campaign)
+    return campaign.source_slug or f"the {campaign.source_product} product page"
 
 
 # A campaign's copy file goes by one of two names, and `README.md`'s own tree
@@ -315,35 +433,113 @@ def test_every_slide_has_a_headline_in_both_languages(campaign_id):
 
 
 @pytest.mark.parametrize("campaign_id", CAMPAIGN_IDS)
-def test_a_top_of_funnel_campaign_declares_the_article_it_summarises(campaign_id):
-    """Without `source.slug` there is no article to check figures against, and
-    the whole "no invented numbers" guarantee degrades to a vacuous pass for
-    that campaign. Top of funnel is by definition a distilled article, so the
-    declaration is mandatory there and the slug must resolve to a real post."""
+def test_every_campaign_declares_the_corpus_its_figures_are_checked_against(
+        campaign_id):
+    """No campaign of any shape gets to opt out of the figure guard.
+
+    This test used to be `test_a_top_of_funnel_campaign_declares_the_article_
+    it_summarises` and began `if campaign.track != "funnel-top": pytest.skip`.
+    Every downstream figure check was written the same way — `if not
+    campaign.source_slug: pytest.skip` — so the entire guarantee hung on a
+    field a campaign was free to omit. Reconstructed on a throwaway funnel-mid
+    campaign: delete the `source` block, plant `9999` on the cover, `4242` and
+    `9999` in the rows and both numbers in the PL and EN post text, and the
+    sweep is 100% green with five SKIPPED lines. Skipping is worse than
+    failing here, because a skip reads as "not applicable" in exactly the
+    place where it means "unchecked". Five product rows of `content-plan.md`
+    are still unbuilt, and every one of them would have inherited it.
+
+    So: two corpora, one mandatory declaration.
+
+    - `source.slug` names a blog article and the figures are checked against
+      `bodyPl` + `bodyEn`. Not a top-of-funnel-only field — campaign three is
+      mid-funnel and links to (and photographs) an article.
+    - `source.product` names an id in `src/data/products.json` and the figures
+      are checked against the i18n strings that product's page renders. This
+      is the answer to "a product campaign has no article": it does have a
+      corpus, it is the page it sends the reader to, and it is checkable.
+
+    `spec._source` refuses a campaign that declares *both*; this refuses one
+    that declares neither, and also pins that whatever it declares resolves to
+    something real and non-empty. `source.figures` is required with it —
+    without it, `test_every_declared_figure_still_stands...` has nothing to
+    hold the deck to when the source is edited out from under it.
+    """
     campaign = _campaign(campaign_id)
-    if campaign.track != "funnel-top":
-        pytest.skip(f"{campaign_id} is {campaign.track}, not an article summary")
-    assert campaign.source_slug, (
-        f"{campaign_id} is top-of-funnel but declares no source.slug, so no "
-        "figure in its deck is checked against any article"
+    declared = [name for name in (campaign.source_slug, campaign.source_product)
+                if name]
+    assert len(declared) == 1, (
+        f"{campaign_id} ({campaign.track}) declares {len(declared)} sources "
+        f"{declared}; every campaign must name exactly one — source.slug for "
+        "an article, source.product for a product page — or no figure in its "
+        "deck is checked against anything"
     )
-    _article(campaign.source_slug)  # raises StopIteration if the slug is wrong
+    if campaign.source_slug:
+        _article(campaign.source_slug)  # StopIteration if the slug is wrong
+    else:
+        _product(campaign.source_product)  # AssertionError naming the known ids
     assert campaign.source_figures, (
         f"{campaign_id} declares no source.figures, so nothing pins the deck "
-        "to the article's own numbers"
+        f"to {_source_name(campaign)}'s own numbers"
     )
+    assert _corpus(campaign).strip(), (
+        f"{campaign_id}'s declared source resolves to an empty corpus, so "
+        "every figure check below would pass or fail for the wrong reason"
+    )
+
+
+@pytest.mark.parametrize("product_id", sorted(p["id"] for p in _products()))
+def test_a_product_page_resolves_to_a_corpus_a_campaign_can_be_checked_against(
+        product_id):
+    """`source.product` is the mid-funnel half of the mandate above, and today
+    no shipped campaign uses it — campaign three is mid-funnel but points at an
+    article. An unexercised corpus resolver is the same shape of hole as the
+    guard it was written to close: it would sit there resolving to nothing
+    until the first product campaign, and *that* campaign would then pass every
+    figure check vacuously. So resolve all six products now, against the site
+    data as it stands.
+
+    The floor is deliberately low and structural rather than a golden string:
+    the check is that `products.json`'s indirection still lands in
+    `src/data/{pl,en}.json` (a renamed key or a moved subtree breaks it), not
+    that any particular sentence is present.
+    """
+    corpus = _product_corpus(product_id)
+    assert len(corpus) > 500, (
+        f"{product_id} resolves {len(corpus)} characters of product-page copy; "
+        "its keys in products.json no longer land in src/data/{pl,en}.json, so "
+        "a campaign built on this page would have almost nothing to check its "
+        "figures against"
+    )
+    product = _product(product_id)
+    for lang in spec.LANGS:
+        name = _lookup(_i18n(lang), product["nameKey"])
+        assert isinstance(name, str) and name in corpus, (
+            f"{product_id}'s {lang} name ({product['nameKey']}) is missing from "
+            "the corpus, so the walk over products.json is not finding its keys"
+        )
+
+
+def test_the_product_corpus_refuses_an_id_that_is_not_a_product():
+    """A typo in `source.product` must name the mistake, not resolve to an
+    empty corpus — an empty corpus fails every figure check for a reason that
+    reads like a copy error."""
+    with pytest.raises(AssertionError, match="not a product"):
+        _product_corpus("accounting-ai-agent")
 
 
 @pytest.mark.parametrize("campaign_id", CAMPAIGN_IDS)
 def test_the_target_link_points_at_the_declared_source(campaign_id):
     """The deck quotes article A while the CTA sends the reader to article B
     is the one failure mode nobody would spot in review — both halves look
-    right on their own."""
+    right on their own. The same holds one step over for a product campaign:
+    figures checked against product X's page, reader sent to product Y's."""
     campaign = _campaign(campaign_id)
-    if not campaign.source_slug:
-        pytest.skip(f"{campaign_id} declares no source article")
-    assert campaign.source_slug in campaign.target, (
-        f"{campaign_id} summarises {campaign.source_slug!r} but links to "
+    _require_source(campaign)
+    expected = (campaign.source_slug if campaign.source_slug
+                else f"/products/{campaign.source_product}/")
+    assert expected in campaign.target, (
+        f"{campaign_id} is built on {_source_name(campaign)} but links to "
         f"{campaign.target}"
     )
 
@@ -351,18 +547,19 @@ def test_the_target_link_points_at_the_declared_source(campaign_id):
 @pytest.mark.parametrize("campaign_id", CAMPAIGN_IDS)
 def test_the_hook_number_comes_from_the_article(campaign_id):
     """The cover figure is the one number every reader takes away, so it is
-    the one that must not be a rounding of something the article never said."""
+    the one that must not be a rounding of something the source never said.
+
+    "The article" in the name is the usual case; for a `source.product`
+    campaign the corpus is the product page's own i18n copy — see `_corpus`."""
     campaign = _campaign(campaign_id)
-    if not campaign.source_slug:
-        pytest.skip(f"{campaign_id} declares no source article")
+    corpus = _corpus(campaign)  # raises if the campaign declared no source
     hook = campaign.slides[0]
     big = hook.get("bigNumber")
     assert big, f"{campaign_id}'s hook slide carries no bigNumber"
-    corpus = _article_corpus(campaign.source_slug)
     for number in _numbers_in([str(big)]):
         assert _quotes(number, corpus), (
             f"{campaign_id}'s cover says {big!r}, but {number!r} does not "
-            f"appear in {campaign.source_slug}"
+            f"appear in {_source_name(campaign)}"
         )
 
 
@@ -372,18 +569,18 @@ def test_every_number_a_reader_sees_appears_in_the_articles_own_text(campaign_id
     article it links to. The old test only scanned `$`-amounts, so a token
     count, a percentage or a headcount was unguarded — `109` could become
     `190` and nothing would notice. Scans every rendered string instead, in
-    both languages, against *this* campaign's own article.
+    both languages, against *this* campaign's own source — its article, or
+    for a `source.product` campaign the i18n copy of the product page it
+    sends the reader to.
     """
     campaign = _campaign(campaign_id)
-    if not campaign.source_slug:
-        pytest.skip(f"{campaign_id} declares no source article")
-    corpus = _article_corpus(campaign.source_slug)
+    corpus = _corpus(campaign)  # raises if the campaign declared no source
     numbers = _numbers_in(_deck_strings(campaign))
     assert numbers, f"{campaign_id}'s deck states no numbers at all"
     for number in sorted(numbers):
         assert _quotes(number, corpus), (
             f"{campaign_id}'s deck states {number!r}, which does not appear "
-            f"in the article it links to ({campaign.source_slug})"
+            f"in the source it links to ({_source_name(campaign)})"
         )
 
 
@@ -394,17 +591,23 @@ def test_every_declared_figure_still_stands_in_both_the_article_and_the_deck(
     number; it cannot catch a deck that quietly drops the figure it was built
     on, nor an article edited out from under a deck that no longer quotes it.
     `source.figures` names those load-bearing figures and asserts both ends.
+
+    Does not skip on an empty `source.figures`: the mandate test above already
+    requires the list to be non-empty, so the skip could only ever have fired
+    for a campaign that had already opted out of the guard entirely.
     """
     campaign = _campaign(campaign_id)
-    if not campaign.source_figures:
-        pytest.skip(f"{campaign_id} declares no source figures")
-    corpus = _article_corpus(campaign.source_slug)
+    corpus = _corpus(campaign)  # raises if the campaign declared no source
+    assert campaign.source_figures, (
+        f"{campaign_id} declares no source.figures, so this direction of the "
+        "guard checks nothing"
+    )
     deck = " \n".join(_deck_strings(campaign))
     for figure in campaign.source_figures:
         assert _quotes(figure, corpus), (
             f"{figure!r} is declared a {campaign_id} source figure but no "
-            f"longer appears in {campaign.source_slug} — the deck is quoting "
-            "something the article dropped"
+            f"longer appears in {_source_name(campaign)} — the deck is quoting "
+            "something the source dropped"
         )
         assert _quotes(figure, deck), (
             f"{figure!r} is declared a {campaign_id} source figure but no "
@@ -634,14 +837,25 @@ def test_each_campaign_has_exactly_one_copy_file(campaign_id):
     """One campaign, one file of post text — under whichever of the two names
     its funnel level uses.
 
-    Missing is caught by every scan below anyway (they all read the file).
-    *Two* is the case worth its own assertion, because it is the quiet one:
-    with both `funnel-<id>.md` and `product-<id>.md` on disk — say a campaign
-    renamed from one convention to the other with the old file left behind —
-    every scan here would happily check whichever the resolver picked first
-    while `content-plan.md` sends the operator to the other, so a stale post
-    text with a stale link ships past a green suite. Naming both here is also
-    the only place a reader learns that the two conventions exist at all.
+    Neither failure is silent today: `_copy_path` raises on both zero files
+    and two, so every scan that reads the copy file already dies. This test
+    earns its place for two other reasons, and the docstring used to justify
+    it with a third that the resolver makes unreachable ("every scan would
+    happily check whichever the resolver picked first") — it does not pick,
+    it refuses.
+
+    First, it is the guard on `_copy_path` itself. The first draft of that
+    resolver returned `found[0]`, and *then* the counterfactual was real: with
+    both `funnel-<id>.md` and `product-<id>.md` on disk — a campaign renamed
+    from one convention to the other with the old file left behind — the scans
+    would read one while `content-plan.md` sent the operator to the other, so
+    a stale post text with a stale link shipped past a green suite. Mutating
+    the resolver back to `found[0]` is killed here and nowhere else.
+
+    Second, it states the condition once, as itself, instead of as N copies of
+    a low-level path error from unrelated tests — and naming both candidates
+    is the only place a reader of this file learns that the two conventions
+    exist at all.
     """
     found = [path.name for path in _copy_candidates(campaign_id) if path.is_file()]
     assert len(found) == 1, (
@@ -714,9 +928,7 @@ def test_every_number_in_the_post_text_appears_in_the_articles_own_text(campaign
     campaigns as written: 23 numbers extracted, zero false positives.
     """
     campaign = _campaign(campaign_id)
-    if not campaign.source_slug:
-        pytest.skip(f"{campaign_id} declares no source article")
-    corpus = _article_corpus(campaign.source_slug)
+    corpus = _corpus(campaign)  # raises if the campaign declared no source
     lines = _post_lines(campaign_id)
     # Anti-vacuity: the scan is driven by heading parsing, so a copy file that
     # renames or reflows its language headings would empty it out and leave
@@ -731,7 +943,7 @@ def test_every_number_in_the_post_text_appears_in_the_articles_own_text(campaign
         offending = next(line for _, line in lines if number in line)
         assert _quotes(number, corpus), (
             f"{_copy_path(campaign_id).name} states {number!r}, which does not "
-            f"appear in {campaign.source_slug}:\n  {offending.strip()}"
+            f"appear in {_source_name(campaign)}:\n  {offending.strip()}"
         )
 
 
