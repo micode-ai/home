@@ -7,7 +7,7 @@ export const langgraphDiagrams: Record<string, string> = {
     R -- Yes --> T[Tool Node]
     T --> A
 
-    subgraph TOOLS [20+ Accounting Tools]
+    subgraph TOOLS [Up to 82 Accounting Tools]
         direction LR
         T1[Invoices & KSeF]
         T2[HR & Payroll]

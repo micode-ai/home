@@ -747,9 +747,9 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
     ru: `stateDiagram-v2
   state "ИИ-агент (модель)" as A
   state "Инструменты" as T
+  state C <<choice>>
   [*] --> A: сообщение пользователя
   A --> C: ответ модели
-  state C <<choice>>
   C --> T: есть вызовы инструментов
   C --> [*]: готовый ответ (без вызовов)
   T --> A: результаты добавлены в диалог
@@ -765,9 +765,9 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
     en: `stateDiagram-v2
   state "AI agent (model)" as A
   state "Tools" as T
+  state C <<choice>>
   [*] --> A: user message
   A --> C: model response
-  state C <<choice>>
   C --> T: has tool calls
   C --> [*]: final answer (no calls)
   T --> A: results appended to the dialogue
@@ -783,9 +783,9 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
     pl: `stateDiagram-v2
   state "Agent AI (model)" as A
   state "Narzędzia" as T
+  state C <<choice>>
   [*] --> A: wiadomość użytkownika
   A --> C: odpowiedź modelu
-  state C <<choice>>
   C --> T: są wywołania narzędzi
   C --> [*]: gotowa odpowiedź (bez wywołań)
   T --> A: wyniki dołączone do rozmowy
