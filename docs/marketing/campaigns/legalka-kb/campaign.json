@@ -1,0 +1,127 @@
+{
+  "id": "legalka-kb",
+  "track": "funnel-mid",
+  "target": "https://mi-code.pl/blog/legalka-kb-ai-architecture/",
+  "utm": { "campaign": "legalka-kb" },
+  "source": {
+    "slug": "legalka-kb-ai-architecture",
+    "figures": ["60", "90", "3", "2,4", "2.4"]
+  },
+  "slides": [
+    {
+      "type": "hook",
+      "bigNumber": "60",
+      "pl": {
+        "eyebrow": "Zbudowaliśmy to u siebie",
+        "headline": "Twoja baza wiedzy, Twój serwer",
+        "sub": "Nie rzadziej niż co tyle dni każde twierdzenie z warstwy „norma” wraca do ponownego sprawdzenia. A że każdy model podmienisz na lokalny, cały stos może stać u Ciebie."
+      },
+      "en": {
+        "eyebrow": "We built this in-house",
+        "headline": "Your knowledge base, your server",
+        "sub": "At most that many days pass before every claim in the “norm” layer goes back for a re-check. And since every model swaps for a local one, no user question has to leave your own hardware."
+      }
+    },
+    {
+      "type": "problem",
+      "pl": {
+        "eyebrow": "Problem",
+        "headline": "Nieaktualna wiedza brzmi tak samo pewnie",
+        "sub": "Wewnętrzna baza starzeje się po cichu: procedura się zmienia, dokument zostaje ten sam. Asystent zbudowany na takiej bazie odpowie równie płynnie co zawsze — tylko według stanu sprzed roku. Sam model tego nie zauważy."
+      },
+      "en": {
+        "eyebrow": "The problem",
+        "headline": "Out of date sounds just as confident",
+        "sub": "An internal base ages quietly: the procedure changes, the document stays the same. An assistant built on that base answers as fluently as ever — only from last year's state of affairs. The model itself will not notice."
+      }
+    },
+    {
+      "type": "numbers",
+      "pl": {
+        "eyebrow": "Baza wiedzy to produkt",
+        "headline": "Dwie warstwy, których nigdy nie mieszamy",
+        "sub": "„Norma” to, czego wymaga prawo: z odnośnikiem do źródła i oznaczeniem dopiero po recenzji prawnika. „Praktyka” to obserwacja wnioskodawców, zawsze z datą, po której fakt uznaje się za nieaktualny.",
+        "rows": [
+          ["Sprawdzenie normy", "co 60 dni"],
+          ["Ważność praktyki", "do +90 dni"],
+          ["Nowa strona", "najpierw szkic"],
+          ["Do użytkownika", "po recenzji"]
+        ]
+      },
+      "en": {
+        "eyebrow": "The knowledge base is the product",
+        "headline": "Two layers we never mix",
+        "sub": "“Norm” is what the law requires: linked to its source and marked verified only after a lawyer's review. “Practice” is an applicants' observation, always dated, with a date after which the fact counts as stale.",
+        "rows": [
+          ["Norm re-checked", "every 60 days"],
+          ["Practice expires", "by +90 days"],
+          ["A new page", "starts as a draft"],
+          ["Reaches users", "after review"]
+        ]
+      }
+    },
+    {
+      "type": "numbers",
+      "pl": {
+        "eyebrow": "Skąd bierze się praktyka",
+        "headline": "Filtr, który woli stracić fakt",
+        "sub": "Kolektor zamienia otwarte czaty w zanonimizowane fakty, a filtr danych osobowych działa według zasady „najpierw bezpieczeństwo”. Po rozbiciu pracy klasyfikatora na małe porcje przydatnych, lecz źle poukładanych faktów zostaje około 3%.",
+        "rows": [
+          ["Wiadomości przez kolektor", "2,4 mln"],
+          ["Fakt z danymi osobowymi", "odrzucany"],
+          ["Źle poukładane fakty", "około 3%"],
+          ["Fakt do bazy", "przenosi kurator"]
+        ]
+      },
+      "en": {
+        "eyebrow": "Where the practice comes from",
+        "headline": "A filter that would rather lose a fact",
+        "sub": "The collector turns open chats into anonymised facts, and the personal-data filter runs on a “safety first” principle. After the classifier's work was split into small batches, useful-but-misfiled facts are down to about 3%.",
+        "rows": [
+          ["Through the collector", "2.4 million"],
+          ["A fact with personal data", "dropped"],
+          ["Misfiled facts", "about 3%"],
+          ["Into the base", "by a curator"]
+        ]
+      }
+    },
+    {
+      "type": "numbers",
+      "pl": {
+        "eyebrow": "Własny serwer, własne modele",
+        "headline": "Modele wymienne, kod ten sam",
+        "sub": "Rozumienie zapytania, generowanie odpowiedzi, rozpoznawanie i synteza mowy — każdy z tych modeli podmienia się na lokalny, na przykład Ollama albo LM Studio, jednym ustawieniem.",
+        "rows": [
+          ["Rozumienie i generowanie", "lokalny model"],
+          ["Mowa w obie strony", "lokalny model"],
+          ["Przełączenie", "jedno ustawienie"],
+          ["Pytania użytkowników", "zostają u Ciebie"]
+        ]
+      },
+      "en": {
+        "eyebrow": "Your own server, your own models",
+        "headline": "Swap the models, keep the code",
+        "sub": "Understanding the question, composing the answer, speech in and speech out — every one of those models swaps for a local one, Ollama or LM Studio for instance, with a single setting.",
+        "rows": [
+          ["Meaning and generation", "a local model"],
+          ["Speech both ways", "a local model"],
+          ["Switching over", "a single setting"],
+          ["Users' questions", "stay with you"]
+        ]
+      }
+    },
+    {
+      "type": "cta",
+      "pl": {
+        "eyebrow": "MICODE",
+        "headline": "Zbudujemy bazę, nie tylko bota",
+        "sub": "Zaczynamy od rozmowy o tym, co u Ciebie jest „normą”, a co „praktyką”, kto to zatwierdza i jak długo fakt zachowuje ważność. Wybór modeli — i to, czy mają stać na Twoim sprzęcie — przychodzi potem."
+      },
+      "en": {
+        "eyebrow": "MICODE",
+        "headline": "We build the base, not just the bot",
+        "sub": "We start with a conversation about what counts as “norm” and what counts as “practice” in your company, who approves it, and how long a fact stays valid. The choice of models — and whether they run on your own hardware — comes after that."
+      }
+    }
+  ]
+}

@@ -121,6 +121,31 @@ CTA пишется без схемы: `mi-code.pl`. Оба зашиты в `bran
 сам агент не заменяет бухгалтера. Подробнее — в шапке
 `product-accounting-ai.md`.
 
+### `legalka-kb`
+
+Вторая кампания **середины воронки** и первая, публикуемая **одиночной
+картинкой**. Предложение то же по форме, что у `accounting-ai` («мы это
+построили — построим и у вас»), но с другим ключом: не «встроим агента в ваши
+системы», а «база и модели остаются у вас». Контакт, домен и UTM-схема — те же.
+
+Отдельная оговорка по соседству в ленте: `rag-without-hallucinations` ведёт на
+**ту же статью** и выходит за девять дней до этой строки. Поэтому здесь не
+повторяются ни `100%`, ни `109`, ни `≈99%`, ни `≈97%` — ни на слайдах, ни в
+тексте поста. Ссылка на статью говорит, что качество измеряется, не называя
+цифр повторно. Подробнее — в шапке `product-legalka-kb.md`.
+
+- **Rozmowa:** Potrzebujesz asystenta, który odpowiada wyłącznie z Twojej bazy — i może stać na Twoim serwerze? Napisz na development@mi-code.pl.
+- **Artykuł:** Cała architektura opisana od środka, ze wszystkimi schematami z wewnętrznej dokumentacji — razem z tym, jak mierzymy jakość odpowiedzi i z jakim wynikiem: `<link>`
+- **Conversation:** Need an assistant that answers strictly from your own base — and can run on your own server? Write to development@mi-code.pl.
+- **Article:** The whole architecture from the inside, with every diagram from our internal documentation — including how we measure answer quality and with what result: `<link>`
+- **Хэштеги:** PL `#RAG #legaltech` · EN `#RAG #legaltech`
+
+Оговорка этой кампании идёт вместе с цифрами: 60 дней — это **максимальный
+интервал** между повторными проверками утверждения слоя «норма», а +90 дней —
+**самая дальняя** дата годности факта слоя «практика». Обе цифры описывают
+верхнюю границу процесса, а не свежесть каждой строки базы в моменте; и сам
+Legalka KB — упорядоченные данные, а не юридическая консультация.
+
 ### `geo-aeo`
 
 Единственная кампания, у которой адресат — **маркетинг-директор**, а не CTO
