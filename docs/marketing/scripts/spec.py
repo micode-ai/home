@@ -11,13 +11,20 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 MARKETING = Path(__file__).resolve().parents[1]
 
-# `diagram` and `tall-diagram` differ only in the shape of the picture they
-# carry, and that difference is the whole point: `diagram` spends its height
-# on a headline and a full sub and gives the leftovers to a wide, low visual
-# (campaign one's 2.83:1 calculator table); `tall-diagram` keeps the header to
-# a label so a tall, narrow visual (the product pages' `flowchart TD` graphs,
-# ~0.62:1) gets every pixel of height the canvas can spare. See
-# `slides._plan_tall_diagram` for the measurements.
+# `diagram` and `tall-diagram` differ by how much room the picture needs, not
+# by its proportions: `diagram` spends its height on a headline and a full sub
+# and gives the leftovers — the 898 px text column — to a visual that fits
+# there (campaign one's calculator table, 1340x474); `tall-diagram` cuts the
+# header down to a label so a visual that does not fit gets a 1006 px column
+# and every pixel of height the canvas can spare, whatever its shape.
+#
+# "Tall and narrow -> `tall-diagram`" is what this comment used to say, and it
+# is wrong: campaign three's shipped capture is 1372x1200, i.e. *wider than it
+# is tall*, and that rule would have sent it to `diagram` at 0.437x instead of
+# 0.733x — ~11 px glyphs instead of 19. `tall-diagram` wins because it hands
+# over more room, which helps any capture short of it. README.md's "Как
+# выбрать тип и как понять, пройдёт ли снимок" has the two-branch rule and its
+# numeric bounds; `slides._plan_tall_diagram` has the layout measurements.
 SLIDE_TYPES = ("hook", "problem", "diagram", "tall-diagram", "numbers", "cta")
 LANGS = ("pl", "en")
 
