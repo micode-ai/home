@@ -1,0 +1,56 @@
+name: Tests
+
+# Deliberately separate from deploy.yml. That workflow publishes; this one
+# verifies. Keeping them apart means a broken marketing test cannot block a
+# site deploy — docs/marketing/ ships nothing to the site — while a broken
+# site test still shows up as a red check on the same commit.
+#
+# No path filters on purpose. The marketing suite reads src/data/blog-posts.json
+# (it checks that every figure in a campaign still appears in the article it
+# cites) and src/data/{pl,en}.json (the product-page corpus), so an edit to the
+# site's content can break it without touching docs/marketing/ at all. Filtering
+# by path would silently skip exactly the case worth catching.
+
+on:
+  push:
+    branches: [development, main]
+  pull_request:
+
+jobs:
+  web:
+    name: Site (vitest)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npx vitest run
+
+  marketing:
+    name: Marketing factory (pytest)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: docs/marketing/requirements.txt
+
+      # No `playwright install chromium` step: nothing here drives a real
+      # browser. test_capture_screens.py monkeypatches `sync_playwright`, so it
+      # needs the package (which requirements.txt pins) and not the binary.
+      # imageio-ffmpeg ships its own ffmpeg, so no apt install either.
+      - run: pip install -r docs/marketing/requirements.txt
+
+      # The fonts these renders need are committed under
+      # docs/marketing/assets/fonts/ precisely so a runner does not have to
+      # fetch them — see the note in fetch_fonts.py about why the upstream
+      # static cuts could not be relied on.
+      - run: python -m pytest docs/marketing/tests/ -v
