@@ -91,7 +91,7 @@ export const langgraphDiagrams: Record<string, string> = {
     R -- KB Review --> REV
 
     subgraph RAG [RAG Assistant · rag/]
-        direction LR
+        direction TB
         IDX[index.json<br/>kb/ embeddings] --> RET[Retrieve<br/>cosine top-K]
         RET --> J{Coverage?}
         J -- No --> ABS([Abstain<br/>не знаю])
@@ -99,7 +99,7 @@ export const langgraphDiagrams: Record<string, string> = {
     end
 
     subgraph REV [AI Revision Agent · LangGraph]
-        direction LR
+        direction TB
         L[loadPage] --> CI[classifyIntent]
         CI -- question --> AM[answerMsg]
         CI -- edit --> MP[makePlan]
@@ -111,7 +111,7 @@ export const langgraphDiagrams: Record<string, string> = {
     end
 
     subgraph PIPE [Practice Ingest Pipeline · LangGraph]
-        direction LR
+        direction TB
         IM[ingest_messages] --> TR[thread_reconstruct]
         TR --> EF[extract_facts · LLM]
         EF --> PG{pii_guard<br/>fail-closed}
@@ -120,6 +120,8 @@ export const langgraphDiagrams: Record<string, string> = {
         CT --> DM[dedup_merge]
         DM --> SF[stage_facts<br/>inbox/facts-*.md]
     end
+
+    SF -. curator .-> IDX
 
     ANS --> END([Response + disclaimer])
     AM --> END
