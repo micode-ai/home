@@ -1,0 +1,125 @@
+{
+  "id": "geo-aeo",
+  "track": "funnel-top",
+  "target": "https://mi-code.pl/blog/geo-aeo-generative-answer-engine-optimization/",
+  "utm": { "campaign": "geo-aeo" },
+  "source": {
+    "slug": "geo-aeo-generative-answer-engine-optimization",
+    "figures": ["2022", "2023", "2024"]
+  },
+  "slides": [
+    {
+      "type": "hook",
+      "bigNumber": "2022",
+      "pl": {
+        "eyebrow": "Widoczność w erze wyszukiwania AI",
+        "headline": "Wyszukiwarka to już nie lista linków",
+        "sub": "Od premiery ChatGPT w listopadzie 2022 roku odpowiedź składa AI — i to ona rozstrzyga, które firmy zostaną wspomniane. Jeśli nie cytuje Twojej treści, jesteś niewidoczny."
+      },
+      "en": {
+        "eyebrow": "Visibility in the age of AI search",
+        "headline": "Search is no longer a list of links",
+        "sub": "Since ChatGPT launched publicly in November 2022, AI composes the answer — and it decides which companies get mentioned. If it does not quote your content, you are invisible."
+      }
+    },
+    {
+      "type": "problem",
+      "pl": {
+        "eyebrow": "Problem",
+        "headline": "Pierwsze miejsce, którego nikt nie klika",
+        "sub": "Rośnie udział wyszukiwań zero-click: odpowiedź powstaje na stronie wyników, a użytkownik nigdy nie odwiedza źródła, z którego pochodzi. Ranking w raporcie wciąż wygląda dobrze — wizyta i wzmianka o marce już niekoniecznie."
+      },
+      "en": {
+        "eyebrow": "The problem",
+        "headline": "Ranking first and going unseen",
+        "sub": "Zero-click search is rising: the answer is synthesized on the results surface and the user never visits the page it came from. The ranking still looks fine in the report — the visit and the brand mention do not follow it."
+      }
+    },
+    {
+      "type": "numbers",
+      "pl": {
+        "eyebrow": "SEO, AEO, GEO",
+        "headline": "Trzy skróty, jeden nowy cel",
+        "sub": "AEO pyta: czy maszyna potrafi wydobyć moją odpowiedź. GEO pyta: czy gdy model składa świeżą odpowiedź z wielu źródeł, moje się w niej znajdzie i zostanie przypisane. Żadne z nich nie zastępuje SEO — nadbudowują się nad nim.",
+        "rows": [
+          ["SEO", "wysoki ranking strony"],
+          ["AEO", "być samą odpowiedzią"],
+          ["GEO", "być cytowanym w odpowiedzi"]
+        ]
+      },
+      "en": {
+        "eyebrow": "SEO, AEO, GEO",
+        "headline": "Three acronyms, one new goal",
+        "sub": "AEO asks: can a machine extract my answer. GEO asks: when a model composes a fresh answer from many sources, does mine make the cut and get credited. Neither of them replaces SEO — they build on it.",
+        "rows": [
+          ["SEO", "rank the page"],
+          ["AEO", "be the answer"],
+          ["GEO", "be cited in the answer"]
+        ]
+      }
+    },
+    {
+      "type": "numbers",
+      "pl": {
+        "eyebrow": "Zmiana sygnałów",
+        "headline": "Co decyduje, kogo model cytuje",
+        "sub": "To nie moda z LinkedIna: termin GEO pochodzi z pracy naukowej z 2023 roku, przedstawionej na konferencji KDD 2024. Zmienił się cel, więc zmieniły się sygnały.",
+        "rows": [
+          ["Struktura", "ponad słowa kluczowe"],
+          ["Cytowalne fakty", "ponad perswazję"],
+          ["Świeżość i jasność", "ponad objętość"],
+          ["Dostęp crawlerów AI", "warunek konieczny"]
+        ]
+      },
+      "en": {
+        "eyebrow": "The signals moved",
+        "headline": "What decides who gets quoted",
+        "sub": "Not a LinkedIn fad: the term GEO comes from a 2023 research paper, later presented at KDD 2024. The goal changed, so the signals that matter changed with it.",
+        "rows": [
+          ["Structure", "over keywords"],
+          ["Quotable facts", "over persuasion"],
+          ["Freshness and clarity", "over volume"],
+          ["AI crawler access", "a precondition"]
+        ]
+      }
+    },
+    {
+      "type": "numbers",
+      "pl": {
+        "eyebrow": "Praktyka",
+        "headline": "Co robimy na każdej naszej stronie",
+        "sub": "Kształt jest wszędzie ten sam i łatwo go skopiować: uczyń witrynę czytelną dla maszyn, świadomie wpuść crawlery AI, odgradzając trasy prywatne, i odpowiadaj wprost na realne pytania.",
+        "rows": [
+          ["Mapa treści dla modeli", "llms.txt"],
+          ["Boty AI wpuszczone świadomie", "robots.txt"],
+          ["Dane strukturalne", "FAQPage, Organization"],
+          ["Odpowiedź wprost", "pierwszy akapit"]
+        ]
+      },
+      "en": {
+        "eyebrow": "In practice",
+        "headline": "What we run on every site we own",
+        "sub": "The shape is the same everywhere and it is easy to copy: make the site machine-readable, deliberately welcome AI crawlers while fencing off private routes, and answer real questions directly.",
+        "rows": [
+          ["A content map for models", "llms.txt"],
+          ["AI bots welcomed on purpose", "robots.txt"],
+          ["Structured data", "FAQPage, Organization"],
+          ["The answer stated early", "first paragraph"]
+        ]
+      }
+    },
+    {
+      "type": "cta",
+      "pl": {
+        "eyebrow": "MICODE",
+        "headline": "Sprawdzimy, jak wypadasz, gdy odpowiada AI",
+        "sub": "Budujemy strony i produkty czytelne zarówno dla ludzi, jak i dla maszyn: dane strukturalne, llms.txt, rozsądna polityka crawlerów i treść pisana tak, by dało się ją cytować. Pomożemy Ci być znalezionym w odpowiedzi, nie tylko na stronie wyników."
+      },
+      "en": {
+        "eyebrow": "MICODE",
+        "headline": "We will check how you show up in AI answers",
+        "sub": "We build sites and products legible to both people and machines: structured data, llms.txt, a sane crawler policy, and content written to be quoted. We will help you get found in the answer, not just on the results page."
+      }
+    }
+  ]
+}

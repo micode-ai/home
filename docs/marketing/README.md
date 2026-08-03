@@ -44,7 +44,7 @@ docs/marketing/
 `fetch_fonts.py`, `capture_screens.py` и все три генератора —
 `build_carousel.py`, `build_single.py`, `build_reel.py`), `assets/fonts/`,
 `assets/micode-badge.png` и полный набор тестов под `tests/`, а также
-`strategy.md`, `content-plan.md` и три настоящие кампании:
+`strategy.md`, `content-plan.md` и четыре настоящие кампании:
 
 - `cost-of-ai-agent` (верх) — 6 слайдов, включая слайд `diagram` со снимком
   калькулятора из статьи;
@@ -52,12 +52,18 @@ docs/marketing/
   (обоснование — в `strategy.md`), поэтому `capture_screens.py` ей не нужен;
 - `accounting-ai` (**середина**, первая продуктовая) — 6 слайдов, включая
   слайд `tall-diagram` со снимком схемы `accounting-agent-loop` **из статьи**,
-  по одному на локаль. Почему не граф со страницы продукта — в `strategy.md`.
+  по одному на локаль. Почему не граф со страницы продукта — в `strategy.md`;
+- `geo-aeo` (верх) — 6 слайдов, тоже **без** слайда с картинкой, но по другой
+  причине, чем кампания 2: у статьи есть схемы, и все три отвергнуты замером —
+  их ужимает сама страница, детектор `check_mermaid_shrink` предупреждает по
+  всем трём. Замеры — в `strategy.md`. Первая кампания, у которой адресат
+  маркетинг-директор, и первая, у которой **обложка несёт дату, а не метрику**:
+  во всём теле статьи на трёх языках ровно три числа, и все три — годы.
 
 У каждой — `campaigns/<id>/campaign.json`, тексты `copy/funnel-<id>.md`
 (верх воронки) или `copy/product-<id>.md` (середина), блок
 в `copy/cta-blocks.md` и все пять форматов в
-`creatives/<id>/renders/{pl,en}/`. Остальные 8 кампаний из `strategy.md` —
+`creatives/<id>/renders/{pl,en}/`. Остальные 7 кампаний из `strategy.md` —
 следующая фаза; кода она не требует, только `campaign.json` и файл в `copy/`.
 
 Рендеры лежат в git намеренно. Во-первых, `tests/test_campaigns.py`

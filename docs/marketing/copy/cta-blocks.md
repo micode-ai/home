@@ -120,3 +120,25 @@ CTA пишется без схемы: `mi-code.pl`. Оба зашиты в `bran
 (58 базовых плюс 15 и 9, включающиеся при настройке), а не типичное число, и
 сам агент не заменяет бухгалтера. Подробнее — в шапке
 `product-accounting-ai.md`.
+
+### `geo-aeo`
+
+Единственная кампания, у которой адресат — **маркетинг-директор**, а не CTO
+и не владелец бизнеса (`strategy.md`, строка `geo-aeo`). Поэтому предложение
+формулируется в терминах видимости бренда, а не архитектуры: не «соберём вам
+систему», а «посмотрим, как вы выглядите, когда за вас отвечает AI». Контакт,
+домен и UTM-схема — те же.
+
+- **Rozmowa:** Zastanawiasz się, jak Twoja marka wypada, gdy to AI odpowiada w Twoim imieniu? Napisz na development@mi-code.pl.
+- **Artykuł:** Skąd się to wzięło, czym różni się od SEO i jak stosujemy to na wszystkich naszych stronach: `<link>`
+- **Conversation:** Wondering how your brand shows up when an AI answers on your behalf? Write to development@mi-code.pl.
+- **Article:** Where this came from, how it differs from SEO, and how we apply it across all our sites: `<link>`
+- **Хэштеги:** PL `#GEO #AEO #marketing` · EN `#GEO #AEO`
+
+Оговорка этой кампании идёт не с цифрой, а вместо неё, и она двойная. Первая
+— авторская, из самой статьи: GEO и AEO — это не «взлом алгоритма», а
+находимость и цитируемость. Вторая — про сам материал: **во всём теле статьи
+на трёх языках ровно три числа, и все три это даты** (2022, 2023, 2024).
+Долей рынка, процента zero-click-запросов и падения трафика там нет ни на
+одном языке, поэтому их нет и в креативе; любая такая цифра была бы
+выдуманной. Подробнее — в шапке `funnel-geo-aeo.md`.
