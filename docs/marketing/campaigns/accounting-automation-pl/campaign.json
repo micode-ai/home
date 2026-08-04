@@ -2,10 +2,14 @@
   "id": "accounting-automation-pl",
   "track": "funnel-top",
   "target": "https://mi-code.pl/blog/accounting-ai-agent-architecture/",
-  "utm": { "campaign": "accounting-automation-pl" },
+  "utm": {
+    "campaign": "accounting-automation-pl"
+  },
   "source": {
     "slug": "accounting-ai-agent-architecture",
-    "figures": ["15 000", "3"]
+    "figures": [
+      "15 000"
+    ]
   },
   "slides": [
     {
@@ -19,7 +23,7 @@
       "en": {
         "eyebrow": "What to hand to AI in accounting",
         "headline": "Start with a threshold and a registry",
-        "sub": "Above that amount Polish law requires a “White List” check on the contractor's account. Fixed threshold, official registry, no judgement — that is the shape of work worth handing over."
+        "sub": "At that amount and above, Polish law requires a “White List” check on the contractor’s account. Fixed threshold, official registry, no judgement — that is the shape of work worth handing over."
       }
     },
     {
@@ -42,10 +46,22 @@
         "headline": "Robota, która ma swoje źródło",
         "sub": "Każda z tych czynności ma jedno miejsce, w którym da się sprawdzić wynik: Twoje faktury w wFirma, państwowy rejestr albo oficjalny kalendarz terminów. Agent nie odpowiada z pamięci — idzie po dane.",
         "rows": [
-          ["Sprawdzenie dużej płatności", "Biała Lista MF"],
-          ["Autouzupełnianie po NIP", "rejestry publiczne"],
-          ["Pilnowanie terminów", "kalendarz podatkowy"],
-          ["Wystawienie e-faktury", "KSeF, format FA(3)"]
+          [
+            "Sprawdzenie dużej płatności",
+            "Biała Lista MF"
+          ],
+          [
+            "Autouzupełnianie po NIP",
+            "rejestry publiczne"
+          ],
+          [
+            "Pilnowanie terminów",
+            "kalendarz podatkowy"
+          ],
+          [
+            "Wystawienie e-faktury",
+            "KSeF, format FA(3)"
+          ]
         ]
       },
       "en": {
@@ -53,10 +69,22 @@
         "headline": "Work that has a source to check",
         "sub": "Every one of these has a single place where the result can be verified: your invoices in wFirma, a state registry, or the official deadline calendar. The agent does not answer from memory — it goes and fetches the data.",
         "rows": [
-          ["Checking a large payment", "MF White List"],
-          ["Autofill by NIP", "public registries"],
-          ["Watching the deadlines", "tax calendar"],
-          ["Issuing an e-invoice", "KSeF, FA(3) format"]
+          [
+            "Checking a large payment",
+            "MF White List"
+          ],
+          [
+            "Autofill by NIP",
+            "public registries"
+          ],
+          [
+            "Watching the deadlines",
+            "tax calendar"
+          ],
+          [
+            "Issuing an e-invoice",
+            "KSeF, FA(3) format"
+          ]
         ]
       }
     },
@@ -67,10 +95,22 @@
         "headline": "Podpis zostaje po Twojej stronie",
         "sub": "Agent pomaga liczyć i sporządzać dokumenty, ale nie zastępuje księgowego ani doradcy podatkowego. Przepisy się zmieniają, a szczegóły zależą od konkretnej sytuacji — i ktoś musi wziąć za to odpowiedzialność.",
         "rows": [
-          ["Liczenie i dokumenty", "agent"],
-          ["Szczegóły Twojej sytuacji", "księgowy"],
-          ["Ocena podatkowa", "doradca podatkowy"],
-          ["Ostateczna decyzja", "Ty"]
+          [
+            "Liczenie i dokumenty",
+            "agent"
+          ],
+          [
+            "Szczegóły Twojej sytuacji",
+            "księgowy"
+          ],
+          [
+            "Ocena podatkowa",
+            "doradca podatkowy"
+          ],
+          [
+            "Ostateczna decyzja",
+            "Ty"
+          ]
         ]
       },
       "en": {
@@ -78,10 +118,22 @@
         "headline": "The signature stays on your side",
         "sub": "The agent helps you calculate and file, but it does not replace an accountant or a tax adviser. Rules change and the details depend on your specific situation — and somebody has to answer for that.",
         "rows": [
-          ["Calculating and filing", "the agent"],
-          ["The details of your case", "your accountant"],
-          ["A tax judgement", "a tax adviser"],
-          ["The final decision", "you"]
+          [
+            "Calculating and filing",
+            "the agent"
+          ],
+          [
+            "The details of your case",
+            "your accountant"
+          ],
+          [
+            "A tax judgement",
+            "a tax adviser"
+          ],
+          [
+            "The final decision",
+            "you"
+          ]
         ]
       }
     },
@@ -92,9 +144,18 @@
         "headline": "Trzy pytania, zanim coś oddasz",
         "sub": "Ta sama zasada działa poza księgowością — w magazynie, w obsłudze klienta, w umowach. Jeśli na dwa pierwsze pytania odpowiadasz „tak”, a na trzecie „nie”, zadanie nadaje się dla agenta.",
         "rows": [
-          ["Da się sprawdzić u źródła?", "tak"],
-          ["Reguła ma jasny próg?", "tak"],
-          ["Trzeba ocenić i podpisać?", "nie"]
+          [
+            "Da się sprawdzić u źródła?",
+            "tak"
+          ],
+          [
+            "Reguła ma jasny próg?",
+            "tak"
+          ],
+          [
+            "Trzeba ocenić i podpisać?",
+            "nie"
+          ]
         ]
       },
       "en": {
@@ -102,9 +163,18 @@
         "headline": "Three questions before you hand it over",
         "sub": "The same rule works outside accounting — in the warehouse, in customer support, in contracts. If the first two answers are yes and the third is no, the task suits an agent.",
         "rows": [
-          ["Can it be checked at the source?", "yes"],
-          ["Does the rule have a threshold?", "yes"],
-          ["Does it need judgement?", "no"]
+          [
+            "Can it be checked at the source?",
+            "yes"
+          ],
+          [
+            "Does the rule have a threshold?",
+            "yes"
+          ],
+          [
+            "Does it need judgement?",
+            "no"
+          ]
         ]
       }
     },

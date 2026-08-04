@@ -30,9 +30,17 @@
   агенту. Оговорка идёт вместе с цифрой: пропуск этой проверки грозит потерей
   права отнести расход в затраты, и это последствие для читателя, а не функция
   нашего продукта.
-- **3** — это **номер версии формата** структурированной e-фактуры, `FA(3)`,
-  который требует KSeF. Не количество чего-либо. В колоде стоит только внутри
-  строки `KSeF, format FA(3)` / `KSeF, FA(3) format`, где подпись однозначна.
+- **3** стоит в колоде только внутри `KSeF, format FA(3)` / `KSeF, FA(3)
+  format` — это **номер версии формата** структурированной e-фактуры, а не
+  количество чего-либо. В `source.figures` его **нет**, и это осознанно: скан
+  ищет цифру где угодно в корпусе на 24 тысячи знаков, а `3` там встречается не
+  только в `FA(3)`, но и внутри `o3` — названия модели OpenAI в перечислении
+  `gpt-5, o1, o3`. То есть пин удовлетворялся бы посторонней подстрокой и не
+  покраснел бы, даже если убрать из статьи все упоминания `FA(3)`. Здесь раньше
+  стояло обратное утверждение — оно было ложным. Общий вывод для следующих
+  кампаний: **однозначные цифры — слабые пины** в большом корпусе, потому что
+  ловятся как часть посторонних токенов (версии, имена моделей, артикулы).
+  Кампанию держит `15 000` — один настоящий пин лучше, чем настоящий и пустой.
 - **117** попадает в скан из `art. 117ba` в тексте поста. Это **номер статьи**
   Налоговой ординации, а не количество. На слайдах его нет.
 
@@ -229,7 +237,7 @@ realistically be handed to AI, and what is just marketing.
 The answer does not depend on how hard the task is. It depends on whether the
 result can be checked.
 
-A concrete one. For any payment of 15,000 zł or more, Polish law — Art. 117ba of
+Take a concrete case. For any payment of 15,000 zł or more, Polish law — Art. 117ba of
 the Tax Ordinance — requires you to confirm that the contractor's account is on
 the official Ministry of Finance “White List”. Skip that step and a formality
 can cost you the right to book the expense. A fixed threshold, an official
