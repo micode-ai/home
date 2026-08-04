@@ -1,0 +1,127 @@
+{
+  "id": "self-improving-agents",
+  "track": "funnel-top",
+  "target": "https://mi-code.pl/blog/self-improving-agent-teams/",
+  "utm": { "campaign": "self-improving-agents" },
+  "source": {
+    "slug": "self-improving-agent-teams",
+    "figures": ["2025"]
+  },
+  "slides": [
+    {
+      "type": "hook",
+      "bigNumber": "2025",
+      "pl": {
+        "eyebrow": "Zespoły agentów AI",
+        "headline": "Twoi agenci nie stają się lepsi",
+        "sub": "W rozmowie z 2025 roku Karpathy nazwał brakujący element: człowiek podczas snu destyluje kontekst dnia do wag mózgu. Dzisiejsze modele nie mają tej fazy."
+      },
+      "en": {
+        "eyebrow": "AI agent teams",
+        "headline": "Your agents never get better",
+        "sub": "In a 2025 conversation Karpathy named the missing piece: during sleep humans distill the day's context into the weights of the brain. Today's models have no equivalent."
+      }
+    },
+    {
+      "type": "problem",
+      "pl": {
+        "eyebrow": "Problem",
+        "headline": "Genialny stażysta z amnezją",
+        "sub": "Bezstanowy agent startuje od zera przy każdej sesji. Kolega, który w zeszłym miesiącu przeglądał twój moduł płatności, wnosi ten kontekst w nowy miesiąc — agent wyprowadza go od nowa, i to źle. Kod bazowy zmienia się codziennie; instrukcje agenta prawie nigdy."
+      },
+      "en": {
+        "eyebrow": "The problem",
+        "headline": "A brilliant intern with amnesia",
+        "sub": "A stateless agent starts from zero every session. A teammate who reviewed your payments module last month carries that context into this month — the agent re-derives it, badly, every time. Codebases move every day; the instructions rarely do."
+      }
+    },
+    {
+      "type": "tall-diagram",
+      "pl": {
+        "eyebrow": "Nocna zmiana",
+        "headline": "Agent proponuje, decyduje człowiek",
+        "sub": "Wyjście każdego agenta to zwykły plik w repozytorium, a samomodyfikacja jest propozycją.",
+        "asset": "src/team-overview-pl.png",
+        "shot": {
+          "path": "/blog/self-improving-agent-teams/",
+          "selector": "figure.article-figure:has(figcaption:has-text(\"Zespół wyspecjalizowanych agentów\")) pre.mermaid svg"
+        }
+      },
+      "en": {
+        "eyebrow": "The night shift",
+        "headline": "The agent proposes, a human disposes",
+        "sub": "Every agent's output is a plain file in the repository, and self-modification is a proposal.",
+        "asset": "src/team-overview-en.png",
+        "shot": {
+          "path": "/en/blog/self-improving-agent-teams/",
+          "selector": "figure.article-figure:has(figcaption:has-text(\"A team of specialist agents\")) pre.mermaid svg"
+        }
+      }
+    },
+    {
+      "type": "numbers",
+      "pl": {
+        "eyebrow": "Pętla samokształcenia",
+        "headline": "Co agent robi w nocy",
+        "sub": "Cykl jest celowo mały i ograniczony: celem jest skończona notatka każdej nocy, a nie idealna mapa repozytorium. Krótka, trafna notatka bije długie śledztwo, które nigdy się nie kończy.",
+        "rows": [
+          ["Przeczytaj rolę na nowo", "punkt zaczepienia"],
+          ["Zbadaj kod wyrywkowo", "ścisły budżet"],
+          ["Napisz notatkę", "czego się dziś nauczyłem"],
+          ["Wykryj rozjazd", "tylko odnotuj"],
+          ["Zaproponuj ewolucję", "decyduje człowiek"]
+        ]
+      },
+      "en": {
+        "eyebrow": "The self-study loop",
+        "headline": "What the agent does at night",
+        "sub": "The cycle is deliberately small and bounded: the goal is a finished note every night, not a perfect map of the repository. A short, accurate note beats a long investigation that never finishes.",
+        "rows": [
+          ["Re-read the role", "the anchor"],
+          ["Sample the code", "a strict budget"],
+          ["Write a learning note", "what I learned today"],
+          ["Detect drift", "record, do not fix"],
+          ["Propose an evolution", "a human decides"]
+        ]
+      }
+    },
+    {
+      "type": "numbers",
+      "pl": {
+        "eyebrow": "Bezpieczniki",
+        "headline": "Dlaczego można to zostawić włączone",
+        "sub": "Dyscyplinę zapożyczono w całości z eksploatacji. Nic nie działa w nieskończoność, a każde uruchomienie kończy się w znanym stanie — to nudna warstwa operacyjna, która zamienia stertę skryptów w coś, co da się zostawić.",
+        "rows": [
+          ["Rotacja", "nikt nie głoduje"],
+          ["Limity współbieżności", "koszt przewidywalny"],
+          ["Watchdog", "zbyt długa cisza kończy sesję"],
+          ["Uzgadnianie", "rozliczenie się zgadza"]
+        ]
+      },
+      "en": {
+        "eyebrow": "Guardrails",
+        "headline": "Why you can leave it running",
+        "sub": "The discipline is borrowed wholesale from operations. Nothing runs forever and every run ends in a known state — the boring operational layer that turns a pile of scripts into something you can actually leave running.",
+        "rows": [
+          ["Rotation", "none is starved"],
+          ["Concurrency limits", "predictable cost"],
+          ["Watchdog", "too long a silence ends the run"],
+          ["Reconciliation", "the books balance"]
+        ]
+      }
+    },
+    {
+      "type": "cta",
+      "pl": {
+        "eyebrow": "MICODE",
+        "headline": "Zbudujemy Ci nocną zmianę",
+        "sub": "Utrzymujemy to podejście na produkcji: harmonogram, rotacja, ograniczone w czasie uruchomienia i artefakt na każde uruchomienie — z człowiekiem przy bramce. Zaczynamy od jednego agenta, jednej notatki i jednego nawyku."
+      },
+      "en": {
+        "eyebrow": "MICODE",
+        "headline": "We will build your night shift",
+        "sub": "We run this approach in production: a schedule, a rotation, bounded runs and an artifact for every run — with a human at the gate. We start with one agent, one note and one habit."
+      }
+    }
+  ]
+}
