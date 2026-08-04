@@ -14,6 +14,11 @@ on:
   schedule:
     - cron: '17 6 * * *'      # daily, 06:17 UTC
   workflow_dispatch:           # and on demand
+    inputs:
+      test_alert:
+        description: 'Only send a test message to the ops channel, skip the checks'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -24,6 +29,7 @@ jobs:
     steps:
       - name: Probe the live site
         id: probe
+        if: ${{ !inputs.test_alert }}
         run: |
           SITE="https://mi-code.pl"
           MIN_CERT_DAYS=20
@@ -73,12 +79,16 @@ jobs:
           fi
           echo "all checks passed"
 
+      # Also runs on demand with test_alert, because an alerting path that has
+      # never delivered a message is not an alerting path — the first real
+      # outage should not be the first test of the channel.
       - name: Tell the ops channel
-        if: failure()
+        if: ${{ failure() || inputs.test_alert }}
         env:
           TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           CHAT: ${{ secrets.TELEGRAM_OPS_CHAT_ID }}
           REPORT: ${{ steps.probe.outputs.report }}
+          IS_TEST: ${{ inputs.test_alert }}
         run: |
           # Missing secrets must not mask the real failure: warn and let the job
           # stay red, so the GitHub e-mail still goes out.
@@ -89,8 +99,12 @@ jobs:
           run_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           # printf rather than a literal multi-line string: inside a YAML block
           # scalar an unindented continuation line silently ends the block.
-          text=$(printf '🔴 mi-code.pl health check failed\n\n%s\nRun: %s' \
-                        "${REPORT:-(no details captured — see the run log)}" "$run_url")
+          if [ "$IS_TEST" = "true" ]; then
+            text=$(printf '🟢 mi-code.pl health check — test message\n\nAlerting works. Nothing is wrong with the site.\nRun: %s' "$run_url")
+          else
+            text=$(printf '🔴 mi-code.pl health check failed\n\n%s\nRun: %s' \
+                          "${REPORT:-(no details captured — see the run log)}" "$run_url")
+          fi
           curl -sS --max-time 30 \
             "https://api.telegram.org/bot${TOKEN}/sendMessage" \
             --data-urlencode "chat_id=${CHAT}" \
