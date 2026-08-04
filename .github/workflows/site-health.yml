@@ -1,0 +1,99 @@
+name: Site health
+
+# Watches the live site, not the build. The build being green says nothing about
+# what mi-code.pl actually serves: on 2026-08-04 a stray Cloudflare A record sent
+# most traffic to SEOHOST's domain-parking page, which answered 200 for the
+# homepage and 404 for everything else. Deploys kept succeeding, and the failure
+# surfaced a week later in an Ahrefs report as "the whole site is broken".
+#
+# So the checks below ask the only question that matters — is this our site? —
+# and watch the certificate, which GitHub renews automatically but cannot renew
+# if DNS ever points away again.
+
+on:
+  schedule:
+    - cron: '17 6 * * *'      # daily, 06:17 UTC
+  workflow_dispatch:           # and on demand
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe the live site
+        id: probe
+        run: |
+          SITE="https://mi-code.pl"
+          MIN_CERT_DAYS=20
+          fail() { echo "FAIL: $1"; FAILURES="${FAILURES}• $1"$'\n'; }
+
+          # 1. The homepage must be ours. A parking page also answers 200, so the
+          #    status code alone proves nothing — check for our own content.
+          body=$(curl -fsS --max-time 30 "$SITE/" || echo "")
+          if [ -z "$body" ]; then
+            fail "homepage did not respond"
+          elif ! grep -qi "MiCode" <<<"$body"; then
+            fail "homepage responds but is not our site (no 'MiCode' in the HTML)"
+          fi
+
+          # 2. Served by GitHub Pages, not some other origin.
+          server=$(curl -sSI --max-time 30 "$SITE/" | tr -d '\r' | awk -F': ' 'tolower($1)=="server"{print $2}')
+          if [ "$server" != "GitHub.com" ]; then
+            fail "served by '${server:-unknown}', expected GitHub.com"
+          fi
+
+          # 3. Subpages. The parking page had a homepage and nothing else, which is
+          #    exactly the shape that made the outage hard to notice.
+          for path in /blog/ /en/ /sitemap.xml /products/accounting-ai/; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 30 "$SITE$path")
+            [ "$code" = "200" ] || fail "$path returned $code"
+          done
+
+          # 4. Certificate. GitHub renews it on its own; this catches a renewal that
+          #    silently failed, which is what a DNS change would cause.
+          not_after=$(echo | openssl s_client -servername mi-code.pl -connect mi-code.pl:443 2>/dev/null \
+                      | openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2)
+          if [ -z "$not_after" ]; then
+            fail "could not read the TLS certificate"
+          else
+            days=$(( ( $(date -d "$not_after" +%s) - $(date +%s) ) / 86400 ))
+            echo "certificate expires in $days day(s) — $not_after"
+            [ "$days" -ge "$MIN_CERT_DAYS" ] || fail "certificate expires in $days day(s) (< $MIN_CERT_DAYS)"
+          fi
+
+          if [ -n "$FAILURES" ]; then
+            {
+              echo "report<<EOF"
+              echo "$FAILURES"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+          echo "all checks passed"
+
+      - name: Tell the ops channel
+        if: failure()
+        env:
+          TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT: ${{ secrets.TELEGRAM_OPS_CHAT_ID }}
+          REPORT: ${{ steps.probe.outputs.report }}
+        run: |
+          # Missing secrets must not mask the real failure: warn and let the job
+          # stay red, so the GitHub e-mail still goes out.
+          if [ -z "$TOKEN" ] || [ -z "$CHAT" ]; then
+            echo "::warning::TELEGRAM_BOT_TOKEN or TELEGRAM_OPS_CHAT_ID not set — no Telegram alert sent"
+            exit 0
+          fi
+          run_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          # printf rather than a literal multi-line string: inside a YAML block
+          # scalar an unindented continuation line silently ends the block.
+          text=$(printf '🔴 mi-code.pl — проверка не прошла\n\n%s\nПодробности: %s' \
+                        "${REPORT:-(нет подробностей, см. лог)}" "$run_url")
+          curl -sS --max-time 30 \
+            "https://api.telegram.org/bot${TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${CHAT}" \
+            --data-urlencode "text=${text}" \
+            --data-urlencode "disable_web_page_preview=true" \
+            -o /dev/null -w 'telegram: HTTP %{http_code}\n'
