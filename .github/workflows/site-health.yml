@@ -89,8 +89,8 @@ jobs:
           run_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           # printf rather than a literal multi-line string: inside a YAML block
           # scalar an unindented continuation line silently ends the block.
-          text=$(printf '🔴 mi-code.pl — проверка не прошла\n\n%s\nПодробности: %s' \
-                        "${REPORT:-(нет подробностей, см. лог)}" "$run_url")
+          text=$(printf '🔴 mi-code.pl health check failed\n\n%s\nRun: %s' \
+                        "${REPORT:-(no details captured — see the run log)}" "$run_url")
           curl -sS --max-time 30 \
             "https://api.telegram.org/bot${TOKEN}/sendMessage" \
             --data-urlencode "chat_id=${CHAT}" \
