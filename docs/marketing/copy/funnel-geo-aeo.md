@@ -71,19 +71,25 @@
 ## Каналы
 
 Контент-план (`content-plan.md`, строка 6) ставит эту кампанию **только в
-LinkedIn** — карусель PL + EN, вторник 2026-08-18. Instagram-канал (`## Stories`,
-`utm_source=instagram`) написан ниже **на опережение**: тексты готовы, слота в
-календаре у него пока нет. Это единственная асимметрия в файле, и она
-намеренная — `test_campaigns.py` требует раздел под каждый **запланированный**
-канал, но не запрещает лишний, так что текст может ждать слот, а не наоборот.
-Чтобы его открыть, в `content-plan.md` добавляется строка `Stories + Reels` с
-этой кампанией.
+LinkedIn** — карусель PL + EN, вторник 2026-08-18. Оба раздела под Instagram
+написаны **на опережение**: тексты готовы, строк в календаре у них пока нет.
+Это единственная асимметрия в файле, и она намеренная — `test_campaigns.py`
+требует раздел под каждый **запланированный** канал, но не запрещает лишний,
+так что текст может ждать слот, а не наоборот.
 
-Форматы, отрендеренные и лежащие в `creatives/geo-aeo/renders/`:
-`story-9x16-01..06.png` и `reel.mp4` (их публикует раздел ниже),
-`feed-4x5.png` и `reel-4x5.mp4` — под фид, `og.png` — под ссылку. Фид — это
-отдельный канал `## Facebook` со своим `utm_source=facebook`; его строки в
-календаре тоже нет, и раздела под неё в этом файле пока нет.
+Куда что публикуется — три канала и разные форматы:
+
+| Раздел | Куда | Формат | `utm_source` |
+|---|---|---|---|
+| `## LinkedIn` | LinkedIn | `carousel.pdf`, запасной `li-single.png` | `linkedin` |
+| `## Facebook` | **лента Instagram** и Facebook | `reel-4x5.mp4` или `feed-4x5.png` | `facebook` |
+| `## Stories` | Stories и Reels | `reel.mp4` + `story-9x16-01..06.png` | `instagram` |
+
+Название `## Facebook` для ленты Instagram — не описка: строка календаря
+называется «Facebook + Instagram фид», это одна строка на две ленты с общим
+`utm_source=facebook`, а `instagram` занят каналом Stories. Чтобы открыть эти
+строки, в `content-plan.md` добавляются `Facebook + Instagram фид` и
+`Stories + Reels` с этой кампанией. `og.png` — под ссылку, канала у него нет.
 
 ## LinkedIn
 
@@ -194,6 +200,71 @@ Wondering how your brand shows up when an AI answers on your behalf? Write to
 development@mi-code.pl.
 
 #AI #GEO #AEO #LLM #softwarehouse #Poland #techleadership
+
+## Facebook
+
+**Это и есть текст поста для Instagram** (и Facebook) — фид. Формат:
+`renders/<lang>/reel-4x5.mp4`, если постим видео, или `renders/<lang>/feed-4x5.png`,
+если картинкой. Канал называется `Facebook`, потому что строка плана называется
+«Facebook + Instagram фид» и `utm_source` у неё общий — `facebook`; отдельного
+`instagram` у фида нет, он занят каналом `## Stories`. Клики из ленты Instagram
+поэтому лягут в бакет `facebook`, и это осознанно: ленты две, текст один.
+
+Почему текст отдельный, а не тот же, что в LinkedIn: **подпись в Instagram
+обрезается на 2200 знаках**, а LinkedIn-версия выше — 2829 знаков на PL и 2716
+на EN, то есть не влезает на 629 и 516 соответственно (замер, а не оценка).
+Дело не только в длине: аудитория здесь листает ленту, а не читает разбор,
+поэтому ниже вдвое короче, без стрелок-буллетов и без жаргона — один крючок
+(`2022`), одно следствие, одна ссылка. Тот же принцип, что у кампании 1.
+
+### PL
+
+Twój ranking się nie zmienił. Zmieniło się to, co widzi klient.
+
+Zadaj dziś pytanie w ChatGPT, Perplexity albo Google — zamiast dziesięciu
+linków dostaniesz jedną gotową odpowiedź. I to ona rozstrzyga, które firmy
+zostaną wspomniane. Jeśli nie cytuje Twojej treści, dla tego klienta po prostu
+Cię tam nie ma — nawet wtedy, gdy w wynikach wyszukiwania wciąż jesteś pierwszy.
+
+Od publicznej premiery ChatGPT w listopadzie 2022 roku to zwyczajny sposób
+szukania, a nie ciekawostka.
+
+Co z tym zrobić: pisać treści, które maszyna potrafi zacytować, świadomie
+wpuścić do siebie crawlery AI — jeśli Twój robots.txt je blokuje, sam
+wypisałeś się z odpowiedzi — i odpowiadać wprost, zamiast owijać rzecz w
+marketing.
+
+Skąd się to wzięło i jak stosujemy to na każdej naszej stronie:
+https://mi-code.pl/blog/geo-aeo-generative-answer-engine-optimization/?utm_source=facebook&utm_medium=social&utm_campaign=geo-aeo
+
+Ciekawi Cię, jak Twoja marka wypada, gdy to AI odpowiada w Twoim imieniu?
+Napisz na development@mi-code.pl.
+
+#AI #GEO #AEO #marketing #softwarehouse #ITPolska
+
+### EN
+
+Your ranking has not changed. What the customer sees has.
+
+Ask a question in ChatGPT, Perplexity or Google today and instead of ten links
+you get one finished answer. And that answer decides which companies get
+mentioned. If it does not quote your content, you are simply not there for that
+customer — even when you still rank first on the results page.
+
+Since ChatGPT launched publicly in November 2022, this is just how people
+search, not a novelty.
+
+What to do about it: write content a machine can quote, deliberately let AI
+crawlers in — if your robots.txt blocks them, you opted out of the answer
+yourself — and answer directly instead of wrapping it in marketing.
+
+Where this came from and how we apply it on every site we own:
+https://mi-code.pl/en/blog/geo-aeo-generative-answer-engine-optimization/?utm_source=facebook&utm_medium=social&utm_campaign=geo-aeo
+
+Curious how your brand shows up when an AI answers on your behalf? Write to
+development@mi-code.pl.
+
+#AI #GEO #AEO #marketing #softwarehouse #Poland
 
 ## Stories
 
