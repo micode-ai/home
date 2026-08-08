@@ -108,6 +108,75 @@ def test_video_frames_use_the_vertical_canvas(workspace):
     assert frames.shape[1:3] == (1920, 1080)
 
 
+# --- the feed-safe 4:5 video -----------------------------------------------
+#
+# Instagram accepts a *feed* video only between 4:5 (0.8) and 16:9 (~1.778).
+# The reel sits at 9:16 = 0.5625, which is correct for the Reels and Stories
+# placements and rejected outright by a feed/ads-feed composer ("the selected
+# video does not fit the aspect ratio range accepted by Instagram").
+# `reel-4x5.mp4` is the same deck rendered at the feed canvas, so one campaign
+# covers both placements without the operator re-cutting anything by hand.
+
+def test_writes_a_feed_safe_video(workspace):
+    build_reel.build("demo", ["pl"])
+    out = _renders_dir(workspace, "pl")
+    assert (out / "reel-4x5.mp4").is_file()
+    assert (out / "reel-4x5.mp4").stat().st_size > 10_000
+
+
+def test_feed_video_is_encoded_at_exactly_the_4x5_canvas(workspace):
+    """Pins the *encoded* size, not the canvas constant.
+
+    `imageio` rounds each dimension **up** to a multiple of `macro_block_size`,
+    and 1350 is not divisible by the 8 the 9:16 reel uses (1350/8 = 168.75).
+    Measured directly: encoding this canvas at `macro_block_size=8` silently
+    produces 1080x1352 — ratio 0.7988, i.e. *below* Instagram's 4:5 floor, so
+    the file would be rejected for the very reason this format was added. Only
+    reading the encoded file back proves the rounding did not happen; asserting
+    on `FEED_CANVAS` would pass while shipping a rejected video."""
+    build_reel.build("demo", ["pl"])
+    mp4 = _renders_dir(workspace, "pl") / "reel-4x5.mp4"
+    frames = iio.imread(mp4, plugin="pyav")
+    assert frames.shape[1:3] == (1350, 1080), (
+        f"encoded {frames.shape[2]}x{frames.shape[1]}, expected 1080x1350 — a "
+        "macro_block_size that does not divide the canvas resized the video"
+    )
+
+
+def test_feed_video_lands_inside_instagrams_accepted_range(workspace):
+    build_reel.build("demo", ["pl"])
+    mp4 = _renders_dir(workspace, "pl") / "reel-4x5.mp4"
+    frames = iio.imread(mp4, plugin="pyav")
+    height, width = frames.shape[1:3]
+    ratio = width / height
+    assert 0.8 <= ratio <= 16 / 9, (
+        f"{width}x{height} is {ratio:.4f}; Instagram's feed accepts "
+        "0.800 (4:5) .. 1.778 (16:9)"
+    )
+
+
+def test_the_reel_stays_9x16_for_reels_and_stories(workspace):
+    """The feed video is an addition, not a replacement. Reels and Stories want
+    the full-bleed vertical canvas, which is deliberately *outside* the feed
+    range — swapping `reel.mp4` to 4:5 would letterbox every Story."""
+    build_reel.build("demo", ["pl"])
+    mp4 = _renders_dir(workspace, "pl") / "reel.mp4"
+    frames = iio.imread(mp4, plugin="pyav")
+    assert frames.shape[1:3] == (1920, 1080)
+
+
+@pytest.mark.parametrize("canvas,expected", [
+    ((1080, 1920), 8),   # divides exactly — unchanged from before this format
+    ((1080, 1350), 2),   # 1350 is a multiple of neither 8 nor 4
+])
+def test_macro_block_size_always_divides_the_canvas(canvas, expected):
+    """The guard behind `test_feed_video_is_encoded_at_exactly_the_4x5_canvas`,
+    stated as its own fact so a future canvas gets the same protection."""
+    chosen = build_reel._macro_block_size(canvas)
+    assert chosen == expected
+    assert canvas[0] % chosen == 0 and canvas[1] % chosen == 0
+
+
 def test_reel_is_not_a_still_image(workspace):
     """A transition bug that renders the same frame throughout still produces
     a playable file, so compare the first and last frames explicitly.
@@ -258,8 +327,8 @@ def test_stale_posters_are_removed_when_the_deck_shrinks(workspace):
 
 def test_build_returns_every_path_it_wrote(workspace):
     written = build_reel.build("demo", ["pl"])
-    # 2 posters + reel.mp4 + reel.gif
-    assert len(written) == 4
+    # 2 posters + reel.mp4 + reel.gif + reel-4x5.mp4
+    assert len(written) == 5
     assert all(p.exists() for p in written)
 
 
@@ -331,23 +400,35 @@ def test_overflow_raises_when_the_caller_treats_runtimewarning_as_an_error(works
             build_reel.build("demo", ["pl"])
 
 
-def test_overflow_warns_and_prints_exactly_once(workspace, capsys):
+def test_overflow_warns_once_per_rendered_format(workspace, capsys):
     """Re-emitting the captured warning must not double it up: under default
-    filters, a caller must see exactly one RuntimeWarning and exactly one
-    operator-facing stderr line for the one slide that overflowed — not zero
-    (suppressed) and not two (the original display plus a duplicate
-    re-emit)."""
+    filters, a caller must see one RuntimeWarning and one operator-facing
+    stderr line **per format the overflowing slide was actually drawn into** —
+    not zero (suppressed) and not a duplicate of the same render.
+
+    That count is two rather than one only because this generator now draws the
+    deck onto two canvases (9:16 for Reels/Stories, 4:5 for the feed), and copy
+    that overflows the taller canvas overflows the shorter one too. The
+    invariant being protected is unchanged, so it is asserted structurally
+    rather than as a bare number: the two lines must name the two *different*
+    canvases. A duplicated re-emit — the regression this test was written for —
+    would print the same canvas twice and still fail."""
     _write_overflowing_campaign(workspace)
     with pytest.warns(RuntimeWarning) as caught:
         build_reel.build("demo", ["pl"])
     runtime_warnings = [w for w in caught if issubclass(w.category, RuntimeWarning)]
-    assert len(runtime_warnings) == 1, (
-        f"expected exactly one RuntimeWarning, got {len(runtime_warnings)} — a dropped "
-        "or duplicated re-emit would show up here"
+    assert len(runtime_warnings) == 2, (
+        f"expected one RuntimeWarning per format, got {len(runtime_warnings)} — a "
+        "dropped or duplicated re-emit would show up here"
     )
     captured = capsys.readouterr()
-    assert captured.err.count("WARNING") == 1, (
-        f"expected exactly one operator message, got {captured.err.count('WARNING')}"
+    assert captured.err.count("WARNING") == 2, (
+        f"expected one operator message per format, got "
+        f"{captured.err.count('WARNING')}"
+    )
+    assert "1080x1920" in captured.err and "1080x1350" in captured.err, (
+        "the two messages must name the two different canvases, not repeat one:\n"
+        f"{captured.err}"
     )
 
 

@@ -200,8 +200,9 @@ pre.mermaid svg`. Снимается сам `svg`, а не `.diagram-wrap` — �
 
 Контент-план (`content-plan.md`, строка 10) ставит эту кампанию **только в
 LinkedIn** — карусель PL + EN, вторник 2026-09-01. Поэтому ниже один канал.
-Остальные форматы (`feed-4x5.png`, `story-9x16-01..06.png`, `reel.mp4`,
-`og.png`) отрендерены и лежат в `creatives/self-improving-agents/renders/` — они
+Остальные форматы (`feed-4x5.png`, `story-9x16-01..06.png`, `reel.mp4` для
+Reels/Stories, `reel-4x5.mp4` для ленты, `og.png`) отрендерены и лежат в
+`creatives/self-improving-agents/renders/` — они
 готовы к публикации, но слота в календаре у них нет; когда он появится, сюда
 добавляется `## Facebook` / `## Stories` со своими `utm_source`, и
 `test_campaigns.py` начнёт требовать их сам.

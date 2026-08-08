@@ -71,12 +71,19 @@
 ## Каналы
 
 Контент-план (`content-plan.md`, строка 6) ставит эту кампанию **только в
-LinkedIn** — карусель PL + EN, вторник 2026-08-18. Поэтому ниже один канал.
-Остальные форматы (`feed-4x5.png`, `story-9x16-01..06.png`, `reel.mp4`,
-`og.png`) отрендерены и лежат в `creatives/geo-aeo/renders/` — они готовы к
-публикации, но слота в календаре у них нет; когда он появится, сюда добавляется
-`## Facebook` / `## Stories` со своими `utm_source`, и `test_campaigns.py`
-начнёт требовать их сам.
+LinkedIn** — карусель PL + EN, вторник 2026-08-18. Instagram-канал (`## Stories`,
+`utm_source=instagram`) написан ниже **на опережение**: тексты готовы, слота в
+календаре у него пока нет. Это единственная асимметрия в файле, и она
+намеренная — `test_campaigns.py` требует раздел под каждый **запланированный**
+канал, но не запрещает лишний, так что текст может ждать слот, а не наоборот.
+Чтобы его открыть, в `content-plan.md` добавляется строка `Stories + Reels` с
+этой кампанией.
+
+Форматы, отрендеренные и лежащие в `creatives/geo-aeo/renders/`:
+`story-9x16-01..06.png` и `reel.mp4` (их публикует раздел ниже),
+`feed-4x5.png` и `reel-4x5.mp4` — под фид, `og.png` — под ссылку. Фид — это
+отдельный канал `## Facebook` со своим `utm_source=facebook`; его строки в
+календаре тоже нет, и раздела под неё в этом файле пока нет.
 
 ## LinkedIn
 
@@ -187,3 +194,48 @@ Wondering how your brand shows up when an AI answers on your behalf? Write to
 development@mi-code.pl.
 
 #AI #GEO #AEO #LLM #softwarehouse #Poland #techleadership
+
+## Stories
+
+Шесть кадров под `renders/<lang>/story-9x16-01..06.png`. Кадры рендерятся из
+тех же слайдов, что и карусель (`build_reel.py` → `slides.render`), поэтому
+**на самом кадре уже напечатан полный текст слайда** — надзаголовок, заголовок
+и подзаголовок. Тот же проход есть видео: `renders/<lang>/reel.mp4`
+(и `reel.gif` для превью).
+
+Видео берётся **по плейсменту, а не по привычке**: в Reels и Stories идёт
+`reel.mp4` (9:16), в ленту — `reel-4x5.mp4` (4:5). `reel.mp4` в ленту не
+встаёт вообще — композер отвечает «выбранное видео не вписывается в диапазон
+соотношения сторон от 4:5 до 16:9». Таблица «какое видео куда» — в
+`README.md`.
+
+Строки ниже — **не текст кадра, а сопроводительная подпись**: то, что
+набирается стикером поверх стори или произносится за кадром в Reels. Одна
+фраза на кадр, не длиннее шести слов; ссылка — только на последнем кадре,
+свайпом вверх.
+
+Отдельная оговорка для этой кампании, и она жёстче обычного: у статьи **три
+числа, и все три — годы** (см. «Что именно измеряет каждая цифра» выше).
+Подписи ниже не содержат ни одной цифры вовсе, и это не случайность — стори
+провоцируют на «прибавить процент для веса», а любой такой процент здесь будет
+выдуманным. Заголовок кадра 01 несёт `2022` сам, прямо на картинке.
+
+### PL
+
+1. `story-9x16-01.png` — Wyszukiwarka przestała być listą linków
+2. `story-9x16-02.png` — Pierwsze miejsce, którego nikt nie klika
+3. `story-9x16-03.png` — SEO rankuje, AEO odpowiada, GEO cytuje
+4. `story-9x16-04.png` — Blokujesz boty AI? Nie istniejesz
+5. `story-9x16-05.png` — llms.txt, robots.txt, dane strukturalne
+6. `story-9x16-06.png` — Sprawdzimy, jak wypadasz w AI →
+   https://mi-code.pl/blog/geo-aeo-generative-answer-engine-optimization/?utm_source=instagram&utm_medium=social&utm_campaign=geo-aeo
+
+### EN
+
+1. `story-9x16-01.png` — Search stopped being a link list
+2. `story-9x16-02.png` — Ranking first, and going unseen
+3. `story-9x16-03.png` — SEO ranks, AEO answers, GEO cites
+4. `story-9x16-04.png` — Blocking AI bots? You vanish
+5. `story-9x16-05.png` — llms.txt, robots.txt, structured data
+6. `story-9x16-06.png` — See how AI answers for you →
+   https://mi-code.pl/en/blog/geo-aeo-generative-answer-engine-optimization/?utm_source=instagram&utm_medium=social&utm_campaign=geo-aeo

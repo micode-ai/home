@@ -23,8 +23,9 @@
 
 Контент-план (`content-plan.md`, строка 4) ставит эту кампанию **только в
 LinkedIn** — карусель PL + EN, вторник 2026-08-11. Поэтому ниже один канал.
-Остальные форматы (`feed-4x5.png`, `story-9x16-01..06.png`, `reel.mp4`,
-`og.png`) отрендерены и лежат в `creatives/rag-without-hallucinations/renders/`
+Остальные форматы (`feed-4x5.png`, `story-9x16-01..06.png`, `reel.mp4` для
+Reels/Stories, `reel-4x5.mp4` для ленты, `og.png`) отрендерены и лежат в
+`creatives/rag-without-hallucinations/renders/`
 — они готовы к публикации, но в календаре для них слота нет; когда он
 появится, сюда добавляется `## Facebook` / `## Stories` с собственными
 `utm_source`, и `test_campaigns.py` начнёт требовать их сам.

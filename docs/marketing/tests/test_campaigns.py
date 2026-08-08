@@ -43,6 +43,7 @@ import json
 import re
 from pathlib import Path
 
+import imageio_ffmpeg
 import pytest
 from fontTools.ttLib import TTFont
 from PIL import Image
@@ -90,6 +91,12 @@ SINGLE_FORMATS = {"li-single.png": (1200, 627),
                   "og.png": (1200, 630)}
 CAROUSEL_SIZE = (1080, 1350)
 STORY_SIZE = (1080, 1920)
+FEED_VIDEO_SIZE = (1080, 1350)
+
+# Instagram accepts a video in the *feed* (and in an ad's feed placement) only
+# within this range of width/height. 9:16 = 0.5625 is below it, which is why
+# `reel.mp4` cannot be posted to a feed and `reel-4x5.mp4` exists.
+FEED_RATIO_RANGE = (0.8, 16 / 9)
 
 
 # --- helpers ---------------------------------------------------------------
@@ -1033,6 +1040,22 @@ def test_the_carousel_pdf_is_shipped_for_both_languages(campaign_id):
         )
 
 
+def _encoded_size(path: Path) -> tuple[int, int]:
+    """(width, height) of a written video, read from the file itself.
+
+    Deliberately not `Image.open`-style cheap metadata off a constant: the
+    encoder, not the canvas, decides the final size (see
+    `build_reel._macro_block_size`). Pulls only the header — `read_frames`
+    yields its metadata dict before decoding any frame — so this stays cheap
+    across every campaign and language instead of decoding ~360 frames a file.
+    """
+    reader = imageio_ffmpeg.read_frames(str(path))
+    try:
+        return tuple(reader.__next__()["size"])
+    finally:
+        reader.close()
+
+
 @pytest.mark.parametrize("campaign_id", CAMPAIGN_IDS)
 def test_the_reel_is_shipped_for_both_languages(campaign_id):
     """`README.md` claims the campaign tests cover `reel.mp4`; nothing
@@ -1040,7 +1063,51 @@ def test_the_reel_is_shipped_for_both_languages(campaign_id):
     without a build, and that argument covers the video too."""
     for lang in spec.LANGS:
         out = MARKETING / "creatives" / campaign_id / "renders" / lang
-        for name in ("reel.mp4", "reel.gif"):
+        for name in ("reel.mp4", "reel.gif", "reel-4x5.mp4"):
             path = out / name
             assert path.is_file(), f"{campaign_id}/{lang}/{name} not rendered"
             assert path.stat().st_size > 50000, f"{path} is suspiciously small"
+
+
+@pytest.mark.parametrize("campaign_id", CAMPAIGN_IDS)
+def test_the_committed_feed_video_can_actually_be_posted_to_a_feed(campaign_id):
+    """The entire reason `reel-4x5.mp4` exists, checked on the committed bytes.
+
+    Instagram accepts a feed video only within `FEED_RATIO_RANGE`; the 9:16
+    reel sitting beside this file is 0.5625 and is rejected by a feed or
+    feed-placement ad composer with "the selected video does not fit the aspect
+    ratio range accepted by Instagram". That rejection is what this format was
+    added to answer, so it is worth proving per campaign rather than trusting
+    the generator: the operator publishes these committed files from a clean
+    clone without ever running the build.
+
+    Asserted on the *encoded* size for a specific, measured reason — `imageio`
+    rounds each dimension up to its macro block size, and 1350 is not divisible
+    by the 8 the 9:16 reel uses, so the obvious implementation writes 1080x1352
+    = 0.7988 and lands back outside the range while every canvas constant in
+    the repo still reads 1080x1350."""
+    for lang in spec.LANGS:
+        mp4 = MARKETING / "creatives" / campaign_id / "renders" / lang / "reel-4x5.mp4"
+        width, height = _encoded_size(mp4)
+        assert (width, height) == FEED_VIDEO_SIZE, (
+            f"{campaign_id}/{lang}/reel-4x5.mp4 is {width}x{height}, "
+            f"expected {FEED_VIDEO_SIZE[0]}x{FEED_VIDEO_SIZE[1]}"
+        )
+        low, high = FEED_RATIO_RANGE
+        assert low <= width / height <= high, (
+            f"{campaign_id}/{lang}/reel-4x5.mp4 is {width/height:.4f}; "
+            f"Instagram's feed accepts {low:.3f} (4:5) .. {high:.3f} (16:9)"
+        )
+
+
+@pytest.mark.parametrize("campaign_id", CAMPAIGN_IDS)
+def test_the_committed_reel_stays_vertical_for_reels_and_stories(campaign_id):
+    """The counterpart guard: `reel-4x5.mp4` is an addition, not a migration.
+    Reels and Stories are full-bleed 9:16, so a well-meaning "fix" that made
+    every video feed-safe would letterbox the format the content plan actually
+    schedules (rows 3 and 11, `Stories + Reels`)."""
+    for lang in spec.LANGS:
+        mp4 = MARKETING / "creatives" / campaign_id / "renders" / lang / "reel.mp4"
+        assert _encoded_size(mp4) == STORY_SIZE, (
+            f"{campaign_id}/{lang}/reel.mp4 is no longer {STORY_SIZE[0]}x{STORY_SIZE[1]}"
+        )
