@@ -82,7 +82,7 @@ SLIDE_KEYS = {"type", "bigNumber", "rows", "asset", "shot", *spec.LANGS}
 
 # `## <heading>` in a copy file -> the `utm_source` links under it must carry.
 CHANNEL_SOURCES = {"LinkedIn": "linkedin", "Facebook": "facebook",
-                   "Stories": "instagram"}
+                   "Stories": "instagram", "Threads": "threads"}
 # How the content plan's channel column names the same three channels.
 PLAN_CHANNEL_PREFIXES = {"LinkedIn": "LinkedIn", "Facebook": "Facebook",
                          "Stories": "Stories"}

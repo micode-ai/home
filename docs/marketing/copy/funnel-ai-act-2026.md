@@ -1,4 +1,4 @@
-# ai-act-2026 — тексты
+﻿# ai-act-2026 — тексты
 
 Кампания верха воронки, шестая в этом треке и восьмая отгруженная. Ведёт на
 статью `ai-act-sierpien-2026-co-obowiazuje`, из статьи — на контакт
@@ -310,3 +310,50 @@ own chatbot? Write to development@mi-code.pl.
 5. `story-9x16-05.png` — KRiBSI starts fining 28 October
 6. `story-9x16-06.png` — We will review your chatbot →
    https://mi-code.pl/en/blog/ai-act-sierpien-2026-co-obowiazuje/?utm_source=instagram&utm_medium=social&utm_campaign=ai-act-2026
+
+## Threads
+
+Первый канал фабрики, где **лимит поста жёсткий и очень короткий: 500 знаков**.
+Версия для LinkedIn (2900+) и даже для фида (1200+) сюда не влезает ни в каком
+виде, поэтому это не сокращённый пересказ, а цепочка из трёх постов: крючок,
+четыре обязанности, сроки со ссылкой.
+
+Замеренные длины — 261, 287 и 412 знаков (последний вместе со ссылкой), то есть
+запас есть в каждом. Считать длину нужно **до** публикации и держать её в этой
+шапке, а не в самих постах: `tests/test_campaigns.py` сканирует каждое число
+внутри `### EN` против текста статьи, и счётчик знаков там честно упал бы —
+в статье нет числа 261.
+
+Публикуется как thread: первый пост, затем два ответа к нему. Ссылка — только в
+последнем, чтобы превью не съело первый пост. `utm_source=threads`.
+
+Картинка не обязательна — Threads показывает превью ссылки, — но если нужна,
+берётся `renders/en/feed-4x5.png`, тот же файл, что для фида.
+
+Только `### EN`, и это осознанно: канал взят под англоязычную аудиторию, а не
+под польский рынок; польская версия здесь не написана, а не потеряна. Тест
+требует разделы под **запланированные** каналы, а строки в `content-plan.md` у
+Threads пока нет — как и у Instagram-разделов выше.
+
+### EN
+
+**1/3**
+
+They deferred the AI Act. They did not defer Article 50.
+
+High-risk systems now have until 2 December 2027. But Article 50 transparency has applied since 2 August 2026, and it attaches to what a system does, not to how risky it is. Run a chatbot? It covers you.
+
+**2/3**
+
+Four duties, in plain terms: tell people they are talking to AI. Mark AI-generated content machine-readably. Disclose deepfakes. Inform anyone subject to emotion recognition.
+
+The exception that saves most companies: text a named human reads, edits and stands behind needs no disclosure.
+
+**3/3**
+
+Two deadlines are still ahead. 28 October 2026: Poland's KRiBSI can start fining. 2 December 2026: the grace period for machine-readable content marking ends.
+
+Transparency alone carries up to EUR 15 million or 3% of worldwide turnover.
+
+What applies now, and six steps for this quarter:
+https://mi-code.pl/en/blog/ai-act-sierpien-2026-co-obowiazuje/?utm_source=threads&utm_medium=social&utm_campaign=ai-act-2026
