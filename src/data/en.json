@@ -378,7 +378,9 @@
             "all": "All",
             "resultsCount": "{count} posts",
             "empty": "No posts match this tag.",
-            "tagAriaLabel": "Filter by {tag}"
+            "tagAriaLabel": "Filter by {tag}",
+            "showMore": "+{count} more",
+            "showLess": "Show fewer tags"
         }
     },
     "faq": {

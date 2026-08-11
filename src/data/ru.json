@@ -364,7 +364,9 @@
       "all": "Все",
       "resultsCount": "{count} статей",
       "empty": "Нет статей с этим тегом.",
-      "tagAriaLabel": "Фильтр по тегу {tag}"
+      "tagAriaLabel": "Фильтр по тегу {tag}",
+      "showMore": "+{count} ещё",
+      "showLess": "Свернуть теги"
     }
   },
   "faq": {

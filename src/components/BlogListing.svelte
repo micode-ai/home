@@ -5,7 +5,7 @@
   import { withLocale } from '../services/locale';
   import blogPosts from '../data/blog-posts.json';
   import { estimateReadingMinutes } from '../services/readingTime';
-  import { collectTags, filterByTag, getTagFromQuery, buildTagQuery } from '../services/blogTagFilter';
+  import { collectTags, rankTagsByCount, filterByTag, getTagFromQuery, buildTagQuery } from '../services/blogTagFilter';
 
   type Post = typeof blogPosts[number];
 
@@ -17,9 +17,31 @@
     .slice()
     .sort((a, b) => b.date.localeCompare(a.date)); // newest first
 
+  // `allTags` is the full alphabetical set the `?tag=` guard validates against; the bar itself
+  // shows the most-used tags first and truncates. Every tag stays reachable either by expanding
+  // the bar or from the tags on any post card below, which are the same filter buttons.
   const allTags = collectTags(publishedPosts);
+  const rankedTags = rankTagsByCount(publishedPosts);
+  // Seven tags, so the bar is one row at the listing's 800px column: measured, the `All` chip
+  // plus seven of the current tags plus the disclosure fit on a line in all three locales, while
+  // eight pushed the disclosure onto a line of its own. Most tags sit on a single post, so an
+  // untruncated bar ran to roughly six rows and pushed the first post off the top of the page.
+  const VISIBLE_TAG_COUNT = 7;
+
   let activeTag = $state<string | null>(null);
+  let tagsExpanded = $state(false);
   const visiblePosts = $derived(filterByTag(publishedPosts, activeTag));
+
+  const collapsedTags = $derived.by(() => {
+    const head = rankedTags.slice(0, VISIBLE_TAG_COUNT);
+    // An active tag out of the truncated tail stays on the bar: collapsing it away would leave
+    // the bar with no pressed chip while the list below is still filtered.
+    return activeTag && !head.includes(activeTag) ? [...head, activeTag] : head;
+  });
+  const shownTags = $derived(tagsExpanded ? rankedTags : collapsedTags);
+  const hiddenTagCount = $derived(rankedTags.length - shownTags.length);
+  // Collapsed is the default, so this is also what `scripts/prerender.mjs` bakes into the HTML.
+  const tagBarTruncates = rankedTags.length > VISIBLE_TAG_COUNT;
 
   // Restore the active tag from `?tag=` on mount only — Svelte's server-side `render()` (used by
   // scripts/prerender.mjs) never runs onMount, so this never executes during prerendering.
@@ -44,6 +66,10 @@
 
   function getResultsCount(count: number, lang: string): string {
     return t('blog.filter.resultsCount', lang).replace('{count}', String(count));
+  }
+
+  function getShowMoreLabel(count: number, lang: string): string {
+    return t('blog.filter.showMore', lang).replace('{count}', String(count));
   }
 
   function getTitle(post: Post, lang: string): string {
@@ -84,7 +110,7 @@
         aria-pressed={activeTag === null}
         onclick={() => { activeTag = null; syncUrl(); }}
       >{t('blog.filter.all', $languageStore)}</button>
-      {#each allTags as tag}
+      {#each shownTags as tag}
         <button
           type="button"
           class="tag filter-chip"
@@ -94,6 +120,16 @@
           onclick={() => toggleTag(tag)}
         >{tag}</button>
       {/each}
+      {#if tagBarTruncates}
+        <button
+          type="button"
+          class="filter-chip tag-toggle"
+          aria-expanded={tagsExpanded}
+          onclick={() => (tagsExpanded = !tagsExpanded)}
+        >{tagsExpanded
+            ? t('blog.filter.showLess', $languageStore)
+            : getShowMoreLabel(hiddenTagCount, $languageStore)}</button>
+      {/if}
     </div>
     <p class="results-count" aria-live="polite">{getResultsCount(visiblePosts.length, $languageStore)}</p>
     {#if visiblePosts.length === 0}
@@ -178,6 +214,18 @@
     color: var(--color-bg, #fff);
   }
   .filter-chip { font-size: 0.8125rem; padding: 0.3rem 0.75rem; }
+  /* Deliberately not a `.tag`: the disclosure is an action on the bar, not one more tag to
+     filter by, and reading as a chip is what makes a "+24 more" button look clickable-but-inert. */
+  .tag-toggle {
+    background: none;
+    border: none;
+    border-radius: 0.25rem;
+    color: var(--color-primary, #1e3a8a);
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .tag-toggle:hover { text-decoration: underline; }
   .back-link { margin-top: 3rem; }
   .back-link a { color: var(--color-primary, #1e3a8a); text-decoration: none; }
   .back-link a:hover { text-decoration: underline; }

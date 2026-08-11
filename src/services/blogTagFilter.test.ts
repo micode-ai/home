@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { collectTags, filterByTag, getTagFromQuery, buildTagQuery } from './blogTagFilter';
+import { collectTags, rankTagsByCount, filterByTag, getTagFromQuery, buildTagQuery } from './blogTagFilter';
 
 const POSTS = [
   { tags: ['AI', 'Java'] },
@@ -14,6 +14,30 @@ describe('collectTags()', () => {
 
   it('returns an empty array for no posts', () => {
     expect(collectTags([])).toEqual([]);
+  });
+});
+
+describe('rankTagsByCount()', () => {
+  it('puts the most-used tag first', () => {
+    expect(rankTagsByCount(POSTS)[0]).toBe('AI');
+  });
+
+  it('breaks ties alphabetically, so the prerendered bar is stable across builds', () => {
+    // Everything except AI (2 posts) appears once, so the rest must come through sorted.
+    expect(rankTagsByCount(POSTS)).toEqual(['AI', 'Accounting', 'Automation', 'Java', 'QA']);
+  });
+
+  it('counts a tag once even if a post repeats it', () => {
+    expect(rankTagsByCount([{ tags: ['AI', 'AI', 'AI'] }, { tags: ['QA'] }, { tags: ['QA'] }]))
+      .toEqual(['QA', 'AI']);
+  });
+
+  it('returns the same tags as collectTags, only in a different order', () => {
+    expect([...rankTagsByCount(POSTS)].sort()).toEqual([...collectTags(POSTS)].sort());
+  });
+
+  it('returns an empty array for no posts', () => {
+    expect(rankTagsByCount([])).toEqual([]);
   });
 });
 

@@ -364,7 +364,9 @@
       "all": "Wszystkie",
       "resultsCount": "{count} wpisów",
       "empty": "Brak wpisów z tym tagiem.",
-      "tagAriaLabel": "Filtruj według tagu {tag}"
+      "tagAriaLabel": "Filtruj według tagu {tag}",
+      "showMore": "+{count} więcej",
+      "showLess": "Zwiń tagi"
     }
   },
   "faq": {

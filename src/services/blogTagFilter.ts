@@ -14,6 +14,29 @@ export function collectTags<T extends TaggedPost>(posts: T[]): string[] {
   return [...tags].sort((a, b) => a.localeCompare(b));
 }
 
+/**
+ * Tags ordered by how many of `posts` carry them, most first, ties alphabetically.
+ *
+ * `collectTags` stays the alphabetical *set* the `?tag=` guard validates against; this is the
+ * display order for the filter bar, which is a different job. Most tags on the blog sit on a
+ * single post, so an alphabetical bar spends its first rows on tags that filter to one article
+ * while `AI` (on nearly every post) waits below the fold. Ranking by count puts the tags worth
+ * clicking first, which is what lets the bar be truncated without losing much.
+ *
+ * Ties break alphabetically rather than by first appearance so the prerendered markup is stable
+ * across builds. A tag repeated within one post counts once.
+ */
+export function rankTagsByCount<T extends TaggedPost>(posts: T[]): string[] {
+  const counts = new Map<string, number>();
+  for (const post of posts) {
+    for (const tag of new Set(post.tags)) counts.set(tag, (counts.get(tag) ?? 0) + 1);
+  }
+  return [...counts.keys()].sort((a, b) => {
+    const byCount = (counts.get(b) ?? 0) - (counts.get(a) ?? 0);
+    return byCount !== 0 ? byCount : a.localeCompare(b);
+  });
+}
+
 /** `tag === null` returns `posts` unchanged; otherwise posts whose `tags` includes it. */
 export function filterByTag<T extends TaggedPost>(posts: T[], tag: string | null): T[] {
   if (tag === null) return posts;
