@@ -1313,11 +1313,23 @@ export function buildRequest(mode, model, text) {
 
 async function callOnce({ url, body }, apiKey, { fetchImpl, sleep }) {
   for (let attempt = 0; attempt < 2; attempt += 1) {
-    const response = await fetchImpl(url, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', 'x-goog-api-key': apiKey },
-      body: JSON.stringify(body),
-    });
+    let response;
+    try {
+      response = await fetchImpl(url, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'x-goog-api-key': apiKey },
+        body: JSON.stringify(body),
+      });
+    } catch (error) {
+      // A dropped connection throws rather than answering, so it bypasses every
+      // status check below. Retry it like a 5xx: observed live, one blip aborted
+      // the sweep and took the whole day's free quota down with it.
+      if (attempt === 0) {
+        await sleep(RETRY_DELAY_MS);
+        continue;
+      }
+      throw new Error(`Gemini API unreachable: ${error.message}`);
+    }
 
     if (response.ok) return response.json();
 
