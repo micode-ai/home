@@ -85,6 +85,27 @@ describe('measure', () => {
     expect(attempts[0].status).toBe('cited');
   });
 
+  it('retries a dropped connection instead of losing the whole sweep', async () => {
+    let calls = 0;
+    const fetchImpl = async () => {
+      calls += 1;
+      if (calls === 1) throw new TypeError('fetch failed');
+      return okResponse(answer('https://mi-code.pl/'));
+    };
+    const { attempts } = await measure(
+      { ...config, slice: slice.slice(0, 1) }, { fetchImpl, sleep: noSleep },
+    );
+    expect(calls).toBe(2);
+    expect(attempts[0].status).toBe('cited');
+  });
+
+  it('gives up when the connection drops twice', async () => {
+    const fetchImpl = async () => { throw new TypeError('fetch failed'); };
+    await expect(
+      measure({ ...config, slice: slice.slice(0, 1) }, { fetchImpl, sleep: noSleep }),
+    ).rejects.toThrow(/unreachable/);
+  });
+
   it('aborts the whole run when a call fails twice, rather than saving half a measurement', async () => {
     const fetchImpl = async () => ({ ok: false, status: 500, text: async () => 'boom' });
     await expect(
