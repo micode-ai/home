@@ -1,4 +1,5 @@
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'fs';
+import { createHash } from 'crypto';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { extractText, extractCitations, resolveHost, classify, bestStatus, summarize, ownedHosts }
@@ -18,7 +19,7 @@ const DEFAULT_MODE = 'generateContent';
 const DEFAULT_REPEATS = 2;
 const RETRY_DELAY_MS = 5000;
 // The free tier caps requests per minute as well as per day, and a run fires
-// dozens of them back to back. Pacing is what stops a weekly run from killing
+// dozens of them back to back. Pacing is what stops a daily slice from killing
 // itself with its own throughput: the first live run tripped a 429 within
 // seconds without it, while a single call at rest succeeded.
 const DEFAULT_DELAY_MS = 6500;
@@ -34,6 +35,14 @@ export function workList(prompts, repeats) {
     for (let repeat = 0; repeat < repeats; repeat += 1) items.push({ prompt, repeat });
   }
   return items;
+}
+
+export function promptsFingerprint(prompts, repeats) {
+  // The cursor is an index into a work list built from prompts.json, so a sweep
+  // is only resumable while that list is identical. Editing prompts mid-sweep
+  // is normal here — a sweep spans days — so the resume has to detect it.
+  const shape = `${repeats}:${prompts.map((prompt) => prompt.id).join(',')}`;
+  return createHash('sha1').update(shape).digest('hex').slice(0, 12);
 }
 
 export function nextSlice(items, cursor, budget) {
@@ -166,48 +175,72 @@ function readPreviousRun(runsDir, todayFile) {
   return JSON.parse(readFileSync(join(runsDir, earlier.at(-1)), 'utf8'));
 }
 
-function readManualSnapshot(month) {
-  const path = join(dataDir, 'manual', `${month}.json`);
+function readManualSnapshot(dir, month) {
+  const path = join(dir, 'manual', `${month}.json`);
   return existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : null;
 }
 
 function publishOutputs(diff, alertText) {
   if (!process.env.GITHUB_OUTPUT) return;
-  writeFileSync(
-    process.env.GITHUB_OUTPUT,
-    `changed=${diff.changed}\nalert<<ALERT_EOF\n${alertText}\nALERT_EOF\n`,
-    { flag: 'a' },
-  );
+  const lines = [`changed=${diff.changed}`];
+  // An alert body is written only when the citation set actually moved. The
+  // workflow decides failure-vs-result from the job status, not from whether
+  // this string happens to be empty.
+  if (diff.changed) lines.push(`alert<<ALERT_EOF\n${alertText}\nALERT_EOF`);
+  writeFileSync(process.env.GITHUB_OUTPUT, `${lines.join('\n')}\n`, { flag: 'a' });
 }
 
-export async function main() {
+// The daily job passes nothing; the tests pass a scratch data directory and a
+// stubbed transport, because every branch below only ever runs in CI otherwise.
+export async function main({ dir = dataDir, deps } = {}) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error('GEMINI_API_KEY is not set');
 
-  const config = JSON.parse(readFileSync(join(dataDir, 'prompts.json'), 'utf8'));
+  const config = JSON.parse(readFileSync(join(dir, 'prompts.json'), 'utf8'));
   const model = process.env.AI_VIS_MODEL || DEFAULT_MODEL;
   const mode = process.env.AI_VIS_ENDPOINT || DEFAULT_MODE;
-  const repeats = Number(process.env.AI_VIS_REPEATS || DEFAULT_REPEATS);
+  // Number('abc') is NaN, and a NaN budget measures nothing while still exiting
+  // 0 — the job would go green every day forever. A misconfigured schedule has
+  // to go red and alert instead of quietly degrading.
+  const asPositiveInt = (name, value, fallback) => {
+    const parsed = Number(value ?? fallback);
+    if (!Number.isInteger(parsed) || parsed < 1) {
+      throw new Error(`${name} must be a positive integer, got ${JSON.stringify(value)}`);
+    }
+    return parsed;
+  };
+  const repeats = asPositiveInt('AI_VIS_REPEATS', process.env.AI_VIS_REPEATS, DEFAULT_REPEATS);
   const delayMs = Number(process.env.AI_VIS_DELAY_MS || DEFAULT_DELAY_MS);
-  const dailyBudget = Number(process.env.AI_VIS_DAILY_BUDGET || DEFAULT_DAILY_BUDGET);
+  const dailyBudget = asPositiveInt(
+    'AI_VIS_DAILY_BUDGET', process.env.AI_VIS_DAILY_BUDGET, DEFAULT_DAILY_BUDGET,
+  );
   const date = process.env.AI_VIS_DATE || new Date().toISOString().slice(0, 10);
 
-  const partialPath = join(dataDir, 'partial.json');
-  const partial = existsSync(partialPath)
-    ? JSON.parse(readFileSync(partialPath, 'utf8'))
-    : { sweep: 1, cursor: 0, attempts: [], calls: 0, started: date };
+  const partialPath = join(dir, 'partial.json');
+  const fingerprint = promptsFingerprint(config.prompts, repeats);
+  const stored = existsSync(partialPath) ? JSON.parse(readFileSync(partialPath, 'utf8')) : null;
+  if (stored && stored.fingerprint !== fingerprint) {
+    console.log(`prompt set changed — abandoning sweep ${stored.sweep} at ${stored.cursor}/${stored.attempts.length} and starting fresh`);
+  }
+  const partial = stored && stored.fingerprint === fingerprint
+    ? stored
+    : { sweep: (stored?.sweep ?? 0) + 1, cursor: 0, attempts: [], calls: 0, started: date, fingerprint };
 
   const items = workList(config.prompts, repeats);
   const { slice, nextCursor, complete } = nextSlice(items, partial.cursor, dailyBudget);
 
-  if (!slice.length) {
-    console.log('sweep already complete for today — nothing to do');
+  // An empty slice that is *complete* means the cursor has run past the end of
+  // the work list — the sweep still has to be closed, or partial.json is never
+  // reset and the job no-ops green every day until a human notices REPORT.md
+  // has gone stale. Only a genuinely-nothing-to-do slice returns early.
+  if (!slice.length && !complete) {
+    console.log('nothing to measure — check AI_VIS_DAILY_BUDGET');
     return;
   }
 
   const { attempts, calls } = await measure(
     { ...config, slice, model, mode, delayMs, apiKey },
-    { fetchImpl: fetch, sleep: (ms) => new Promise((r) => setTimeout(r, ms)) },
+    deps ?? { fetchImpl: fetch, sleep: (ms) => new Promise((r) => setTimeout(r, ms)) },
   );
 
   const allAttempts = [...partial.attempts, ...attempts];
@@ -227,7 +260,7 @@ export async function main() {
     calls: totalCalls, results, summary: summarize(results),
   };
 
-  const runsDir = join(dataDir, 'runs');
+  const runsDir = join(dir, 'runs');
   const todayFile = `${date}.json`;
   const previous = readPreviousRun(runsDir, todayFile);
   const diff = diffRuns(previous, run);
@@ -235,11 +268,14 @@ export async function main() {
   mkdirSync(runsDir, { recursive: true });
   writeFileSync(join(runsDir, todayFile), `${JSON.stringify(run, null, 2)}\n`);
   writeFileSync(
-    join(dataDir, 'REPORT.md'),
-    renderReport({ run, previous, manual: readManualSnapshot(date.slice(0, 7)) }),
+    join(dir, 'REPORT.md'),
+    renderReport({ run, previous, manual: readManualSnapshot(dir, date.slice(0, 7)) }),
   );
+  // The fresh sweep carries the fingerprint too. Without it the next run reads
+  // back a partial that matches nothing and restarts the sweep every single day.
   writeFileSync(partialPath, `${JSON.stringify(
-    { sweep: partial.sweep + 1, cursor: 0, attempts: [], calls: 0, started: date }, null, 2,
+    { sweep: partial.sweep + 1, cursor: 0, attempts: [], calls: 0, started: date, fingerprint },
+    null, 2,
   )}\n`);
 
   publishOutputs(diff, renderAlert(diff, run));

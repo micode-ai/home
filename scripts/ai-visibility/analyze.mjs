@@ -10,7 +10,7 @@ const REDIRECT_HOSTS = ['vertexaisearch.cloud.google.com'];
 // A grounded chunk's title is usually the publisher's bare domain rather than a
 // page title — verified against the live response captured in fixtures/. When it
 // is shaped like a domain we trust it, because the alternative is one HEAD
-// request per source and a weekly run sees a few hundred of them.
+// request per source and a full sweep sees a few hundred of them.
 const DOMAIN_SHAPED = /^[a-z0-9-]+(\.[a-z0-9-]+)+$/i;
 
 const bareHost = (value) => String(value).replace(/^www\./, '').toLowerCase();

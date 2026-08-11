@@ -1,7 +1,7 @@
 # AI visibility
 
 Does anything out there cite mi-code.pl when it answers a question? `REPORT.md`
-holds the current answer; `runs/` holds every weekly measurement.
+holds the current answer; `runs/` holds one file per completed sweep.
 
 ## Automatic — daily, no hands
 
@@ -44,7 +44,7 @@ Once a month, fill in `manual/YYYY-MM.json` from `manual/TEMPLATE.json`:
    can drive this through the browser — ask it to run the monthly AI-visibility
    pass.
 
-The next weekly run picks the file up and folds it into `REPORT.md`.
+The next sweep to close picks the file up and folds it into `REPORT.md`.
 
 ## Changing the prompts
 
@@ -52,6 +52,13 @@ Edit `prompts.json`. A new product or article usually deserves one category
 prompt phrased the way a customer who has never heard of us would ask it.
 `scripts/ai-visibility/prompts.test.mjs` guards the shape; run `npm run test:run`
 after editing.
+
+Editing the set abandons the sweep in progress and starts a new one from zero.
+That is intended: the cursor in `partial.json` is an index into a work list built
+from `prompts.json`, and a sweep measured against two different prompt lists
+would be meaningless — some prompts counted twice, the new ones never asked at
+all. `partial.json` carries a fingerprint of the list so the next run notices and
+says so in its log. There is no need to wait for a safe window; there isn't one.
 
 Keep the brand prompts. They are the canary: if even "what does MiCode do" stops
 finding us, indexing broke, and no amount of content will fix that.
