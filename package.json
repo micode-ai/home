@@ -8,6 +8,7 @@
     "prebuild": "node scripts/fetch-github-npm-stats.js && node scripts/generate-og-images.mjs",
     "build": "vite build && vite build --config vite.ssr.config.ts && node scripts/prerender.mjs",
     "preview": "vite preview",
+    "ai-visibility": "node scripts/ai-visibility/run.mjs",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run"
