@@ -1,0 +1,81 @@
+name: AI visibility
+
+# Measures whether AI engines cite mi-code.pl. The site has been built
+# to be citable — llms.txt, an AI-friendly robots.txt, a trilingual prerender —
+# and none of that came with a way to tell whether it works. This is that way.
+#
+# Gemini is the only engine with a free grounded API: Perplexity and OpenAI both
+# charge for web search. So this is a trend line for one engine, not a share of
+# all AI answers, and the monthly manual pass in docs/seo/ai-visibility/README.md
+# is what keeps it honest.
+#
+# It runs daily because the free tier allows 20 model calls a day and a full
+# sweep needs 54: each run measures the next slice and only the last one closes
+# the sweep, writes a run file and alerts.
+
+on:
+  schedule:
+    - cron: '41 5 * * *'      # daily, 05:41 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write             # the job commits the run back to development
+
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: development
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # No npm ci on purpose: the script uses only Node built-ins, so the job
+      # needs no install step and cannot be broken by a dependency.
+      - name: Measure
+        id: measure
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: npm run ai-visibility
+
+      - name: Commit the run
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/seo/ai-visibility
+          if git diff --cached --quiet; then
+            echo "nothing to commit"
+            exit 0
+          fi
+          # [skip ci] is load-bearing: deploy.yml fires on every push to
+          # development with no path filter, so without it a docs-only commit
+          # would trigger a full rebuild, a stats refetch and a redeploy.
+          git commit -m "Record the weekly AI-visibility run [skip ci]"
+          git push
+
+      - name: Tell the ops channel
+        if: ${{ failure() || steps.measure.outputs.changed == 'true' }}
+        env:
+          TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT: ${{ secrets.TELEGRAM_OPS_CHAT_ID }}
+          ALERT: ${{ steps.measure.outputs.alert }}
+        run: |
+          if [ -z "$TOKEN" ] || [ -z "$CHAT" ]; then
+            echo "::warning::TELEGRAM_BOT_TOKEN or TELEGRAM_OPS_CHAT_ID not set — no alert sent"
+            exit 0
+          fi
+          run_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          if [ -n "$ALERT" ]; then
+            text=$(printf '📊 %s\n\nRun: %s' "$ALERT" "$run_url")
+          else
+            text=$(printf '🔴 AI-visibility run failed\n\nRun: %s' "$run_url")
+          fi
+          curl -sS --max-time 30 \
+            "https://api.telegram.org/bot${TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${CHAT}" \
+            --data-urlencode "text=${text}" \
+            --data-urlencode "disable_web_page_preview=true" \
+            -o /dev/null -w 'telegram: HTTP %{http_code}\n'
