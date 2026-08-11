@@ -1667,6 +1667,257 @@ Push `development`, then update https://github.com/micode-ai/home/issues/75 with
 
 ---
 
+### Task 8: Count the whole portfolio, not just the landing page
+
+Discovered during execution: `eksiegowyai.pl`, `emarketingai.pl` and `ai-budget.pl` are MiCode properties too, and the first live probe showed Gemini citing `eksiegowyai.pl` for a MiCode brand question while never citing `mi-code.pl`. Measured against `mi-code.pl` alone, that answer scores `absent` — which is precisely wrong: the company was cited, on its own asset.
+
+So `cited` becomes "any owned domain", while the report keeps the properties apart so the landing page's own signal is not lost inside a portfolio total.
+
+**Files:**
+- Modify: `docs/seo/ai-visibility/prompts.json`
+- Modify: `scripts/ai-visibility/prompts.test.mjs`
+- Modify: `scripts/ai-visibility/analyze.mjs`, `scripts/ai-visibility/analyze.test.mjs`
+- Modify: `scripts/ai-visibility/report.mjs`, `scripts/ai-visibility/report.test.mjs`
+- Modify: `scripts/ai-visibility/run.mjs`
+
+**Interfaces:**
+- Consumes: everything from Tasks 2–6.
+- Produces:
+  - `ownedHosts(hosts, ownedDomains) -> string[]` — the subset of `hosts` belonging to us
+  - `classify({ text, hosts, domain, ownedDomains, brandTerms })` — `ownedDomains` is optional and defaults to `[domain]`, so every existing caller and test keeps working
+  - `citedProperties(run) -> Record<string, number>` — how many prompts cited each owned property
+  - run attempts gain a `citedDomains: string[]` field alongside `citedUrls`
+
+- [ ] **Step 1: Write the failing tests**
+
+Append to `scripts/ai-visibility/analyze.test.mjs` (add `ownedHosts` to the existing import from `./analyze.mjs`):
+
+```js
+const OWNED = ['mi-code.pl', 'eksiegowyai.pl', 'ai-budget.pl'];
+
+describe('ownedHosts', () => {
+  it('picks out the hosts that are ours and drops the rest', () => {
+    expect(ownedHosts(['wfirma.pl', 'eksiegowyai.pl', 'sap.com'], OWNED))
+      .toEqual(['eksiegowyai.pl']);
+  });
+
+  it('counts a subdomain of an owned property', () => {
+    expect(ownedHosts(['blog.ai-budget.pl'], OWNED)).toEqual(['blog.ai-budget.pl']);
+  });
+
+  it('does not fall for a lookalike of an owned property', () => {
+    expect(ownedHosts(['noteksiegowyai.pl'], OWNED)).toEqual([]);
+  });
+
+  it('returns nothing when no host is ours', () => {
+    expect(ownedHosts(['gowork.pl'], OWNED)).toEqual([]);
+  });
+});
+
+describe('classify across the portfolio', () => {
+  it('counts a product site as cited, not absent', () => {
+    // The real failure this fixes: a brand question answered with a citation of
+    // eksiegowyai.pl scored `absent` while the company had in fact been cited.
+    const status = classify({
+      text: 'MiCode buduje eKsiegowyAi.',
+      hosts: ['eksiegowyai.pl'],
+      domain: 'mi-code.pl',
+      ownedDomains: OWNED,
+      brandTerms: ['MiCode'],
+    });
+    expect(status).toBe('cited');
+  });
+
+  it('still falls back to the single domain when no list is given', () => {
+    const status = classify({
+      text: '', hosts: ['eksiegowyai.pl'], domain: 'mi-code.pl', brandTerms: ['MiCode'],
+    });
+    expect(status).toBe('absent');
+  });
+});
+```
+
+Append to `scripts/ai-visibility/report.test.mjs` (add `citedProperties` to the existing import from `./report.mjs`):
+
+```js
+describe('citedProperties', () => {
+  const runWithAttempts = {
+    date: '2026-08-11',
+    results: [
+      { id: 'a', attempts: [{ citedDomains: ['mi-code.pl'] }, { citedDomains: ['mi-code.pl'] }] },
+      { id: 'b', attempts: [{ citedDomains: ['eksiegowyai.pl'] }, { citedDomains: [] }] },
+      { id: 'c', attempts: [{ citedDomains: [] }, { citedDomains: [] }] },
+    ],
+  };
+
+  it('counts each property once per prompt, however many repeats cited it', () => {
+    expect(citedProperties(runWithAttempts)).toEqual({
+      'mi-code.pl': 1,
+      'eksiegowyai.pl': 1,
+    });
+  });
+
+  it('returns nothing when no property was cited', () => {
+    expect(citedProperties({ results: [{ id: 'a', attempts: [{ citedDomains: [] }] }] })).toEqual({});
+  });
+
+  it('survives a run whose attempts predate the citedDomains field', () => {
+    expect(citedProperties({ results: [{ id: 'a', attempts: [{}] }] })).toEqual({});
+  });
+});
+```
+
+Add to the existing `renderReport` describe block in `scripts/ai-visibility/report.test.mjs`:
+
+```js
+  it('breaks the citations down by which property was cited', () => {
+    const withProperties = {
+      ...run('2026-08-11', { 'pl-a': 'cited' }),
+      results: [
+        {
+          id: 'pl-a', lang: 'pl', kind: 'category', status: 'cited', target: '/',
+          attempts: [{ citedDomains: ['eksiegowyai.pl'] }],
+        },
+      ],
+    };
+    const md = renderReport({ run: withProperties, previous: null, manual: null });
+    expect(md).toContain('eksiegowyai.pl');
+  });
+```
+
+Append to `scripts/ai-visibility/prompts.test.mjs`:
+
+```js
+  it('measures every owned property, not only the landing page', () => {
+    expect(config.ownedDomains).toEqual(
+      expect.arrayContaining(['mi-code.pl', 'eksiegowyai.pl', 'emarketingai.pl', 'ai-budget.pl']),
+    );
+  });
+
+  it('keeps the primary domain inside the owned list', () => {
+    expect(config.ownedDomains).toContain(config.domain);
+  });
+```
+
+- [ ] **Step 2: Run them to verify they fail**
+
+Run: `npx vitest run scripts/ai-visibility/`
+Expected: FAIL — `ownedHosts is not a function`, `citedProperties is not a function`, and `config.ownedDomains` undefined.
+
+- [ ] **Step 3: Add the owned domains to the config**
+
+In `docs/seo/ai-visibility/prompts.json`, directly after the `"domain"` line:
+
+```json
+  "ownedDomains": ["mi-code.pl", "eksiegowyai.pl", "emarketingai.pl", "ai-budget.pl"],
+```
+
+Leave `"domain": "mi-code.pl"` as it is — it stays the primary property, and the report keeps it distinguishable from the rest.
+
+- [ ] **Step 4: Implement `ownedHosts` and widen `classify`**
+
+In `scripts/ai-visibility/analyze.mjs`, add `ownedHosts` and change `classify` to use it. `classify` keeps working for callers that pass only `domain`:
+
+```js
+export function ownedHosts(hosts, ownedDomains) {
+  const targets = ownedDomains.map(bareHost);
+  return hosts.filter((host) => {
+    const candidate = bareHost(host);
+    // The leading dot is what separates our subdomain from someone else's
+    // lookalike: `noteksiegowyai.pl` must never count as ours.
+    return targets.some((target) => candidate === target || candidate.endsWith(`.${target}`));
+  });
+}
+
+export function classify({ text, hosts, domain, ownedDomains, brandTerms }) {
+  const owned = ownedDomains?.length ? ownedDomains : [domain];
+  if (ownedHosts(hosts, owned).length > 0) return 'cited';
+
+  const haystack = String(text).toLowerCase();
+  // A brand can be named without being linked — worth knowing, but it is not
+  // a citation and must never be counted as one.
+  const named = brandTerms.some((term) => haystack.includes(term.toLowerCase()));
+  return named ? 'mentioned' : 'absent';
+}
+```
+
+Delete the now-unused local `isOurs`/`target` lines from the old `classify` body — `ownedHosts` owns that comparison now, and leaving a second copy invites the two to drift apart.
+
+- [ ] **Step 5: Record which property was cited, in the runner**
+
+In `scripts/ai-visibility/run.mjs`, import `ownedHosts` alongside the existing imports, read the list from config, and record it per attempt. Replace the `attempts.push({...})` block with:
+
+```js
+      const owned = ownedHosts(hosts, ownedDomains?.length ? ownedDomains : [domain]);
+      attempts.push({
+        status,
+        citedUrls: citations
+          .filter((_, index) => owned.includes(hosts[index]))
+          .map((citation) => citation.url),
+        citedDomains: [...new Set(owned)],
+        sourceDomains: [...new Set(hosts)],
+      });
+```
+
+`ownedDomains` comes out of the same destructuring as the rest of the config, and `classify` is called with it:
+
+```js
+  const { prompts, domain, ownedDomains, brandTerms, model, mode, repeats, apiKey, delayMs } = config;
+```
+
+```js
+      const status = classify({
+        text: extractText(response), hosts, domain, ownedDomains, brandTerms,
+      });
+```
+
+- [ ] **Step 6: Render the breakdown**
+
+In `scripts/ai-visibility/report.mjs`, add the aggregation and a report section:
+
+```js
+export function citedProperties(run) {
+  const counts = {};
+  for (const result of run.results ?? []) {
+    const properties = new Set(
+      (result.attempts ?? []).flatMap((attempt) => attempt.citedDomains ?? []),
+    );
+    for (const property of properties) counts[property] = (counts[property] ?? 0) + 1;
+  }
+  return counts;
+}
+```
+
+In `renderReport`, immediately after the "By kind" table and before "## Prompts":
+
+```js
+  const properties = citedProperties(run);
+  if (Object.keys(properties).length) {
+    lines.push('## Which property was cited');
+    lines.push('');
+    lines.push('| property | prompts |');
+    lines.push('|---|---|');
+    for (const [property, count] of Object.entries(properties).sort(([a], [b]) => a.localeCompare(b))) {
+      lines.push(`| ${property} | ${count} |`);
+    }
+    lines.push('');
+  }
+```
+
+- [ ] **Step 7: Run the whole suite**
+
+Run: `npm run test:run`
+Expected: PASS. The `scripts/ai-visibility/` files should total 60 tests — 30 in `analyze.test.mjs`, 17 in `report.test.mjs`, 9 in `prompts.test.mjs`, 10 in `run.test.mjs` — and every pre-existing test elsewhere must still pass untouched.
+
+- [ ] **Step 8: Commit**
+
+```bash
+git add docs/seo/ai-visibility/prompts.json scripts/ai-visibility
+git commit -m "Count every owned property as a citation, not just mi-code.pl (MI-70)"
+```
+
+---
+
 ## Self-Review
 
 **Spec coverage:**
