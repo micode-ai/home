@@ -2170,4 +2170,42 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
   B3 --> A3
   B4 --> A4`,
   },
+  'ai-act-timeline': {
+    ru: `flowchart LR
+  subgraph NOW["Уже действует"]
+    direction TB
+    A["2 февраля 2025<br/>запрещённые практики<br/>+ ИИ-грамотность"] --> B["2 августа 2025<br/>обязанности GPAI"]
+    B --> C["2 августа 2026<br/>статья 50<br/>+ штрафы по GPAI"] --> D["11 августа 2026<br/>польский закон<br/>о системах ИИ"]
+  end
+  subgraph AHEAD["Ещё впереди"]
+    direction TB
+    E["28 октября 2026<br/>KRiBSI налагает штрафы"] --> F["2 декабря 2026<br/>конец отсрочки<br/>на маркировку"]
+    F --> G["2 декабря 2027<br/>высокий риск,<br/>Приложение III"] --> H["2 августа 2028<br/>высокий риск,<br/>Приложение I"]
+  end
+  D --> E`,
+    en: `flowchart LR
+  subgraph NOW["Already applies"]
+    direction TB
+    A["2 February 2025<br/>prohibited practices<br/>+ AI literacy"] --> B["2 August 2025<br/>GPAI obligations"]
+    B --> C["2 August 2026<br/>Article 50<br/>+ GPAI fines"] --> D["11 August 2026<br/>Poland's act<br/>on AI systems"]
+  end
+  subgraph AHEAD["Still ahead"]
+    direction TB
+    E["28 October 2026<br/>KRiBSI imposes fines"] --> F["2 December 2026<br/>marking grace period<br/>ends"]
+    F --> G["2 December 2027<br/>high risk,<br/>Annex III"] --> H["2 August 2028<br/>high risk,<br/>Annex I"]
+  end
+  D --> E`,
+    pl: `flowchart LR
+  subgraph NOW["Już obowiązuje"]
+    direction TB
+    A["2 lutego 2025<br/>praktyki zakazane<br/>+ kompetencje AI"] --> B["2 sierpnia 2025<br/>obowiązki GPAI"]
+    B --> C["2 sierpnia 2026<br/>artykuł 50<br/>+ kary wobec GPAI"] --> D["11 sierpnia 2026<br/>polska ustawa<br/>o systemach AI"]
+  end
+  subgraph AHEAD["Jeszcze przed nami"]
+    direction TB
+    E["28 października 2026<br/>KRiBSI nakłada kary"] --> F["2 grudnia 2026<br/>koniec karencji<br/>na znakowanie"]
+    F --> G["2 grudnia 2027<br/>wysokie ryzyko,<br/>Załącznik III"] --> H["2 sierpnia 2028<br/>wysokie ryzyko,<br/>Załącznik I"]
+  end
+  D --> E`,
+  },
 };

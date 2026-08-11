@@ -58,6 +58,7 @@ export default defineConfig({
                 selfImprovingAgentTeamsArticle: resolve(__dirname, "blog/self-improving-agent-teams/index.html"),
                 geoAeoArticle: resolve(__dirname, "blog/geo-aeo-generative-answer-engine-optimization/index.html"),
                 agentCostArticle: resolve(__dirname, "blog/ai-agent-cost-per-month-model/index.html"),
+                aiActArticle: resolve(__dirname, "blog/ai-act-sierpien-2026-co-obowiazuje/index.html"),
             },
         },
     },

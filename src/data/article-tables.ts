@@ -104,4 +104,51 @@ export const articleTables: Record<string, Record<Lang, ArticleTable>> = {
       ],
     },
   },
+
+  // AI Act compliance calendar as it stands after Regulation (EU) 2026/1744 (Digital Omnibus
+  // on AI, in force 27 July 2026) and Poland's act on AI systems (core provisions in force
+  // 11 August 2026). The two December 2026 / December 2027 rows are the deferred dates, not
+  // the original ones — if the calendar shifts again, this table and the article body that
+  // states the same dates in prose have to move together.
+  'ai-act-dates': {
+    ru: {
+      headers: ['Дата', 'Что вступает в силу', 'Кого касается'],
+      rows: [
+        ['2 февраля 2025', 'Запрещённые практики (ст. 5) и ИИ-грамотность (ст. 4)', 'Всех — поставщиков и внедряющих'],
+        ['2 августа 2025', 'Обязанности поставщиков моделей общего назначения (GPAI)', 'Поставщиков моделей'],
+        ['2 августа 2026', 'Прозрачность по ст. 50; штрафные полномочия Комиссии по GPAI', 'Чат-боты, генераторы контента, дипфейки, распознавание эмоций'],
+        ['11 августа 2026', 'Польский закон о системах ИИ: надзор, нотифицированные органы, песочницы', 'Польский рынок'],
+        ['28 октября 2026', 'KRiBSI может налагать административные штрафы', 'Польский рынок'],
+        ['2 декабря 2026', 'Конец отсрочки на машиночитаемую маркировку контента', 'Поставщиков генераторов контента'],
+        ['2 декабря 2027', 'Системы высокого риска, Приложение III (после переноса)', 'Найм, образование, кредиты, госуслуги'],
+        ['2 августа 2028', 'Системы высокого риска, Приложение I (после переноса)', 'ИИ, встроенный в регулируемые продукты'],
+      ],
+    },
+    en: {
+      headers: ['Date', 'What starts applying', 'Who it affects'],
+      rows: [
+        ['2 February 2025', 'Prohibited practices (Art. 5) and AI literacy (Art. 4)', 'Everyone — providers and deployers'],
+        ['2 August 2025', 'Obligations for providers of general-purpose AI models (GPAI)', 'Model providers'],
+        ['2 August 2026', 'Article 50 transparency; Commission fining powers over GPAI', 'Chatbots, content generators, deepfakes, emotion recognition'],
+        ['11 August 2026', 'Poland’s AI systems act: supervision, notified bodies, sandboxes', 'The Polish market'],
+        ['28 October 2026', 'KRiBSI can impose administrative fines', 'The Polish market'],
+        ['2 December 2026', 'End of the grace period for machine-readable content marking', 'Providers of content generators'],
+        ['2 December 2027', 'High-risk systems, Annex III (after the deferral)', 'Hiring, education, credit, public services'],
+        ['2 August 2028', 'High-risk systems, Annex I (after the deferral)', 'AI embedded in regulated products'],
+      ],
+    },
+    pl: {
+      headers: ['Data', 'Co zaczyna obowiązywać', 'Kogo dotyczy'],
+      rows: [
+        ['2 lutego 2025', 'Praktyki zakazane (art. 5) i kompetencje AI (art. 4)', 'Wszystkich — dostawców i wdrażających'],
+        ['2 sierpnia 2025', 'Obowiązki dostawców modeli ogólnego przeznaczenia (GPAI)', 'Dostawców modeli'],
+        ['2 sierpnia 2026', 'Przejrzystość z art. 50; uprawnienia Komisji do kar wobec GPAI', 'Chatboty, generatory treści, deepfake, rozpoznawanie emocji'],
+        ['11 sierpnia 2026', 'Polska ustawa o systemach AI: nadzór, jednostki notyfikowane, piaskownice', 'Rynek polski'],
+        ['28 października 2026', 'KRiBSI może nakładać kary administracyjne', 'Rynek polski'],
+        ['2 grudnia 2026', 'Koniec karencji na maszynowe znakowanie treści', 'Dostawców generatorów treści'],
+        ['2 grudnia 2027', 'Systemy wysokiego ryzyka, Załącznik III (po przesunięciu)', 'Rekrutacja, edukacja, kredyty, usługi publiczne'],
+        ['2 sierpnia 2028', 'Systemy wysokiego ryzyka, Załącznik I (po przesunięciu)', 'AI wbudowana w produkty regulowane'],
+      ],
+    },
+  },
 };
