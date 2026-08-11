@@ -466,10 +466,32 @@ describe('resolveHost', () => {
     expect(await resolveHost(citation, explode)).toBe('mi-code.pl');
   });
 
-  it('follows the redirect when no domain field is given', async () => {
+  it('reads the publisher domain off the title when it is shaped like one', async () => {
+    // Confirmed against the live fixture on 2026-08-11: grounded chunks carry no
+    // domain field, and their title is the bare publisher domain.
+    const citation = {
+      url: 'https://vertexaisearch.cloud.google.com/grounding-api-redirect/abc',
+      title: 'krs-online.com.pl',
+      domain: null,
+    };
+    expect(await resolveHost(citation, explode)).toBe('krs-online.com.pl');
+  });
+
+  it('follows the redirect when the title is a page title rather than a domain', async () => {
     const fetchImpl = async () => ({ url: 'https://mi-code.pl/products/accounting-ai/' });
     const citation = {
       url: 'https://vertexaisearch.cloud.google.com/grounding-api-redirect/abc',
+      title: 'MiCode — enterprise software and AI',
+      domain: null,
+    };
+    expect(await resolveHost(citation, fetchImpl)).toBe('mi-code.pl');
+  });
+
+  it('follows the redirect when there is no title at all', async () => {
+    const fetchImpl = async () => ({ url: 'https://mi-code.pl/products/accounting-ai/' });
+    const citation = {
+      url: 'https://vertexaisearch.cloud.google.com/grounding-api-redirect/abc',
+      title: '',
       domain: null,
     };
     expect(await resolveHost(citation, fetchImpl)).toBe('mi-code.pl');
@@ -510,6 +532,12 @@ Create `scripts/ai-visibility/analyze.mjs`:
 // our domain against such a URL would never match, so the host has to be
 // resolved before any classification happens.
 const REDIRECT_HOSTS = ['vertexaisearch.cloud.google.com'];
+
+// A grounded chunk's title is usually the publisher's bare domain rather than a
+// page title — verified against the live response captured in fixtures/. When it
+// is shaped like a domain we trust it, because the alternative is one HEAD
+// request per source and a weekly run sees a few hundred of them.
+const DOMAIN_SHAPED = /^[a-z0-9-]+(\.[a-z0-9-]+)+$/i;
 
 const bareHost = (value) => String(value).replace(/^www\./, '').toLowerCase();
 
@@ -561,6 +589,9 @@ export async function resolveHost(citation, fetchImpl) {
   if (!REDIRECT_HOSTS.includes(host)) return host;
   if (citation.domain) return bareHost(citation.domain);
 
+  const title = String(citation.title ?? '').trim();
+  if (DOMAIN_SHAPED.test(title)) return bareHost(title);
+
   try {
     const response = await fetchImpl(citation.url, { method: 'HEAD', redirect: 'follow' });
     return bareHost(new URL(response.url).hostname);
@@ -573,7 +604,7 @@ export async function resolveHost(citation, fetchImpl) {
 - [ ] **Step 4: Run the tests and make sure they pass**
 
 Run: `npx vitest run scripts/ai-visibility/analyze.test.mjs`
-Expected: PASS, 13 tests.
+Expected: PASS, 15 tests.
 
 - [ ] **Step 5: Commit**
 
@@ -759,7 +790,7 @@ Note on `classify`: matching a lookalike like `notmi-code.pl` is prevented by co
 - [ ] **Step 4: Run the tests and make sure they pass**
 
 Run: `npx vitest run scripts/ai-visibility/analyze.test.mjs`
-Expected: PASS, 26 tests.
+Expected: PASS, 28 tests.
 
 - [ ] **Step 5: Commit**
 
