@@ -118,6 +118,22 @@ describe('measure', () => {
     expect(waits).toEqual([30000]);
   });
 
+  it('waits only the short delay after a server error', async () => {
+    // Without this, "longer than a server error" is an untested claim: mutation
+    // testing showed the 429 branch alone still passes if both delays are made
+    // equal. The pair of assertions is what pins the asymmetry.
+    const waits = [];
+    const sleep = async (ms) => { waits.push(ms); };
+    let calls = 0;
+    const fetchImpl = async () => {
+      calls += 1;
+      if (calls === 1) return { ok: false, status: 500, text: async () => 'boom' };
+      return okResponse(answer('https://mi-code.pl/'));
+    };
+    await measure({ ...config, repeats: 1, delayMs: 0 }, { fetchImpl, sleep });
+    expect(waits).toEqual([5000]);
+  });
+
   it('does not retry a 400, which will fail identically the second time', async () => {
     let calls = 0;
     const fetchImpl = async () => {
