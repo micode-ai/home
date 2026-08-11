@@ -1,0 +1,127 @@
+{
+  "id": "ai-act-2026",
+  "track": "funnel-top",
+  "target": "https://mi-code.pl/blog/ai-act-sierpien-2026-co-obowiazuje/",
+  "utm": { "campaign": "ai-act-2026" },
+  "source": {
+    "slug": "ai-act-sierpien-2026-co-obowiazuje",
+    "figures": ["50", "2027", "2026", "15", "35", "28"]
+  },
+  "slides": [
+    {
+      "type": "hook",
+      "bigNumber": "50",
+      "pl": {
+        "eyebrow": "AI Act, stan na sierpień 2026",
+        "headline": "Przesunęli AI Act. Artykułu 50 nie przesunęli",
+        "sub": "Obowiązki dla systemów wysokiego ryzyka pojechały na grudzień 2027. Ale przejrzystość z artykułu 50 obowiązuje od 2 sierpnia 2026 — i dotyczy każdego, kto ma chatbota albo publikuje treści generowane przez AI."
+      },
+      "en": {
+        "eyebrow": "The AI Act as of August 2026",
+        "headline": "They deferred the AI Act. They did not defer Article 50",
+        "sub": "High-risk obligations moved to December 2027. But the Article 50 transparency duties have applied since 2 August 2026 — and they land on anyone running a chatbot or publishing AI-generated content."
+      }
+    },
+    {
+      "type": "problem",
+      "pl": {
+        "eyebrow": "Problem",
+        "headline": "Odroczenie przeczytane jako amnestia",
+        "sub": "Dwa pytania brzmią niemal identycznie, a wymagają przeciwnych odpowiedzi: przesunęli, więc odpuszczamy — czy obowiązuje już wszystko, więc mamy problem. Oba czytania są błędne, a pomyłka w którąkolwiek stronę kosztuje: albo zbędny projekt compliance, albo realne ryzyko kary."
+      },
+      "en": {
+        "eyebrow": "The problem",
+        "headline": "A deferral read as an amnesty",
+        "sub": "Two questions sound almost identical and need opposite answers: it was deferred, so can we drop it — or everything applies now, so are we in trouble. Both readings are wrong, and getting it wrong either way costs you: an unnecessary compliance project, or real exposure to a fine."
+      }
+    },
+    {
+      "type": "numbers",
+      "pl": {
+        "eyebrow": "Kalendarz",
+        "headline": "Co przesunięto, a co obowiązuje",
+        "sub": "Digital Omnibus on AI przesunął wysokie ryzyko o 16 i 12 miesięcy. Artykułu 50 nie ruszył wcale, a polska ustawa o systemach AI weszła w życie osobno.",
+        "rows": [
+          ["Annex III", "2 grudnia 2027"],
+          ["Annex I", "2 sierpnia 2028"],
+          ["Artykuł 50", "2 sierpnia 2026"],
+          ["Ustawa o AI", "11 sierpnia 2026"]
+        ]
+      },
+      "en": {
+        "eyebrow": "The calendar",
+        "headline": "What moved and what applies",
+        "sub": "The Digital Omnibus on AI deferred high risk by 16 and 12 months. It left Article 50 untouched, and Poland's own AI systems act entered into force separately.",
+        "rows": [
+          ["Annex III", "2 December 2027"],
+          ["Annex I", "2 August 2028"],
+          ["Article 50", "2 August 2026"],
+          ["Poland's AI act", "11 August 2026"]
+        ]
+      }
+    },
+    {
+      "type": "numbers",
+      "pl": {
+        "eyebrow": "Artykuł 50 w praktyce",
+        "headline": "Cztery obowiązki, które już działają",
+        "sub": "Artykuł 50 jest przypisany do funkcji systemu, nie do poziomu ryzyka. Nie musisz mieć systemu wysokiego ryzyka, żeby cię dotyczył — wystarczy, że masz chatbota.",
+        "rows": [
+          ["Chatbot", "powiedz, że to AI"],
+          ["Treści z AI", "znakuj maszynowo"],
+          ["Deepfake", "ujawnij"],
+          ["Emocje", "poinformuj"]
+        ]
+      },
+      "en": {
+        "eyebrow": "Article 50 in practice",
+        "headline": "Four duties already in force",
+        "sub": "Article 50 attaches to a system's function, not to a risk tier. You do not need a high-risk system for it to apply — a chatbot is enough.",
+        "rows": [
+          ["Chatbot", "say it is AI"],
+          ["AI content", "mark it machine-readably"],
+          ["Deepfake", "disclose it"],
+          ["Emotion AI", "inform people"]
+        ]
+      }
+    },
+    {
+      "type": "numbers",
+      "pl": {
+        "eyebrow": "Kary i terminy",
+        "headline": "Dwie daty, które są jeszcze przed nami",
+        "sub": "Kary za przejrzystość są realne, a dwa terminy dopiero nadchodzą: karencja na maszynowe znakowanie treści kończy się w grudniu, a polski organ zaczyna karać w październiku.",
+        "rows": [
+          ["Artykuł 50", "15 mln euro albo 3%"],
+          ["Praktyki zakazane", "35 mln euro albo 7%"],
+          ["KRiBSI karze od", "28 października 2026"],
+          ["Znakowanie treści", "2 grudnia 2026"]
+        ]
+      },
+      "en": {
+        "eyebrow": "Fines and deadlines",
+        "headline": "Two dates still ahead of you",
+        "sub": "The transparency fines are real, and two deadlines are still coming: the grace period for machine-readable content marking ends in December, and the Polish authority starts fining in October.",
+        "rows": [
+          ["Article 50", "EUR 15m or 3%"],
+          ["Prohibited practices", "EUR 35m or 7%"],
+          ["KRiBSI fines from", "28 October 2026"],
+          ["Content marking", "2 December 2026"]
+        ]
+      }
+    },
+    {
+      "type": "cta",
+      "pl": {
+        "eyebrow": "MICODE",
+        "headline": "Sprawdzimy Twojego chatbota i Twoje treści",
+        "sub": "Budujemy chatboty i generatory treści, które same mówią, że są AI, podają źródła i mają miejsce na odpowiedź nie wiem. Przejrzystość z artykułu 50 wychodzi z takiej architektury sama, a nie z klauzuli dopisanej do regulaminu."
+      },
+      "en": {
+        "eyebrow": "MICODE",
+        "headline": "We will review your chatbot and your content",
+        "sub": "We build chatbots and content pipelines that say they are AI, cite their sources and have room to answer I do not know. Article 50 transparency falls out of that architecture rather than out of a clause added to your terms."
+      }
+    }
+  ]
+}

@@ -53,7 +53,7 @@ def test_the_schedule_table_was_actually_parsed():
     changes so the parser matches nothing, all of those loops pass vacuously
     and this file silently stops testing the calendar at all."""
     rows = _rows()
-    assert len(rows) == 13, f"expected 13 scheduled rows, parsed {len(rows)}"
+    assert len(rows) == 14, f"expected 14 scheduled rows, parsed {len(rows)}"
     assert {r["level"] for r in rows} == {TOP, MIDDLE}
 
 
