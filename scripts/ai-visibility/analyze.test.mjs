@@ -50,10 +50,18 @@ describe('extractCitations', () => {
     ]);
   });
 
-  it('handles both committed fixtures without throwing', () => {
-    for (const name of ['generate-content.json', 'interactions.json']) {
-      expect(Array.isArray(extractCitations(fixture(name)))).toBe(true);
-    }
+  it('pulls the real sources out of each committed fixture', () => {
+    // Asserting only that an array comes back would still pass if parsing
+    // silently regressed to [] for both shapes — which is the one failure this
+    // test exists to catch.
+    const live = extractCitations(fixture('generate-content.json'));
+    expect(live).toHaveLength(6);
+    expect(live.every((c) => c.url.includes('vertexaisearch.cloud.google.com'))).toBe(true);
+    expect(live.map((c) => c.title)).toContain('eksiegowyai.pl');
+
+    const annotated = extractCitations(fixture('interactions.json'));
+    expect(annotated).toHaveLength(2);
+    expect(annotated[0].url).toBe('https://mi-code.pl/');
   });
 
   it('de-duplicates a url cited more than once', () => {
@@ -71,7 +79,10 @@ describe('extractCitations', () => {
         },
       ],
     };
-    expect(extractCitations(response)).toHaveLength(1);
+    // First occurrence wins — pinned so the dedup rule cannot quietly invert.
+    expect(extractCitations(response)).toEqual([
+      { url: 'https://mi-code.pl/', title: 'a', domain: null },
+    ]);
   });
 
   it('returns an empty list for an ungrounded answer', () => {
