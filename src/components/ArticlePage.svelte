@@ -59,7 +59,7 @@
   // Body is authored as `\n\n`-separated chunks. Most chunks are plain paragraphs; a few opt into
   // light markup: `## heading`, `> callout`, and `[[diagram:id|caption]]` (renders a Mermaid figure).
   // Inline `**bold**` and `*italic*` are supported inside paragraphs/callouts. Plain-prose posts are unaffected.
-  type Seg = { t: string; b: boolean; i: boolean };
+  type Seg = { t: string; b: boolean; i: boolean; href?: string };
   // `RawBlock` is what the split/regex pass below produces — an `h2` has heading text but no id
   // yet, since ids are derived from *all* headings in the article at once (see `tocHeadings`).
   // `Block` is the final per-render shape used by the template, with that id filled in.
@@ -82,9 +82,15 @@
   const TABLE_RE = /^\[\[table:([a-z0-9-]+)\]\]$/i;
   const WIDGET_RE = /^\[\[widget:([a-z0-9-]+)\]\]$/i;
 
+  // `[text](url)` in prose and callouts, rendered as an external link. Only http(s) URLs match,
+  // so an authored `javascript:`/`data:` target stays inert text rather than becoming a link.
+  // Article bodies live in blog-posts.json, but they are still authored content passing through
+  // a renderer, so the scheme allowlist is the guard rather than trust in the source file.
+  const LINK_RE = /\[([^\][]+)\]\((https?:\/\/[^\s)]+)\)/g;
+
   // `**bold**` is parsed first; within each non-bold run, single `*italic*` is parsed. The two
   // never nest in authored content, so treating them independently is sufficient.
-  function inlineSegments(text: string): Seg[] {
+  function emphasisSegments(text: string): Seg[] {
     const out: Seg[] = [];
     text.split('**').forEach((part, bi) => {
       if (bi % 2 === 1) {
@@ -96,6 +102,21 @@
         });
       }
     });
+    return out;
+  }
+
+  // Links are split out before emphasis, so link text is always plain — `**bold**` inside a
+  // link label is not supported and none of the authored content needs it.
+  function inlineSegments(text: string): Seg[] {
+    const out: Seg[] = [];
+    let cursor = 0;
+    for (const match of text.matchAll(LINK_RE)) {
+      const start = match.index ?? 0;
+      if (start > cursor) out.push(...emphasisSegments(text.slice(cursor, start)));
+      out.push({ t: match[1], b: false, i: false, href: match[2] });
+      cursor = start + match[0].length;
+    }
+    if (cursor < text.length) out.push(...emphasisSegments(text.slice(cursor)));
     return out;
   }
 
@@ -269,7 +290,7 @@
         {#if block.kind === 'h2'}
           <h2 class="article-h2" id={block.id}>{block.text}</h2>
         {:else if block.kind === 'callout'}
-          <aside class="article-callout">{#each block.segments as seg}{#if seg.b}<strong>{seg.t}</strong>{:else if seg.i}<em>{seg.t}</em>{:else}{seg.t}{/if}{/each}</aside>
+          <aside class="article-callout">{#each block.segments as seg}{#if seg.href}<a href={seg.href} target="_blank" rel="noopener noreferrer">{seg.t}</a>{:else if seg.b}<strong>{seg.t}</strong>{:else if seg.i}<em>{seg.t}</em>{:else}{seg.t}{/if}{/each}</aside>
         {:else if block.kind === 'diagram'}
           {@const def = diagramDef(block.id, lang)}
           {#if def}
@@ -305,7 +326,7 @@
             <CostCalculator {lang} />
           {/if}
         {:else}
-          <p>{#each block.segments as seg}{#if seg.b}<strong>{seg.t}</strong>{:else if seg.i}<em>{seg.t}</em>{:else}{seg.t}{/if}{/each}</p>
+          <p>{#each block.segments as seg}{#if seg.href}<a href={seg.href} target="_blank" rel="noopener noreferrer">{seg.t}</a>{:else if seg.b}<strong>{seg.t}</strong>{:else if seg.i}<em>{seg.t}</em>{:else}{seg.t}{/if}{/each}</p>
         {/if}
       {/each}
 
@@ -412,6 +433,16 @@
   .article-body p { line-height: 1.8; margin-bottom: 1.25rem; color: var(--color-text-primary, #1e293b); text-align: justify; }
   .article-body :global(strong) { font-weight: 600; color: var(--color-text-primary, #1e293b); }
   .article-body :global(em) { font-style: italic; }
+  /* Body citations. Scoped to prose and callouts rather than `.article-body a`, which would also
+     catch the table-of-contents links above (they deliberately carry no underline). */
+  .article-body p a,
+  .article-callout a {
+    color: var(--color-primary, #1e3a8a);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+  .article-body p a:hover,
+  .article-callout a:hover { color: var(--color-accent, #f97316); }
   .article-toc {
     margin: 0 0 2.5rem;
     padding: 1.25rem 1.5rem;

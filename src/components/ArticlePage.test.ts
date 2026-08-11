@@ -45,6 +45,19 @@ vi.mock('../data/blog-posts.json', () => ({
       bodyRu: 'Абзац.\n\n## Один раздел\n\nЕще.',
     },
     {
+      // Oldest date on purpose: tag-overlap ties resolve newest-first, so this fixture stays
+      // out of the other posts' top-3 related lists and leaves those assertions alone.
+      slug: 'link-fixture',
+      titlePl: 'Linki', titleEn: 'Links', titleRu: 'Ссылки',
+      summaryPl: 's', summaryEn: 's', summaryRu: 's',
+      date: '2026-07-01',
+      tags: ['AI'],
+      bodyPl: 'Zobacz [rozporządzenie](https://eur-lex.europa.eu/eli/reg/2026/1744/oj).',
+      bodyEn:
+        'Read the [regulation](https://eur-lex.europa.eu/eli/reg/2026/1744/oj) and **note this**.\n\n> Callout with [the ministry](https://www.gov.pl/web/cyfryzacja).\n\nNot a link: [click](javascript:alert(1)).',
+      bodyRu: 'Смотрите [регламент](https://eur-lex.europa.eu/eli/reg/2026/1744/oj).',
+    },
+    {
       slug: 'long-fixture',
       titlePl: 'Długi', titleEn: 'Long', titleRu: 'Длинный',
       summaryPl: 's', summaryEn: 's', summaryRu: 's',
@@ -119,6 +132,47 @@ describe('ArticlePage widget block', () => {
     languageStore.set('en');
     const { queryByText } = render(ArticlePage, { props: { slug: 'block-fixture' } });
     expect(queryByText('[[widget:unknown-widget]]')).toBeNull();
+  });
+});
+
+describe('ArticlePage inline links', () => {
+  it('renders [text](url) as an external link opening in a new tab', () => {
+    languageStore.set('en');
+    const { getByRole } = render(ArticlePage, { props: { slug: 'link-fixture' } });
+    const link = getByRole('link', { name: 'regulation' });
+    expect(link.getAttribute('href')).toBe('https://eur-lex.europa.eu/eli/reg/2026/1744/oj');
+    expect(link.getAttribute('target')).toBe('_blank');
+    expect(link.getAttribute('rel')).toBe('noopener noreferrer');
+  });
+
+  it('keeps the surrounding prose and bold in the same paragraph as the link', () => {
+    languageStore.set('en');
+    const { getByRole } = render(ArticlePage, { props: { slug: 'link-fixture' } });
+    const paragraph = getByRole('link', { name: 'regulation' }).closest('p');
+    expect(paragraph?.textContent).toBe('Read the regulation and note this.');
+    expect(paragraph?.querySelector('strong')?.textContent).toBe('note this');
+  });
+
+  it('renders a link inside a callout', () => {
+    languageStore.set('en');
+    const { container } = render(ArticlePage, { props: { slug: 'link-fixture' } });
+    const link = container.querySelector('.article-callout a');
+    expect(link?.getAttribute('href')).toBe('https://www.gov.pl/web/cyfryzacja');
+  });
+
+  it('leaves a non-http(s) target as plain text instead of a link', () => {
+    languageStore.set('en');
+    const { queryByRole, getByText } = render(ArticlePage, { props: { slug: 'link-fixture' } });
+    expect(queryByRole('link', { name: 'click' })).toBeNull();
+    expect(getByText(/Not a link: \[click\]/)).toBeTruthy();
+  });
+
+  it('renders a link authored in the Russian body', () => {
+    languageStore.set('ru');
+    const { getByRole } = render(ArticlePage, { props: { slug: 'link-fixture' } });
+    expect(getByRole('link', { name: 'регламент' }).getAttribute('href')).toContain(
+      'eli/reg/2026/1744'
+    );
   });
 });
 
