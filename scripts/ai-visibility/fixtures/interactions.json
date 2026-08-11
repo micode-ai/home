@@ -1,0 +1,32 @@
+{
+  "id": "int_hand_written",
+  "model": "gemini-2.5-flash",
+  "output_text": "MiCode Sp. z o.o. to software house z Gdanska.",
+  "steps": [
+    {
+      "type": "model_output",
+      "content": [
+        {
+          "type": "text",
+          "text": "MiCode Sp. z o.o. to software house z Gdanska.",
+          "annotations": [
+            {
+              "type": "url_citation",
+              "url": "https://mi-code.pl/",
+              "title": "MiCode — enterprise software and AI",
+              "start_index": 0,
+              "end_index": 45
+            },
+            {
+              "type": "url_citation",
+              "url": "https://rejestr.io/krs/example",
+              "title": "Rejestr.io",
+              "start_index": 46,
+              "end_index": 60
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
