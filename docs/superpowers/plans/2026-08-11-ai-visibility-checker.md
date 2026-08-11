@@ -1199,6 +1199,31 @@ describe('measure', () => {
     ).rejects.toThrow(/500/);
   });
 
+  it('paces its calls so the free tier per-minute limit is not tripped', async () => {
+    // The first live run fired 54 calls back to back and died on a 429 within
+    // seconds, while a single call at rest succeeded — the limit is per minute,
+    // and the gap between calls is the whole fix.
+    const waits = [];
+    const fetchImpl = async () => okResponse(answer('https://example.com/'));
+    const sleep = async (ms) => { waits.push(ms); };
+    await measure({ ...config, delayMs: 6500 }, { fetchImpl, sleep });
+    // Two calls, so exactly one gap — and nothing waited before the first.
+    expect(waits).toEqual([6500]);
+  });
+
+  it('waits out a rate limit for longer than a server error', async () => {
+    const waits = [];
+    const sleep = async (ms) => { waits.push(ms); };
+    let calls = 0;
+    const fetchImpl = async () => {
+      calls += 1;
+      if (calls === 1) return { ok: false, status: 429, text: async () => 'slow down' };
+      return okResponse(answer('https://mi-code.pl/'));
+    };
+    await measure({ ...config, repeats: 1, delayMs: 0 }, { fetchImpl, sleep });
+    expect(waits).toEqual([30000]);
+  });
+
   it('does not retry a 400, which will fail identically the second time', async () => {
     let calls = 0;
     const fetchImpl = async () => {
@@ -1239,6 +1264,12 @@ const DEFAULT_MODEL = 'gemini-2.5-flash';
 const DEFAULT_MODE = 'generateContent';
 const DEFAULT_REPEATS = 2;
 const RETRY_DELAY_MS = 5000;
+// The free tier caps requests per minute as well as per day, and a run fires
+// dozens of them back to back. Pacing is what stops a weekly run from killing
+// itself with its own throughput: the first live run tripped a 429 within
+// seconds without it, while a single call at rest succeeded.
+const DEFAULT_DELAY_MS = 6500;
+const RATE_LIMIT_DELAY_MS = 30000;
 
 export function buildRequest(mode, model, text) {
   if (mode === 'interactions') {
@@ -1267,7 +1298,9 @@ async function callOnce({ url, body }, apiKey, { fetchImpl, sleep }) {
     // fail identically, so burning a second call on it only wastes quota.
     const retryable = response.status === 429 || response.status >= 500;
     if (attempt === 0 && retryable) {
-      await sleep(RETRY_DELAY_MS);
+      // A rate limit clears on a clock, a server error on a whim — wait out the
+      // former properly rather than spending the one retry too early.
+      await sleep(response.status === 429 ? RATE_LIMIT_DELAY_MS : RETRY_DELAY_MS);
       continue;
     }
     const detail = (await response.text()).slice(0, 300);
@@ -1276,7 +1309,7 @@ async function callOnce({ url, body }, apiKey, { fetchImpl, sleep }) {
 }
 
 export async function measure(config, deps) {
-  const { prompts, domain, brandTerms, model, mode, repeats, apiKey } = config;
+  const { prompts, domain, brandTerms, model, mode, repeats, apiKey, delayMs } = config;
   const results = [];
   let calls = 0;
 
@@ -1284,6 +1317,10 @@ export async function measure(config, deps) {
     const attempts = [];
 
     for (let repeat = 0; repeat < repeats; repeat += 1) {
+      // Pace every call but the first: the gap belongs between calls, and
+      // waiting before the run has even started just burns wall clock.
+      if (calls > 0) await deps.sleep(delayMs ?? 0);
+
       const response = await callOnce(
         buildRequest(mode, model, prompt.text), apiKey, deps,
       );
@@ -1351,10 +1388,11 @@ export async function main() {
   const model = process.env.AI_VIS_MODEL || DEFAULT_MODEL;
   const mode = process.env.AI_VIS_ENDPOINT || DEFAULT_MODE;
   const repeats = Number(process.env.AI_VIS_REPEATS || DEFAULT_REPEATS);
+  const delayMs = Number(process.env.AI_VIS_DELAY_MS || DEFAULT_DELAY_MS);
   const date = process.env.AI_VIS_DATE || new Date().toISOString().slice(0, 10);
 
   const { results, calls } = await measure(
-    { ...config, model, mode, repeats, apiKey },
+    { ...config, model, mode, repeats, delayMs, apiKey },
     { fetchImpl: fetch, sleep: (ms) => new Promise((r) => setTimeout(r, ms)) },
   );
 
@@ -1389,7 +1427,7 @@ Set `DEFAULT_MODE` to whichever endpoint the Task 1 probe actually answered on, 
 - [ ] **Step 4: Run the tests and make sure they pass**
 
 Run: `npx vitest run scripts/ai-visibility/run.test.mjs`
-Expected: PASS, 8 tests.
+Expected: PASS, 10 tests.
 
 - [ ] **Step 5: Add the npm script**
 
@@ -1410,6 +1448,8 @@ Expected: PASS, including the existing suites.
 export GEMINI_API_KEY='...'
 npm run ai-visibility
 ```
+
+Expect this to take several minutes, not seconds: calls are paced about 6.5s apart to stay under the free tier's per-minute limit, so 54 of them is roughly six minutes of mostly waiting.
 
 Expected: a line like `54 calls · cited 3.7% · changed=false`, a new `docs/seo/ai-visibility/runs/<today>.json`, and a rebuilt `docs/seo/ai-visibility/REPORT.md`. Open the report and confirm the brand prompts are not all `absent` — if `pl-brand-micode` cannot find us, the problem is indexing, not the script.
 
