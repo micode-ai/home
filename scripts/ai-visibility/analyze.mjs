@@ -73,3 +73,39 @@ export async function resolveHost(citation, fetchImpl) {
     return 'unknown';
   }
 }
+
+// Ranked so a repeat that found more evidence wins over one that found less.
+const RANK = { cited: 3, mentioned: 2, absent: 1 };
+
+export function classify({ text, hosts, domain, brandTerms }) {
+  const target = bareHost(domain);
+  const isOurs = (host) => host === target || host.endsWith(`.${target}`);
+  if (hosts.some(isOurs)) return 'cited';
+
+  const haystack = String(text).toLowerCase();
+  // A brand can be named without being linked — worth knowing, but it is not
+  // a citation and must never be counted as one.
+  const named = brandTerms.some((term) => haystack.includes(term.toLowerCase()));
+  return named ? 'mentioned' : 'absent';
+}
+
+export function bestStatus(statuses) {
+  return statuses.reduce(
+    (best, status) => ((RANK[status] ?? 0) > RANK[best] ? status : best),
+    'absent',
+  );
+}
+
+export function summarize(results) {
+  const emptyBucket = () => ({ cited: 0, mentioned: 0, absent: 0 });
+  const byLang = {};
+  const byKind = {};
+
+  for (const result of results) {
+    (byLang[result.lang] ??= emptyBucket())[result.status] += 1;
+    (byKind[result.kind] ??= emptyBucket())[result.status] += 1;
+  }
+
+  const cited = results.filter((result) => result.status === 'cited').length;
+  return { byLang, byKind, citedShare: results.length ? cited / results.length : 0 };
+}

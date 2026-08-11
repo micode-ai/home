@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { extractText, extractCitations, resolveHost } from './analyze.mjs';
+import { extractText, extractCitations, resolveHost, classify, bestStatus, summarize } from './analyze.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const fixture = (name) =>
@@ -158,5 +158,107 @@ describe('resolveHost', () => {
 
   it('reports unknown for a malformed url', async () => {
     expect(await resolveHost({ url: 'not a url' }, explode)).toBe('unknown');
+  });
+});
+
+const BRAND = ['MiCode', 'eKsiegowyAi'];
+
+describe('classify', () => {
+  it('calls it cited when our domain is among the sources', () => {
+    const status = classify({
+      text: 'Nothing recognisable here.',
+      hosts: ['wfirma.pl', 'mi-code.pl'],
+      domain: 'mi-code.pl',
+      brandTerms: BRAND,
+    });
+    expect(status).toBe('cited');
+  });
+
+  it('counts a subdomain of ours as cited', () => {
+    const status = classify({
+      text: '', hosts: ['blog.mi-code.pl'], domain: 'mi-code.pl', brandTerms: BRAND,
+    });
+    expect(status).toBe('cited');
+  });
+
+  it('does not mistake a lookalike domain for ours', () => {
+    const status = classify({
+      text: '', hosts: ['notmi-code.pl'], domain: 'mi-code.pl', brandTerms: BRAND,
+    });
+    expect(status).toBe('absent');
+  });
+
+  it('calls it mentioned when the brand is in the text but not in the sources', () => {
+    const status = classify({
+      text: 'Takim narzedziem jest eKsiegowyAi od polskiego zespolu.',
+      hosts: ['poradnikprzedsiebiorcy.pl'],
+      domain: 'mi-code.pl',
+      brandTerms: BRAND,
+    });
+    expect(status).toBe('mentioned');
+  });
+
+  it('matches a brand term regardless of case', () => {
+    const status = classify({
+      text: 'micode builds agents', hosts: [], domain: 'mi-code.pl', brandTerms: BRAND,
+    });
+    expect(status).toBe('mentioned');
+  });
+
+  it('prefers cited over mentioned when both are true', () => {
+    const status = classify({
+      text: 'MiCode', hosts: ['mi-code.pl'], domain: 'mi-code.pl', brandTerms: BRAND,
+    });
+    expect(status).toBe('cited');
+  });
+
+  it('calls it absent when neither is true', () => {
+    const status = classify({
+      text: 'Some other vendors.', hosts: ['sap.com'], domain: 'mi-code.pl', brandTerms: BRAND,
+    });
+    expect(status).toBe('absent');
+  });
+});
+
+describe('bestStatus', () => {
+  it('takes the strongest of the repeats', () => {
+    expect(bestStatus(['absent', 'cited'])).toBe('cited');
+    expect(bestStatus(['absent', 'mentioned'])).toBe('mentioned');
+    expect(bestStatus(['absent', 'absent'])).toBe('absent');
+  });
+
+  it('treats no attempts as absent rather than crashing', () => {
+    expect(bestStatus([])).toBe('absent');
+  });
+});
+
+describe('summarize', () => {
+  const results = [
+    { id: 'a', lang: 'pl', kind: 'category', status: 'cited' },
+    { id: 'b', lang: 'pl', kind: 'category', status: 'absent' },
+    { id: 'c', lang: 'en', kind: 'brand', status: 'mentioned' },
+    { id: 'd', lang: 'en', kind: 'brand', status: 'cited' },
+  ];
+
+  it('counts every status per language', () => {
+    expect(summarize(results).byLang).toEqual({
+      pl: { cited: 1, mentioned: 0, absent: 1 },
+      en: { cited: 1, mentioned: 1, absent: 0 },
+    });
+  });
+
+  it('counts every status per kind', () => {
+    expect(summarize(results).byKind).toEqual({
+      category: { cited: 1, mentioned: 0, absent: 1 },
+      brand: { cited: 1, mentioned: 1, absent: 0 },
+    });
+  });
+
+  it('reports the cited share over all prompts', () => {
+    expect(summarize(results).citedShare).toBeCloseTo(0.5, 5);
+  });
+
+  it('reports a zero share for an empty run instead of dividing by zero', () => {
+    expect(summarize([]).citedShare).toBe(0);
   });
 });
