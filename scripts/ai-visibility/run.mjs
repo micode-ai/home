@@ -17,6 +17,12 @@ const DEFAULT_MODEL = 'gemini-2.5-flash';
 const DEFAULT_MODE = 'generateContent';
 const DEFAULT_REPEATS = 2;
 const RETRY_DELAY_MS = 5000;
+// The free tier caps requests per minute as well as per day, and a run fires
+// dozens of them back to back. Pacing is what stops a weekly run from killing
+// itself with its own throughput: the first live run tripped a 429 within
+// seconds without it, while a single call at rest succeeded.
+const DEFAULT_DELAY_MS = 6500;
+const RATE_LIMIT_DELAY_MS = 30000;
 
 export function buildRequest(mode, model, text) {
   if (mode === 'interactions') {
@@ -45,7 +51,9 @@ async function callOnce({ url, body }, apiKey, { fetchImpl, sleep }) {
     // fail identically, so burning a second call on it only wastes quota.
     const retryable = response.status === 429 || response.status >= 500;
     if (attempt === 0 && retryable) {
-      await sleep(RETRY_DELAY_MS);
+      // A rate limit clears on a clock, a server error on a whim — wait out the
+      // former properly rather than spending the one retry too early.
+      await sleep(response.status === 429 ? RATE_LIMIT_DELAY_MS : RETRY_DELAY_MS);
       continue;
     }
     const detail = (await response.text()).slice(0, 300);
@@ -54,7 +62,7 @@ async function callOnce({ url, body }, apiKey, { fetchImpl, sleep }) {
 }
 
 export async function measure(config, deps) {
-  const { prompts, domain, brandTerms, model, mode, repeats, apiKey } = config;
+  const { prompts, domain, brandTerms, model, mode, repeats, apiKey, delayMs } = config;
   const results = [];
   let calls = 0;
 
@@ -62,6 +70,10 @@ export async function measure(config, deps) {
     const attempts = [];
 
     for (let repeat = 0; repeat < repeats; repeat += 1) {
+      // Pace every call but the first: the gap belongs between calls, and
+      // waiting before the run has even started just burns wall clock.
+      if (calls > 0) await deps.sleep(delayMs ?? 0);
+
       const response = await callOnce(
         buildRequest(mode, model, prompt.text), apiKey, deps,
       );
@@ -129,10 +141,11 @@ export async function main() {
   const model = process.env.AI_VIS_MODEL || DEFAULT_MODEL;
   const mode = process.env.AI_VIS_ENDPOINT || DEFAULT_MODE;
   const repeats = Number(process.env.AI_VIS_REPEATS || DEFAULT_REPEATS);
+  const delayMs = Number(process.env.AI_VIS_DELAY_MS || DEFAULT_DELAY_MS);
   const date = process.env.AI_VIS_DATE || new Date().toISOString().slice(0, 10);
 
   const { results, calls } = await measure(
-    { ...config, model, mode, repeats, apiKey },
+    { ...config, model, mode, repeats, delayMs, apiKey },
     { fetchImpl: fetch, sleep: (ms) => new Promise((r) => setTimeout(r, ms)) },
   );
 

@@ -93,6 +93,31 @@ describe('measure', () => {
     ).rejects.toThrow(/500/);
   });
 
+  it('paces its calls so the free tier per-minute limit is not tripped', async () => {
+    // The first live run fired 54 calls back to back and died on a 429 within
+    // seconds, while a single call at rest succeeded — the limit is per minute,
+    // and the gap between calls is the whole fix.
+    const waits = [];
+    const fetchImpl = async () => okResponse(answer('https://example.com/'));
+    const sleep = async (ms) => { waits.push(ms); };
+    await measure({ ...config, delayMs: 6500 }, { fetchImpl, sleep });
+    // Two calls, so exactly one gap — and nothing waited before the first.
+    expect(waits).toEqual([6500]);
+  });
+
+  it('waits out a rate limit for longer than a server error', async () => {
+    const waits = [];
+    const sleep = async (ms) => { waits.push(ms); };
+    let calls = 0;
+    const fetchImpl = async () => {
+      calls += 1;
+      if (calls === 1) return { ok: false, status: 429, text: async () => 'slow down' };
+      return okResponse(answer('https://mi-code.pl/'));
+    };
+    await measure({ ...config, repeats: 1, delayMs: 0 }, { fetchImpl, sleep });
+    expect(waits).toEqual([30000]);
+  });
+
   it('does not retry a 400, which will fail identically the second time', async () => {
     let calls = 0;
     const fetchImpl = async () => {
