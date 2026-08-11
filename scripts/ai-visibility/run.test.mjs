@@ -1,17 +1,18 @@
 import { describe, it, expect } from 'vitest';
-import { buildRequest, measure } from './run.mjs';
+import { buildRequest, measure, workList, nextSlice, foldAttempts } from './run.mjs';
 
 const config = {
   domain: 'mi-code.pl',
   brandTerms: ['MiCode'],
   model: 'gemini-2.5-flash',
   mode: 'generateContent',
-  repeats: 2,
   apiKey: 'test-key',
-  prompts: [
-    { id: 'pl-a', lang: 'pl', kind: 'category', target: '/', text: 'pytanie?' },
-  ],
 };
+
+const slice = [
+  { prompt: { id: 'pl-a', lang: 'pl', kind: 'category', target: '/', text: 'pytanie?' }, repeat: 0 },
+  { prompt: { id: 'pl-a', lang: 'pl', kind: 'category', target: '/', text: 'pytanie?' }, repeat: 1 },
+];
 
 const answer = (uri) => ({
   candidates: [
@@ -50,7 +51,7 @@ describe('measure', () => {
       calls += 1;
       return okResponse(answer('https://example.com/'));
     };
-    const result = await measure(config, { fetchImpl, sleep: noSleep });
+    const result = await measure({ ...config, slice }, { fetchImpl, sleep: noSleep });
     expect(calls).toBe(2);
     expect(result.calls).toBe(2);
   });
@@ -61,17 +62,15 @@ describe('measure', () => {
       headers = options.headers;
       return okResponse(answer('https://example.com/'));
     };
-    await measure(config, { fetchImpl, sleep: noSleep });
+    await measure({ ...config, slice }, { fetchImpl, sleep: noSleep });
     expect(headers['x-goog-api-key']).toBe('test-key');
   });
 
-  it('keeps the strongest status across the repeats', async () => {
+  it('returns one attempt per repeat, each with its own status', async () => {
     const pages = [answer('https://example.com/'), answer('https://mi-code.pl/')];
     const fetchImpl = async () => okResponse(pages.shift());
-    const { results } = await measure(config, { fetchImpl, sleep: noSleep });
-    expect(results[0].status).toBe('cited');
-    expect(results[0].attempts).toHaveLength(2);
-    expect(results[0].attempts[0].status).toBe('absent');
+    const { attempts } = await measure({ ...config, slice }, { fetchImpl, sleep: noSleep });
+    expect(attempts.map((a) => a.status)).toEqual(['absent', 'cited']);
   });
 
   it('retries once on a rate limit and then succeeds', async () => {
@@ -81,15 +80,15 @@ describe('measure', () => {
       if (calls === 1) return { ok: false, status: 429, text: async () => 'slow down' };
       return okResponse(answer('https://mi-code.pl/'));
     };
-    const { results } = await measure({ ...config, repeats: 1 }, { fetchImpl, sleep: noSleep });
+    const { attempts } = await measure({ ...config, slice: slice.slice(0, 1) }, { fetchImpl, sleep: noSleep });
     expect(calls).toBe(2);
-    expect(results[0].status).toBe('cited');
+    expect(attempts[0].status).toBe('cited');
   });
 
   it('aborts the whole run when a call fails twice, rather than saving half a measurement', async () => {
     const fetchImpl = async () => ({ ok: false, status: 500, text: async () => 'boom' });
     await expect(
-      measure({ ...config, repeats: 1 }, { fetchImpl, sleep: noSleep }),
+      measure({ ...config, slice: slice.slice(0, 1) }, { fetchImpl, sleep: noSleep }),
     ).rejects.toThrow(/500/);
   });
 
@@ -100,7 +99,7 @@ describe('measure', () => {
     const waits = [];
     const fetchImpl = async () => okResponse(answer('https://example.com/'));
     const sleep = async (ms) => { waits.push(ms); };
-    await measure({ ...config, delayMs: 6500 }, { fetchImpl, sleep });
+    await measure({ ...config, slice, delayMs: 6500 }, { fetchImpl, sleep });
     // Two calls, so exactly one gap — and nothing waited before the first.
     expect(waits).toEqual([6500]);
   });
@@ -114,7 +113,7 @@ describe('measure', () => {
       if (calls === 1) return { ok: false, status: 429, text: async () => 'slow down' };
       return okResponse(answer('https://mi-code.pl/'));
     };
-    await measure({ ...config, repeats: 1, delayMs: 0 }, { fetchImpl, sleep });
+    await measure({ ...config, slice: slice.slice(0, 1), delayMs: 0 }, { fetchImpl, sleep });
     expect(waits).toEqual([30000]);
   });
 
@@ -130,7 +129,7 @@ describe('measure', () => {
       if (calls === 1) return { ok: false, status: 500, text: async () => 'boom' };
       return okResponse(answer('https://mi-code.pl/'));
     };
-    await measure({ ...config, repeats: 1, delayMs: 0 }, { fetchImpl, sleep });
+    await measure({ ...config, slice: slice.slice(0, 1), delayMs: 0 }, { fetchImpl, sleep });
     expect(waits).toEqual([5000]);
   });
 
@@ -141,8 +140,67 @@ describe('measure', () => {
       return { ok: false, status: 400, text: async () => 'bad model' };
     };
     await expect(
-      measure({ ...config, repeats: 1 }, { fetchImpl, sleep: noSleep }),
+      measure({ ...config, slice: slice.slice(0, 1) }, { fetchImpl, sleep: noSleep }),
     ).rejects.toThrow(/400/);
     expect(calls).toBe(1);
+  });
+});
+
+describe('workList', () => {
+  it('expands every prompt once per repeat, in a stable order', () => {
+    const prompts = [{ id: 'a' }, { id: 'b' }];
+    expect(workList(prompts, 2).map((i) => `${i.prompt.id}#${i.repeat}`))
+      .toEqual(['a#0', 'a#1', 'b#0', 'b#1']);
+  });
+
+  it('is empty when there are no prompts', () => {
+    expect(workList([], 2)).toEqual([]);
+  });
+});
+
+describe('nextSlice', () => {
+  const items = [1, 2, 3, 4, 5];
+
+  it('takes the budget from the cursor and reports where to resume', () => {
+    expect(nextSlice(items, 0, 2)).toEqual({ slice: [1, 2], nextCursor: 2, complete: false });
+  });
+
+  it('stops at the end rather than running past it', () => {
+    expect(nextSlice(items, 4, 3)).toEqual({ slice: [5], nextCursor: 5, complete: true });
+  });
+
+  it('reports completion exactly when the last item is taken', () => {
+    expect(nextSlice(items, 3, 2).complete).toBe(true);
+    expect(nextSlice(items, 2, 2).complete).toBe(false);
+  });
+
+  it('handles a budget larger than the whole list', () => {
+    expect(nextSlice(items, 0, 99)).toEqual({ slice: items, nextCursor: 5, complete: true });
+  });
+});
+
+describe('foldAttempts', () => {
+  it('groups attempts by prompt and keeps the strongest status', () => {
+    const attempts = [
+      { id: 'a', lang: 'pl', kind: 'category', target: '/', status: 'absent', citedUrls: [], citedDomains: [], sourceDomains: ['x.pl'] },
+      { id: 'a', lang: 'pl', kind: 'category', target: '/', status: 'cited', citedUrls: ['https://mi-code.pl/'], citedDomains: ['mi-code.pl'], sourceDomains: ['mi-code.pl'] },
+      { id: 'b', lang: 'en', kind: 'brand', target: '/', status: 'absent', citedUrls: [], citedDomains: [], sourceDomains: [] },
+    ];
+    const results = foldAttempts(attempts);
+    expect(results).toHaveLength(2);
+    expect(results[0]).toMatchObject({ id: 'a', lang: 'pl', kind: 'category', status: 'cited' });
+    expect(results[0].attempts).toHaveLength(2);
+    expect(results[1]).toMatchObject({ id: 'b', status: 'absent' });
+  });
+
+  it('preserves the order in which prompts were first seen', () => {
+    const attempts = [
+      { id: 'b', status: 'absent' }, { id: 'a', status: 'absent' }, { id: 'b', status: 'cited' },
+    ];
+    expect(foldAttempts(attempts).map((r) => r.id)).toEqual(['b', 'a']);
+  });
+
+  it('returns nothing for no attempts', () => {
+    expect(foldAttempts([])).toEqual([]);
   });
 });
