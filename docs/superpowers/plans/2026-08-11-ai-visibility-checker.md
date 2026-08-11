@@ -402,10 +402,18 @@ describe('extractCitations', () => {
     ]);
   });
 
-  it('handles both committed fixtures without throwing', () => {
-    for (const name of ['generate-content.json', 'interactions.json']) {
-      expect(Array.isArray(extractCitations(fixture(name)))).toBe(true);
-    }
+  it('pulls the real sources out of each committed fixture', () => {
+    // Asserting only that an array comes back would still pass if parsing
+    // silently regressed to [] for both shapes — which is the one failure this
+    // test exists to catch.
+    const live = extractCitations(fixture('generate-content.json'));
+    expect(live).toHaveLength(6);
+    expect(live.every((c) => c.url.includes('vertexaisearch.cloud.google.com'))).toBe(true);
+    expect(live.map((c) => c.title)).toContain('eksiegowyai.pl');
+
+    const annotated = extractCitations(fixture('interactions.json'));
+    expect(annotated).toHaveLength(2);
+    expect(annotated[0].url).toBe('https://mi-code.pl/');
   });
 
   it('de-duplicates a url cited more than once', () => {
@@ -423,7 +431,10 @@ describe('extractCitations', () => {
         },
       ],
     };
-    expect(extractCitations(response)).toHaveLength(1);
+    // First occurrence wins — pinned so the dedup rule cannot quietly invert.
+    expect(extractCitations(response)).toEqual([
+      { url: 'https://mi-code.pl/', title: 'a', domain: null },
+    ]);
   });
 
   it('returns an empty list for an ungrounded answer', () => {
@@ -1224,6 +1235,22 @@ describe('measure', () => {
     expect(waits).toEqual([30000]);
   });
 
+  it('waits only the short delay after a server error', async () => {
+    // Without this, "longer than a server error" is an untested claim: mutation
+    // testing showed the 429 branch alone still passes if both delays are made
+    // equal. The pair of assertions is what pins the asymmetry.
+    const waits = [];
+    const sleep = async (ms) => { waits.push(ms); };
+    let calls = 0;
+    const fetchImpl = async () => {
+      calls += 1;
+      if (calls === 1) return { ok: false, status: 500, text: async () => 'boom' };
+      return okResponse(answer('https://mi-code.pl/'));
+    };
+    await measure({ ...config, repeats: 1, delayMs: 0 }, { fetchImpl, sleep });
+    expect(waits).toEqual([5000]);
+  });
+
   it('does not retry a 400, which will fail identically the second time', async () => {
     let calls = 0;
     const fetchImpl = async () => {
@@ -1484,7 +1511,7 @@ Create `.github/workflows/ai-visibility.yml`:
 ```yaml
 name: AI visibility
 
-# Measures whether AI engines cite mi-code.pl, weekly. The site has been built
+# Measures whether AI engines cite mi-code.pl. The site has been built
 # to be citable — llms.txt, an AI-friendly robots.txt, a trilingual prerender —
 # and none of that came with a way to tell whether it works. This is that way.
 #
@@ -1492,10 +1519,14 @@ name: AI visibility
 # charge for web search. So this is a trend line for one engine, not a share of
 # all AI answers, and the monthly manual pass in docs/seo/ai-visibility/README.md
 # is what keeps it honest.
+#
+# It runs daily because the free tier allows 20 model calls a day and a full
+# sweep needs 54: each run measures the next slice and only the last one closes
+# the sweep, writes a run file and alerts.
 
 on:
   schedule:
-    - cron: '41 5 * * 1'      # Mondays, 05:41 UTC
+    - cron: '41 5 * * *'      # daily, 05:41 UTC
   workflow_dispatch:
 
 permissions:
@@ -1598,16 +1629,28 @@ Create `docs/seo/ai-visibility/README.md`:
 Does anything out there cite mi-code.pl when it answers a question? `REPORT.md`
 holds the current answer; `runs/` holds every weekly measurement.
 
-## Automatic — weekly, no hands
+## Automatic — daily, no hands
 
-`.github/workflows/ai-visibility.yml` runs `npm run ai-visibility` every Monday.
-It asks Gemini the prompts in `prompts.json` with Google Search grounding, reads
-the sources it cited back, and writes `runs/YYYY-MM-DD.json` plus a rebuilt
-`REPORT.md`. Telegram only hears about it when the set of cited prompts changes.
+`.github/workflows/ai-visibility.yml` runs `npm run ai-visibility` every morning.
+It asks Gemini the prompts in `prompts.json` with Google Search grounding and
+reads back the sources it cited.
 
-Grounding is free on Gemini 2.5 Flash up to 500 requests a day, shared with
-Flash-Lite. At 27 prompts × 2 repeats a week we use about a tenth of one day's
-free allowance.
+A full sweep is 27 prompts × 2 repeats = 54 calls, and the free tier allows **20
+model calls a day** — the API is explicit about it:
+
+```
+id = GenerateRequestsPerDayPerProjectPerModel-FreeTier, value = 20
+```
+
+(The "up to 500 RPD" in Google's pricing table is the *search tool*, not the
+model calls. That distinction cost us a design.)
+
+So a sweep runs across three days. Each run measures the next slice of the work
+list and saves its place in `partial.json`; only the run that takes the last
+slice folds the sweep into `runs/YYYY-MM-DD.json`, rebuilds `REPORT.md`, and
+compares against the previous sweep. Telegram hears about it only then, and only
+if the set of cited prompts changed — a half-measured sweep is never compared
+against a whole one.
 
 ## Manual — monthly, about ten minutes
 
@@ -1914,6 +1957,268 @@ Expected: PASS. The `scripts/ai-visibility/` files should total 60 tests — 30 
 ```bash
 git add docs/seo/ai-visibility/prompts.json scripts/ai-visibility
 git commit -m "Count every owned property as a citation, not just mi-code.pl (MI-70)"
+```
+
+---
+
+### Task 9: Spread a sweep across days to fit the real free-tier quota
+
+Discovered during execution, and it invalidates the plan's central assumption. The pricing page's "Free of charge, up to 500 RPD" describes the *search tool*; the binding limit is on model calls, and the API states it plainly:
+
+```
+QUOTA metric = generativelanguage.googleapis.com/generate_content_free_tier_requests
+id           = GenerateRequestsPerDayPerProjectPerModel-FreeTier
+value        = 20
+```
+
+Twenty calls per day, per model. A 54-call sweep cannot run in one day at any pace — the first live attempt died on this, and pacing calls further apart made no difference because the cap is daily, not per-minute.
+
+So a sweep becomes a multi-day affair: each day measures the next slice of the work list, and only when the last slice lands does a sweep close into a run file, diff against the previous one, and alert. Everything downstream — `diffRuns`, `renderReport`, `renderAlert`, the run-file format — is reused unchanged, because a completed sweep is exactly the run object those functions already take.
+
+**Files:**
+- Modify: `scripts/ai-visibility/run.mjs`, `scripts/ai-visibility/run.test.mjs`
+- Creates at runtime: `docs/seo/ai-visibility/partial.json`
+
+**Interfaces:**
+- Consumes: everything from Tasks 3–6 and 8.
+- Produces:
+  - `workList(prompts, repeats) -> Array<{ prompt, repeat }>` — the full sweep, in a stable order
+  - `nextSlice(items, cursor, budget) -> { slice, nextCursor, complete }`
+  - `foldAttempts(attempts) -> results` — groups a sweep's attempts by prompt id and applies `bestStatus`
+
+- [ ] **Step 1: Write the failing tests**
+
+Append to `scripts/ai-visibility/run.test.mjs` (add `workList`, `nextSlice` and `foldAttempts` to the existing import):
+
+```js
+describe('workList', () => {
+  it('expands every prompt once per repeat, in a stable order', () => {
+    const prompts = [{ id: 'a' }, { id: 'b' }];
+    expect(workList(prompts, 2).map((i) => `${i.prompt.id}#${i.repeat}`))
+      .toEqual(['a#0', 'a#1', 'b#0', 'b#1']);
+  });
+
+  it('is empty when there are no prompts', () => {
+    expect(workList([], 2)).toEqual([]);
+  });
+});
+
+describe('nextSlice', () => {
+  const items = [1, 2, 3, 4, 5];
+
+  it('takes the budget from the cursor and reports where to resume', () => {
+    expect(nextSlice(items, 0, 2)).toEqual({ slice: [1, 2], nextCursor: 2, complete: false });
+  });
+
+  it('stops at the end rather than running past it', () => {
+    expect(nextSlice(items, 4, 3)).toEqual({ slice: [5], nextCursor: 5, complete: true });
+  });
+
+  it('reports completion exactly when the last item is taken', () => {
+    expect(nextSlice(items, 3, 2).complete).toBe(true);
+    expect(nextSlice(items, 2, 2).complete).toBe(false);
+  });
+
+  it('handles a budget larger than the whole list', () => {
+    expect(nextSlice(items, 0, 99)).toEqual({ slice: items, nextCursor: 5, complete: true });
+  });
+});
+
+describe('foldAttempts', () => {
+  it('groups attempts by prompt and keeps the strongest status', () => {
+    const attempts = [
+      { id: 'a', lang: 'pl', kind: 'category', target: '/', status: 'absent', citedUrls: [], citedDomains: [], sourceDomains: ['x.pl'] },
+      { id: 'a', lang: 'pl', kind: 'category', target: '/', status: 'cited', citedUrls: ['https://mi-code.pl/'], citedDomains: ['mi-code.pl'], sourceDomains: ['mi-code.pl'] },
+      { id: 'b', lang: 'en', kind: 'brand', target: '/', status: 'absent', citedUrls: [], citedDomains: [], sourceDomains: [] },
+    ];
+    const results = foldAttempts(attempts);
+    expect(results).toHaveLength(2);
+    expect(results[0]).toMatchObject({ id: 'a', lang: 'pl', kind: 'category', status: 'cited' });
+    expect(results[0].attempts).toHaveLength(2);
+    expect(results[1]).toMatchObject({ id: 'b', status: 'absent' });
+  });
+
+  it('preserves the order in which prompts were first seen', () => {
+    const attempts = [
+      { id: 'b', status: 'absent' }, { id: 'a', status: 'absent' }, { id: 'b', status: 'cited' },
+    ];
+    expect(foldAttempts(attempts).map((r) => r.id)).toEqual(['b', 'a']);
+  });
+
+  it('returns nothing for no attempts', () => {
+    expect(foldAttempts([])).toEqual([]);
+  });
+});
+```
+
+- [ ] **Step 2: Run them to verify they fail**
+
+Run: `npx vitest run scripts/ai-visibility/run.test.mjs`
+Expected: FAIL — `workList is not a function`.
+
+- [ ] **Step 3: Implement the three pure functions**
+
+Add to `scripts/ai-visibility/run.mjs`:
+
+```js
+// Twenty model calls a day on the free tier means a 54-call sweep cannot run in
+// one sitting. It runs as a cursor over a stable work list instead: each day
+// takes the next slice, and the sweep closes when the last item lands.
+const DEFAULT_DAILY_BUDGET = 18;
+
+export function workList(prompts, repeats) {
+  const items = [];
+  for (const prompt of prompts) {
+    for (let repeat = 0; repeat < repeats; repeat += 1) items.push({ prompt, repeat });
+  }
+  return items;
+}
+
+export function nextSlice(items, cursor, budget) {
+  const nextCursor = Math.min(cursor + budget, items.length);
+  return { slice: items.slice(cursor, nextCursor), nextCursor, complete: nextCursor >= items.length };
+}
+
+export function foldAttempts(attempts) {
+  const byId = new Map();
+  for (const attempt of attempts) {
+    if (!byId.has(attempt.id)) {
+      byId.set(attempt.id, {
+        id: attempt.id,
+        lang: attempt.lang,
+        kind: attempt.kind,
+        target: attempt.target ?? null,
+        status: 'absent',
+        attempts: [],
+      });
+    }
+    const result = byId.get(attempt.id);
+    result.attempts.push({
+      status: attempt.status,
+      citedUrls: attempt.citedUrls ?? [],
+      citedDomains: attempt.citedDomains ?? [],
+      sourceDomains: attempt.sourceDomains ?? [],
+    });
+    result.status = bestStatus(result.attempts.map((a) => a.status));
+  }
+  return [...byId.values()];
+}
+```
+
+- [ ] **Step 4: Rework `measure` to take a slice, and `main` to accumulate**
+
+`measure` currently loops prompts × repeats itself. Change it to walk a prepared slice, so the day's budget is decided by the caller. Replace its two nested loops with a single loop over `slice`, keeping everything inside the body — the request, the retry, the host resolution, the classification — exactly as it is today. Its signature becomes:
+
+```js
+export async function measure(config, deps)
+// config: { slice, domain, ownedDomains, brandTerms, model, mode, apiKey, delayMs }
+// returns: { attempts, calls }
+```
+
+Each entry pushed to `attempts` is flat and carries its prompt's identity, because a sweep file has to survive across days without the prompt list beside it:
+
+```js
+      attempts.push({
+        id: item.prompt.id,
+        lang: item.prompt.lang,
+        kind: item.prompt.kind,
+        target: item.prompt.target ?? null,
+        status,
+        citedUrls: citations
+          .filter((_, index) => owned.includes(hosts[index]))
+          .map((citation) => citation.url),
+        citedDomains: [...new Set(owned)],
+        sourceDomains: [...new Set(hosts)],
+      });
+```
+
+`main()` becomes: read `partial.json` (or start a fresh sweep at cursor 0), take the day's slice, measure it, append the attempts, and then either close the sweep or save progress.
+
+```js
+  const partialPath = join(dataDir, 'partial.json');
+  const partial = existsSync(partialPath)
+    ? JSON.parse(readFileSync(partialPath, 'utf8'))
+    : { sweep: 1, cursor: 0, attempts: [], calls: 0, started: date };
+
+  const items = workList(config.prompts, repeats);
+  const { slice, nextCursor, complete } = nextSlice(items, partial.cursor, dailyBudget);
+
+  if (!slice.length) {
+    console.log('sweep already complete for today — nothing to do');
+    return;
+  }
+
+  const { attempts, calls } = await measure(
+    { ...config, slice, model, mode, delayMs, apiKey },
+    { fetchImpl: fetch, sleep: (ms) => new Promise((r) => setTimeout(r, ms)) },
+  );
+
+  const allAttempts = [...partial.attempts, ...attempts];
+  const totalCalls = partial.calls + calls;
+
+  if (!complete) {
+    writeFileSync(partialPath, `${JSON.stringify(
+      { ...partial, cursor: nextCursor, attempts: allAttempts, calls: totalCalls }, null, 2,
+    )}\n`);
+    console.log(`sweep ${partial.sweep}: ${nextCursor}/${items.length} measured (${calls} calls today)`);
+    return;
+  }
+
+  const results = foldAttempts(allAttempts);
+  const run = {
+    date, source: 'gemini', model, sweep: partial.sweep, started: partial.started,
+    calls: totalCalls, results, summary: summarize(results),
+  };
+
+  const runsDir = join(dataDir, 'runs');
+  const todayFile = `${date}.json`;
+  const previous = readPreviousRun(runsDir, todayFile);
+  const diff = diffRuns(previous, run);
+
+  mkdirSync(runsDir, { recursive: true });
+  writeFileSync(join(runsDir, todayFile), `${JSON.stringify(run, null, 2)}\n`);
+  writeFileSync(
+    join(dataDir, 'REPORT.md'),
+    renderReport({ run, previous, manual: readManualSnapshot(date.slice(0, 7)) }),
+  );
+  writeFileSync(partialPath, `${JSON.stringify(
+    { sweep: partial.sweep + 1, cursor: 0, attempts: [], calls: 0, started: date }, null, 2,
+  )}\n`);
+
+  publishOutputs(diff, renderAlert(diff, run));
+  console.log(`sweep ${partial.sweep} complete · ${totalCalls} calls · cited ${(run.summary.citedShare * 100).toFixed(1)}% · changed=${diff.changed}`);
+```
+
+`dailyBudget` reads `AI_VIS_DAILY_BUDGET` with `DEFAULT_DAILY_BUDGET` as the default. On a partial day nothing is published to the workflow outputs, so no alert can fire mid-sweep — a half-measured sweep must never be compared against a whole one.
+
+- [ ] **Step 5: Update the existing `measure` tests to the slice signature**
+
+The existing `measure` tests build `config` with a `prompts` array and `repeats`. They now build a `slice` instead. Replace the shared fixture at the top of the `measure` describe block:
+
+```js
+const slice = [
+  { prompt: { id: 'pl-a', lang: 'pl', kind: 'category', target: '/', text: 'pytanie?' }, repeat: 0 },
+  { prompt: { id: 'pl-a', lang: 'pl', kind: 'category', target: '/', text: 'pytanie?' }, repeat: 1 },
+];
+```
+
+and give `config` `slice` in place of `prompts` and `repeats`. Tests that exercised a single call use `slice.slice(0, 1)`. The assertions themselves — call counts, the header, the retry behaviour, the pacing, the abort — stay exactly as they are; only how the work is handed in changes. The test that asserted `results[0].status` becomes an assertion over `attempts`, since `measure` no longer folds:
+
+```js
+    const { attempts } = await measure({ ...config, slice }, { fetchImpl, sleep: noSleep });
+    expect(attempts.map((a) => a.status)).toEqual(['absent', 'cited']);
+```
+
+- [ ] **Step 6: Run the whole suite**
+
+Run: `npm run test:run`
+Expected: PASS, with `run.test.mjs` at 20 tests (11 existing, reworked in place, plus 9 new).
+
+- [ ] **Step 7: Commit**
+
+```bash
+git add scripts/ai-visibility docs/seo/ai-visibility
+git commit -m "Spread a sweep across days to fit the 20-call daily quota (MI-70)"
 ```
 
 ---
