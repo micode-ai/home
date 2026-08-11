@@ -31,6 +31,17 @@ const bucketRows = (buckets) =>
 
 const STATUS_ICON = { cited: '✅', mentioned: '➖', absent: '❌' };
 
+export function citedProperties(run) {
+  const counts = {};
+  for (const result of run.results ?? []) {
+    const properties = new Set(
+      (result.attempts ?? []).flatMap((attempt) => attempt.citedDomains ?? []),
+    );
+    for (const property of properties) counts[property] = (counts[property] ?? 0) + 1;
+  }
+  return counts;
+}
+
 export function renderReport({ run, previous, manual }) {
   const diff = diffRuns(previous, run);
   const lines = [];
@@ -66,6 +77,18 @@ export function renderReport({ run, previous, manual }) {
   lines.push('|---|---|---|---|');
   lines.push(bucketRows(run.summary.byKind));
   lines.push('');
+
+  const properties = citedProperties(run);
+  if (Object.keys(properties).length) {
+    lines.push('## Which property was cited');
+    lines.push('');
+    lines.push('| property | prompts |');
+    lines.push('|---|---|');
+    for (const [property, count] of Object.entries(properties).sort(([a], [b]) => a.localeCompare(b))) {
+      lines.push(`| ${property} | ${count} |`);
+    }
+    lines.push('');
+  }
 
   lines.push('## Prompts');
   lines.push('');

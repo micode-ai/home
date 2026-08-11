@@ -77,10 +77,19 @@ export async function resolveHost(citation, fetchImpl) {
 // Ranked so a repeat that found more evidence wins over one that found less.
 const RANK = { cited: 3, mentioned: 2, absent: 1 };
 
-export function classify({ text, hosts, domain, brandTerms }) {
-  const target = bareHost(domain);
-  const isOurs = (host) => host === target || host.endsWith(`.${target}`);
-  if (hosts.some(isOurs)) return 'cited';
+export function ownedHosts(hosts, ownedDomains) {
+  const targets = ownedDomains.map(bareHost);
+  return hosts.filter((host) => {
+    const candidate = bareHost(host);
+    // The leading dot is what separates our subdomain from someone else's
+    // lookalike: `noteksiegowyai.pl` must never count as ours.
+    return targets.some((target) => candidate === target || candidate.endsWith(`.${target}`));
+  });
+}
+
+export function classify({ text, hosts, domain, ownedDomains, brandTerms }) {
+  const owned = ownedDomains?.length ? ownedDomains : [domain];
+  if (ownedHosts(hosts, owned).length > 0) return 'cited';
 
   const haystack = String(text).toLowerCase();
   // A brand can be named without being linked — worth knowing, but it is not

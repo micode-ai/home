@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { diffRuns, renderReport, renderAlert } from './report.mjs';
+import { diffRuns, renderReport, renderAlert, citedProperties } from './report.mjs';
 
 const run = (date, statuses) => ({
   date,
@@ -91,6 +91,20 @@ describe('renderReport', () => {
     const md = renderReport({ run: next, previous: null, manual: null });
     expect(md).toContain('no manual snapshot');
   });
+
+  it('breaks the citations down by which property was cited', () => {
+    const withProperties = {
+      ...run('2026-08-11', { 'pl-a': 'cited' }),
+      results: [
+        {
+          id: 'pl-a', lang: 'pl', kind: 'category', status: 'cited', target: '/',
+          attempts: [{ citedDomains: ['eksiegowyai.pl'] }],
+        },
+      ],
+    };
+    const md = renderReport({ run: withProperties, previous: null, manual: null });
+    expect(md).toContain('eksiegowyai.pl');
+  });
 });
 
 describe('renderAlert', () => {
@@ -106,5 +120,31 @@ describe('renderAlert', () => {
     const diff = { gained: ['pl-a'], lost: [], changed: true, baseline: false };
     const text = renderAlert(diff, run('2026-08-11', {}));
     expect(text).not.toContain('Lost');
+  });
+});
+
+describe('citedProperties', () => {
+  const runWithAttempts = {
+    date: '2026-08-11',
+    results: [
+      { id: 'a', attempts: [{ citedDomains: ['mi-code.pl'] }, { citedDomains: ['mi-code.pl'] }] },
+      { id: 'b', attempts: [{ citedDomains: ['eksiegowyai.pl'] }, { citedDomains: [] }] },
+      { id: 'c', attempts: [{ citedDomains: [] }, { citedDomains: [] }] },
+    ],
+  };
+
+  it('counts each property once per prompt, however many repeats cited it', () => {
+    expect(citedProperties(runWithAttempts)).toEqual({
+      'mi-code.pl': 1,
+      'eksiegowyai.pl': 1,
+    });
+  });
+
+  it('returns nothing when no property was cited', () => {
+    expect(citedProperties({ results: [{ id: 'a', attempts: [{ citedDomains: [] }] }] })).toEqual({});
+  });
+
+  it('survives a run whose attempts predate the citedDomains field', () => {
+    expect(citedProperties({ results: [{ id: 'a', attempts: [{}] }] })).toEqual({});
   });
 });

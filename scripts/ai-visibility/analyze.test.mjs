@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { extractText, extractCitations, resolveHost, classify, bestStatus, summarize } from './analyze.mjs';
+import { extractText, extractCitations, resolveHost, classify, bestStatus, summarize, ownedHosts } from './analyze.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const fixture = (name) =>
@@ -229,6 +229,49 @@ describe('bestStatus', () => {
 
   it('treats no attempts as absent rather than crashing', () => {
     expect(bestStatus([])).toBe('absent');
+  });
+});
+
+const OWNED = ['mi-code.pl', 'eksiegowyai.pl', 'ai-budget.pl'];
+
+describe('ownedHosts', () => {
+  it('picks out the hosts that are ours and drops the rest', () => {
+    expect(ownedHosts(['wfirma.pl', 'eksiegowyai.pl', 'sap.com'], OWNED))
+      .toEqual(['eksiegowyai.pl']);
+  });
+
+  it('counts a subdomain of an owned property', () => {
+    expect(ownedHosts(['blog.ai-budget.pl'], OWNED)).toEqual(['blog.ai-budget.pl']);
+  });
+
+  it('does not fall for a lookalike of an owned property', () => {
+    expect(ownedHosts(['noteksiegowyai.pl'], OWNED)).toEqual([]);
+  });
+
+  it('returns nothing when no host is ours', () => {
+    expect(ownedHosts(['gowork.pl'], OWNED)).toEqual([]);
+  });
+});
+
+describe('classify across the portfolio', () => {
+  it('counts a product site as cited, not absent', () => {
+    // The real failure this fixes: a brand question answered with a citation of
+    // eksiegowyai.pl scored `absent` while the company had in fact been cited.
+    const status = classify({
+      text: 'MiCode buduje eKsiegowyAi.',
+      hosts: ['eksiegowyai.pl'],
+      domain: 'mi-code.pl',
+      ownedDomains: OWNED,
+      brandTerms: ['MiCode'],
+    });
+    expect(status).toBe('cited');
+  });
+
+  it('still falls back to the single domain when no list is given', () => {
+    const status = classify({
+      text: '', hosts: ['eksiegowyai.pl'], domain: 'mi-code.pl', brandTerms: ['MiCode'],
+    });
+    expect(status).toBe('absent');
   });
 });
 

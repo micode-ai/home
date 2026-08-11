@@ -51,4 +51,14 @@ describe('prompts.json', () => {
       expect(p.target.startsWith('/')).toBe(true);
     }
   });
+
+  it('measures every owned property, not only the landing page', () => {
+    expect(config.ownedDomains).toEqual(
+      expect.arrayContaining(['mi-code.pl', 'eksiegowyai.pl', 'emarketingai.pl', 'ai-budget.pl']),
+    );
+  });
+
+  it('keeps the primary domain inside the owned list', () => {
+    expect(config.ownedDomains).toContain(config.domain);
+  });
 });

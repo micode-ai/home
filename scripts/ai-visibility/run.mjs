@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { extractText, extractCitations, resolveHost, classify, bestStatus, summarize }
+import { extractText, extractCitations, resolveHost, classify, bestStatus, summarize, ownedHosts }
   from './analyze.mjs';
 import { diffRuns, renderReport, renderAlert } from './report.mjs';
 
@@ -62,7 +62,7 @@ async function callOnce({ url, body }, apiKey, { fetchImpl, sleep }) {
 }
 
 export async function measure(config, deps) {
-  const { prompts, domain, brandTerms, model, mode, repeats, apiKey, delayMs } = config;
+  const { prompts, domain, ownedDomains, brandTerms, model, mode, repeats, apiKey, delayMs } = config;
   const results = [];
   let calls = 0;
 
@@ -86,13 +86,15 @@ export async function measure(config, deps) {
       }
 
       const status = classify({
-        text: extractText(response), hosts, domain, brandTerms,
+        text: extractText(response), hosts, domain, ownedDomains, brandTerms,
       });
+      const owned = ownedHosts(hosts, ownedDomains?.length ? ownedDomains : [domain]);
       attempts.push({
         status,
         citedUrls: citations
-          .filter((_, index) => hosts[index] === domain || hosts[index].endsWith(`.${domain}`))
+          .filter((_, index) => owned.includes(hosts[index]))
           .map((citation) => citation.url),
+        citedDomains: [...new Set(owned)],
         sourceDomains: [...new Set(hosts)],
       });
     }
