@@ -34,6 +34,30 @@
       "note": "Recommended a rival package, @angularai/chatbot, with a full integration example. All citations went to npm. ngx-open-web-ui-chat was not mentioned, despite being a direct match for the question.",
       "citedDomains": [],
       "sourceDomains": ["npmjs.com"]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "pl-koszt-agenta",
+      "status": "absent",
+      "note": "Gave a full monthly cost breakdown — token maths, an infrastructure table, the point that a multi-step agent costs far more than a chatbot. That is the subject of our own ai-agent-cost-per-month-model article, which was not cited. One citation chip read 'OpenAI +1'; the second source was not identified before leaving the page.",
+      "citedDomains": [],
+      "sourceDomains": ["openai.com"]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "pl-geo-aeo",
+      "status": "absent",
+      "note": "Answered the GEO/AEO question at length and cited OpenAI's own help centre. Our geo-aeo-generative-answer-engine-optimization article was not cited, on a question that is literally its subject.",
+      "citedDomains": [],
+      "sourceDomains": ["help.openai.com"]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "pl-legalizacja-bot",
+      "status": "absent",
+      "note": "Second product declared nonexistent: it stated in bold that there is no single official, free bot that legalises a stay, then offered to act as one itself. Legalka KB (@legalka_pl_bot) is exactly that and is free. Every source was gov.pl.",
+      "citedDomains": [],
+      "sourceDomains": ["gov.pl"]
     }
   ]
 }
