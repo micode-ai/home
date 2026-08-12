@@ -211,4 +211,36 @@ describe('renderTelegramReport', () => {
     expect(text).toContain('Свип 3');
     expect(text).toContain('1 из 2');
   });
+
+  it('drops the lowest-priority advice first, keeping the most important', () => {
+    const advice = [
+      { rule: 'brand-canary', priority: 1, text: `первый ${'x'.repeat(1500)}` },
+      { rule: 'dead-language', priority: 4, text: `последний ${'y'.repeat(3000)}` },
+    ];
+    const text = renderTelegramReport(sweep(), null, advice);
+    expect(text).toContain('первый');
+    expect(text).not.toContain('последний');
+  });
+
+  it('drops the whole advice block rather than leaving a dangling heading', () => {
+    const advice = [{ rule: 'brand-canary', priority: 1, text: 'z'.repeat(5000) }];
+    const text = renderTelegramReport(sweep(), null, advice);
+    expect(text).not.toContain('Что делать');
+    expect(text).toContain('Свип 3');
+  });
+
+  it('names the rivals cited where we were not, and never an unresolved host', () => {
+    const withRivals = sweep({
+      results: [
+        {
+          id: 'pl-a', lang: 'pl', kind: 'category', status: 'absent', target: '/',
+          attempts: [{ status: 'absent', citedUrls: [], citedDomains: [], sourceDomains: ['cognity.pl', 'unknown'] }],
+        },
+      ],
+      summary: { byLang: {}, byKind: {}, citedShare: 0 },
+    });
+    const text = renderTelegramReport(withRivals, null, []);
+    expect(text).toContain('cognity.pl (1)');
+    expect(text).not.toContain('unknown');
+  });
 });

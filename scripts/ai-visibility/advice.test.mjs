@@ -74,6 +74,13 @@ describe('rule: page exists but is not cited', () => {
     ]), DOMAIN);
     expect(rules(advice).filter((r) => r === 'page-not-cited')).toHaveLength(2);
   });
+
+  it('never names an unresolved host as the one cited instead', () => {
+    const advice = buildAdvice(run([
+      result('pl-x', { target: '/x/', sourceDomains: ['unknown'] }),
+    ]), DOMAIN);
+    expect(advice.find((a) => a.rule === 'page-not-cited').text).not.toContain('unknown');
+  });
 });
 
 describe('rule: portfolio skew', () => {
@@ -100,6 +107,14 @@ describe('rule: portfolio skew', () => {
   it('treats a subdomain of the primary domain as primary', () => {
     const advice = buildAdvice(run([
       result('a', { status: 'cited', citedDomains: ['blog.mi-code.pl'] }),
+    ]), DOMAIN);
+    expect(rules(advice)).not.toContain('portfolio-skew');
+  });
+
+  it('stays silent when product sites and the primary domain tie', () => {
+    const advice = buildAdvice(run([
+      result('a', { status: 'cited', citedDomains: ['eksiegowyai.pl'] }),
+      result('b', { status: 'cited', citedDomains: [DOMAIN] }),
     ]), DOMAIN);
     expect(rules(advice)).not.toContain('portfolio-skew');
   });
