@@ -717,6 +717,153 @@ git commit -m "Send the AI-visibility report on every closed sweep (MI-70)"
 
 ---
 
+### Task 4: Name the question, not the slug
+
+Found by rendering the real message from the 18 attempts already measured. Three of its five bullets identify a prompt only by its id:
+
+```
+• pl-koszt-agenta: страница под запрос есть (/blog/ai-agent-cost-per-month-model/), но цитируют peppereffect.com
+• На грани, повторы расходятся: pl-ksiegowosc-wfirma — запрос почти берётся
+```
+
+`pl-koszt-agenta` means nothing to someone reading Telegram on a phone, and the whole point of this feature was that the report be understandable without opening the repository. The prompt text exists in `prompts.json`; it simply never reaches the advice.
+
+**Files:**
+- Modify: `scripts/ai-visibility/advice.mjs`, `scripts/ai-visibility/advice.test.mjs`
+- Modify: `scripts/ai-visibility/run.mjs`
+
+**Interfaces:**
+- Produces: `buildAdvice(run, domain, questions)` — `questions` is an optional `Record<id, string>` of prompt texts. Omitting it falls back to printing the id, which is what keeps every existing test valid.
+
+- [ ] **Step 1: Write the failing test**
+
+Append to `scripts/ai-visibility/advice.test.mjs`:
+
+```js
+const QUESTIONS = {
+  'pl-koszt': 'Ile kosztuje miesiecznie utrzymanie agenta AI opartego na LLM?',
+  'pl-brand': 'Czym zajmuje sie MiCode Sp. z o.o. z Gdanska?',
+};
+
+describe('question labels', () => {
+  it('prints the question instead of the slug when it is known', () => {
+    const advice = buildAdvice(
+      run([result('pl-koszt', { target: '/blog/koszt/', sourceDomains: ['cognity.pl'] })]),
+      DOMAIN, QUESTIONS,
+    );
+    const text = advice.find((a) => a.rule === 'page-not-cited').text;
+    expect(text).toContain('Ile kosztuje');
+    expect(text).not.toContain('pl-koszt:');
+  });
+
+  it('falls back to the id when the question is unknown', () => {
+    const advice = buildAdvice(
+      run([result('pl-mystery', { target: '/x/', sourceDomains: ['cognity.pl'] })]),
+      DOMAIN, QUESTIONS,
+    );
+    expect(advice.find((a) => a.rule === 'page-not-cited').text).toContain('pl-mystery');
+  });
+
+  it('labels the brand canary with its question too', () => {
+    const advice = buildAdvice(
+      run([result('pl-brand', { kind: 'brand' })]), DOMAIN, QUESTIONS,
+    );
+    expect(advice.find((a) => a.rule === 'brand-canary').text).toContain('Czym zajmuje');
+  });
+
+  it('shortens a long question rather than filling the message', () => {
+    const long = { 'pl-long': `${'a'.repeat(200)}?` };
+    const advice = buildAdvice(
+      run([result('pl-long', { target: '/x/', sourceDomains: ['cognity.pl'] })]),
+      DOMAIN, long,
+    );
+    const text = advice.find((a) => a.rule === 'page-not-cited').text;
+    expect(text).toContain('…');
+    expect(text.length).toBeLessThan(200);
+  });
+
+  it('lists at most two questions and counts the rest', () => {
+    const many = { a: 'Pierwsze pytanie?', b: 'Drugie pytanie?', c: 'Trzecie pytanie?' };
+    const advice = buildAdvice(run([
+      result('a', { kind: 'brand' }), result('b', { kind: 'brand' }), result('c', { kind: 'brand' }),
+    ]), DOMAIN, many);
+    const text = advice.find((a) => a.rule === 'brand-canary').text;
+    expect(text).toContain('Pierwsze');
+    expect(text).toContain('и ещё 1');
+    expect(text).not.toContain('Trzecie');
+  });
+
+  it('behaves exactly as before when no questions are given', () => {
+    const advice = buildAdvice(run([result('pl-koszt', { target: '/x/', sourceDomains: ['cognity.pl'] })]), DOMAIN);
+    expect(advice.find((a) => a.rule === 'page-not-cited').text).toContain('pl-koszt');
+  });
+});
+```
+
+- [ ] **Step 2: Run it to verify it fails**
+
+Run: `npx vitest run scripts/ai-visibility/advice.test.mjs`
+Expected: FAIL — the advice still prints ids, so the "Ile kosztuje" and "и ещё 1" assertions do not hold.
+
+- [ ] **Step 3: Write the implementation**
+
+In `scripts/ai-visibility/advice.mjs`, add near the other constants:
+
+```js
+const MAX_LABEL = 70;
+const MAX_LISTED = 2;
+
+// The report is read in Telegram, on a phone, by someone who has not opened the
+// repository. `pl-koszt-agenta` tells them nothing; the question does.
+const label = (id, questions) => {
+  const question = questions?.[id];
+  if (!question) return id;
+  return question.length > MAX_LABEL ? `«${question.slice(0, MAX_LABEL - 1)}…»` : `«${question}»`;
+};
+
+const labelList = (ids, questions) => {
+  const shown = ids.slice(0, MAX_LISTED).map((id) => label(id, questions)).join(', ');
+  const rest = ids.length - MAX_LISTED;
+  return rest > 0 ? `${shown} и ещё ${rest}` : shown;
+};
+```
+
+Thread `questions` through: `buildAdvice(run, domain, questions)` passes it to `brandCanary`, `pageNotCited` and `volatile`. In those three rules replace the bare id with `label(...)` / `labelList(...)`:
+
+- `brandCanary`: `Бренд не находит нас: ${labelList(missing.map((item) => item.id), questions)} — это индексация, а не маркетинг`
+- `pageNotCited`: `${label(item.id, questions)}: страница под запрос есть (${item.target}), но цитируют ${rivals.join(', ')}` and the same substitution in the no-rivals variant
+- `volatile`: `На грани, повторы расходятся: ${labelList(flapping.map((item) => item.id), questions)} — запрос почти берётся`
+
+`portfolioSkew`, `deadLanguage` and `persistentRival` name domains and languages rather than prompts and are unchanged.
+
+- [ ] **Step 4: Run the tests and make sure they pass**
+
+Run: `npx vitest run scripts/ai-visibility/advice.test.mjs`
+Expected: PASS, 26 tests (20 existing plus 6 new).
+
+- [ ] **Step 5: Pass the questions in from the runner**
+
+In `scripts/ai-visibility/run.mjs`, at the sweep-closure call site, build the map from the config that is already loaded and hand it over:
+
+```js
+  const questions = Object.fromEntries(config.prompts.map((prompt) => [prompt.id, prompt.text]));
+  const advice = buildAdvice(run, config.domain, questions);
+```
+
+- [ ] **Step 6: Render the real message again**
+
+Run the same preview command as Task 3 Step 6, against `docs/seo/ai-visibility/partial.json`. Every bullet that named a slug must now name a question. Paste the output into the report.
+
+- [ ] **Step 7: Run the whole suite and commit**
+
+```bash
+npm run test:run
+git add scripts/ai-visibility/advice.mjs scripts/ai-visibility/advice.test.mjs scripts/ai-visibility/run.mjs
+git commit -m "Name the question rather than its slug in the advice (MI-70)"
+```
+
+---
+
 ## Self-Review
 
 **Spec coverage:**
