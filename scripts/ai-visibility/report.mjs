@@ -226,3 +226,54 @@ export function renderTelegramReport(run, previous, advice) {
   }
   return text === opened ? header : text;
 }
+
+const ENGINE_NAMES = { chatgpt: 'ChatGPT', perplexity: 'Perplexity', gemini: 'Gemini', copilot: 'Copilot' };
+const engineName = (engine) => ENGINE_NAMES[engine] ?? engine;
+
+export function renderManualReport(month, perEngine) {
+  const lines = [];
+  lines.push('📊 AI-видимость mi-code.pl');
+  lines.push(`Ручной проход · ${month} · ${perEngine.map(({ engine }) => engineName(engine)).join(', ')}`);
+  lines.push('');
+
+  for (const { engine, run } of perEngine) {
+    const results = run.results ?? [];
+    const cited = results.filter((item) => item.status === 'cited').length;
+    lines.push(`${engineName(engine)}: ${cited} из ${results.length}`);
+  }
+
+  // Who takes our queries is one question, not one per engine — splitting this
+  // by engine would triple the line for a distinction that does not matter here.
+  const counts = {};
+  for (const { run } of perEngine) {
+    for (const [domain, count] of Object.entries(rivalCounts(run))) {
+      counts[domain] = (counts[domain] ?? 0) + count;
+    }
+  }
+  const rivals = Object.entries(counts)
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .slice(0, 3)
+    .map(([domain, count]) => `${domain} (${count})`);
+  if (rivals.length) {
+    lines.push('');
+    lines.push(`Цитируют вместо нас: ${rivals.join(' · ')}`);
+  }
+
+  // The same prompt yields different advice on different engines, so an untagged
+  // bullet would be unreadable — unless there is only one engine to confuse it with.
+  const tagged = perEngine.length > 1;
+  const bullets = perEngine.flatMap(({ engine, advice }) =>
+    (advice ?? []).map((item) => (tagged ? `${engineName(engine)} · ${item.text}` : item.text)));
+
+  const header = lines.join('\n');
+  if (!bullets.length) return header;
+
+  const opened = `${header}\n\nЧто делать:`;
+  let text = opened;
+  for (const bullet of bullets) {
+    const next = `${text}\n• ${bullet}`;
+    if (next.length > TELEGRAM_LIMIT) break;
+    text = next;
+  }
+  return text === opened ? header : text;
+}

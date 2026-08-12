@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { diffRuns, renderReport, renderTelegramReport, citedProperties, plural } from './report.mjs';
+import { diffRuns, renderReport, renderTelegramReport, citedProperties, plural, renderManualReport } from './report.mjs';
 
 const run = (date, statuses) => ({
   date,
@@ -310,6 +310,81 @@ describe('renderTelegramReport', () => {
     const text = renderTelegramReport(withRivals, null, []);
     expect(text).toContain('cognity.pl (1)');
     expect(text).not.toContain('unknown');
+  });
+});
+
+const engineRun = (statuses, sources = {}) => ({
+  date: '2026-08',
+  source: 'manual',
+  results: Object.entries(statuses).map(([id, status]) => ({
+    id, lang: 'pl', kind: 'category', status, target: '/',
+    attempts: [{ status, citedUrls: [], citedDomains: [], sourceDomains: sources[id] ?? [] }],
+  })),
+  summary: { byLang: {}, byKind: {}, citedShare: 0 },
+});
+
+describe('renderManualReport', () => {
+  it('names the month and the engines it covers', () => {
+    const text = renderManualReport('2026-08', [
+      { engine: 'chatgpt', run: engineRun({ a: 'absent' }), advice: [] },
+      { engine: 'perplexity', run: engineRun({ a: 'cited' }), advice: [] },
+    ]);
+    expect(text).toContain('2026-08');
+    expect(text).toContain('ChatGPT');
+    expect(text).toContain('Perplexity');
+  });
+
+  it('gives each engine its own count', () => {
+    const text = renderManualReport('2026-08', [
+      { engine: 'chatgpt', run: engineRun({ a: 'absent', b: 'absent', c: 'mentioned' }), advice: [] },
+      { engine: 'perplexity', run: engineRun({ a: 'cited' }), advice: [] },
+    ]);
+    expect(text).toContain('ChatGPT: 0 из 3');
+    expect(text).toContain('Perplexity: 1 из 1');
+  });
+
+  it('tags each advice line with its engine when more than one was measured', () => {
+    const text = renderManualReport('2026-08', [
+      { engine: 'chatgpt', run: engineRun({ a: 'absent' }), advice: [{ rule: 'x', priority: 1, text: 'первое' }] },
+      { engine: 'perplexity', run: engineRun({ a: 'cited' }), advice: [{ rule: 'y', priority: 1, text: 'второе' }] },
+    ]);
+    expect(text).toContain('• ChatGPT · первое');
+    expect(text).toContain('• Perplexity · второе');
+  });
+
+  it('leaves the tag off when only one engine was measured', () => {
+    const text = renderManualReport('2026-08', [
+      { engine: 'chatgpt', run: engineRun({ a: 'absent' }), advice: [{ rule: 'x', priority: 1, text: 'первое' }] },
+    ]);
+    expect(text).toContain('• первое');
+    expect(text).not.toContain('ChatGPT · первое');
+  });
+
+  it('counts rivals across every engine at once', () => {
+    const text = renderManualReport('2026-08', [
+      { engine: 'chatgpt', run: engineRun({ a: 'absent' }, { a: ['cognity.pl'] }), advice: [] },
+      { engine: 'perplexity', run: engineRun({ b: 'absent' }, { b: ['cognity.pl'] }), advice: [] },
+    ]);
+    expect(text).toContain('cognity.pl (2)');
+  });
+
+  it('omits the advice block entirely when no rule fired anywhere', () => {
+    const text = renderManualReport('2026-08', [
+      { engine: 'chatgpt', run: engineRun({ a: 'absent' }), advice: [] },
+    ]);
+    expect(text).not.toContain('Что делать');
+  });
+
+  it('stays within the Telegram limit and keeps the header when advice is long', () => {
+    const advice = Array.from({ length: 5 }, (_, index) => ({
+      rule: 'x', priority: 1, text: `${index} ${'y'.repeat(1500)}`,
+    }));
+    const text = renderManualReport('2026-08', [
+      { engine: 'chatgpt', run: engineRun({ a: 'absent' }), advice },
+    ]);
+    expect(text.length).toBeLessThanOrEqual(4096);
+    expect(text).toContain('ChatGPT: 0 из 1');
+    expect(text).toContain('0 yyy');
   });
 });
 
