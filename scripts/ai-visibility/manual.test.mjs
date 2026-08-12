@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { manualToRuns } from './manual.mjs';
+import { buildAdvice } from './advice.mjs';
 
 const config = {
   domain: 'mi-code.pl',
@@ -84,5 +85,26 @@ describe('manualToRuns', () => {
 
   it('returns nothing for a file with no entries rather than throwing', () => {
     expect(manualToRuns(manual([]), config)).toEqual({ runs: [], skipped: [] });
+  });
+});
+
+describe('the adapter output actually drives the rules', () => {
+  it('hands advice.mjs a shape its rules can read', () => {
+    // The contract with advice.mjs is field names. A one-letter drift would
+    // disable a rule silently, and every other test here would still pass.
+    const { runs } = manualToRuns(manual([
+      { engine: 'chatgpt', id: 'pl-a', status: 'absent', citedDomains: [], sourceDomains: ['cognity.pl'] },
+      { engine: 'chatgpt', id: 'en-b', status: 'mentioned', citedDomains: [], sourceDomains: [] },
+    ]), config);
+
+    const advice = buildAdvice(runs[0].run, config.domain, { 'pl-a': 'Pytanie A?' });
+    const rules = advice.map((item) => item.rule);
+
+    expect(rules).toContain('brand-mentioned-not-cited');
+    expect(rules).toContain('page-not-cited');
+
+    const page = advice.find((item) => item.rule === 'page-not-cited').text;
+    expect(page).toContain('cognity.pl');
+    expect(page).toContain('Pytanie A?');
   });
 });
