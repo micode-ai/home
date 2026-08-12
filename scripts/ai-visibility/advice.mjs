@@ -21,6 +21,7 @@ const AGGREGATORS = new Set([
 ]);
 
 const isAggregator = (host) => AGGREGATORS.has(host) || host.startsWith('google.');
+const isRival = (host) => host !== 'unknown' && !isAggregator(host);
 
 const bare = (value) => String(value).replace(/^www\./, '').toLowerCase();
 const citedOnes = (run) => (run.results ?? []).filter((item) => item.status === 'cited');
@@ -49,7 +50,7 @@ export function rivalCounts(run) {
     // Once per prompt, not once per mention: a page cited twice in one answer
     // is one competitor, not two.
     for (const domain of domainsOf(item, 'sourceDomains')) {
-      if (domain === 'unknown' || isAggregator(domain)) continue;
+      if (!isRival(domain)) continue;
       counts[domain] = (counts[domain] ?? 0) + 1;
     }
   }
@@ -88,7 +89,7 @@ function pageNotCited(run, questions) {
   for (const item of run.results ?? []) {
     if (out.length >= MAX_PAGES) break;
     if (item.kind !== 'category' || item.status === 'cited' || !item.target) continue;
-    const rivals = domainsOf(item, 'sourceDomains').filter((d) => d !== 'unknown').slice(0, 2);
+    const rivals = domainsOf(item, 'sourceDomains').filter(isRival).slice(0, 2);
     out.push({
       rule: 'page-not-cited',
       priority: 2,

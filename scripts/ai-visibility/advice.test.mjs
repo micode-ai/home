@@ -138,6 +138,15 @@ describe('rule: page exists but is not cited', () => {
     ]), DOMAIN);
     expect(advice.find((a) => a.rule === 'page-not-cited').text).not.toContain('unknown');
   });
+
+  it('never names a search aggregator as the one cited instead', () => {
+    const advice = buildAdvice(run([
+      result('pl-x', { target: '/x/', sourceDomains: ['google.com', 'cognity.pl'] }),
+    ]), DOMAIN);
+    const text = advice.find((a) => a.rule === 'page-not-cited').text;
+    expect(text).toContain('cognity.pl');
+    expect(text).not.toContain('google.com');
+  });
 });
 
 describe('rule: portfolio skew', () => {
