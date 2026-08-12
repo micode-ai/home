@@ -67,6 +67,11 @@ export default defineConfig({
         globals: true,
         environment: "jsdom",
         setupFiles: ["./src/setupTests.js"],
+        // Mounting a Svelte component with its translations loaded takes 2-8s in
+        // jsdom, which sits right on vitest's 5s default. Run alone the component
+        // suites pass; run together under load a random handful times out, which
+        // looked like a flaky test but was a budget set too tight.
+        testTimeout: 20000,
     },
     resolve: process.env.VITEST
         ? {
