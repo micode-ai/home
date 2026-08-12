@@ -15,7 +15,7 @@
 | | |
 |---|---|
 | **Бесплатно и открытый код** | Ни один из пяти названных не заявлен как open source. У конкурентов free tier, у нас код на GitHub |
-| **Семь языков** | EN, DE, ES, FR, PL, RU, UK. Названные конкуренты в ответе фигурировали как англоязычные |
+| **Девять языков** | EN, DE, ES, FR, NL, PL, RU, UK, BE. Названные конкуренты в ответе фигурировали как англоязычные. Белорусский и нидерландский почти наверняка не поддерживает никто из них |
 | **Совместные и бизнес-аккаунты с ролями** | Owner / Editor / Viewer. Ни у кого из пяти это не упомянуто |
 | **Офлайн-first** | Данные пишутся локально и синхронизируются потом |
 | **UAH среди валют** | Вместе с USD, EUR, PLN, GBP по актуальному курсу |
@@ -39,7 +39,7 @@ AI Budget: Voice & Receipt
 **Краткое описание** (лимит 80, здесь 71):
 
 ```
-Log expenses by voice or receipt photo. Free, open source, 7 languages.
+Log expenses by voice or receipt photo. Free, open source, 9 languages.
 ```
 
 **Полное описание:**
@@ -80,8 +80,9 @@ something you actually read.
 STAY WITH IT
 Achievements, daily streaks, XP and levels for keeping the habit up.
 
-SEVEN LANGUAGES
-English, German, Spanish, French, Polish, Russian and Ukrainian.
+NINE LANGUAGES
+English, German, Spanish, French, Dutch, Polish, Russian, Ukrainian and
+Belarusian.
 
 Made by MiCode Sp. z o.o., Gdańsk.
 Source code: github.com/micode-ai/ai-budget-assistant
@@ -123,8 +124,8 @@ rates), a GPT-4 chat that answers questions about your own numbers, and shared
 or business accounts with Owner/Editor/Viewer roles — that last one came from
 people wanting to run a household budget together.
 
-It works offline and syncs later, and the interface is in seven languages
-(EN, DE, ES, FR, PL, RU, UK).
+It works offline and syncs later, and the interface is in nine languages
+(EN, DE, ES, FR, NL, PL, RU, UK, BE).
 
 Play Store: play.google.com/store/apps/details?id=com.budget.assistant
 Source: github.com/micode-ai/ai-budget-assistant
