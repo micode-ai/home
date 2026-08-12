@@ -58,6 +58,14 @@
       "note": "Second product declared nonexistent: it stated in bold that there is no single official, free bot that legalises a stay, then offered to act as one itself. Legalka KB (@legalka_pl_bot) is exactly that and is free. Every source was gov.pl.",
       "citedDomains": [],
       "sourceDomains": ["gov.pl"]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "en-budget-voice",
+      "status": "absent",
+      "note": "Different failure from the others, and the most instructive one. ChatGPT answered 'Yes' and named five rival apps as best matches — ExpenseEasy, Mocy, Yavo, Breadsheet, MoneyMinder — plus Monarch Money, then offered to narrow by platform. The Sources panel showed 39 sources: each rival's own site, an App Store listing, apple.com, and two Reddit product-announcement posts ('Introducing: Receipt Scanning', Dec 2025). So for app questions a product's own site IS citable — the engine simply does not know AI Budget Assistant exists. Note App Store and apple.com among the sources: the product ships on Google Play only. CAVEAT ON THE DOMAINS BELOW: the vendor sources were displayed as product labels ('ExpenseEasy', 'Mocy', 'Yavo', 'Breadsheet', 'MoneyMinder', 'App Store'), not as URLs, and their exact domains were not read off the screen. Only apple.com and reddit.com were shown literally, so only those are recorded.",
+      "citedDomains": [],
+      "sourceDomains": ["apple.com", "reddit.com"]
     }
   ]
 }

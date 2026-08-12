@@ -67,6 +67,15 @@
     { "id": "pl-brand-eksiegowy", "lang": "pl", "kind": "brand", "arena": "ours", "target": "/products/accounting-ai/",
       "text": "Co to jest eKsiegowyAi i kto go zbudowal?" },
     { "id": "en-brand-ngx", "lang": "en", "kind": "brand", "arena": "ours", "target": "/products/ngx-chat/",
-      "text": "What is the npm package ngx-open-web-ui-chat?" }
+      "text": "What is the npm package ngx-open-web-ui-chat?" },
+    { "id": "en-brand-budget", "lang": "en", "kind": "brand", "arena": "ours", "target": "/products/budget-assistant/",
+      "text": "What is the AI Budget Assistant app and who makes it?" },
+
+    { "id": "pl-budzet-paragony", "lang": "pl", "kind": "category", "arena": "ours", "target": "/products/budget-assistant/",
+      "text": "Czy jest aplikacja do budzetu domowego, ktora skanuje paragony i zapisuje wydatki glosem?" },
+    { "id": "en-budget-voice", "lang": "en", "kind": "category", "arena": "ours", "target": "/products/budget-assistant/",
+      "text": "Is there a budgeting app that logs expenses by voice or by photographing a receipt?" },
+    { "id": "ru-byudzhet-cheki", "lang": "ru", "kind": "category", "arena": "ours", "target": "/products/budget-assistant/",
+      "text": "Есть ли приложение для учёта расходов, которое распознаёт чеки и принимает голосовой ввод?" }
   ]
 }
