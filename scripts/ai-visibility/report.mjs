@@ -1,6 +1,8 @@
 // Rendering and diffing. Like analyze.mjs: pure, no clock, no filesystem —
 // the run's own `date` field is the only notion of time.
 
+import { rivalCounts } from './advice.mjs';
+
 const citedIds = (run) =>
   new Set((run?.results ?? []).filter((r) => r.status === 'cited').map((r) => r.id));
 
@@ -143,9 +145,66 @@ export function renderReport({ run, previous, manual }) {
   return lines.join('\n');
 }
 
-export function renderAlert(diff, run) {
-  const parts = [`AI visibility — mi-code.pl (${run.date})`, ''];
-  if (diff.gained.length) parts.push(`Newly cited: ${diff.gained.join(', ')}`);
-  if (diff.lost.length) parts.push(`Lost: ${diff.lost.join(', ')}`);
-  return parts.join('\n');
+const TELEGRAM_LIMIT = 4096;
+
+const bucketTotal = (bucket) => bucket.cited + bucket.mentioned + bucket.absent;
+
+export function renderTelegramReport(run, previous, advice) {
+  const results = run.results ?? [];
+  const cited = results.filter((item) => item.status === 'cited').length;
+  const lines = [];
+
+  lines.push('📊 AI-видимость mi-code.pl');
+  lines.push(`Свип ${run.sweep ?? '?'} · ${run.date} · ${run.calls} вызовов`);
+  lines.push('');
+
+  const head = `Процитированы: ${cited} из ${results.length} (${percent(run.summary.citedShare)})`;
+  if (previous) {
+    const before = (previous.results ?? []).filter((item) => item.status === 'cited').length;
+    lines.push(`${head} — было ${before} из ${(previous.results ?? []).length} (${percent(previous.summary.citedShare)})`);
+  } else {
+    lines.push(head);
+  }
+
+  const langs = Object.entries(run.summary.byLang ?? {})
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([lang, bucket]) => `${lang} ${bucket.cited}/${bucketTotal(bucket)}`);
+  if (langs.length) lines.push(`По языкам: ${langs.join(' · ')}`);
+
+  const kinds = run.summary.byKind ?? {};
+  const kindParts = [];
+  if (kinds.brand) kindParts.push(`Бренд ${kinds.brand.cited}/${bucketTotal(kinds.brand)}`);
+  if (kinds.category) kindParts.push(`Категория ${kinds.category.cited}/${bucketTotal(kinds.category)}`);
+  if (kindParts.length) lines.push(kindParts.join(' · '));
+
+  const diff = diffRuns(previous, run);
+  if (!diff.baseline) {
+    lines.push('');
+    lines.push(`Появились: ${diff.gained.length ? diff.gained.join(', ') : '—'}`);
+    lines.push(`Пропали: ${diff.lost.length ? diff.lost.join(', ') : '—'}`);
+  }
+
+  const rivals = Object.entries(rivalCounts(run))
+    .filter(([domain]) => domain !== 'unknown')
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .slice(0, 3)
+    .map(([domain, count]) => `${domain} (${count})`);
+  if (rivals.length) {
+    lines.push('');
+    lines.push(`Цитируют вместо нас: ${rivals.join(' · ')}`);
+  }
+
+  // The header is never sacrificed: advice lines are appended one at a time and
+  // the first one that would breach the limit ends the list.
+  const header = lines.join('\n');
+  if (!advice.length) return header;
+
+  const opened = `${header}\n\nЧто делать:`;
+  let text = opened;
+  for (const item of advice) {
+    const next = `${text}\n• ${item.text}`;
+    if (next.length > TELEGRAM_LIMIT) break;
+    text = next;
+  }
+  return text === opened ? header : text;
 }

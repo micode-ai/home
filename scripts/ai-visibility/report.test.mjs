@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { diffRuns, renderReport, renderAlert, citedProperties } from './report.mjs';
+import { diffRuns, renderReport, renderTelegramReport, citedProperties } from './report.mjs';
 
 const run = (date, statuses) => ({
   date,
@@ -107,22 +107,6 @@ describe('renderReport', () => {
   });
 });
 
-describe('renderAlert', () => {
-  it('names what appeared and what disappeared', () => {
-    const diff = { gained: ['pl-a'], lost: ['en-b'], changed: true, baseline: false };
-    const text = renderAlert(diff, run('2026-08-11', {}));
-    expect(text).toContain('pl-a');
-    expect(text).toContain('en-b');
-    expect(text).toContain('2026-08-11');
-  });
-
-  it('omits an empty side rather than printing an empty list', () => {
-    const diff = { gained: ['pl-a'], lost: [], changed: true, baseline: false };
-    const text = renderAlert(diff, run('2026-08-11', {}));
-    expect(text).not.toContain('Lost');
-  });
-});
-
 describe('citedProperties', () => {
   const runWithAttempts = {
     date: '2026-08-11',
@@ -146,5 +130,85 @@ describe('citedProperties', () => {
 
   it('survives a run whose attempts predate the citedDomains field', () => {
     expect(citedProperties({ results: [{ id: 'a', attempts: [{}] }] })).toEqual({});
+  });
+});
+
+const sweep = (over = {}) => ({
+  date: '2026-08-14',
+  sweep: over.sweep ?? 3,
+  calls: over.calls ?? 54,
+  results: over.results ?? [
+    { id: 'pl-a', lang: 'pl', kind: 'category', status: 'cited', target: '/', attempts: [] },
+    { id: 'en-b', lang: 'en', kind: 'brand', status: 'absent', target: '/', attempts: [] },
+  ],
+  summary: over.summary ?? {
+    byLang: { pl: { cited: 1, mentioned: 0, absent: 0 }, en: { cited: 0, mentioned: 0, absent: 1 } },
+    byKind: { category: { cited: 1, mentioned: 0, absent: 0 }, brand: { cited: 0, mentioned: 0, absent: 1 } },
+    citedShare: 0.5,
+  },
+});
+
+describe('renderTelegramReport', () => {
+  it('leads with the sweep, the date and the call count', () => {
+    const text = renderTelegramReport(sweep(), null, []);
+    expect(text).toContain('Свип 3');
+    expect(text).toContain('2026-08-14');
+    expect(text).toContain('54');
+  });
+
+  it('reports the cited count and share', () => {
+    const text = renderTelegramReport(sweep(), null, []);
+    expect(text).toContain('1 из 2');
+    expect(text).toContain('50.0%');
+  });
+
+  it('breaks the numbers down by language and by kind', () => {
+    const text = renderTelegramReport(sweep(), null, []);
+    expect(text).toContain('pl 1/1');
+    expect(text).toContain('en 0/1');
+    expect(text).toContain('Бренд 0/1');
+    expect(text).toContain('Категория 1/1');
+  });
+
+  it('omits the comparison and the movement block on a first sweep', () => {
+    const text = renderTelegramReport(sweep(), null, []);
+    expect(text).not.toContain('было');
+    expect(text).not.toContain('Появились');
+  });
+
+  it('shows what moved once there is a previous sweep', () => {
+    const previous = sweep({
+      results: [
+        { id: 'pl-a', lang: 'pl', kind: 'category', status: 'absent', target: '/', attempts: [] },
+        { id: 'en-b', lang: 'en', kind: 'brand', status: 'absent', target: '/', attempts: [] },
+      ],
+      summary: { byLang: {}, byKind: {}, citedShare: 0 },
+    });
+    const text = renderTelegramReport(sweep(), previous, []);
+    expect(text).toContain('было 0 из 2');
+    expect(text).toContain('Появились: pl-a');
+    expect(text).toContain('Пропали: —');
+  });
+
+  it('prints the advice under a heading', () => {
+    const text = renderTelegramReport(sweep(), null, [
+      { rule: 'dead-language', priority: 4, text: 'ru: 0 из 4' },
+    ]);
+    expect(text).toContain('Что делать:');
+    expect(text).toContain('• ru: 0 из 4');
+  });
+
+  it('omits the advice block entirely when no rule fired', () => {
+    expect(renderTelegramReport(sweep(), null, [])).not.toContain('Что делать');
+  });
+
+  it('stays within the Telegram limit and keeps the header when advice is long', () => {
+    const advice = Array.from({ length: 5 }, (_, index) => ({
+      rule: 'page-not-cited', priority: 2, text: `${index} ${'x'.repeat(1500)}`,
+    }));
+    const text = renderTelegramReport(sweep(), null, advice);
+    expect(text.length).toBeLessThanOrEqual(4096);
+    expect(text).toContain('Свип 3');
+    expect(text).toContain('1 из 2');
   });
 });
