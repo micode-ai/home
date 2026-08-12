@@ -59,6 +59,7 @@ export default defineConfig({
                 geoAeoArticle: resolve(__dirname, "blog/geo-aeo-generative-answer-engine-optimization/index.html"),
                 agentCostArticle: resolve(__dirname, "blog/ai-agent-cost-per-month-model/index.html"),
                 aiActArticle: resolve(__dirname, "blog/ai-act-sierpien-2026-co-obowiazuje/index.html"),
+                wfirmaAssistantArticle: resolve(__dirname, "blog/asystent-ai-wfirma-vat-pit/index.html"),
             },
         },
     },
