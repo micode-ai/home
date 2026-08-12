@@ -25,28 +25,55 @@ wFirma i odpowiada na pytania o VAT i PIT?» ChatGPT процитировал р
 что такого ассистента не существует. Мы не проиграли ранжирование. Нас нет в
 источнике, который движок для этого вопроса и читает.
 
-**Что сделать.** Подать eKsiegowyAi в каталог интеграций / партнёров wFirma.
-Ищется в их разделе для партнёров и разработчиков API.
+**Куда именно** (проверено 2026-08-12):
 
-**Текст заявки (PL):**
+| | |
+|---|---|
+| Программа | **Partnerzy technologiczni** — `https://wfirma.pl/partnerzy-technologiczni` |
+| Подача | форма на той же странице: имя, email, телефон, сообщение |
+| Ключ к API | отдельно, `https://wfirma.pl/kontakt/1#appKey` |
 
-> **eKsiegowyAi — asystent AI podłączony do konta wFirma**
+Это верная из пяти их программ. `Partnerzy wdrożeniowi` — про внедренцев,
+`program afiliacyjny` — про проценты с рекомендаций; ни та, ни другая не про нас.
+
+**Чего на самом деле просить.** Публичного каталога партнёров на странице
+программы нет — это важно, потому что от него зависел весь смысл затеи. Но
+механизм существует в другом месте: на тематических страницах интеграций чужие
+продукты перечислены поимённо — `Autopay`, `Przelewy24`, `SMSAPI`, `dlugi.info`,
+`IAI Printer`. Вот эту страницу и читает ChatGPT.
+
+Значит цель не «вступить в программу», а **попасть в этот перечень рядом с
+SMSAPI**, и просить об этом надо прямо.
+
+**Риск, который стоит знать заранее.** Программа перечисляет свои сектора:
+e-commerce и маркетплейсы, платежи и финансовые системы, документооборот,
+коммуникации. AI-ассистента для бухгалтерии среди них нет. Это питч, а не
+формальность, и отказ вполне возможен.
+
+**Текст для формы (PL):**
+
+> Dzień dobry,
 >
-> Asystent AI, który łączy się z kontem wFirma przez API i odpowiada na pytania
-> o VAT, PIT i CIT na podstawie rzeczywistych danych firmy — faktur, rejestrów
-> VAT i terminów ZUS. Zamiast ogólnej wiedzy podatkowej podaje odpowiedź opartą
-> na tym, co faktycznie jest w księgach.
+> eKsiegowyAi to asystent AI, który przez API wFirma odczytuje dane firmy —
+> faktury, rejestry VAT, dane kontrahentów — i odpowiada na pytania o VAT, PIT,
+> CIT i terminy ZUS w oparciu o realne księgi użytkownika, a nie o ogólną wiedzę
+> podatkową. Nie składa deklaracji i nie zastępuje księgowego ani doradcy.
 >
-> Nie składa deklaracji i nie zastępuje doradcy podatkowego. Odczytuje dane,
-> odpowiada na pytania i wskazuje niespójności — na przykład niekompletny adres
-> firmy na fakturze.
+> Integracja z wFirma już działa. Produkt ma otwarty kod na GitHubie i wersję
+> hostowaną pod eKsiegowyAi.pl. Twórca: MiCode Sp. z o.o. z Gdańska.
 >
-> Integracja: wFirma API. Producent: MiCode Sp. z o.o., Gdańsk.
-> Strona: https://eksiegowyai.pl · https://mi-code.pl/products/accounting-ai/
+> Chcielibyśmy porozmawiać o partnerstwie technologicznym — a konkretnie o tym,
+> czy eKsiegowyAi mógłby znaleźć się na Państwa stronie z integracjami, podobnie
+> jak SMSAPI czy Autopay.
+>
+> Kontakt: development@mi-code.pl
+
+Последний абзац несёт всю нагрузку: он называет конкретную просьбу вместо
+расплывчатого «хотим сотрудничать».
 
 **Как проверить, что сработало.** Через месяц задать ChatGPT тот же вопрос. Если
-в ответе появится ссылка — сработало. Это самая быстрая обратная связь из всех
-трёх пунктов.
+в ответе появится ссылка — сработало. Это самая быстрая обратная связь из трёх
+пунктов, потому что источник для этого вопроса ровно один.
 
 ---
 
