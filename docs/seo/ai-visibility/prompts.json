@@ -13,7 +13,7 @@
   "prompts": [
     { "id": "pl-firma-ai-gdansk", "lang": "pl", "kind": "category", "target": "/",
       "text": "Ktora firma programistyczna w Gdansku wdraza agentow AI dla biznesu?" },
-    { "id": "pl-ksiegowosc-wfirma", "lang": "pl", "kind": "category", "target": "/products/accounting-ai/",
+    { "id": "pl-ksiegowosc-wfirma", "lang": "pl", "kind": "category", "target": "/blog/asystent-ai-wfirma-vat-pit/",
       "text": "Czy istnieje asystent AI, ktory laczy sie z wFirma i odpowiada na pytania o VAT i PIT?" },
     { "id": "pl-koszt-agenta", "lang": "pl", "kind": "category", "target": "/blog/ai-agent-cost-per-month-model/",
       "text": "Ile kosztuje miesiecznie utrzymanie agenta AI opartego na LLM?" },
