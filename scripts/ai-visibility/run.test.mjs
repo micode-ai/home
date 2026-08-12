@@ -352,27 +352,35 @@ describe('main', () => {
     return path;
   };
 
-  it('publishes no alert body when the citation set did not move', async () => {
-    // renderAlert always returns a header line, so an unconditional alert output
-    // made the workflow's "did anything go wrong" test unfalsifiable: a failed
-    // push reported a normal result to the ops channel.
+  it('publishes an alert body on every closed sweep, not only when the cited set moved', async () => {
+    // The previous behaviour only spoke up on a change, which at the observed
+    // hit rate meant months of silence.
     const path = useGithubOutput();
     await main({ dir, deps });
-    expect(readFileSync(path, 'utf8')).toBe('changed=false\n');
+    const written = readFileSync(path, 'utf8');
+    expect(written).toContain('changed=false');
+    expect(written).toContain('alert<<ALERT_EOF');
+    expect(written).toContain('AI-видимость');
   });
 
   it('publishes the alert body when the citation set moved', async () => {
     mkdirSync(join(dir, 'runs'), { recursive: true });
     writeFileSync(
       join(dir, 'runs', '2026-08-10.json'),
-      JSON.stringify({ date: '2026-08-10', results: [{ id: 'p1', status: 'cited' }] }),
+      // A real run file always carries a summary alongside results — renderTelegramReport
+      // reads previous.summary.citedShare, so the fixture has to match that shape.
+      JSON.stringify({
+        date: '2026-08-10',
+        results: [{ id: 'p1', status: 'cited' }],
+        summary: { citedShare: 1, byLang: {}, byKind: {} },
+      }),
     );
     const path = useGithubOutput();
     await main({ dir, deps });
     const output = readFileSync(path, 'utf8');
     expect(output).toContain('changed=true');
     expect(output).toContain('alert<<ALERT_EOF');
-    expect(output).toContain('Lost: p1');
+    expect(output).toContain('Пропали: p1');
   });
 
   it('closes the sweep when the cursor has run past the end of the work list', async () => {

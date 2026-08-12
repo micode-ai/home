@@ -4,7 +4,8 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { extractText, extractCitations, resolveHost, classify, bestStatus, summarize, ownedHosts }
   from './analyze.mjs';
-import { diffRuns, renderReport, renderAlert } from './report.mjs';
+import { diffRuns, renderReport, renderTelegramReport } from './report.mjs';
+import { buildAdvice } from './advice.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '../..');
 const dataDir = join(root, 'docs/seo/ai-visibility');
@@ -182,11 +183,12 @@ function readManualSnapshot(dir, month) {
 
 function publishOutputs(diff, alertText) {
   if (!process.env.GITHUB_OUTPUT) return;
-  const lines = [`changed=${diff.changed}`];
-  // An alert body is written only when the citation set actually moved. The
-  // workflow decides failure-vs-result from the job status, not from whether
-  // this string happens to be empty.
-  if (diff.changed) lines.push(`alert<<ALERT_EOF\n${alertText}\nALERT_EOF`);
+  // Written on every closed sweep. The workflow tells a failure from a result
+  // by the job status, never by whether this string is empty.
+  const lines = [
+    `changed=${diff.changed}`,
+    `alert<<ALERT_EOF\n${alertText}\nALERT_EOF`,
+  ];
   writeFileSync(process.env.GITHUB_OUTPUT, `${lines.join('\n')}\n`, { flag: 'a' });
 }
 
@@ -282,7 +284,8 @@ export async function main({ dir = dataDir, deps } = {}) {
     null, 2,
   )}\n`);
 
-  publishOutputs(diff, renderAlert(diff, run));
+  const advice = buildAdvice(run, config.domain);
+  publishOutputs(diff, renderTelegramReport(run, previous, advice));
   console.log(`sweep ${partial.sweep} complete · ${totalCalls} calls · cited ${(run.summary.citedShare * 100).toFixed(1)}% · changed=${diff.changed}`);
 }
 

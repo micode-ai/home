@@ -62,7 +62,7 @@ jobs:
           git push
 
       - name: Tell the ops channel
-        if: ${{ failure() || steps.measure.outputs.changed == 'true' }}
+        if: ${{ failure() || steps.measure.outputs.alert != '' }}
         env:
           TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           CHAT: ${{ secrets.TELEGRAM_OPS_CHAT_ID }}
