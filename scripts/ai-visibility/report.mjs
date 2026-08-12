@@ -33,6 +33,19 @@ const bucketRows = (buckets) =>
 
 const STATUS_ICON = { cited: '✅', mentioned: '➖', absent: '❌' };
 
+const ARENA_LABELS = { ours: 'Наши темы', open: 'Общие' };
+
+// Only the buckets a summary actually produced get a part — an empty byArena
+// (an older run file, or a manual pass with no arena-tagged prompts at all)
+// must render nothing rather than a line of zeroes.
+function arenaLine(byArena) {
+  const buckets = byArena ?? {};
+  const parts = Object.keys(ARENA_LABELS)
+    .filter((key) => buckets[key])
+    .map((key) => `${ARENA_LABELS[key]}: ${buckets[key].cited}/${bucketTotal(buckets[key])}`);
+  return parts.length ? parts.join(' · ') : null;
+}
+
 export function citedProperties(run) {
   const counts = {};
   for (const result of run.results ?? []) {
@@ -189,6 +202,9 @@ export function renderTelegramReport(run, previous, advice) {
     .map(([lang, bucket]) => `${lang} ${bucket.cited}/${bucketTotal(bucket)}`);
   if (langs.length) lines.push(`По языкам: ${langs.join(' · ')}`);
 
+  const arena = arenaLine(run.summary.byArena);
+  if (arena) lines.push(arena);
+
   const kinds = run.summary.byKind ?? {};
   const kindParts = [];
   if (kinds.brand) kindParts.push(`Бренд ${kinds.brand.cited}/${bucketTotal(kinds.brand)}`);
@@ -240,6 +256,8 @@ export function renderManualReport(month, perEngine) {
     const results = run.results ?? [];
     const cited = results.filter((item) => item.status === 'cited').length;
     lines.push(`${engineName(engine)}: ${cited} из ${results.length}`);
+    const arena = arenaLine(run.summary?.byArena);
+    if (arena) lines.push(arena);
   }
 
   // Who takes our queries is one question, not one per engine — splitting this

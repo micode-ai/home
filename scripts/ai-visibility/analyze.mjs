@@ -109,12 +109,17 @@ export function summarize(results) {
   const emptyBucket = () => ({ cited: 0, mentioned: 0, absent: 0 });
   const byLang = {};
   const byKind = {};
+  const byArena = {};
 
   for (const result of results) {
     (byLang[result.lang] ??= emptyBucket())[result.status] += 1;
     (byKind[result.kind] ??= emptyBucket())[result.status] += 1;
+    // An unclassified prompt is not one we can claim as ours, so it must land
+    // among the open topics rather than crash or spawn its own bucket.
+    const arena = result.arena ?? 'open';
+    (byArena[arena] ??= emptyBucket())[result.status] += 1;
   }
 
   const cited = results.filter((result) => result.status === 'cited').length;
-  return { byLang, byKind, citedShare: results.length ? cited / results.length : 0 };
+  return { byLang, byKind, byArena, citedShare: results.length ? cited / results.length : 0 };
 }

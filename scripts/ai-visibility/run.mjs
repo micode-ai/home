@@ -60,6 +60,7 @@ export function foldAttempts(attempts) {
         lang: attempt.lang,
         kind: attempt.kind,
         target: attempt.target ?? null,
+        arena: attempt.arena ?? null,
         status: 'absent',
         attempts: [],
       });
@@ -155,6 +156,7 @@ export async function measure(config, deps) {
       lang: item.prompt.lang,
       kind: item.prompt.kind,
       target: item.prompt.target ?? null,
+      arena: item.prompt.arena ?? null,
       status,
       citedUrls: citations
         .filter((_, index) => owned.includes(hosts[index]))

@@ -173,6 +173,15 @@ describe('measure', () => {
     expect(calls).toBe(0);
   });
 
+  it('carries arena from the prompt onto the attempt, exactly like lang, kind and target', async () => {
+    const arenaSlice = [
+      { prompt: { id: 'pl-a', lang: 'pl', kind: 'category', target: '/', arena: 'ours', text: 'pytanie?' }, repeat: 0 },
+    ];
+    const fetchImpl = async () => okResponse(answer('https://example.com/'));
+    const { attempts } = await measure({ ...config, slice: arenaSlice }, { fetchImpl, sleep: noSleep });
+    expect(attempts[0].arena).toBe('ours');
+  });
+
   it('does not retry a 400, which will fail identically the second time', async () => {
     let calls = 0;
     const fetchImpl = async () => {
@@ -242,6 +251,18 @@ describe('foldAttempts', () => {
 
   it('returns nothing for no attempts', () => {
     expect(foldAttempts([])).toEqual([]);
+  });
+
+  it('carries arena from the attempt onto the folded result', () => {
+    const attempts = [
+      { id: 'a', lang: 'pl', kind: 'category', target: '/', arena: 'ours', status: 'cited' },
+    ];
+    expect(foldAttempts(attempts)[0]).toMatchObject({ id: 'a', arena: 'ours' });
+  });
+
+  it('falls back to null when the attempt carries no arena', () => {
+    const attempts = [{ id: 'a', lang: 'pl', kind: 'category', target: '/', status: 'absent' }];
+    expect(foldAttempts(attempts)[0]).toMatchObject({ arena: null });
   });
 });
 

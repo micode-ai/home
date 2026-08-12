@@ -20,6 +20,7 @@ export function manualToRuns(manual, config) {
       lang: prompt.lang,
       kind: prompt.kind,
       target: prompt.target ?? null,
+      arena: prompt.arena ?? null,
       status: entry.status,
       // Entries written before the schema grew these fields must read as empty,
       // not throw — our own August file is exactly that shape.

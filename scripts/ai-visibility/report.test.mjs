@@ -311,6 +311,30 @@ describe('renderTelegramReport', () => {
     expect(text).toContain('cognity.pl (1)');
     expect(text).not.toContain('unknown');
   });
+
+  it('prints the arena line under the language breakdown when byArena has data', () => {
+    const withArena = sweep({
+      summary: {
+        byLang: { pl: { cited: 1, mentioned: 0, absent: 0 }, en: { cited: 0, mentioned: 0, absent: 1 } },
+        byKind: {},
+        byArena: {
+          ours: { cited: 1, mentioned: 0, absent: 11 },
+          open: { cited: 0, mentioned: 0, absent: 15 },
+        },
+        citedShare: 0.5,
+      },
+    });
+    const text = renderTelegramReport(withArena, null, []);
+    expect(text).toContain('Наши темы: 1/12 · Общие: 0/15');
+  });
+
+  it('omits the arena line entirely when byArena is empty', () => {
+    // sweep()'s summary carries no byArena at all — the shape an older run file
+    // or a summary built before this field existed would have.
+    const text = renderTelegramReport(sweep(), null, []);
+    expect(text).not.toContain('Наши темы');
+    expect(text).not.toContain('Общие');
+  });
 });
 
 const engineRun = (statuses, sources = {}) => ({
@@ -385,6 +409,31 @@ describe('renderManualReport', () => {
     expect(text.length).toBeLessThanOrEqual(4096);
     expect(text).toContain('ChatGPT: 0 из 1');
     expect(text).toContain('0 yyy');
+  });
+
+  it('prints an arena line under an engine line when that engine has byArena data', () => {
+    const withArena = {
+      engine: 'chatgpt',
+      run: {
+        ...engineRun({ a: 'cited', b: 'absent' }),
+        summary: {
+          byLang: {}, byKind: {},
+          byArena: { ours: { cited: 1, mentioned: 0, absent: 0 }, open: { cited: 0, mentioned: 0, absent: 1 } },
+          citedShare: 0.5,
+        },
+      },
+      advice: [],
+    };
+    const text = renderManualReport('2026-08', [withArena]);
+    expect(text).toContain('Наши темы: 1/1 · Общие: 0/1');
+  });
+
+  it('omits the arena line for an engine whose byArena is empty', () => {
+    const text = renderManualReport('2026-08', [
+      { engine: 'chatgpt', run: engineRun({ a: 'absent' }), advice: [] },
+    ]);
+    expect(text).not.toContain('Наши темы');
+    expect(text).not.toContain('Общие');
   });
 });
 

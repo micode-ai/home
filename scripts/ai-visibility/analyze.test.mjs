@@ -315,4 +315,33 @@ describe('summarize', () => {
   it('reports a zero share for an empty run instead of dividing by zero', () => {
     expect(summarize([]).citedShare).toBe(0);
   });
+
+  it('counts every status per arena', () => {
+    const withArena = [
+      { id: 'a', lang: 'pl', kind: 'category', arena: 'ours', status: 'cited' },
+      { id: 'b', lang: 'pl', kind: 'category', arena: 'ours', status: 'absent' },
+      { id: 'c', lang: 'en', kind: 'brand', arena: 'open', status: 'mentioned' },
+      { id: 'd', lang: 'en', kind: 'brand', arena: 'open', status: 'absent' },
+    ];
+    expect(summarize(withArena).byArena).toEqual({
+      ours: { cited: 1, mentioned: 0, absent: 1 },
+      open: { cited: 0, mentioned: 1, absent: 1 },
+    });
+  });
+
+  it('groups a result with no arena under open, since an unclassified prompt is not one we can claim', () => {
+    const untagged = [
+      { id: 'a', lang: 'pl', kind: 'category', status: 'cited' },
+      { id: 'b', lang: 'pl', kind: 'category', arena: 'ours', status: 'absent' },
+    ];
+    expect(summarize(untagged).byArena).toEqual({
+      open: { cited: 1, mentioned: 0, absent: 0 },
+      ours: { cited: 0, mentioned: 0, absent: 1 },
+    });
+  });
+
+  it('yields an empty byArena for an empty result list rather than throwing', () => {
+    expect(() => summarize([])).not.toThrow();
+    expect(summarize([]).byArena).toEqual({});
+  });
 });

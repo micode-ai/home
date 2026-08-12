@@ -86,6 +86,22 @@ describe('manualToRuns', () => {
   it('returns nothing for a file with no entries rather than throwing', () => {
     expect(manualToRuns(manual([]), config)).toEqual({ runs: [], skipped: [] });
   });
+
+  it('carries arena from the prompt config onto each result, exactly like lang, kind and target', () => {
+    const withArena = {
+      domain: 'mi-code.pl',
+      prompts: [{ id: 'pl-a', lang: 'pl', kind: 'category', target: '/a/', arena: 'ours', text: 'Pytanie A?' }],
+    };
+    const { runs } = manualToRuns(manual([{ engine: 'chatgpt', id: 'pl-a', status: 'absent' }]), withArena);
+    expect(runs[0].run.results[0]).toMatchObject({ id: 'pl-a', arena: 'ours' });
+  });
+
+  it('falls back to null when the prompt carries no arena', () => {
+    const { runs } = manualToRuns(manual([
+      { engine: 'chatgpt', id: 'pl-a', status: 'absent' },
+    ]), config);
+    expect(runs[0].run.results[0]).toMatchObject({ arena: null });
+  });
 });
 
 describe('the adapter output actually drives the rules', () => {
