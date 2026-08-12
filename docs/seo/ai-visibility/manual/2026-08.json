@@ -1,31 +1,39 @@
 {
   "month": "2026-08",
   "source": "manual",
-  "notes": "Browser pass run 2026-08-12 against anonymous sessions. crawlers/referrals are deliberately absent rather than zero — the Cloudflare and GA4 dashboards have not been read yet, and a zero would read as a measurement. Perplexity allowed one anonymous query before demanding signup, so only its brand prompt was captured.",
+  "notes": "Browser pass run 2026-08-12 against anonymous sessions. crawlers/referrals are deliberately absent rather than zero — the Cloudflare and GA4 dashboards have not been read yet, and a zero would read as a measurement. Perplexity allowed one anonymous query before demanding signup, so only its brand prompt was captured. ChatGPT показывает источники подписями («Goodfirms», «Rejestr»), а не URL; goodfirms.co и rejestr.io — это сопоставление подписи домену, а не то, что было видно на экране.",
   "engines": [
     {
       "engine": "perplexity",
       "id": "pl-brand-micode",
       "status": "cited",
-      "note": "mi-code.pl was source #1 of 10. Rest were registries (krs-online, bizraport, vrejestr, panoramafirm, masio) and two competitor pages (impicode.pl). Also surfaced micode.fi, an unrelated Finnish company, and a separate KRS entry for 'Micode - Michal Nakonieczny' — the brand name is ambiguous in search."
+      "note": "mi-code.pl was source #1 of 10. Rest were registries (krs-online, bizraport, vrejestr, panoramafirm, masio) and two competitor pages (impicode.pl). Also surfaced micode.fi, an unrelated Finnish company, and a separate KRS entry for 'Micode - Michal Nakonieczny' — the brand name is ambiguous in search.",
+      "citedDomains": ["mi-code.pl"],
+      "sourceDomains": ["mi-code.pl", "krs-online.com.pl", "bizraport.pl", "micode.fi", "panoramafirm.pl", "masio.pl", "vrejestr.pl", "impicode.pl"]
     },
     {
       "engine": "chatgpt",
       "id": "pl-brand-micode",
       "status": "mentioned",
-      "note": "Described us accurately and in detail — RAG, Text2SQL, AI agents, Java/Spring Boot, Angular, AI Budget Assistant, accounting and marketing products — but every inline citation pointed at Goodfirms and Rejestr. Our own domain was never cited. It knows us through directories, not through us."
+      "note": "Described us accurately and in detail — RAG, Text2SQL, AI agents, Java/Spring Boot, Angular, AI Budget Assistant, accounting and marketing products — but every inline citation pointed at Goodfirms and Rejestr. Our own domain was never cited. It knows us through directories, not through us.",
+      "citedDomains": [],
+      "sourceDomains": ["goodfirms.co", "rejestr.io"]
     },
     {
       "engine": "chatgpt",
       "id": "pl-ksiegowosc-wfirma",
       "status": "absent",
-      "note": "Worse than absent: it stated in bold that no ready, publicly available assistant connecting to a wFirma account exists, then offered to help build one. That is a description of Accounting AI Agent / eKsiegowyAi. Only source cited was wfirma.pl. This is our highest-intent commercial prompt."
+      "note": "Worse than absent: it stated in bold that no ready, publicly available assistant connecting to a wFirma account exists, then offered to help build one. That is a description of Accounting AI Agent / eKsiegowyAi. Only source cited was wfirma.pl. This is our highest-intent commercial prompt.",
+      "citedDomains": [],
+      "sourceDomains": ["wfirma.pl"]
     },
     {
       "engine": "chatgpt",
       "id": "en-angular-ai-chat",
       "status": "absent",
-      "note": "Recommended a rival package, @angularai/chatbot, with a full integration example. All citations went to npm. ngx-open-web-ui-chat was not mentioned, despite being a direct match for the question."
+      "note": "Recommended a rival package, @angularai/chatbot, with a full integration example. All citations went to npm. ngx-open-web-ui-chat was not mentioned, despite being a direct match for the question.",
+      "citedDomains": [],
+      "sourceDomains": ["npmjs.com"]
     }
   ]
 }

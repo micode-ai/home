@@ -9,6 +9,7 @@
     "build": "vite build && vite build --config vite.ssr.config.ts && node scripts/prerender.mjs",
     "preview": "vite preview",
     "ai-visibility": "node scripts/ai-visibility/run.mjs",
+    "ai-visibility:manual": "node scripts/ai-visibility/manual.mjs",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run"

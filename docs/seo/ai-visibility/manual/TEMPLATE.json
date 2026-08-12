@@ -16,5 +16,14 @@
     "gemini.google.com": 0,
     "copilot.microsoft.com": 0
   },
-  "engines": []
+  "engines": [
+    {
+      "engine": "",
+      "id": "",
+      "status": "",
+      "note": "",
+      "citedDomains": [],
+      "sourceDomains": []
+    }
+  ]
 }

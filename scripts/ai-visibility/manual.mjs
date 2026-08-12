@@ -41,3 +41,53 @@ export function manualToRuns(manual, config) {
 
   return { runs, skipped };
 }
+
+import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import { buildAdvice } from './advice.mjs';
+import { renderManualReport } from './report.mjs';
+
+const dataDir = join(dirname(fileURLToPath(import.meta.url)), '../../docs/seo/ai-visibility');
+
+function publishAlert(message) {
+  if (!process.env.GITHUB_OUTPUT) return;
+  writeFileSync(
+    process.env.GITHUB_OUTPUT,
+    `alert<<ALERT_EOF\n${message}\nALERT_EOF\n`,
+    { flag: 'a' },
+  );
+}
+
+export function main({ dir = dataDir, month = process.env.AI_VIS_MONTH } = {}) {
+  if (!month) throw new Error('AI_VIS_MONTH is not set');
+
+  const path = join(dir, 'manual', `${month}.json`);
+  // Failing loudly beats sending an empty report that reads as "nobody cites us".
+  if (!existsSync(path)) throw new Error(`no manual pass recorded for ${month} (${path})`);
+
+  const manual = JSON.parse(readFileSync(path, 'utf8'));
+  const config = JSON.parse(readFileSync(join(dir, 'prompts.json'), 'utf8'));
+  const { runs, skipped } = manualToRuns(manual, config);
+
+  for (const id of skipped) console.warn(`skipping entry with unknown prompt id: ${id}`);
+  if (!runs.length) throw new Error(`no usable entries in ${path}`);
+
+  const questions = Object.fromEntries(config.prompts.map((prompt) => [prompt.id, prompt.text]));
+  const perEngine = runs.map(({ engine, run }) => ({
+    engine, run, advice: buildAdvice(run, config.domain, questions),
+  }));
+
+  const message = renderManualReport(month, perEngine);
+  publishAlert(message);
+  console.log(message);
+}
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  try {
+    main();
+  } catch (error) {
+    console.error(error.message);
+    process.exit(1);
+  }
+}

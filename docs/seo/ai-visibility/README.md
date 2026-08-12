@@ -46,6 +46,14 @@ Once a month, fill in `manual/YYYY-MM.json` from `manual/TEMPLATE.json`:
 
 The next sweep to close picks the file up and folds it into `REPORT.md`.
 
+Once the month's file is committed and pushed, send it to the ops channel:
+
+    gh workflow run "AI visibility manual" -f month=2026-08
+
+There is no schedule — the pass is hand-driven, so the report goes out when the
+pass is done. Record `citedDomains` (ours) and `sourceDomains` (all) per entry:
+without them only two of the five advice rules can fire.
+
 ## Changing the prompts
 
 Edit `prompts.json`. A new product or article usually deserves one category

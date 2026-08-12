@@ -1,0 +1,63 @@
+name: AI visibility manual
+
+# Reports a hand-driven browser pass over ChatGPT and Perplexity — the engines
+# that matter and have no free API. There is no schedule on purpose: a human (or
+# Claude) drives the browser, commits the month's file, and then runs this.
+#
+# The bot token stays a GitHub secret, so whoever runs the pass never handles it.
+# No GEMINI_API_KEY is involved.
+
+on:
+  workflow_dispatch:
+    inputs:
+      month:
+        description: 'Month to report, as YYYY-MM'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: development
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # No npm ci: the script uses only Node built-ins.
+      - name: Render the report
+        id: render
+        env:
+          AI_VIS_MONTH: ${{ inputs.month }}
+        run: npm run ai-visibility:manual
+
+      - name: Tell the ops channel
+        if: ${{ failure() || steps.render.outputs.alert != '' }}
+        env:
+          TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT: ${{ secrets.TELEGRAM_OPS_CHAT_ID }}
+          ALERT: ${{ steps.render.outputs.alert }}
+          FAILED: ${{ job.status == 'failure' }}
+        run: |
+          if [ -z "$TOKEN" ] || [ -z "$CHAT" ]; then
+            echo "::warning::TELEGRAM_BOT_TOKEN or TELEGRAM_OPS_CHAT_ID not set — no message sent"
+            exit 0
+          fi
+          run_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          if [ "$FAILED" = "true" ]; then
+            text=$(printf '🔴 AI-visibility manual report failed\n\nRun: %s' "$run_url")
+          else
+            text=$(printf '%s\n\nRun: %s' "$ALERT" "$run_url")
+          fi
+          curl -sS --max-time 30 \
+            "https://api.telegram.org/bot${TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${CHAT}" \
+            --data-urlencode "text=${text}" \
+            --data-urlencode "disable_web_page_preview=true" \
+            -o /dev/null -w 'telegram: HTTP %{http_code}\n'
