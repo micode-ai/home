@@ -284,7 +284,8 @@ export async function main({ dir = dataDir, deps } = {}) {
     null, 2,
   )}\n`);
 
-  const advice = buildAdvice(run, config.domain);
+  const questions = Object.fromEntries(config.prompts.map((prompt) => [prompt.id, prompt.text]));
+  const advice = buildAdvice(run, config.domain, questions);
   publishOutputs(diff, renderTelegramReport(run, previous, advice));
   console.log(`sweep ${partial.sweep} complete · ${totalCalls} calls · cited ${(run.summary.citedShare * 100).toFixed(1)}% · changed=${diff.changed}`);
 }

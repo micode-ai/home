@@ -209,3 +209,62 @@ describe('buildAdvice', () => {
     expect(buildAdvice(run([]), DOMAIN)).toEqual([]);
   });
 });
+
+const QUESTIONS = {
+  'pl-koszt': 'Ile kosztuje miesiecznie utrzymanie agenta AI opartego na LLM?',
+  'pl-brand': 'Czym zajmuje sie MiCode Sp. z o.o. z Gdanska?',
+};
+
+describe('question labels', () => {
+  it('prints the question instead of the slug when it is known', () => {
+    const advice = buildAdvice(
+      run([result('pl-koszt', { target: '/blog/koszt/', sourceDomains: ['cognity.pl'] })]),
+      DOMAIN, QUESTIONS,
+    );
+    const text = advice.find((a) => a.rule === 'page-not-cited').text;
+    expect(text).toContain('Ile kosztuje');
+    expect(text).not.toContain('pl-koszt:');
+  });
+
+  it('falls back to the id when the question is unknown', () => {
+    const advice = buildAdvice(
+      run([result('pl-mystery', { target: '/x/', sourceDomains: ['cognity.pl'] })]),
+      DOMAIN, QUESTIONS,
+    );
+    expect(advice.find((a) => a.rule === 'page-not-cited').text).toContain('pl-mystery');
+  });
+
+  it('labels the brand canary with its question too', () => {
+    const advice = buildAdvice(
+      run([result('pl-brand', { kind: 'brand' })]), DOMAIN, QUESTIONS,
+    );
+    expect(advice.find((a) => a.rule === 'brand-canary').text).toContain('Czym zajmuje');
+  });
+
+  it('shortens a long question rather than filling the message', () => {
+    const long = { 'pl-long': `${'a'.repeat(200)}?` };
+    const advice = buildAdvice(
+      run([result('pl-long', { target: '/x/', sourceDomains: ['cognity.pl'] })]),
+      DOMAIN, long,
+    );
+    const text = advice.find((a) => a.rule === 'page-not-cited').text;
+    expect(text).toContain('…');
+    expect(text.length).toBeLessThan(200);
+  });
+
+  it('lists at most two questions and counts the rest', () => {
+    const many = { a: 'Pierwsze pytanie?', b: 'Drugie pytanie?', c: 'Trzecie pytanie?' };
+    const advice = buildAdvice(run([
+      result('a', { kind: 'brand' }), result('b', { kind: 'brand' }), result('c', { kind: 'brand' }),
+    ]), DOMAIN, many);
+    const text = advice.find((a) => a.rule === 'brand-canary').text;
+    expect(text).toContain('Pierwsze');
+    expect(text).toContain('и ещё 1');
+    expect(text).not.toContain('Trzecie');
+  });
+
+  it('behaves exactly as before when no questions are given', () => {
+    const advice = buildAdvice(run([result('pl-koszt', { target: '/x/', sourceDomains: ['cognity.pl'] })]), DOMAIN);
+    expect(advice.find((a) => a.rule === 'page-not-cited').text).toContain('pl-koszt');
+  });
+});

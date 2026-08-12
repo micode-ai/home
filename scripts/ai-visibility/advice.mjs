@@ -6,9 +6,25 @@
 const MAX_ADVICE = 5;
 const MAX_PAGES = 2;
 const RIVAL_THRESHOLD = 3;
+const MAX_LABEL = 70;
+const MAX_LISTED = 2;
 
 const bare = (value) => String(value).replace(/^www\./, '').toLowerCase();
 const citedOnes = (run) => (run.results ?? []).filter((item) => item.status === 'cited');
+
+// The report is read in Telegram, on a phone, by someone who has not opened the
+// repository. `pl-koszt-agenta` tells them nothing; the question does.
+const label = (id, questions) => {
+  const question = questions?.[id];
+  if (!question) return id;
+  return question.length > MAX_LABEL ? `«${question.slice(0, MAX_LABEL - 1)}…»` : `«${question}»`;
+};
+
+const labelList = (ids, questions) => {
+  const shown = ids.slice(0, MAX_LISTED).map((id) => label(id, questions)).join(', ');
+  const rest = ids.length - MAX_LISTED;
+  return rest > 0 ? `${shown} и ещё ${rest}` : shown;
+};
 
 const domainsOf = (result, field) =>
   [...new Set((result.attempts ?? []).flatMap((attempt) => attempt[field] ?? []))];
@@ -26,7 +42,7 @@ export function rivalCounts(run) {
   return counts;
 }
 
-function brandCanary(run) {
+function brandCanary(run, questions) {
   const missing = (run.results ?? []).filter(
     (item) => item.kind === 'brand' && item.status !== 'cited',
   );
@@ -34,11 +50,11 @@ function brandCanary(run) {
   return [{
     rule: 'brand-canary',
     priority: 1,
-    text: `Бренд не находит нас: ${missing.map((item) => item.id).join(', ')} — это индексация, а не маркетинг`,
+    text: `Бренд не находит нас: ${labelList(missing.map((item) => item.id), questions)} — это индексация, а не маркетинг`,
   }];
 }
 
-function pageNotCited(run) {
+function pageNotCited(run, questions) {
   const out = [];
   for (const item of run.results ?? []) {
     if (out.length >= MAX_PAGES) break;
@@ -48,8 +64,8 @@ function pageNotCited(run) {
       rule: 'page-not-cited',
       priority: 2,
       text: rivals.length
-        ? `${item.id}: страница под запрос есть (${item.target}), но цитируют ${rivals.join(', ')}`
-        : `${item.id}: страница под запрос есть (${item.target}), но её не цитируют`,
+        ? `${label(item.id, questions)}: страница под запрос есть (${item.target}), но цитируют ${rivals.join(', ')}`
+        : `${label(item.id, questions)}: страница под запрос есть (${item.target}), но её не цитируют`,
     });
   }
   return out;
@@ -97,7 +113,7 @@ function deadLanguage(run) {
     }));
 }
 
-function volatile(run) {
+function volatile(run, questions) {
   const flapping = (run.results ?? []).filter((item) => {
     const statuses = new Set((item.attempts ?? []).map((attempt) => attempt.status));
     return statuses.has('cited') && statuses.size > 1;
@@ -106,7 +122,7 @@ function volatile(run) {
   return [{
     rule: 'volatile',
     priority: 5,
-    text: `На грани, повторы расходятся: ${flapping.map((item) => item.id).join(', ')} — запрос почти берётся`,
+    text: `На грани, повторы расходятся: ${labelList(flapping.map((item) => item.id), questions)} — запрос почти берётся`,
   }];
 }
 
@@ -123,13 +139,13 @@ function persistentRival(run) {
   }];
 }
 
-export function buildAdvice(run, domain) {
+export function buildAdvice(run, domain, questions) {
   return [
-    ...brandCanary(run),
-    ...pageNotCited(run),
+    ...brandCanary(run, questions),
+    ...pageNotCited(run, questions),
     ...portfolioSkew(run, domain),
     ...deadLanguage(run),
-    ...volatile(run),
+    ...volatile(run, questions),
     ...persistentRival(run),
   ]
     .sort((a, b) => a.priority - b.priority)
