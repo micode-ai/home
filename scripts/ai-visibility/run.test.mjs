@@ -409,6 +409,52 @@ describe('main', () => {
       .toThrow('AI_VIS_REPEATS must be a positive integer, got "0"');
   });
 
+  describe('asPositiveInt (exercised through AI_VIS_REPEATS)', () => {
+    // An unset Actions variable renders as '', not undefined — both must fall
+    // back to the default rather than being treated as a bad value, or the job
+    // goes red every morning a variable is simply left unconfigured.
+    it('falls back to the default when the value is an empty string', async () => {
+      process.env.AI_VIS_REPEATS = '';
+      await main({ dir, deps });
+      // 2 prompts * DEFAULT_REPEATS (2) = 4 calls.
+      expect(readJson('runs', '2026-08-13.json').calls).toBe(4);
+    });
+
+    it('falls back to the default when the value is undefined', async () => {
+      delete process.env.AI_VIS_REPEATS;
+      await main({ dir, deps });
+      expect(readJson('runs', '2026-08-13.json').calls).toBe(4);
+    });
+
+    it('throws on a non-numeric string', async () => {
+      process.env.AI_VIS_REPEATS = 'abc';
+      await expect(main({ dir, deps })).rejects
+        .toThrow('AI_VIS_REPEATS must be a positive integer, got "abc"');
+      expect(fetched).toBe(0);
+    });
+
+    it('throws on "0"', async () => {
+      process.env.AI_VIS_REPEATS = '0';
+      await expect(main({ dir, deps })).rejects
+        .toThrow('AI_VIS_REPEATS must be a positive integer, got "0"');
+      expect(fetched).toBe(0);
+    });
+
+    it('throws on a negative value', async () => {
+      process.env.AI_VIS_REPEATS = '-3';
+      await expect(main({ dir, deps })).rejects
+        .toThrow('AI_VIS_REPEATS must be a positive integer, got "-3"');
+      expect(fetched).toBe(0);
+    });
+
+    it('uses a valid value', async () => {
+      process.env.AI_VIS_REPEATS = '3';
+      await main({ dir, deps });
+      // 2 prompts * 3 repeats = 6 calls.
+      expect(readJson('runs', '2026-08-13.json').calls).toBe(6);
+    });
+  });
+
   it('abandons the sweep in progress when the prompt set changed under it', async () => {
     writeFileSync(join(dir, 'partial.json'), JSON.stringify({
       sweep: 3,

@@ -203,7 +203,11 @@ export async function main({ dir = dataDir, deps } = {}) {
   // 0 — the job would go green every day forever. A misconfigured schedule has
   // to go red and alert instead of quietly degrading.
   const asPositiveInt = (name, value, fallback) => {
-    const parsed = Number(value ?? fallback);
+    // An unset Actions variable renders as an empty string rather than as
+    // undefined. Treating that as a bad value would turn this guard into the
+    // daily failure it exists to prevent.
+    const raw = value === undefined || value === '' ? fallback : value;
+    const parsed = Number(raw);
     if (!Number.isInteger(parsed) || parsed < 1) {
       throw new Error(`${name} must be a positive integer, got ${JSON.stringify(value)}`);
     }

@@ -15,7 +15,12 @@ name: AI visibility
 
 on:
   schedule:
-    - cron: '41 5 * * *'      # daily, 05:41 UTC
+    # 08:41 UTC is 01:41 Pacific in summer and 00:41 in winter. Google's
+    # free-tier daily quota resets at midnight Pacific, so this always starts a
+    # run just after the reset, with the full day's allowance ahead of it. The
+    # earlier 05:41 UTC slot sat 19 minutes *before* the reset, on the tail of
+    # the previous quota day, where any manual run that day had already spent it.
+    - cron: '41 8 * * *'
   workflow_dispatch:
 
 permissions:
