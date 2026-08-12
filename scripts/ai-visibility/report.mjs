@@ -149,19 +149,37 @@ const TELEGRAM_LIMIT = 4096;
 
 const bucketTotal = (bucket) => bucket.cited + bucket.mentioned + bucket.absent;
 
+// Russian counts in three: 1 вызов, 2–4 вызова, 5+ вызовов — except the teens,
+// where 11–14 take the plural despite ending in 1–4. A full sweep is 54, so the
+// naive `${n} вызовов` was wrong on the one number this line prints most.
+export function plural(count, one, few, many) {
+  const abs = Math.abs(count) % 100;
+  if (abs >= 11 && abs <= 14) return many;
+  const last = abs % 10;
+  if (last === 1) return one;
+  if (last >= 2 && last <= 4) return few;
+  return many;
+}
+
 export function renderTelegramReport(run, previous, advice) {
   const results = run.results ?? [];
   const cited = results.filter((item) => item.status === 'cited').length;
   const lines = [];
 
   lines.push('📊 AI-видимость mi-code.pl');
-  lines.push(`Свип ${run.sweep ?? '?'} · ${run.date} · ${run.calls} вызовов`);
+  lines.push(
+    `Свип ${run.sweep ?? '?'} · ${run.date} · ${run.calls} ${plural(run.calls, 'вызов', 'вызова', 'вызовов')}`,
+  );
   lines.push('');
 
   const head = `Процитированы: ${cited} из ${results.length} (${percent(run.summary.citedShare)})`;
   if (previous) {
     const before = (previous.results ?? []).filter((item) => item.status === 'cited').length;
-    lines.push(`${head} — было ${before} из ${(previous.results ?? []).length} (${percent(previous.summary.citedShare)})`);
+    // Guarded like every other cross-run access: a previous run file written by
+    // an older schema would otherwise throw here — after main() has written the
+    // run file and reset partial.json, but before the commit step, losing days
+    // of measurement on a runner that cannot replay them.
+    lines.push(`${head} — было ${before} из ${(previous.results ?? []).length} (${percent((previous.summary ?? {}).citedShare ?? 0)})`);
   } else {
     lines.push(head);
   }

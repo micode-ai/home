@@ -5,9 +5,22 @@
 
 const MAX_ADVICE = 5;
 const MAX_PAGES = 2;
-const RIVAL_THRESHOLD = 3;
 const MAX_LABEL = 70;
 const MAX_LISTED = 2;
+// A single citation is not a pattern. `1 против 0` used to qualify as a skew,
+// and on live data that one citation was the accounting product page answering
+// an accounting question — the portfolio working, not tilting.
+const MIN_SKEW_SAMPLE = 3;
+
+// Search aggregators and platforms are where answers get assembled, not rivals
+// for the work. Calling Google a competitor would discredit the whole report.
+const AGGREGATORS = new Set([
+  'google.com', 'youtube.com', 'medium.com', 'amazon.com', 'microsoft.com',
+  'linkedin.com', 'wikipedia.org', 'reddit.com', 'facebook.com', 'x.com',
+  'twitter.com', 'quora.com', 'github.com', 'stackoverflow.com',
+]);
+
+const isAggregator = (host) => AGGREGATORS.has(host) || host.startsWith('google.');
 
 const bare = (value) => String(value).replace(/^www\./, '').toLowerCase();
 const citedOnes = (run) => (run.results ?? []).filter((item) => item.status === 'cited');
@@ -36,22 +49,38 @@ export function rivalCounts(run) {
     // Once per prompt, not once per mention: a page cited twice in one answer
     // is one competitor, not two.
     for (const domain of domainsOf(item, 'sourceDomains')) {
+      if (domain === 'unknown' || isAggregator(domain)) continue;
       counts[domain] = (counts[domain] ?? 0) + 1;
     }
   }
   return counts;
 }
 
+// `mentioned` and `absent` are different diseases and classify() goes to real
+// trouble to keep them apart: absent means the engine never found us, mentioned
+// means it named the brand and linked somewhere else. One line for both would
+// point half its readers at the wrong remedy.
 function brandCanary(run, questions) {
-  const missing = (run.results ?? []).filter(
-    (item) => item.kind === 'brand' && item.status !== 'cited',
-  );
-  if (!missing.length) return [];
-  return [{
-    rule: 'brand-canary',
-    priority: 1,
-    text: `Бренд не находит нас: ${labelList(missing.map((item) => item.id), questions)} — это индексация, а не маркетинг`,
-  }];
+  const brand = (run.results ?? []).filter((item) => item.kind === 'brand');
+  const absent = brand.filter((item) => item.status === 'absent');
+  const mentioned = brand.filter((item) => item.status === 'mentioned');
+  const out = [];
+
+  if (absent.length) {
+    out.push({
+      rule: 'brand-canary',
+      priority: 1,
+      text: `Бренд не находит нас: ${labelList(absent.map((item) => item.id), questions)} — это индексация, а не маркетинг`,
+    });
+  }
+  if (mentioned.length) {
+    out.push({
+      rule: 'brand-mentioned-not-cited',
+      priority: 1,
+      text: `Бренд называют, но не ссылаются: ${labelList(mentioned.map((item) => item.id), questions)} — это ссылки, а не индексация`,
+    });
+  }
+  return out;
 }
 
 function pageNotCited(run, questions) {
@@ -88,7 +117,10 @@ function portfolioSkew(run, domain) {
     for (const host of domains) others.add(host);
   }
 
-  if (secondary <= primary || !others.size) return [];
+  // A skew is a shape in the data, and two points cannot draw one: below
+  // MIN_SKEW_SAMPLE this rule was reporting a single product-page citation as a
+  // portfolio problem.
+  if (secondary < MIN_SKEW_SAMPLE || secondary <= primary || !others.size) return [];
   return [{
     rule: 'portfolio-skew',
     priority: 3,
@@ -126,19 +158,10 @@ function volatile(run, questions) {
   }];
 }
 
-function persistentRival(run) {
-  const strong = Object.entries(rivalCounts(run))
-    .filter(([domain, count]) => domain !== 'unknown' && count >= RIVAL_THRESHOLD)
-    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
-  if (!strong.length) return [];
-  const [domain, count] = strong[0];
-  return [{
-    rule: 'persistent-rival',
-    priority: 6,
-    text: `${domain} цитируют в ${count} запросах, где нас нет — постоянный конкурент`,
-  }];
-}
-
+// There was a `persistent-rival` rule here (priority 6). It restated, by
+// construction, the first entry of the report's own "Цитируют вместо нас" line
+// two rows above it — one of five advice slots spent on a repeat. rivalCounts
+// stays exported because report.mjs still renders that header line.
 export function buildAdvice(run, domain, questions) {
   return [
     ...brandCanary(run, questions),
@@ -146,7 +169,6 @@ export function buildAdvice(run, domain, questions) {
     ...portfolioSkew(run, domain),
     ...deadLanguage(run),
     ...volatile(run, questions),
-    ...persistentRival(run),
   ]
     .sort((a, b) => a.priority - b.priority)
     .slice(0, MAX_ADVICE);

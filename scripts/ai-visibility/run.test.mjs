@@ -495,6 +495,22 @@ describe('main', () => {
     });
   });
 
+  it('never alerts on a day that does not close the sweep', async () => {
+    // The one hard safety guarantee of the whole feature: a sweep spans days,
+    // and a partial slice measures a fraction of the prompts. Alerting on it
+    // would report a made-up cited share to the ops channel every morning.
+    // Nothing asserted this — a publishOutputs() call in the !complete branch
+    // left the entire suite green.
+    process.env.AI_VIS_DAILY_BUDGET = '1';
+    const path = useGithubOutput();
+
+    await main({ dir, deps });
+
+    expect(readJson('partial.json')).toMatchObject({ sweep: 1, cursor: 1 });
+    expect(existsSync(join(dir, 'runs', '2026-08-13.json'))).toBe(false);
+    expect(readFileSync(path, 'utf8')).toBe('');
+  });
+
   it('resumes an unfinished sweep the next day rather than starting over', async () => {
     process.env.AI_VIS_DAILY_BUDGET = '1';
     await main({ dir, deps });

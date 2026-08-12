@@ -34,6 +34,31 @@ describe('rivalCounts', () => {
     ]));
     expect(counts['cognity.pl']).toBeUndefined();
   });
+
+  it('never counts a search aggregator as a rival', () => {
+    // A Gdansk software house does not compete with Google for a citation slot;
+    // naming it as a competitor would discredit every other line in the report.
+    const counts = rivalCounts(run([
+      result('a', { sourceDomains: ['google.com', 'youtube.com', 'amazon.com', 'cognity.pl'] }),
+    ]));
+    expect(counts['google.com']).toBeUndefined();
+    expect(counts['youtube.com']).toBeUndefined();
+    expect(counts['amazon.com']).toBeUndefined();
+    expect(counts['cognity.pl']).toBe(1);
+  });
+
+  it('excludes a country-coded Google host too', () => {
+    const counts = rivalCounts(run([
+      result('a', { sourceDomains: ['google.co.uk', 'google.pl'] }),
+    ]));
+    expect(counts['google.co.uk']).toBeUndefined();
+    expect(counts['google.pl']).toBeUndefined();
+  });
+
+  it('never counts an unresolved host', () => {
+    expect(rivalCounts(run([result('a', { sourceDomains: ['unknown'] })]))['unknown'])
+      .toBeUndefined();
+  });
 });
 
 describe('rule: brand canary', () => {
@@ -49,6 +74,38 @@ describe('rule: brand canary', () => {
       DOMAIN,
     );
     expect(rules(advice)).not.toContain('brand-canary');
+    expect(rules(advice)).not.toContain('brand-mentioned-not-cited');
+  });
+
+  it('calls an absent brand prompt an indexing problem, not a linking one', () => {
+    const advice = buildAdvice(run([result('pl-brand', { kind: 'brand', status: 'absent' })]), DOMAIN);
+    const texts = advice.map((a) => a.text).join('\n');
+    expect(texts).toContain('это индексация');
+    expect(texts).not.toContain('это ссылки');
+  });
+
+  it('calls a mentioned brand prompt a linking problem, not an indexing one', () => {
+    // classify() keeps `mentioned` apart from `absent` on purpose: the engine
+    // named us and linked elsewhere. Telling the reader to fix indexing here
+    // points at the wrong remedy entirely.
+    const advice = buildAdvice(run([result('pl-brand', { kind: 'brand', status: 'mentioned' })]), DOMAIN);
+    const texts = advice.map((a) => a.text).join('\n');
+    expect(texts).toContain('это ссылки');
+    expect(texts).not.toContain('это индексация');
+    expect(rules(advice)).toContain('brand-mentioned-not-cited');
+  });
+
+  it('raises both lines when one brand prompt is absent and another is mentioned', () => {
+    const advice = buildAdvice(run([
+      result('pl-brand', { kind: 'brand', status: 'absent' }),
+      result('en-brand', { kind: 'brand', status: 'mentioned' }),
+    ]), DOMAIN);
+    expect(rules(advice)).toContain('brand-canary');
+    expect(rules(advice)).toContain('brand-mentioned-not-cited');
+    expect(advice.find((a) => a.rule === 'brand-canary').text).toContain('pl-brand');
+    expect(advice.find((a) => a.rule === 'brand-canary').text).not.toContain('en-brand');
+    expect(advice.find((a) => a.rule === 'brand-mentioned-not-cited').text).toContain('en-brand');
+    expect(advice.find((a) => a.rule === 'brand-mentioned-not-cited').text).not.toContain('pl-brand');
   });
 });
 
@@ -88,33 +145,74 @@ describe('rule: portfolio skew', () => {
     const advice = buildAdvice(run([
       result('a', { status: 'cited', citedDomains: ['eksiegowyai.pl'] }),
       result('b', { status: 'cited', citedDomains: ['ai-budget.pl'] }),
-      result('c', { status: 'cited', citedDomains: [DOMAIN] }),
+      result('c', { status: 'cited', citedDomains: ['eksiegowyai.pl'] }),
+      result('d', { status: 'cited', citedDomains: [DOMAIN] }),
     ]), DOMAIN);
     const text = advice.find((a) => a.rule === 'portfolio-skew').text;
     expect(text).toContain('eksiegowyai.pl');
     expect(text).toContain(DOMAIN);
   });
 
+  it('stays silent on a single secondary citation, which is a page doing its job', () => {
+    // Live data: one citation of eksiegowyai.pl answering an accounting
+    // question fired this rule as `1 против 0`. That is the product page
+    // working, not a portfolio tilting away from the primary domain.
+    const advice = buildAdvice(run([
+      result('a', { status: 'cited', citedDomains: ['eksiegowyai.pl'] }),
+    ]), DOMAIN);
+    expect(rules(advice)).not.toContain('portfolio-skew');
+  });
+
+  it('stays silent on two secondary citations, still below the sample floor', () => {
+    const advice = buildAdvice(run([
+      result('a', { status: 'cited', citedDomains: ['eksiegowyai.pl'] }),
+      result('b', { status: 'cited', citedDomains: ['ai-budget.pl'] }),
+    ]), DOMAIN);
+    expect(rules(advice)).not.toContain('portfolio-skew');
+  });
+
+  it('fires at three secondary citations against none', () => {
+    const advice = buildAdvice(run([
+      result('a', { status: 'cited', citedDomains: ['eksiegowyai.pl'] }),
+      result('b', { status: 'cited', citedDomains: ['ai-budget.pl'] }),
+      result('c', { status: 'cited', citedDomains: ['eksiegowyai.pl'] }),
+    ]), DOMAIN);
+    expect(advice.find((a) => a.rule === 'portfolio-skew').text).toContain('3 против 0');
+  });
+
+  it('stays silent at a tie above the sample floor', () => {
+    const advice = buildAdvice(run([
+      result('a', { status: 'cited', citedDomains: ['eksiegowyai.pl'] }),
+      result('b', { status: 'cited', citedDomains: ['eksiegowyai.pl'] }),
+      result('c', { status: 'cited', citedDomains: ['eksiegowyai.pl'] }),
+      result('d', { status: 'cited', citedDomains: [DOMAIN] }),
+      result('e', { status: 'cited', citedDomains: [DOMAIN] }),
+      result('f', { status: 'cited', citedDomains: [DOMAIN] }),
+    ]), DOMAIN);
+    expect(rules(advice)).not.toContain('portfolio-skew');
+  });
+
   it('stays silent when the primary domain leads', () => {
+    // Four against three: past the sample floor, so only the comparison can
+    // keep this quiet.
     const advice = buildAdvice(run([
       result('a', { status: 'cited', citedDomains: [DOMAIN] }),
       result('b', { status: 'cited', citedDomains: [DOMAIN] }),
-      result('c', { status: 'cited', citedDomains: ['eksiegowyai.pl'] }),
+      result('c', { status: 'cited', citedDomains: [DOMAIN] }),
+      result('d', { status: 'cited', citedDomains: [DOMAIN] }),
+      result('e', { status: 'cited', citedDomains: ['eksiegowyai.pl'] }),
+      result('f', { status: 'cited', citedDomains: ['eksiegowyai.pl'] }),
+      result('g', { status: 'cited', citedDomains: ['eksiegowyai.pl'] }),
     ]), DOMAIN);
     expect(rules(advice)).not.toContain('portfolio-skew');
   });
 
   it('treats a subdomain of the primary domain as primary', () => {
+    // Three of them, so the sample floor is not what keeps this silent.
     const advice = buildAdvice(run([
       result('a', { status: 'cited', citedDomains: ['blog.mi-code.pl'] }),
-    ]), DOMAIN);
-    expect(rules(advice)).not.toContain('portfolio-skew');
-  });
-
-  it('stays silent when product sites and the primary domain tie', () => {
-    const advice = buildAdvice(run([
-      result('a', { status: 'cited', citedDomains: ['eksiegowyai.pl'] }),
-      result('b', { status: 'cited', citedDomains: [DOMAIN] }),
+      result('b', { status: 'cited', citedDomains: ['blog.mi-code.pl'] }),
+      result('c', { status: 'cited', citedDomains: ['blog.mi-code.pl'] }),
     ]), DOMAIN);
     expect(rules(advice)).not.toContain('portfolio-skew');
   });
@@ -160,49 +258,23 @@ describe('rule: volatile', () => {
   });
 });
 
-describe('rule: persistent rival', () => {
-  it('fires on a domain cited across three prompts where we are absent', () => {
-    const advice = buildAdvice(run([
-      result('a', { sourceDomains: ['cognity.pl'] }),
-      result('b', { sourceDomains: ['cognity.pl'] }),
-      result('c', { sourceDomains: ['cognity.pl'] }),
-    ]), DOMAIN);
-    expect(advice.find((a) => a.rule === 'persistent-rival').text).toContain('cognity.pl');
-  });
-
-  it('stays silent below the threshold', () => {
-    const advice = buildAdvice(run([
-      result('a', { sourceDomains: ['cognity.pl'] }),
-      result('b', { sourceDomains: ['cognity.pl'] }),
-    ]), DOMAIN);
-    expect(rules(advice)).not.toContain('persistent-rival');
-  });
-
-  it('never reports an unresolved host as a rival', () => {
-    const advice = buildAdvice(run([
-      result('a', { sourceDomains: ['unknown'] }),
-      result('b', { sourceDomains: ['unknown'] }),
-      result('c', { sourceDomains: ['unknown'] }),
-    ]), DOMAIN);
-    expect(rules(advice)).not.toContain('persistent-rival');
-  });
-});
-
 describe('buildAdvice', () => {
   it('keeps the five highest-priority items when more rules fire', () => {
     const results = [
       result('pl-brand', { kind: 'brand' }),
+      result('en-brand', { kind: 'brand', status: 'mentioned', lang: 'en' }),
       result('a', { target: '/a/', sourceDomains: ['cognity.pl'] }),
       result('b', { target: '/b/', sourceDomains: ['cognity.pl'] }),
       result('c', { sourceDomains: ['cognity.pl'] }),
       result('ru-1', { lang: 'ru' }),
-      result('en-1', { lang: 'en' }),
+      result('de-1', { lang: 'de' }),
     ];
     const advice = buildAdvice(run(results), DOMAIN);
     expect(advice).toHaveLength(5);
     expect(advice[0].rule).toBe('brand-canary');
-    // Sorted by priority, so the lowest-priority rule that fired is dropped.
-    expect(rules(advice)).not.toContain('persistent-rival');
+    // Sorted by priority, so the lowest-priority rules that fired are dropped:
+    // two dead languages queue behind the two priority-1 brand lines.
+    expect(rules(advice).filter((r) => r === 'dead-language')).toHaveLength(1);
   });
 
   it('returns nothing for a run with no results rather than throwing', () => {

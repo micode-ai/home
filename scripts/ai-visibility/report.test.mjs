@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { diffRuns, renderReport, renderTelegramReport, citedProperties } from './report.mjs';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import { diffRuns, renderReport, renderTelegramReport, citedProperties, plural } from './report.mjs';
 
 const run = (date, statuses) => ({
   date,
@@ -148,6 +151,38 @@ const sweep = (over = {}) => ({
   },
 });
 
+describe('plural', () => {
+  const call = (n) => plural(n, 'вызов', 'вызова', 'вызовов');
+
+  it('uses the singular for one', () => {
+    expect(call(1)).toBe('вызов');
+  });
+
+  it('uses the paucal for two through four', () => {
+    expect(call(2)).toBe('вызова');
+    expect(call(4)).toBe('вызова');
+  });
+
+  it('uses the plural from five', () => {
+    expect(call(5)).toBe('вызовов');
+  });
+
+  it('uses the plural through the teens, which do not follow their last digit', () => {
+    expect(call(11)).toBe('вызовов');
+    expect(call(12)).toBe('вызовов');
+    expect(call(14)).toBe('вызовов');
+  });
+
+  it('follows the last digit again past twenty', () => {
+    expect(call(21)).toBe('вызов');
+    expect(call(54)).toBe('вызова');
+  });
+
+  it('handles zero', () => {
+    expect(call(0)).toBe('вызовов');
+  });
+});
+
 describe('renderTelegramReport', () => {
   it('leads with the sweep, the date and the call count', () => {
     const text = renderTelegramReport(sweep(), null, []);
@@ -229,6 +264,39 @@ describe('renderTelegramReport', () => {
     expect(text).toContain('Свип 3');
   });
 
+  it('agrees the call count with its noun', () => {
+    // A full sweep is 54 — "54 вызовов" is simply wrong Russian, and it is the
+    // number this line prints on almost every closed sweep.
+    const head = (calls) => renderTelegramReport(sweep({ calls }), null, []).split('\n')[1];
+    expect(head(54)).toBe('Свип 3 · 2026-08-14 · 54 вызова');
+    expect(head(1)).toBe('Свип 3 · 2026-08-14 · 1 вызов');
+    expect(head(5)).toBe('Свип 3 · 2026-08-14 · 5 вызовов');
+  });
+
+  it('survives a previous run whose summary is missing', () => {
+    // main() writes the run file and resets partial.json *before* rendering the
+    // alert. A throw here would lose days of measurement on a runner that
+    // cannot replay them, so every cross-run read is guarded.
+    const previous = { date: '2026-08-13', results: [{ id: 'pl-a', status: 'cited' }] };
+    expect(() => renderTelegramReport(sweep(), previous, [])).not.toThrow();
+    expect(renderTelegramReport(sweep(), previous, [])).toContain('было 1 из 1');
+  });
+
+  it('never names a search aggregator among the rivals', () => {
+    const withAggregators = sweep({
+      results: [
+        {
+          id: 'pl-a', lang: 'pl', kind: 'category', status: 'absent', target: '/',
+          attempts: [{ status: 'absent', citedUrls: [], citedDomains: [], sourceDomains: ['google.com', 'cognity.pl'] }],
+        },
+      ],
+      summary: { byLang: {}, byKind: {}, citedShare: 0 },
+    });
+    const text = renderTelegramReport(withAggregators, null, []);
+    expect(text).toContain('cognity.pl (1)');
+    expect(text).not.toContain('google.com');
+  });
+
   it('names the rivals cited where we were not, and never an unresolved host', () => {
     const withRivals = sweep({
       results: [
@@ -242,5 +310,23 @@ describe('renderTelegramReport', () => {
     const text = renderTelegramReport(withRivals, null, []);
     expect(text).toContain('cognity.pl (1)');
     expect(text).not.toContain('unknown');
+  });
+});
+
+describe('the workflow that sends the message', () => {
+  const workflow = readFileSync(
+    join(dirname(fileURLToPath(import.meta.url)), '../..', '.github/workflows/ai-visibility.yml'),
+    'utf8',
+  );
+
+  it('does not prefix an emoji the message already carries', () => {
+    // renderTelegramReport opens with 📊, so a 📊 in the workflow's printf too
+    // would send every report headed '📊 📊'.
+    expect(renderTelegramReport(sweep(), null, [])).toContain('📊');
+    expect(workflow).toContain("text=$(printf '%s\\n\\nRun: %s' \"$ALERT\" \"$run_url\")");
+  });
+
+  it('still marks a failed run, which renders no message of its own', () => {
+    expect(workflow).toContain('🔴 AI-visibility run failed');
   });
 });

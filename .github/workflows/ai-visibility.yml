@@ -80,7 +80,9 @@ jobs:
           if [ "$FAILED" = "true" ]; then
             text=$(printf '🔴 AI-visibility run failed\n\nRun: %s' "$run_url")
           else
-            text=$(printf '📊 %s\n\nRun: %s' "$ALERT" "$run_url")
+            # No emoji here: the report renders its own 📊 heading, and adding
+            # one prefixed every message with a doubled icon.
+            text=$(printf '%s\n\nRun: %s' "$ALERT" "$run_url")
           fi
           curl -sS --max-time 30 \
             "https://api.telegram.org/bot${TOKEN}/sendMessage" \
