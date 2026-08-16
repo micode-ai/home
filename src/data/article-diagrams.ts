@@ -2274,4 +2274,55 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
   end
   AUTH --> SEND --> CONF --> KEEP`,
   },
+
+  'ai-funding-decision': {
+    ru: `flowchart TB
+  Q1{"Бюджет внедрения"}
+  Q1 -->|"до 100 тыс. зл."| P1["Пилот за свои деньги"]
+  Q1 -->|"100 тыс. – 1 млн зл."| Q2{"Создаёте что-то новое<br/>или настраиваете готовое?"}
+  Q1 -->|"более 3 млн зл. затрат"| Q3{"Есть ли в проекте<br/>работы НИОКР?"}
+  Q2 -->|"настройка готового"| P2["Гранта под это нет.<br/>Обычные расходы,<br/>смотрите региональную программу"]
+  Q2 -->|"новое решение"| P3["Льгота B+R на затраты,<br/>IP Box на доход от прав"]
+  Q3 -->|"да, самостоятельно"| P4["Ścieżka SMART, приём PARP<br/>анонс 29.09.2026"]
+  Q3 -->|"да, в консорциуме"| P5["Ścieżka SMART, приём NCBR<br/>до 16.10.2026"]
+  Q3 -->|"нет, только внедрение"| P6["Ścieżka SMART внедренческая<br/>приём 21.01–16.03.2027"]
+  P1 --> R
+  P3 --> R
+  P4 --> R
+  P5 --> R
+  P6 --> R
+  R["В любом варианте:<br/>учёт B+R с первого дня<br/>и раздельный учёт по правам ИС"]`,
+    en: `flowchart TB
+  Q1{"Deployment budget"}
+  Q1 -->|"up to PLN 100,000"| P1["Run the pilot on your own money"]
+  Q1 -->|"PLN 100,000 – 1 m"| Q2{"Are you building something new<br/>or configuring something ready?"}
+  Q1 -->|"above PLN 3 m of costs"| Q3{"Does the project contain<br/>R&D work?"}
+  Q2 -->|"configuring"| P2["No grant fits this.<br/>Ordinary costs,<br/>check your regional programme"]
+  Q2 -->|"a new solution"| P3["R&D relief on the costs,<br/>IP Box on the income from rights"]
+  Q3 -->|"yes, on our own"| P4["Ścieżka SMART, PARP call<br/>launch 29.09.2026"]
+  Q3 -->|"yes, in a consortium"| P5["Ścieżka SMART, NCBR call<br/>until 16.10.2026"]
+  Q3 -->|"no, deployment only"| P6["Ścieżka SMART deployment track<br/>call 21.01–16.03.2027"]
+  P1 --> R
+  P3 --> R
+  P4 --> R
+  P5 --> R
+  P6 --> R
+  R["In every branch:<br/>R&D records from day one<br/>and separate books per IP right"]`,
+    pl: `flowchart TB
+  Q1{"Budżet wdrożenia"}
+  Q1 -->|"do 100 tys. zł"| P1["Zrób pilotaż za własne środki"]
+  Q1 -->|"100 tys. – 1 mln zł"| Q2{"Powstaje coś nowego<br/>czy konfigurujecie gotowe?"}
+  Q1 -->|"powyżej 3 mln zł kosztów"| Q3{"Czy w projekcie<br/>są prace B+R?"}
+  Q2 -->|"konfiguracja gotowego"| P2["Nie ma na to dotacji.<br/>Zwykłe koszty,<br/>sprawdź program regionalny"]
+  Q2 -->|"nowe rozwiązanie"| P3["Ulga B+R na koszty,<br/>IP Box na dochód z praw"]
+  Q3 -->|"tak, samodzielnie"| P4["Ścieżka SMART, nabór PARP<br/>ogłoszenie 29.09.2026"]
+  Q3 -->|"tak, w konsorcjum"| P5["Ścieżka SMART, nabór NCBR<br/>do 16.10.2026"]
+  Q3 -->|"nie, tylko wdrożenie"| P6["Ścieżka SMART wdrożeniowa<br/>nabór 21.01–16.03.2027"]
+  P1 --> R
+  P3 --> R
+  P4 --> R
+  P5 --> R
+  P6 --> R
+  R["W każdym wariancie:<br/>ewidencja B+R od pierwszego dnia<br/>i odrębna ewidencja na prawo IP"]`,
+  },
 };

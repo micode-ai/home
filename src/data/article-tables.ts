@@ -198,4 +198,90 @@ export const articleTables: Record<string, Record<Lang, ArticleTable>> = {
       ],
     },
   },
+
+  // Status of Polish public funding instruments an SME could use for an AI/automation project,
+  // as of 16 August 2026. Sources: the official FENG call schedule (XIX aktualizacja, valid from
+  // 31.07.2026, nowoczesnagospodarka.gov.pl), funduszeunijne.gov.pl call pages, digit.arp.pl and
+  // gov.pl/web/ncbr. Every "status" cell is a point-in-time claim — if a call opens or closes,
+  // this table and the prose in the article that repeats the same dates have to move together.
+  'ai-funding-2026': {
+    ru: {
+      headers: ['Инструмент', 'Для кого', 'Масштаб поддержки', 'Статус на 16.08.2026'],
+      rows: [
+        ['KPO — инвестиции для предприятий', 'МСП и крупные компании', '—', 'Закрыт: приём завершён, 31.08.2026 — срок достижения показателей'],
+        ['FENG 1.1 Ścieżka SMART — консорциумы (NCBR)', 'Консорциумы фирм, в том числе с научными организациями или НКО', 'Аллокация 350 млн зл., минимум 3 млн зл. затрат, до 140 млн зл. на проект', 'Открыт: 7.08–16.10.2026'],
+        ['FENG 1.1 Ścieżka SMART — НИОКР (PARP)', 'Отдельные МСП', 'Аллокация 500 млн зл.', 'Объявлен: анонс 29.09.2026, приём 29.10–29.12.2026'],
+        ['FENG 1.1 Ścieżka SMART — внедрение результатов НИОКР (PARP)', 'Отдельные МСП', 'В приёме 2026 года: 700 млн зл., до 50 млн зл. на проект, минимум 3 млн зл. затрат', 'Завершён 11.06.2026; следующий: анонс 17.12.2026, приём 21.01–16.03.2027'],
+        ['FENG 2.12 Granty na eurogranty (PARP)', 'МСП и научные организации', 'Аллокация 20 млн зл.; паушальная сумма на подготовку заявки на европейский грант', 'Открыт до 3.09.2026; следующий X.2026–II.2027'],
+        ['FENG 2.32 Технологический кредит (BGK)', 'МСП', 'Технологическая премия, гасящая часть кредита', 'Приёма нет — аллокация исчерпана после конкурса 2023 года'],
+        ['Dig.IT Цифровая трансформация (ARP)', 'МСП из обрабатывающей промышленности и производственных услуг', '150–850 тыс. зл., до 50% затрат, помощь de minimis', 'Открытого приёма нет; пилот закрыт 28.11.2025'],
+        ['FEPW 1.2 Автоматизация и роботизация в МСП (PARP)', 'МСП Восточной Польши', 'До 3 млн зл., интенсивность до 85% в зависимости от категории затрат', 'Завершён — последний приём 1.08–26.09.2024'],
+        ['16 региональных программ', 'МСП в своём воеводстве', 'Зависит от региона', 'Собственные графики — смотрите программу своего воеводства'],
+        ['EDIH — европейские хабы цифровых инноваций', 'МСП', 'Услуги, а не деньги; помощь de minimis', 'Работают — но это не грант на внедрение'],
+      ],
+    },
+    en: {
+      headers: ['Instrument', 'Who it is for', 'Scale of support', 'Status on 16.08.2026'],
+      rows: [
+        ['KPO — investments for enterprises', 'SMEs and large companies', '—', 'Closed: calls settled, 31.08.2026 is the deadline for hitting the targets'],
+        ['FENG 1.1 Ścieżka SMART — consortia (NCBR)', 'Consortia of firms, also with research organisations or NGOs', 'PLN 350 m allocation, min. PLN 3 m eligible costs, up to PLN 140 m per project', 'Open: 7.08–16.10.2026'],
+        ['FENG 1.1 Ścieżka SMART — R&D (PARP)', 'Individual SMEs', 'PLN 500 m allocation', 'Announced: launch 29.09.2026, call 29.10–29.12.2026'],
+        ['FENG 1.1 Ścieżka SMART — deployment of R&D results (PARP)', 'Individual SMEs', 'In the 2026 call: PLN 700 m, up to PLN 50 m per project, min. PLN 3 m of costs', 'Closed 11.06.2026; next: launch 17.12.2026, call 21.01–16.03.2027'],
+        ['FENG 2.12 Granty na eurogranty (PARP)', 'SMEs and research organisations', 'PLN 20 m allocation; a lump sum to prepare a European grant application', 'Open until 3.09.2026; next Oct 2026–Feb 2027'],
+        ['FENG 2.32 Technology loan (BGK)', 'SMEs', 'A technology bonus repaying part of the loan', 'No call — the allocation was exhausted after the 2023 competition'],
+        ['Dig.IT Digital Transformation (ARP)', 'SMEs in manufacturing and production services', 'PLN 150,000–850,000, up to 50% of costs, de minimis aid', 'No open call; the pilot closed 28.11.2025'],
+        ['FEPW 1.2 Automation and robotisation in SMEs (PARP)', 'SMEs in Eastern Poland', 'Up to PLN 3 m, intensity up to 85% depending on the cost category', 'Closed — the last call ran 1.08–26.09.2024'],
+        ['16 regional programmes', 'SMEs in a given voivodeship', 'Depends on the region', 'Own schedules — check your voivodeship’s programme'],
+        ['EDIH — European Digital Innovation Hubs', 'SMEs', 'Services, not cash; de minimis aid', 'Operating — but this is not a deployment grant'],
+      ],
+    },
+    pl: {
+      headers: ['Instrument', 'Dla kogo', 'Skala wsparcia', 'Status na 16.08.2026'],
+      rows: [
+        ['KPO — inwestycje dla przedsiębiorstw', 'MŚP i duże firmy', '—', 'Zamknięty: nabory rozstrzygnięte, 31.08.2026 to termin osiągnięcia wskaźników'],
+        ['FENG 1.1 Ścieżka SMART — konsorcja (NCBR)', 'Konsorcja firm, także z organizacjami badawczymi lub NGO', 'Alokacja 350 mln zł, min. 3 mln zł kosztów kwalifikowalnych, do 140 mln zł na projekt', 'Otwarty: 7.08–16.10.2026'],
+        ['FENG 1.1 Ścieżka SMART — B+R (PARP)', 'Pojedyncze MŚP', 'Alokacja 500 mln zł', 'Zapowiedziany: ogłoszenie 29.09.2026, nabór 29.10–29.12.2026'],
+        ['FENG 1.1 Ścieżka SMART — wdrożenie wyników B+R (PARP)', 'Pojedyncze MŚP', 'W naborze z 2026 r.: 700 mln zł, do 50 mln zł na projekt, min. 3 mln zł kosztów', 'Zakończony 11.06.2026; kolejny: ogłoszenie 17.12.2026, nabór 21.01–16.03.2027'],
+        ['FENG 2.12 Granty na eurogranty (PARP)', 'MŚP i organizacje badawcze', 'Alokacja 20 mln zł; ryczałt na przygotowanie wniosku o grant europejski', 'Otwarty do 3.09.2026; kolejny X.2026–II.2027'],
+        ['FENG 2.32 Kredyt technologiczny (BGK)', 'MŚP', 'Premia technologiczna spłacająca część kredytu', 'Brak naboru — alokacja wyczerpana po konkursie z 2023 r.'],
+        ['Dig.IT Transformacja Cyfrowa (ARP)', 'MŚP z przetwórstwa przemysłowego i usług produkcyjnych', '150–850 tys. zł, do 50% kosztów, pomoc de minimis', 'Brak otwartego naboru; pilotaż zamknięty 28.11.2025'],
+        ['FEPW 1.2 Automatyzacja i robotyzacja w MŚP (PARP)', 'MŚP z Polski Wschodniej', 'Do 3 mln zł, intensywność do 85% zależnie od kategorii kosztów', 'Zakończony — ostatni nabór 1.08–26.09.2024'],
+        ['16 programów regionalnych', 'MŚP w danym województwie', 'Zależnie od regionu', 'Własne harmonogramy — sprawdź program swojego województwa'],
+        ['EDIH — Europejskie Huby Innowacji Cyfrowych', 'MŚP', 'Usługi, nie gotówka; pomoc de minimis', 'Działają — ale to nie jest dotacja na wdrożenie'],
+      ],
+    },
+  },
+
+  // The four Polish income-tax reliefs an AI/automation project can realistically touch, with the
+  // statutory anchors quoted in the article prose. Rates are from podatki.gov.pl; the robotisation
+  // sunset ("tax year that began in 2026") is the statutory wording, not a projection.
+  'ai-tax-reliefs-2026': {
+    ru: {
+      headers: ['Льгота', 'Кто может воспользоваться', 'Что даёт', 'Статус на 16.08.2026'],
+      rows: [
+        ['Льгота B+R (ст. 18d–18e CIT, ст. 26e PIT)', 'Плательщики CIT и PIT по шкале или линейной ставке, ведущие деятельность B+R', '100% квалифицированных затрат, 200% зарплат сотрудников и исполнителей по договорам', 'Бессрочная, без конкурса'],
+        ['Льгота на инновационных сотрудников (ст. 18db CIT)', 'Фирмы с убытком или слишком малым доходом, чтобы вычесть льготу B+R целиком', 'Уменьшение авансов по PIT сотрудников, занятых в B+R не менее 50% рабочего времени', 'Бессрочная, без конкурса'],
+        ['IP Box (ст. 24d CIT, ст. 30ca PIT)', 'Доход от квалифицированного права ИС, в том числе от авторского права на программу', '5% налога на доход от квалифицированного права ИС', 'Бессрочная; с 2022 года совмещается с льготой B+R'],
+        ['Льгота на роботизацию (ст. 38eb CIT, ст. 52jb PIT)', 'Плательщики CIT и PIT, покупающие промышленных роботов', 'Дополнительные 50% затрат на роботизацию', 'До конца налогового года, начавшегося в 2026 году'],
+      ],
+    },
+    en: {
+      headers: ['Relief', 'Who can use it', 'What it gives', 'Status on 16.08.2026'],
+      rows: [
+        ['R&D relief (Art. 18d–18e CIT, Art. 26e PIT)', 'CIT payers and PIT payers on the scale or flat rate who run R&D activity', '100% of qualified costs, 200% of salaries of employees and contractors', 'Open-ended, no competition'],
+        ['Innovative employees relief (Art. 18db CIT)', 'Firms with a loss, or too little income to deduct the whole R&D relief', 'Reduces PIT advances of staff spending at least 50% of their time on R&D', 'Open-ended, no competition'],
+        ['IP Box (Art. 24d CIT, Art. 30ca PIT)', 'Income from a qualified IP right, including copyright in a computer program', '5% tax on income from the qualified IP right', 'Open-ended; combinable with the R&D relief since 2022'],
+        ['Robotisation relief (Art. 38eb CIT, Art. 52jb PIT)', 'CIT and PIT payers buying industrial robots', 'An extra 50% of robotisation costs', 'Through the end of the tax year that began in 2026'],
+      ],
+    },
+    pl: {
+      headers: ['Ulga', 'Kto może skorzystać', 'Ile daje', 'Status na 16.08.2026'],
+      rows: [
+        ['Ulga B+R (art. 18d–18e CIT, art. 26e PIT)', 'Podatnicy CIT oraz PIT na skali lub liniowym, prowadzący działalność B+R', '100% kosztów kwalifikowanych, 200% wynagrodzeń pracowników i zleceniobiorców', 'Bezterminowa, bez naboru'],
+        ['Ulga na innowacyjnych pracowników (art. 18db CIT)', 'Firmy ze stratą albo ze zbyt niskim dochodem, żeby odliczyć całą ulgę B+R', 'Pomniejsza zaliczki PIT osób poświęcających B+R co najmniej 50% czasu pracy', 'Bezterminowa, bez naboru'],
+        ['IP Box (art. 24d CIT, art. 30ca PIT)', 'Dochód z kwalifikowanego prawa IP, w tym z autorskiego prawa do programu komputerowego', '5% podatku od dochodu z kwalifikowanego prawa IP', 'Bezterminowa; od 2022 łączy się z ulgą B+R'],
+        ['Ulga na robotyzację (art. 38eb CIT, art. 52jb PIT)', 'Podatnicy CIT i PIT kupujący roboty przemysłowe', 'Dodatkowe 50% kosztów robotyzacji', 'Do końca roku podatkowego, który rozpoczął się w 2026 r.'],
+      ],
+    },
+  },
 };
