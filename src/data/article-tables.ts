@@ -151,4 +151,51 @@ export const articleTables: Record<string, Record<Lang, ArticleTable>> = {
       ],
     },
   },
+
+  // Obligatory KSeF calendar. Every date here traces to podatki.gov.pl / biznes.gov.pl:
+  // 200 mln zł is measured on 2024 sales including VAT; the 10 000 zł relief and the
+  // cash-register carve-out both expire 31 XII 2026; art. 106ni penalties and the KSeF
+  // number in payments both start 1 I 2027. The prose in the article repeats these, so
+  // the two have to move together.
+  'ksef-dates': {
+    ru: {
+      headers: ['Дата', 'Что вступает в силу', 'Кого касается'],
+      rows: [
+        ['1 февраля 2026', 'Выставление счетов через KSeF', 'Продажи с налогом свыше 200 млн злотых за 2024 год'],
+        ['1 февраля 2026', 'Приём счетов через KSeF', 'Всех налогоплательщиков, без исключений'],
+        ['1 апреля 2026', 'Выставление счетов через KSeF', 'Остальных предпринимателей, включая освобождённых от НДС'],
+        ['до 31 декабря 2026', 'Счета вне KSeF при продажах до 10 000 злотых в месяц', 'Самых мелких выставителей'],
+        ['до 31 декабря 2026', 'Счета с кассовых аппаратов и чеки с ИНН как упрощённые счета', 'Розничную торговлю'],
+        ['до 31 декабря 2026', 'Период без денежных штрафов по ст. 106ni закона об НДС', 'Всех'],
+        ['1 января 2027', 'Денежные штрафы за нарушение обязанностей KSeF', 'Всех'],
+        ['1 января 2027', 'Номер KSeF в сообщении перевода и при раздельном платеже', 'Платежи B2B между действующими плательщиками НДС'],
+      ],
+    },
+    en: {
+      headers: ['Date', 'What starts applying', 'Who it affects'],
+      rows: [
+        ['1 February 2026', 'Issuing invoices through KSeF', 'Sales including VAT above PLN 200 m in 2024'],
+        ['1 February 2026', 'Receiving invoices through KSeF', 'Every taxpayer, no exceptions'],
+        ['1 April 2026', 'Issuing invoices through KSeF', 'All remaining businesses, including those exempt from VAT'],
+        ['through 31 December 2026', 'Invoices outside KSeF at sales up to PLN 10 000 a month', 'The smallest issuers'],
+        ['through 31 December 2026', 'Cash-register invoices and tax-ID receipts as simplified invoices', 'Retail'],
+        ['through 31 December 2026', 'Period without the monetary penalties of Art. 106ni of the VAT Act', 'Everyone'],
+        ['1 January 2027', 'Monetary penalties for breaching KSeF duties', 'Everyone'],
+        ['1 January 2027', 'KSeF number in the transfer message and under split payment', 'B2B payments between active VAT payers'],
+      ],
+    },
+    pl: {
+      headers: ['Data', 'Co zaczyna obowiązywać', 'Kogo dotyczy'],
+      rows: [
+        ['1 lutego 2026', 'Wystawianie faktur w KSeF', 'Sprzedaż z podatkiem powyżej 200 mln zł w 2024 r.'],
+        ['1 lutego 2026', 'Odbieranie faktur z KSeF', 'Wszystkich podatników, bez wyjątku'],
+        ['1 kwietnia 2026', 'Wystawianie faktur w KSeF', 'Pozostałych przedsiębiorców, także zwolnionych z VAT'],
+        ['do 31 grudnia 2026', 'Faktury poza KSeF przy sprzedaży do 10 000 zł miesięcznie', 'Najmniejszych wystawców'],
+        ['do 31 grudnia 2026', 'Faktury z kas rejestrujących i paragony z NIP jako faktury uproszczone', 'Handel detaliczny'],
+        ['do 31 grudnia 2026', 'Okres bez kar pieniężnych z art. 106ni ustawy o VAT', 'Wszystkich'],
+        ['1 stycznia 2027', 'Kary pieniężne za naruszenie obowiązków KSeF', 'Wszystkich'],
+        ['1 stycznia 2027', 'Numer KSeF w komunikacie przelewu i przy podzielonej płatności', 'Płatności B2B między czynnymi podatnikami VAT'],
+      ],
+    },
+  },
 };

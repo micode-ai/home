@@ -60,6 +60,7 @@ export default defineConfig({
                 agentCostArticle: resolve(__dirname, "blog/ai-agent-cost-per-month-model/index.html"),
                 aiActArticle: resolve(__dirname, "blog/ai-act-sierpien-2026-co-obowiazuje/index.html"),
                 wfirmaAssistantArticle: resolve(__dirname, "blog/asystent-ai-wfirma-vat-pit/index.html"),
+                ksefReadinessArticle: resolve(__dirname, "blog/ksef-2026-co-zrobic-jesli-nie-jestes-gotowy/index.html"),
             },
         },
     },

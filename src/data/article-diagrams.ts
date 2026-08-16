@@ -2208,4 +2208,70 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
   end
   D --> E`,
   },
+  // KSeF 2.0 integration path, drawn from the Ministry of Finance API documentation
+  // (github.com/CIRFMF/ksef-api): challenge → XAdES or token → session with an encrypted
+  // payload → status poll → UPO and the KSeF number. The last stage is what the integrator
+  // has to persist, which is the part most rollouts leave out.
+  'ksef-integration-flow': {
+    ru: `flowchart LR
+  subgraph AUTH["1. Аутентификация"]
+    direction TB
+    A1["challenge<br/>действует 10 минут"] --> A2["подпись XAdES<br/>или токен KSeF"]
+    A2 --> A3["accessToken ~15 минут<br/>refreshToken до 7 дней"]
+  end
+  subgraph SEND["2. Отправка"]
+    direction TB
+    B1["ключ AES-256<br/>зашифрован ключом Минфина"] --> B2["сессия интерактивная<br/>или пакетная"]
+    B2 --> B3["XML по схеме FA 3<br/>до 1 МБ без вложения"]
+  end
+  subgraph CONF["3. Подтверждение"]
+    direction TB
+    C1["опрос статуса<br/>обработка асинхронная"] --> C2["номер KSeF, 35 символов<br/>+ UPO"]
+  end
+  subgraph KEEP["4. У себя"]
+    direction TB
+    D1["номер KSeF, UPO,<br/>исходный XML, режим отправки"] --> D2["дедупликация входящих<br/>по номеру KSeF"]
+  end
+  AUTH --> SEND --> CONF --> KEEP`,
+    en: `flowchart LR
+  subgraph AUTH["1. Authentication"]
+    direction TB
+    A1["challenge<br/>valid for 10 minutes"] --> A2["XAdES signature<br/>or KSeF token"]
+    A2 --> A3["accessToken ~15 min<br/>refreshToken up to 7 days"]
+  end
+  subgraph SEND["2. Submission"]
+    direction TB
+    B1["AES-256 key<br/>encrypted with the Ministry key"] --> B2["session: interactive<br/>or batch"]
+    B2 --> B3["XML in the FA 3 schema<br/>up to 1 MB without attachment"]
+  end
+  subgraph CONF["3. Confirmation"]
+    direction TB
+    C1["poll for status<br/>processing is async"] --> C2["KSeF number, 35 chars<br/>+ UPO"]
+  end
+  subgraph KEEP["4. On your side"]
+    direction TB
+    D1["KSeF number, UPO,<br/>original XML, submission mode"] --> D2["deduplicate incoming<br/>by KSeF number"]
+  end
+  AUTH --> SEND --> CONF --> KEEP`,
+    pl: `flowchart LR
+  subgraph AUTH["1. Uwierzytelnienie"]
+    direction TB
+    A1["challenge<br/>ważny 10 minut"] --> A2["podpis XAdES<br/>albo token KSeF"]
+    A2 --> A3["accessToken ~15 minut<br/>refreshToken do 7 dni"]
+  end
+  subgraph SEND["2. Wysyłka"]
+    direction TB
+    B1["klucz AES-256<br/>zaszyfrowany kluczem MF"] --> B2["sesja interaktywna<br/>albo wsadowa"]
+    B2 --> B3["XML w schemacie FA 3<br/>do 1 MB bez załącznika"]
+  end
+  subgraph CONF["3. Potwierdzenie"]
+    direction TB
+    C1["odpytanie o status<br/>przetwarzanie asynchroniczne"] --> C2["numer KSeF, 35 znaków<br/>+ UPO"]
+  end
+  subgraph KEEP["4. Po Twojej stronie"]
+    direction TB
+    D1["numer KSeF, UPO,<br/>oryginalny XML, tryb wysyłki"] --> D2["deduplikacja zakupowych<br/>po numerze KSeF"]
+  end
+  AUTH --> SEND --> CONF --> KEEP`,
+  },
 };
