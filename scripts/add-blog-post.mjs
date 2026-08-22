@@ -32,14 +32,18 @@
  *
  *     // optional page head; both fall back to summaryPl
  *     "page": { "metaDescription": "<=160 chars", "ldDescription": "...",
- *               "keywords": ["extra", "schema", "keywords"] }
+ *               "keywords": ["extra", "schema", "keywords"],
+ *               "llmsDescription": "one sentence for llms.txt" }
  *   }
  *
- * It writes four things, the same four a human does by hand:
+ * It writes five things, the same five a human does by hand:
  *   1. the entry appended to src/data/blog-posts.json
  *   2. blog/<slug>/index.html   (head + JSON-LD generated; scaffolding copied)
  *   3. blog/<slug>/main.ts
  *   4. one input line in vite.config.ts
+ *   5. one line under "## Blog" in public/llms.txt, the curated map answer
+ *      engines read. That file is hand-maintained, and three of eighteen
+ *      articles were missing from it before this step existed.
  *
  * Nothing is written unless every check passes, so a rejected payload leaves
  * the repository exactly as it was.
@@ -287,6 +291,36 @@ const insertAt = lastInput.index + lastInput[0].length;
 const viteLine = `${indent}${viteKey}: resolve(__dirname, "blog/${payload.slug}/index.html"),\n`;
 vite = vite.slice(0, insertAt) + viteLine + vite.slice(insertAt);
 
+// ------------------------------------------------------- public/llms.txt
+// The curated map answer engines read. It is hand-maintained, not generated,
+// so every article published without touching it goes missing from the one
+// file whose whole job is telling an LLM what this site contains — three of
+// eighteen were already absent when this step was added.
+const LLMS = join(ROOT, 'public', 'llms.txt');
+let llms = null;
+let llmsLine = '';
+if (existsSync(LLMS)) {
+  const text = readFileSync(LLMS, 'utf8');
+  if (!text.includes(`/blog/${payload.slug}/`)) {
+    const lines = text.split('\n');
+    const start = lines.findIndex((l) => l.trim() === '## Blog');
+    if (start === -1) {
+      console.error('add-blog-post: public/llms.txt has no "## Blog" section — skipping it');
+    } else {
+      let last = start;
+      for (let i = start + 1; i < lines.length && !lines[i].startsWith('## '); i++) {
+        if (lines[i].startsWith('- [')) last = i;
+      }
+      const title = payload.metaTitleEn || payload.titleEn;
+      const desc = (page.llmsDescription || payload.metaDescriptionEn
+        || payload.summaryEn || '').replace(/\s+/g, ' ').trim();
+      llmsLine = `- [${title}](${SITE}/blog/${payload.slug}/): ${desc}`;
+      lines.splice(last + 1, 0, llmsLine);
+      llms = lines.join('\n');
+    }
+  }
+}
+
 // ------------------------------------------------------------------- write
 const nextPosts = JSON.stringify([...posts, payload], null, 2) + '\n';
 
@@ -298,6 +332,7 @@ if (dryRun) {
   console.log(`  index.html    ${Buffer.byteLength(indexHtml)} bytes (template: ${tplSlug})`);
   console.log(`  vite input    ${viteKey}`);
   console.log(`  faq questions ${payload.faq.length}`);
+  console.log(`  llms.txt      ${llms ? 'one line appended' : 'unchanged (already listed, or no ## Blog section)'}`);
   process.exit(0);
 }
 
@@ -312,10 +347,12 @@ writeFileSync(join(articleDir, 'index.html'), indexHtml, 'utf8');
 writeFileSync(join(articleDir, 'main.ts'), mainTs, 'utf8');
 writeAtomic(POSTS, nextPosts);
 writeAtomic(VITE, vite);
+if (llms !== null) writeAtomic(LLMS, llms);
 
 console.log(`add-blog-post: registered ${payload.slug}`);
 console.log(`  src/data/blog-posts.json   ${posts.length} -> ${posts.length + 1} entries`);
 console.log(`  blog/${payload.slug}/index.html   ${Buffer.byteLength(indexHtml)} bytes`);
 console.log(`  blog/${payload.slug}/main.ts`);
 console.log(`  vite.config.ts             + ${viteKey}`);
+if (llms !== null) console.log(`  public/llms.txt            + 1 line`);
 console.log('  next: npm run build');
