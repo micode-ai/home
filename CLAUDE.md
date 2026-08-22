@@ -25,6 +25,8 @@ Entry points:
 
 Since there's no router, every new product or blog article requires: a new directory under `products/` or `blog/` with its own `index.html` + `main.ts`, plus a matching `rollupOptions.input` entry in `vite.config.ts`.
 
+**For a blog article, do not do those four steps by hand — run `node scripts/add-blog-post.mjs <payload.json>`** (`--dry-run` to check first). It appends the entry, writes `index.html` + `main.ts`, and inserts the `vite.config.ts` input, refusing the whole payload if anything is off. The reason it exists: `src/data/blog-posts.json` is ~780 KB — 17 articles with three full language bodies each — and reading it to append an entry exhausts an agent's context before it writes anything. Do not open that file to edit it; sample one entry if you need the shape.
+
 ### Content/data-driven pages, not hardcoded markup
 
 - `src/data/products.json` is the source of truth for all product pages — `ProductPage.svelte` looks up the product by `id` and renders generically. Adding a product = adding a JSON entry (+ i18n keys + optional image/diagram), not new markup.
