@@ -284,4 +284,37 @@ export const articleTables: Record<string, Record<Lang, ArticleTable>> = {
       ],
     },
   },
+
+  'ai-visibility-quota': {
+    ru: {
+      headers: ['Ограничение свободного тарифа', 'Значение'],
+      rows: [
+        ['Вызовов модели в день (на проект, на модель)', '20'],
+        ['Реально используемый дневной бюджет', '18 (запас под лимитом)'],
+        ['Вызовов на полный обход', '54 (27 промптов × 2 повтора)'],
+        ['Дней на закрытие одного обхода', '3'],
+        ['Пауза между вызовами (лимит в минуту)', '6,5 секунды'],
+      ],
+    },
+    en: {
+      headers: ['Free-tier constraint', 'Value'],
+      rows: [
+        ['Model calls allowed per day (per project, per model)', '20'],
+        ['Daily budget actually used', '18 (headroom under the cap)'],
+        ['Calls for one full sweep', '54 (27 prompts × 2 repeats)'],
+        ['Days needed to close one sweep', '3'],
+        ['Pacing gap between calls (per-minute limit)', '6.5 seconds'],
+      ],
+    },
+    pl: {
+      headers: ['Ograniczenie darmowego tieru', 'Wartość'],
+      rows: [
+        ['Wywołań modelu dziennie (na projekt, na model)', '20'],
+        ['Realnie wykorzystywany dzienny budżet', '18 (margines pod limitem)'],
+        ['Wywołań na pełny przegląd', '54 (27 promptów × 2 powtórzenia)'],
+        ['Dni potrzebnych na zamknięcie przeglądu', '3'],
+        ['Odstęp między wywołaniami (limit na minutę)', '6,5 sekundy'],
+      ],
+    },
+  },
 };

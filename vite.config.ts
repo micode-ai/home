@@ -62,6 +62,7 @@ export default defineConfig({
                 wfirmaAssistantArticle: resolve(__dirname, "blog/asystent-ai-wfirma-vat-pit/index.html"),
                 ksefReadinessArticle: resolve(__dirname, "blog/ksef-2026-co-zrobic-jesli-nie-jestes-gotowy/index.html"),
                 aiFundingArticle: resolve(__dirname, "blog/dotacje-na-ai-dla-firm-2026/index.html"),
+                aiCitationMonitorGeminiFreeQuotaArticle: resolve(__dirname, "blog/ai-citation-monitor-gemini-free-quota/index.html"),
             },
         },
     },

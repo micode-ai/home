@@ -2325,4 +2325,46 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
   P6 --> R
   R["W każdym wariancie:<br/>ewidencja B+R od pierwszego dnia<br/>i odrębna ewidencja na prawo IP"]`,
   },
+
+  'ai-visibility-sweep-cursor': {
+    ru: `flowchart TB
+  L["Список работы: 54 пункта<br/>27 промптов × 2 повтора"] --> D1
+  D1["День 1<br/>пункты 0–17, курсор 0 → 18"] --> S1{"Обход завершён?"}
+  S1 -->|нет| W1["partial.json: курсор 18<br/>накопленные попытки сохранены"]
+  W1 --> D2["День 2<br/>пункты 18–35, курсор 18 → 36"]
+  D2 --> S2{"Обход завершён?"}
+  S2 -->|нет| W2["partial.json: курсор 36"]
+  W2 --> D3["День 3<br/>пункты 36–53, курсор 36 → 54"]
+  D3 --> S3{"Обход завершён?"}
+  S3 -->|да| F["Сборка в датированный запуск,<br/>пересборка отчёта, курсор → 0"]
+  RT["Разрыв соединения или 429:<br/>повтор внутри того же дня,<br/>курсор не продвигается"] -.-> D1
+  RT -.-> D2
+  RT -.-> D3`,
+    en: `flowchart TB
+  L["Work list: 54 items<br/>27 prompts × 2 repeats"] --> D1
+  D1["Day 1<br/>items 0–17, cursor 0 → 18"] --> S1{"Sweep complete?"}
+  S1 -->|no| W1["partial.json: cursor 18<br/>attempts so far saved"]
+  W1 --> D2["Day 2<br/>items 18–35, cursor 18 → 36"]
+  D2 --> S2{"Sweep complete?"}
+  S2 -->|no| W2["partial.json: cursor 36"]
+  W2 --> D3["Day 3<br/>items 36–53, cursor 36 → 54"]
+  D3 --> S3{"Sweep complete?"}
+  S3 -->|yes| F["Fold into dated run,<br/>rebuild report, cursor → 0"]
+  RT["Dropped connection or 429:<br/>retried within the same day's slice,<br/>cursor does not advance"] -.-> D1
+  RT -.-> D2
+  RT -.-> D3`,
+    pl: `flowchart TB
+  L["Lista zadań: 54 pozycje<br/>27 promptów × 2 powtórzenia"] --> D1
+  D1["Dzień 1<br/>pozycje 0–17, kursor 0 → 18"] --> S1{"Przegląd zamknięty?"}
+  S1 -->|nie| W1["partial.json: kursor 18<br/>dotychczasowe próby zapisane"]
+  W1 --> D2["Dzień 2<br/>pozycje 18–35, kursor 18 → 36"]
+  D2 --> S2{"Przegląd zamknięty?"}
+  S2 -->|nie| W2["partial.json: kursor 36"]
+  W2 --> D3["Dzień 3<br/>pozycje 36–53, kursor 36 → 54"]
+  D3 --> S3{"Przegląd zamknięty?"}
+  S3 -->|tak| F["Złożenie w przegląd z datą,<br/>przebudowa raportu, kursor → 0"]
+  RT["Zerwane połączenie lub 429:<br/>ponowna próba w tej samej porcji dnia,<br/>kursor się nie przesuwa"] -.-> D1
+  RT -.-> D2
+  RT -.-> D3`,
+  },
 };
