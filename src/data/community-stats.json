@@ -1,12 +1,12 @@
 {
-  "fetchedAt": "2026-08-16T11:38:32.741Z",
+  "fetchedAt": "2026-08-22T10:16:42.546Z",
   "stats": {
     "budget-assistant": {
-      "githubStars": 5,
+      "githubStars": 7,
       "npmWeeklyDownloads": null
     },
     "accounting-ai": {
-      "githubStars": 4,
+      "githubStars": 6,
       "npmWeeklyDownloads": null
     },
     "legalka-kb": {
@@ -14,15 +14,15 @@
       "npmWeeklyDownloads": null
     },
     "emarketing-ai": {
-      "githubStars": 6,
+      "githubStars": 8,
       "npmWeeklyDownloads": null
     },
     "ngx-chat": {
       "githubStars": null,
-      "npmWeeklyDownloads": 26
+      "npmWeeklyDownloads": 30
     },
     "testing-ai": {
-      "githubStars": 4,
+      "githubStars": 6,
       "npmWeeklyDownloads": null
     }
   }
