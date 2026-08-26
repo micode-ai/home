@@ -2,6 +2,7 @@
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import { withLocale } from '../services/locale';
+  import { track } from '../services/tracking';
   import productsData from '../data/products.json';
   import blogPosts from '../data/blog-posts.json';
   import type { Product } from '../types/products';
@@ -11,6 +12,10 @@
   import ImageLightbox from './ImageLightbox.svelte';
 
   let lightboxOpen = $state(false);
+
+  function trackOutbound(linkType: string) {
+    track('click', { outbound: true, link_type: linkType, item_id: productId });
+  }
   import ngxChatImage from '../assets/images/ngx-open-web-ui-chat.png';
   import accountingAiImage from '../assets/images/accounting-ai.png';
   import budgetAssistantImage from '../assets/images/budget-assistant.jpg';
@@ -126,6 +131,7 @@
               class="product-website-link"
               target="_blank"
               rel="noopener noreferrer"
+              onclick={() => trackOutbound('website')}
             >
               {product.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
@@ -150,6 +156,7 @@
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="{t(link.labelKey, lang)} — {name}"
+                onclick={() => trackOutbound(link.type)}
               >
                 {#if link.type === 'npm'}
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M1.763 0C.786 0 0 .786 0 1.763v20.474C0 23.214.786 24 1.763 24h20.474c.977 0 1.763-.786 1.763-1.763V1.763C24 .786 23.214 0 22.237 0zM5.13 5.323l13.837.019-.009 13.836h-3.464l.01-10.382h-3.456L12.04 19.17H5.113z"/></svg>
@@ -265,6 +272,7 @@
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="{t(link.labelKey, lang)} — {name}"
+                onclick={() => trackOutbound(link.type)}
               >
                 {#if link.type === 'npm'}
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M1.763 0C.786 0 0 .786 0 1.763v20.474C0 23.214.786 24 1.763 24h20.474c.977 0 1.763-.786 1.763-1.763V1.763C24 .786 23.214 0 22.237 0zM5.13 5.323l13.837.019-.009 13.836h-3.464l.01-10.382h-3.456L12.04 19.17H5.113z"/></svg>

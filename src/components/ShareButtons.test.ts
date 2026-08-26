@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest';
 import { render, fireEvent } from '@testing-library/svelte';
 import { loadTranslations } from '../services/i18n';
 import ShareButtons from './ShareButtons.svelte';
@@ -72,5 +72,59 @@ describe('ShareButtons copy-link button', () => {
     await fireEvent.click(getByTestId('share-copy-button'));
 
     expect(getByTestId('share-copy-button').textContent).toMatch(/Couldn't copy/);
+  });
+});
+
+describe('ShareButtons tracking', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    localStorage.setItem('cookieConsent', 'accepted');
+    window.gtag = vi.fn();
+    window.mktai = vi.fn();
+  });
+
+  afterEach(() => {
+    Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true });
+  });
+
+  it('fires share with the linkedin method', async () => {
+    const { getByLabelText } = render(ShareButtons, { props });
+    await fireEvent.click(getByLabelText('Share on LinkedIn'));
+    expect(window.gtag).toHaveBeenCalledWith(
+      'event',
+      'share',
+      expect.objectContaining({ method: 'linkedin', content_type: 'article' })
+    );
+  });
+
+  it('fires share with the twitter method', async () => {
+    const { getByLabelText } = render(ShareButtons, { props });
+    await fireEvent.click(getByLabelText('Share on X'));
+    expect(window.gtag).toHaveBeenCalledWith(
+      'event',
+      'share',
+      expect.objectContaining({ method: 'twitter' })
+    );
+  });
+
+  it('fires share with the copy_link method', async () => {
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText: vi.fn().mockResolvedValue(undefined) },
+      configurable: true,
+    });
+    const { getByTestId } = render(ShareButtons, { props });
+    await fireEvent.click(getByTestId('share-copy-button'));
+    expect(window.gtag).toHaveBeenCalledWith(
+      'event',
+      'share',
+      expect.objectContaining({ method: 'copy_link' })
+    );
+  });
+
+  it('sends nothing when cookies were not accepted', async () => {
+    localStorage.setItem('cookieConsent', 'rejected');
+    const { getByLabelText } = render(ShareButtons, { props });
+    await fireEvent.click(getByLabelText('Share on LinkedIn'));
+    expect(window.gtag).not.toHaveBeenCalled();
   });
 });

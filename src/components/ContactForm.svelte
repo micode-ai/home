@@ -4,6 +4,7 @@
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import { validateForm, type FormData } from '../services/validation';
+  import { track, trackConversion } from '../services/tracking';
 
   const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
   const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
@@ -23,6 +24,9 @@
   let submitError = $state(false);
   let touched = $state<Partial<Record<keyof FormData, boolean>>>({});
 
+  // Once per mounted form: tells us how many visitors start typing but never send.
+  let formStarted = false;
+
   // Prefills the message from a `msg` query param — how the cost calculator's "Discuss this
   // estimate" link hands its summary over. Read once, then stripped from the URL so a reload
   // doesn't reapply/duplicate it after the visitor has edited or cleared the message.
@@ -36,6 +40,12 @@
     const url = `${window.location.pathname}${query ? `?${query}` : ''}${window.location.hash}`;
     window.history.replaceState(null, '', url);
   });
+
+  function handleFormStart() {
+    if (formStarted) return;
+    formStarted = true;
+    track('form_start', { form: 'contact' });
+  }
 
   function dismissSuccess() {
     isSubmitted = false;
@@ -104,12 +114,16 @@
         isSubmitted = true;
         formData = { name: '', email: '', message: '' };
         touched = {};
+        trackConversion('generate_lead', { form: 'contact' });
       } catch (err) {
         console.error('EmailJS error:', err);
         submitError = true;
+        track('form_error', { form: 'contact', reason: 'send_failed' });
       } finally {
         isSubmitting = false;
       }
+    } else {
+      track('form_error', { form: 'contact', reason: 'validation' });
     }
   }
 </script>
@@ -141,7 +155,7 @@
         </div>
       {/if}
 
-      <form onsubmit={handleSubmit} novalidate aria-label="Contact form">
+      <form onsubmit={handleSubmit} oninput={handleFormStart} novalidate aria-label="Contact form">
         <div class="form-group">
           <label for="name">{t('contact.name', $languageStore)}</label>
           <input

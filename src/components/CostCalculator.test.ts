@@ -221,3 +221,43 @@ describe('CostCalculator discuss link', () => {
     expect(href.startsWith('/ru/?msg=')).toBe(true);
   });
 });
+
+describe('CostCalculator engagement tracking', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    localStorage.setItem('cookieConsent', 'accepted');
+    window.history.replaceState(null, '', '/blog/cost-of-ai-agent/');
+    window.gtag = vi.fn();
+    window.mktai = vi.fn();
+  });
+
+  function calculatorEvents() {
+    return vi.mocked(window.gtag!).mock.calls.filter((call) => call[1] === 'calculator_use');
+  }
+
+  it('stays silent until the visitor edits an input', () => {
+    render(CostCalculator, { props: { lang: 'pl' } });
+    expect(calculatorEvents()).toHaveLength(0);
+  });
+
+  it('fires calculator_use on the first edit', async () => {
+    const { getByLabelText } = render(CostCalculator, { props: { lang: 'pl' } });
+    await fireEvent.input(getByLabelText('Liczba narzędzi agenta'), { target: { value: '120' } });
+    expect(calculatorEvents()).toHaveLength(1);
+  });
+
+  it('does not fire again on later edits', async () => {
+    const { getByLabelText } = render(CostCalculator, { props: { lang: 'pl' } });
+    const tools = getByLabelText('Liczba narzędzi agenta');
+    await fireEvent.input(tools, { target: { value: '120' } });
+    await fireEvent.input(tools, { target: { value: '130' } });
+    expect(calculatorEvents()).toHaveLength(1);
+  });
+
+  it('sends nothing when cookies were not accepted', async () => {
+    localStorage.setItem('cookieConsent', 'rejected');
+    const { getByLabelText } = render(CostCalculator, { props: { lang: 'pl' } });
+    await fireEvent.input(getByLabelText('Liczba narzędzi agenta'), { target: { value: '120' } });
+    expect(window.gtag).not.toHaveBeenCalled();
+  });
+});

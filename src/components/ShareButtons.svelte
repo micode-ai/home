@@ -1,6 +1,7 @@
 <script lang="ts">
   import { t } from '../services/i18n';
   import { copyToClipboard } from '../services/clipboard';
+  import { track } from '../services/tracking';
 
   let { url, title, lang }: { url: string; title: string; lang: string } = $props();
 
@@ -14,7 +15,12 @@
   let copyState = $state<'idle' | 'copied' | 'error'>('idle');
   let copyResetTimer: ReturnType<typeof setTimeout> | undefined;
 
+  function trackShare(method: string) {
+    track('share', { method, content_type: 'article', item_id: url });
+  }
+
   async function handleCopyLink() {
+    trackShare('copy_link');
     const ok = await copyToClipboard(url);
     copyState = ok ? 'copied' : 'error';
     clearTimeout(copyResetTimer);
@@ -35,6 +41,7 @@
     target="_blank"
     rel="noopener noreferrer"
     aria-label={t('blog.share.linkedin', lang)}
+    onclick={() => trackShare('linkedin')}
   >
     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM7.12 20.45H3.56V9h3.56v11.45Z"/></svg>
   </a>
@@ -44,6 +51,7 @@
     target="_blank"
     rel="noopener noreferrer"
     aria-label={t('blog.share.twitter', lang)}
+    onclick={() => trackShare('twitter')}
   >
     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2h3.3l-7.2 8.2L23.5 22h-6.6l-5.2-6.8L5.7 22H2.4l7.7-8.8L1 2h6.8l4.7 6.2L18.9 2Zm-1.2 18h1.8L7.4 4h-1.9l12.2 16Z"/></svg>
   </a>

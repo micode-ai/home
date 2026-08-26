@@ -3,6 +3,7 @@
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import { withLocale } from '../services/locale';
+  import { track } from '../services/tracking';
   import blogPosts from '../data/blog-posts.json';
   import products from '../data/products.json';
   import MermaidDiagram from './MermaidDiagram.svelte';
@@ -168,6 +169,19 @@
     if (!articleBodyEl) return;
     const rect = articleBodyEl.getBoundingClientRect();
     readingProgress = computeReadingProgress(rect.top, rect.height, window.innerHeight);
+    reportScrollDepth();
+  }
+
+  // Ascending, so a jump to the end reports the thresholds in the order they were passed.
+  const SCROLL_DEPTHS = [25, 50, 75, 90];
+  const reportedDepths = new Set<number>();
+
+  function reportScrollDepth() {
+    for (const depth of SCROLL_DEPTHS) {
+      if (readingProgress < depth || reportedDepths.has(depth)) continue;
+      reportedDepths.add(depth);
+      track('scroll', { percent_scrolled: depth, slug });
+    }
   }
 
   onMount(() => {

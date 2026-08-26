@@ -2,6 +2,7 @@
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import { withLocale } from '../services/locale';
+  import { track } from '../services/tracking';
   import type { Product } from '../types/products';
   import CommunityStatBadges from './CommunityStatBadges.svelte';
 
@@ -14,16 +15,21 @@
 
   const { product, productImage, index, onOpenModal }: Props = $props();
 
+  function openModal() {
+    track('select_item', { item_id: product.id });
+    onOpenModal(product);
+  }
+
   function handleClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
     if (target.closest('.product-link')) return;
-    onOpenModal(product);
+    openModal();
   }
 
   function handleKeydown(event: KeyboardEvent) {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      onOpenModal(product);
+      openModal();
     }
   }
 </script>

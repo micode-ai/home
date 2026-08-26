@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest';
-import { render, screen } from '@testing-library/svelte';
+import { render, screen, fireEvent, waitFor } from '@testing-library/svelte';
 import { loadTranslations } from '../services/i18n';
 import ContactForm from './ContactForm.svelte';
+import emailjs from '@emailjs/browser';
 
 vi.mock('@emailjs/browser', () => ({
   default: {
@@ -92,5 +93,96 @@ describe('ContactForm message prefill from a msg query param', () => {
     window.history.replaceState(null, '', '/?utm_source=newsletter&msg=hello');
     render(ContactForm);
     expect(window.location.search).toBe('?utm_source=newsletter');
+  });
+});
+
+describe('ContactForm conversion tracking', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    localStorage.setItem('cookieConsent', 'accepted');
+    window.history.replaceState(null, '', '/');
+    window.gtag = vi.fn();
+    window.mktai = vi.fn();
+    vi.mocked(emailjs.send).mockReset();
+    vi.mocked(emailjs.send).mockResolvedValue({ status: 200, text: 'OK' });
+  });
+
+  async function fillAndSubmit() {
+    render(ContactForm);
+    await fireEvent.input(screen.getByLabelText(/imię/i), { target: { value: 'Anna' } });
+    await fireEvent.input(screen.getByLabelText(/email/i), { target: { value: 'anna@example.com' } });
+    await fireEvent.input(screen.getByLabelText(/wiadomość/i), { target: { value: 'Dzień dobry' } });
+    await fireEvent.click(screen.getByLabelText(/wyrażam zgodę/i));
+    await fireEvent.click(screen.getByRole('button', { name: /wyślij/i }));
+  }
+
+  function eventsNamed(name: string) {
+    return vi.mocked(window.gtag!).mock.calls.filter((call) => call[1] === name);
+  }
+
+  it('fires generate_lead once the message is delivered', async () => {
+    await fillAndSubmit();
+    await waitFor(() => {
+      expect(window.gtag).toHaveBeenCalledWith(
+        'event',
+        'generate_lead',
+        expect.objectContaining({ form: 'contact' })
+      );
+    });
+  });
+
+  it('reports the delivered message to mktai as a conversion', async () => {
+    await fillAndSubmit();
+    await waitFor(() => {
+      expect(window.mktai).toHaveBeenCalledWith(
+        'conversion',
+        'generate_lead',
+        expect.objectContaining({ form: 'contact' })
+      );
+    });
+  });
+
+  it('fires form_error instead of generate_lead when delivery fails', async () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.mocked(emailjs.send).mockRejectedValueOnce(new Error('network down'));
+
+    await fillAndSubmit();
+
+    await waitFor(() => {
+      expect(window.gtag).toHaveBeenCalledWith(
+        'event',
+        'form_error',
+        expect.objectContaining({ reason: 'send_failed' })
+      );
+    });
+    expect(eventsNamed('generate_lead')).toHaveLength(0);
+    consoleError.mockRestore();
+  });
+
+  it('fires form_error when validation blocks the submission', async () => {
+    render(ContactForm);
+    await fireEvent.click(screen.getByRole('button', { name: /wyślij/i }));
+    await waitFor(() => {
+      expect(window.gtag).toHaveBeenCalledWith(
+        'event',
+        'form_error',
+        expect.objectContaining({ reason: 'validation' })
+      );
+    });
+  });
+
+  it('fires form_start on the first edit only', async () => {
+    render(ContactForm);
+    const name = screen.getByLabelText(/imię/i);
+    await fireEvent.input(name, { target: { value: 'A' } });
+    await fireEvent.input(name, { target: { value: 'An' } });
+    expect(eventsNamed('form_start')).toHaveLength(1);
+  });
+
+  it('sends nothing when cookies were not accepted', async () => {
+    localStorage.setItem('cookieConsent', 'rejected');
+    await fillAndSubmit();
+    expect(window.gtag).not.toHaveBeenCalled();
+    expect(window.mktai).not.toHaveBeenCalled();
   });
 });

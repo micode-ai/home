@@ -1,8 +1,15 @@
 <script lang="ts">
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
+  import { track } from '../services/tracking';
 
   const sectionTitle = $derived(t('faq.title', $languageStore));
+
+  // `toggle` fires on collapse too; only an expand is a signal of interest.
+  function handleToggle(event: Event, id: string) {
+    if (!(event.currentTarget as HTMLDetailsElement).open) return;
+    track('faq_open', { item_id: id });
+  }
 
   const items = $derived(
     [1, 2, 3, 4].map((n) => ({
@@ -19,7 +26,7 @@
 
     <div class="faq-list">
       {#each items as item (item.id)}
-        <details class="faq-item reveal-child">
+        <details class="faq-item reveal-child" ontoggle={(event) => handleToggle(event, item.id)}>
           <summary class="faq-question">
             <span>{item.question}</span>
             <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

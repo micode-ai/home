@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeAll, vi } from 'vitest';
-import { render } from '@testing-library/svelte';
+import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest';
+import { render, fireEvent } from '@testing-library/svelte';
 import { loadTranslations } from '../services/i18n';
 import { languageStore } from '../stores/languageStore';
 import plTranslations from '../data/pl.json';
@@ -253,5 +253,88 @@ describe('ArticlePage reading progress bar', () => {
     expect(bar).toBeTruthy();
     expect(bar?.getAttribute('aria-hidden')).toBe('true');
     expect(bar?.getAttribute('style')).toMatch(/width:\s*[\d.]+%/);
+  });
+});
+
+describe('ArticlePage scroll depth tracking', () => {
+  let rectSpy: ReturnType<typeof vi.spyOn> | undefined;
+
+  // jsdom gives every element a zero-sized rect, which reads as "fully scrolled".
+  // Stub a tall article body so the thresholds can be crossed deliberately.
+  function articleTop(top: number) {
+    const rect = {
+      top,
+      height: 3000,
+      bottom: top + 3000,
+      left: 0,
+      right: 800,
+      width: 800,
+      x: 0,
+      y: top,
+      toJSON: () => ({}),
+    } as DOMRect;
+    if (rectSpy) {
+      rectSpy.mockReturnValue(rect);
+    } else {
+      rectSpy = vi.spyOn(Element.prototype, 'getBoundingClientRect').mockReturnValue(rect);
+    }
+  }
+
+  function depths() {
+    return vi
+      .mocked(window.gtag!)
+      .mock.calls.filter((call) => call[1] === 'scroll')
+      .map((call) => (call[2] as Record<string, unknown>).percent_scrolled);
+  }
+
+  beforeEach(() => {
+    localStorage.clear();
+    localStorage.setItem('cookieConsent', 'accepted');
+    window.history.replaceState(null, '', '/blog/long-fixture/');
+    languageStore.set('en');
+    window.gtag = vi.fn();
+    window.mktai = vi.fn();
+    articleTop(0);
+  });
+
+  afterEach(() => {
+    rectSpy?.mockRestore();
+    rectSpy = undefined;
+  });
+
+  it('sends nothing while the reader is still at the top', () => {
+    render(ArticlePage, { props: { slug: 'long-fixture' } });
+    expect(depths()).toEqual([]);
+  });
+
+  it('reports the 25% threshold once the reader passes it', async () => {
+    render(ArticlePage, { props: { slug: 'long-fixture' } });
+    articleTop(-600);
+    await fireEvent.scroll(window);
+    expect(depths()).toEqual([25]);
+  });
+
+  it('does not repeat a threshold already reported', async () => {
+    render(ArticlePage, { props: { slug: 'long-fixture' } });
+    articleTop(-600);
+    await fireEvent.scroll(window);
+    articleTop(-700);
+    await fireEvent.scroll(window);
+    expect(depths()).toEqual([25]);
+  });
+
+  it('reports every threshold crossed in a single jump to the end', async () => {
+    render(ArticlePage, { props: { slug: 'long-fixture' } });
+    articleTop(-2232);
+    await fireEvent.scroll(window);
+    expect(depths()).toEqual([25, 50, 75, 90]);
+  });
+
+  it('sends nothing when cookies were not accepted', async () => {
+    localStorage.setItem('cookieConsent', 'rejected');
+    render(ArticlePage, { props: { slug: 'long-fixture' } });
+    articleTop(-2232);
+    await fireEvent.scroll(window);
+    expect(window.gtag).not.toHaveBeenCalled();
   });
 });

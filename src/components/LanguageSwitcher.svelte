@@ -1,6 +1,7 @@
 <script lang="ts">
   import { languageStore, persistLanguage, type Language } from '../stores/languageStore';
   import { localizedPath } from '../services/locale';
+  import { track } from '../services/tracking';
 
   const languages: Language[] = ['pl', 'en', 'ru'];
 
@@ -10,6 +11,7 @@
   // The choice is persisted so the home page can redirect a returning visitor.
   function selectLanguage(lang: Language) {
     if (lang === $languageStore) return;
+    track('language_change', { from_language: $languageStore, to_language: lang });
     persistLanguage(lang);
     window.location.assign(localizedPath(window.location.pathname, lang));
   }

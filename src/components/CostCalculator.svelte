@@ -20,6 +20,7 @@
   } from '../services/costEstimateUrl';
   import { copyToClipboard } from '../services/clipboard';
   import { withLocale } from '../services/locale';
+  import { track } from '../services/tracking';
   import type { Language } from '../stores/languageStore';
 
   let { lang }: { lang: string } = $props();
@@ -60,6 +61,10 @@
 
   let restoredFromUrl = false;
 
+  // Once per mounted calculator: separates visitors who actually ran a number
+  // from those who only scrolled past the widget.
+  let engagementTracked = false;
+
   onMount(() => {
     const restored = decodeEstimateQuery(window.location.search, DEFAULT_FIELDS);
     restoredFromUrl = hasEstimateParams(window.location.search);
@@ -87,6 +92,12 @@
       outputTokensPerStep, stepsMin, stepsMax, tasksPerDay, cachedSharePct, model, euResidency,
     };
     if (!restoredFromUrl && estimateFieldsEqual(fields, DEFAULT_FIELDS)) return;
+
+    if (!engagementTracked) {
+      engagementTracked = true;
+      track('calculator_use', { calculator: 'agent_cost', model });
+    }
+
     const params = new URLSearchParams(window.location.search);
     applyEstimateParams(params, fields);
     const url = `${window.location.pathname}?${params}${window.location.hash}`;

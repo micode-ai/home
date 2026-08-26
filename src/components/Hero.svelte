@@ -1,6 +1,7 @@
 <script lang="ts">
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
+  import { track } from '../services/tracking';
 
   const headline = $derived(t('hero.headline', $languageStore));
   const subheadline = $derived(t('hero.subheadline', $languageStore));
@@ -8,6 +9,8 @@
   const ctaAriaLabel = $derived(t('hero.ctaAriaLabel', $languageStore));
 
   function scrollToContact() {
+    track('cta_click', { location: 'hero' });
+
     const contactSection = document.getElementById('contact');
     if (contactSection) {
       contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
