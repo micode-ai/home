@@ -131,6 +131,17 @@ describe('ContactForm conversion tracking', () => {
     });
   });
 
+  it('tags the delivered form submission with method form', async () => {
+    await fillAndSubmit();
+    await waitFor(() => {
+      expect(window.gtag).toHaveBeenCalledWith(
+        'event',
+        'generate_lead',
+        expect.objectContaining({ form: 'contact', method: 'form' })
+      );
+    });
+  });
+
   it('reports the delivered message to mktai as a conversion', async () => {
     await fillAndSubmit();
     await waitFor(() => {
@@ -182,6 +193,56 @@ describe('ContactForm conversion tracking', () => {
   it('sends nothing when cookies were not accepted', async () => {
     localStorage.setItem('cookieConsent', 'rejected');
     await fillAndSubmit();
+    expect(window.gtag).not.toHaveBeenCalled();
+    expect(window.mktai).not.toHaveBeenCalled();
+  });
+});
+
+describe('ContactForm direct-email fallback', () => {
+  // The address used to be plain <strong> text: a prospect who read everything
+  // and mailed us directly produced no event at all, so the funnel reported a
+  // real lead as nothing. Same `generate_lead` name as the form, different
+  // `method`, so GA4 needs exactly one key event for both paths.
+  const EMAIL = 'development@mi-code.pl';
+
+  beforeEach(() => {
+    localStorage.clear();
+    localStorage.setItem('cookieConsent', 'accepted');
+    window.history.replaceState(null, '', '/');
+    window.gtag = vi.fn();
+    window.mktai = vi.fn();
+  });
+
+  it('renders the address as a mailto link', () => {
+    render(ContactForm);
+    const link = screen.getByRole('link', { name: new RegExp(EMAIL, 'i') });
+    expect(link.getAttribute('href')).toBe(`mailto:${EMAIL}`);
+  });
+
+  it('counts a click on it as generate_lead with method email_link', async () => {
+    render(ContactForm);
+    await fireEvent.click(screen.getByRole('link', { name: new RegExp(EMAIL, 'i') }));
+    expect(window.gtag).toHaveBeenCalledWith(
+      'event',
+      'generate_lead',
+      expect.objectContaining({ method: 'email_link' })
+    );
+  });
+
+  it('reports the click to mktai as a conversion', async () => {
+    render(ContactForm);
+    await fireEvent.click(screen.getByRole('link', { name: new RegExp(EMAIL, 'i') }));
+    expect(window.mktai).toHaveBeenCalledWith(
+      'conversion',
+      'generate_lead',
+      expect.objectContaining({ method: 'email_link' })
+    );
+  });
+
+  it('sends nothing when cookies were not accepted', async () => {
+    localStorage.setItem('cookieConsent', 'rejected');
+    render(ContactForm);
+    await fireEvent.click(screen.getByRole('link', { name: new RegExp(EMAIL, 'i') }));
     expect(window.gtag).not.toHaveBeenCalled();
     expect(window.mktai).not.toHaveBeenCalled();
   });

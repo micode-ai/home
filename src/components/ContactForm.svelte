@@ -6,6 +6,10 @@
   import { validateForm, type FormData } from '../services/validation';
   import { track, trackConversion } from '../services/tracking';
 
+  // Shown as the fallback next to the form, and reported under the same
+  // `generate_lead` name so GA4 needs one key event for both routes to us.
+  const CONTACT_EMAIL = 'development@mi-code.pl';
+
   const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
   const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
   const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
@@ -114,7 +118,7 @@
         isSubmitted = true;
         formData = { name: '', email: '', message: '' };
         touched = {};
-        trackConversion('generate_lead', { form: 'contact' });
+        trackConversion('generate_lead', { form: 'contact', method: 'form' });
       } catch (err) {
         console.error('EmailJS error:', err);
         submitError = true;
@@ -125,6 +129,12 @@
     } else {
       track('form_error', { form: 'contact', reason: 'validation' });
     }
+  }
+
+  // No preventDefault: the mail client still has to open. The event is queued
+  // synchronously, which is enough — gtag/mktai both buffer.
+  function handleEmailClick() {
+    trackConversion('generate_lead', { form: 'contact', method: 'email_link' });
   }
 </script>
 
@@ -246,7 +256,11 @@
 
       <div class="alternative-contact" role="complementary" aria-label="Alternative contact information">
         <p>{t('contact.alternativeContact', $languageStore)}</p>
-        <p><strong>development@mi-code.pl</strong></p>
+        <p>
+          <a class="contact-email" href="mailto:{CONTACT_EMAIL}" onclick={handleEmailClick}>
+            <strong>{CONTACT_EMAIL}</strong>
+          </a>
+        </p>
       </div>
     </div>
   </div>
@@ -473,6 +487,18 @@
 
   .alternative-contact strong {
     color: var(--color-text-primary);
+  }
+
+  .contact-email {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-border);
+    transition: border-color 0.2s ease;
+  }
+
+  .contact-email:hover,
+  .contact-email:focus-visible {
+    border-bottom-color: var(--color-text-primary);
   }
 
   @media (max-width: 767px) {

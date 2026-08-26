@@ -1,6 +1,7 @@
 <script lang="ts">
   import { languageStore, type Language } from '../stores/languageStore';
   import { t } from '../services/i18n';
+  import { track } from '../services/tracking';
 
   type TelegramBrand = {
     id: string;
@@ -41,6 +42,13 @@
   const facebookUrl = 'https://www.facebook.com/profile.php?id=61570771625318';
   const instagramUrl = 'https://www.instagram.com/micode.development/';
 
+  // These links leave the site, so the click is the last thing we can observe
+  // about that visitor. Same event shape as the product-page outbound links
+  // (see ProductPage.svelte) so both can be compared in one GA4 report.
+  function trackSocial(network: string, itemId: string) {
+    track('click', { outbound: true, link_type: network, item_id: itemId });
+  }
+
   const heading = $derived(t('footer.socialMedia', $languageStore));
   const telegramLinks = $derived(telegramBrands.map(brand => ({
     id: brand.id,
@@ -58,6 +66,7 @@
         <a
           class="social-icon-btn"
           href={link.url}
+          onclick={() => trackSocial('telegram', link.id)}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Telegram — {link.label}"
@@ -72,6 +81,7 @@
       <a
         class="social-icon-btn icon-only"
         href={facebookUrl}
+        onclick={() => trackSocial('facebook', 'facebook')}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Facebook"
@@ -84,6 +94,7 @@
       <a
         class="social-icon-btn icon-only"
         href={instagramUrl}
+        onclick={() => trackSocial('instagram', 'instagram')}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Instagram"

@@ -5,6 +5,7 @@
   import { getItem, setItem } from '../services/storage';
   import { initializeAnalytics } from '../services/analytics';
   import { initializeMktai } from '../services/mktai';
+  import { track } from '../services/tracking';
 
   const COOKIE_CONSENT_KEY = 'cookieConsent';
 
@@ -22,10 +23,17 @@
     setItem(COOKIE_CONSENT_KEY, 'accepted');
     initializeAnalytics();
     initializeMktai();
+    // Every other event on the site is gated on this key, so the accept rate is
+    // the multiplier on all analytics — worth one event of its own. It has to
+    // come after the loaders: `track()` re-reads the same consent key.
+    track('consent_accept');
     visible = false;
     document.documentElement.classList.remove('cookie-banner-visible');
   }
 
+  // Deliberately untracked: reporting a decline would mean tracking someone who
+  // just asked us not to. The decline rate is inferred from the gap between
+  // `consent_accept` and the (consent-free) server-side visit count instead.
   function reject() {
     setItem(COOKIE_CONSENT_KEY, 'rejected');
     visible = false;
