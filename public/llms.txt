@@ -43,6 +43,8 @@ Contact: development@mi-code.pl — Jana Heweliusza 11 lok. 811, 80-890 Gdańsk,
 - [KSeF 2026: What to Do If You Are Not Ready Yet](https://mi-code.pl/blog/ksef-2026-co-zrobic-jesli-nie-jestes-gotowy/): KSeF is mandatory since February and April 2026 and the penalty-free window closes on 31 December. Four ways to catch up, the API integration, and a checklist.
 - [AI Grants in Poland 2026: What Is Open and the R&D Relief](https://mi-code.pl/blog/dotacje-na-ai-dla-firm-2026/): Which Polish AI funding calls are open in August 2026, what happened to KPO, and why the R&D relief and IP Box usually beat a grant on a small deployment.
 - [AI-citation monitor inside Gemini's free-tier quota](https://mi-code.pl/blog/ai-citation-monitor-gemini-free-quota/): How MiCode paces a 54-call AI-citation sweep across three days inside Gemini's 20-call daily free tier, with retries and a prompt-list fingerprint.
+- [Metric semantics: why an LLM lies on correct numbers](https://mi-code.pl/blog/llm-metric-semantics-analytics/): Six defects from wiring cross-channel analytics into an LLM digest — cumulative counters, search rank direction, a level read inside the reporting window, reporting lag, and null versus zero — plus the prompt rules and pure-module tests that catch them.
+- [MiCode: what we build, what we sell, and how to start](https://mi-code.pl/blog/o-firmie-micode/): Six products of our own, three service lines, and a quote in three business days — a description of the company in which every figure can be checked by the reader.
 
 ## FAQ
 

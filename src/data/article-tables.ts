@@ -317,4 +317,110 @@ export const articleTables: Record<string, Record<Lang, ArticleTable>> = {
       ],
     },
   },
+
+  // Six defects from wiring cross-channel analytics into an LLM digest. Left column is what the
+  // digest actually carried; right column is the recommendation the model produced (or would have
+  // produced) from it. Every row is a case that happened, not an illustration.
+  'llm-metric-traps': {
+    ru: {
+      headers: ['Что попало в дайджест', 'Что отвечает модель'],
+      rows: [
+        ['Кумулятивные снимки, сложенные как дневные значения', 'Рост в разы больше реального'],
+        ['Позиция в выдаче как есть', 'С 20-й на 4-ю читается как ухудшение'],
+        ['opens: 0 там, где трекинга открытий нет', '«Перепишите темы писем» под несуществующую проблему'],
+        ['Уровень, найденный только внутри окна', '«У приложения нет пользователей» — у живого приложения'],
+        ['Клики поиска против визитов сайта за одни даты', '«Обвал поискового трафика» вместо задержки отчётности'],
+        ['0 вместо null', 'Выводы из данных, которых никто не собирал'],
+      ],
+    },
+    en: {
+      headers: ['What the digest carried', 'What the model answers'],
+      rows: [
+        ['Cumulative snapshots summed as daily values', 'Growth several times larger than the real one'],
+        ['Search rank passed through as is', '20th to 4th reads as a decline'],
+        ['opens: 0 where open tracking does not exist', '"Rewrite your subject lines" for a problem nobody has'],
+        ['A level looked up inside the window only', '"The app has no users" — about a live app'],
+        ['Search clicks against site visitors for the same dates', '"Search traffic collapsed" instead of a reporting lag'],
+        ['0 instead of null', 'Conclusions drawn from data nobody collected'],
+      ],
+    },
+    pl: {
+      headers: ['Co trafiło do digestu', 'Co odpowiada model'],
+      rows: [
+        ['Skumulowane migawki zsumowane jak wartości dzienne', 'Wzrost kilkukrotnie większy niż rzeczywisty'],
+        ['Pozycja w wynikach przekazana bez zmian', 'Z 20. na 4. czyta się jako pogorszenie'],
+        ['opens: 0 tam, gdzie nie ma śledzenia otwarć', '„Przepiszcie tematy maili” pod nieistniejący problem'],
+        ['Poziom szukany wyłącznie wewnątrz okna', '„Aplikacja nie ma użytkowników” — o żywej aplikacji'],
+        ['Kliknięcia z wyszukiwarki wobec wizyt za te same daty', '„Załamanie ruchu z wyszukiwarki” zamiast opóźnienia raportowania'],
+        ['0 zamiast null', 'Wnioski z danych, których nikt nie zbierał'],
+      ],
+    },
+  },
+
+  // The two Google Play rows that sat inside the 30-day window for one project after the export
+  // had stopped a month earlier. averageRating resolved correctly to 5 by walking back through the
+  // filler zeros; activeDeviceInstalls resolved to 0 because its only non-zero readings (up to 15)
+  // lay just before the window boundary.
+  'llm-metric-play-window': {
+    ru: {
+      headers: ['Дата', 'installs', 'activeDeviceInstalls', 'averageRating'],
+      rows: [
+        ['2026-07-29', '0', '0', '0'],
+        ['2026-07-28', '0', '0', '5'],
+      ],
+    },
+    en: {
+      headers: ['Date', 'installs', 'activeDeviceInstalls', 'averageRating'],
+      rows: [
+        ['2026-07-29', '0', '0', '0'],
+        ['2026-07-28', '0', '0', '5'],
+      ],
+    },
+    pl: {
+      headers: ['Data', 'installs', 'activeDeviceInstalls', 'averageRating'],
+      rows: [
+        ['2026-07-29', '0', '0', '0'],
+        ['2026-07-28', '0', '0', '5'],
+      ],
+    },
+  },
+
+  // The fix for each of the six traps in 'llm-metric-traps', in the same order.
+  // Every one of them changes which number reaches the JSON — none of them is a better prompt
+  // or a better model, which is the point the article makes with this table.
+  'llm-metric-fixes': {
+    ru: {
+      headers: ['Ловушка', 'Как закрыли'],
+      rows: [
+        ['Пожизненные счётчики TikTok', 'Последний снимок минус первый, а не сумма строк'],
+        ['Позиция в выдаче', 'В дайджест едут набранные позиции: +16 вместо пары чисел'],
+        ['Открытия писем, которых не измеряют', 'Вместо числа флаг openTracking: false'],
+        ['Уровень, прочитанный внутри окна', 'Поиск последнего значения снят с окна и идёт по всей истории'],
+        ['Задержка отчётности Search Console', 'Поле lagDays плюс запрет в промпте сравнивать ряды по датам'],
+        ['0 вместо null', 'Неизмеренное едет как null, и в промпте сказано, что null не ноль'],
+      ],
+    },
+    en: {
+      headers: ['Trap', 'How it was closed'],
+      rows: [
+        ['TikTok lifetime counters', 'Last snapshot minus the first, not the sum of the rows'],
+        ['Search rank', 'The digest carries positions gained: +16 instead of two numbers'],
+        ['Email opens nobody measures', 'A flag, openTracking: false, instead of a number'],
+        ['A level read inside the window', 'The last-value lookup is off the window and runs over the whole history'],
+        ['Search Console reporting lag', 'A lagDays field, plus a prompt rule against comparing the series by date'],
+        ['0 instead of null', 'Unmeasured travels as null, and the prompt says null is not zero'],
+      ],
+    },
+    pl: {
+      headers: ['Pułapka', 'Jak ją zamknęliśmy'],
+      rows: [
+        ['Liczniki dożywotnie TikToka', 'Ostatnia migawka minus pierwsza, a nie suma wierszy'],
+        ['Pozycja w wynikach', 'Do digestu jadą zdobyte pozycje: +16 zamiast pary liczb'],
+        ['Otwarcia maili, których nikt nie mierzy', 'Zamiast liczby flaga openTracking: false'],
+        ['Poziom odczytany wewnątrz okna', 'Szukanie ostatniej wartości zdjęte z okna, idzie po całej historii'],
+        ['Opóźnienie raportowania Search Console', 'Pole lagDays plus zakaz w prompcie porównywania szeregów po datach'],
+        ['0 zamiast null', 'Niezmierzone jedzie jako null, a prompt mówi, że null to nie zero'],
+      ],
+    },
+  },
 };

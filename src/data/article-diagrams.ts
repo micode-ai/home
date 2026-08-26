@@ -2367,4 +2367,103 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
   RT -.-> D2
   RT -.-> D3`,
   },
+
+  'llm-metrics-digest': {
+    ru: `flowchart TB
+  subgraph C["1. Сбор"]
+    TT["TikTok<br/>только пожизненные счётчики"]
+    IG["Instagram<br/>дневной ряд только у охвата"]
+    GP["Google Play<br/>выгрузка CSV, дни без данных — нули"]
+    GS["Search Console<br/>по требованию, окно кончается на 2 дня раньше"]
+    OW["Свои таблицы<br/>визиты, воронка, UTM, позиции, письма"]
+  end
+  subgraph N["2. Нормализация"]
+    K{"Какой это вид числа?"}
+    FL["Поток<br/>сумма строго внутри окна"]
+    LV["Уровень<br/>последнее значение,<br/>окном не ограничен"]
+    RA["Ставка<br/>последнее значение,<br/>не суммируется"]
+    RL["Правила чтения:<br/>null не равен нулю, позиция в набранные позиции,<br/>задержка отчётности как данные,<br/>неизмеряемое как флаг"]
+    K --> FL --> RL
+    K --> LV --> RL
+    K --> RA --> RL
+  end
+  subgraph A["3. Анализ"]
+    J["Один JSON-дайджест"]
+    P["Системный промпт:<br/>половина текста — правила чтения чисел"]
+    M["Модель"]
+    V["Строгий разбор ответа:<br/>пустой результат не затирает карточки"]
+    J --> P --> M --> V
+  end
+  TT --> K
+  IG --> K
+  GP --> K
+  GS --> K
+  OW --> K
+  RL --> J
+  FA["Сбой источника: подключено, цифры null,<br/>а не нули"] -.-> J`,
+    en: `flowchart TB
+  subgraph C["1. Collect"]
+    TT["TikTok<br/>lifetime counters only"]
+    IG["Instagram<br/>daily series for reach only"]
+    GP["Google Play<br/>CSV export, missing days filled with zeros"]
+    GS["Search Console<br/>on demand, window stops 2 days early"]
+    OW["Own tables<br/>visitors, funnel, UTM, ranks, emails"]
+  end
+  subgraph N["2. Normalise"]
+    K{"Which kind of number is it?"}
+    FL["Flow<br/>summed strictly inside the window"]
+    LV["Level<br/>last known value,<br/>not bounded by the window"]
+    RA["Rate<br/>last known value,<br/>never summed"]
+    RL["Reading rules:<br/>null is not zero, rank into positions gained,<br/>reporting lag carried as data,<br/>unmeasured metric carried as a flag"]
+    K --> FL --> RL
+    K --> LV --> RL
+    K --> RA --> RL
+  end
+  subgraph A["3. Analyse"]
+    J["One JSON digest"]
+    P["System prompt:<br/>half of it is how to read the numbers"]
+    M["Model"]
+    V["Strict response parsing:<br/>an empty result never overwrites good cards"]
+    J --> P --> M --> V
+  end
+  TT --> K
+  IG --> K
+  GP --> K
+  GS --> K
+  OW --> K
+  RL --> J
+  FA["Source failure: connected with null,<br/>not zeros"] -.-> J`,
+    pl: `flowchart TB
+  subgraph C["1. Zbieranie"]
+    TT["TikTok<br/>tylko liczniki dożywotnie"]
+    IG["Instagram<br/>szereg dzienny tylko dla zasięgu"]
+    GP["Google Play<br/>eksport CSV, dni bez danych jako zera"]
+    GS["Search Console<br/>na żądanie, okno kończy się 2 dni wcześniej"]
+    OW["Własne tabele<br/>wizyty, lejek, UTM, pozycje, maile"]
+  end
+  subgraph N["2. Normalizacja"]
+    K{"Jaki to rodzaj liczby?"}
+    FL["Strumień<br/>suma ściśle wewnątrz okna"]
+    LV["Poziom<br/>ostatnia znana wartość,<br/>okno jej nie ogranicza"]
+    RA["Wskaźnik<br/>ostatnia znana wartość,<br/>nie sumujemy"]
+    RL["Zasady czytania:<br/>null to nie zero, pozycja na zdobyte pozycje,<br/>opóźnienie raportowania jako dane,<br/>metryka niemierzona jako flaga"]
+    K --> FL --> RL
+    K --> LV --> RL
+    K --> RA --> RL
+  end
+  subgraph A["3. Analiza"]
+    J["Jeden digest JSON"]
+    P["Prompt systemowy:<br/>połowa to zasady czytania liczb"]
+    M["Model"]
+    V["Ścisłe parsowanie odpowiedzi:<br/>pusty wynik nie nadpisuje dobrych kart"]
+    J --> P --> M --> V
+  end
+  TT --> K
+  IG --> K
+  GP --> K
+  GS --> K
+  OW --> K
+  RL --> J
+  FA["Awaria źródła: połączone, liczby null,<br/>a nie zera"] -.-> J`,
+  },
 };
