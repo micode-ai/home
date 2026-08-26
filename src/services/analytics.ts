@@ -28,8 +28,13 @@ export function initializeAnalytics(): void {
     document.head.appendChild(script);
 
     window.dataLayer = window.dataLayer || [];
-    window.gtag = function gtag(...args: unknown[]) {
-      window.dataLayer!.push(args);
+    // Must push `arguments`, not a rest-parameter array. gtag.js tells its own
+    // commands apart from ordinary dataLayer data by type and only acts on
+    // `[object Arguments]`; given a real array it registers its container and
+    // then silently ignores every command, `config` included — the library
+    // loads, sets no `_ga` cookie and sends nothing at all.
+    window.gtag = function gtag() {
+      window.dataLayer!.push(arguments);
     };
     window.gtag('js', new Date());
     window.gtag('config', GA_MEASUREMENT_ID);

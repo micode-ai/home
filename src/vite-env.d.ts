@@ -15,7 +15,7 @@ interface ImportMeta {
 
 declare global {
   interface Window {
-    dataLayer?: unknown[][];
+    dataLayer?: (IArguments | unknown[])[];
     gtag?: (...args: unknown[]) => void;
     mktai?: (type: string, action: string, params?: Record<string, unknown>) => void;
   }
