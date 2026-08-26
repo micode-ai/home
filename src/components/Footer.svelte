@@ -14,6 +14,7 @@
   const address = $derived(t('footer.address', $languageStore));
   const privacyPolicyLabel = $derived(t('footer.privacyPolicy', $languageStore));
   const blogLabel = $derived(t('nav.blog', $languageStore));
+  const aboutLabel = $derived(t('footer.about', $languageStore));
   const accountingAiLabel = $derived(t('products.accountingAI.name', $languageStore));
   const budgetAssistantLabel = $derived(t('products.budgetAssistant.name', $languageStore));
 </script>
@@ -24,6 +25,7 @@
       <p class="footer-copyright">{copyright}</p>
       <address class="footer-address">{address}</address>
       <nav class="footer-links" aria-label={t('nav.menu', $languageStore)}>
+        <a href={withLocale('/blog/o-firmie-micode/', $languageStore)}>{aboutLabel}</a>
         <a href={withLocale('/blog/', $languageStore)}>{blogLabel}</a>
         <a href={withLocale('/products/accounting-ai/', $languageStore)}>{accountingAiLabel}</a>
         <a href={withLocale('/products/budget-assistant/', $languageStore)}>{budgetAssistantLabel}</a>

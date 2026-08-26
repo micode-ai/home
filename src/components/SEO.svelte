@@ -27,6 +27,10 @@
     "@context": "https://schema.org",
     "@type": ["Organization", "ProfessionalService"],
     "name": "MiCode Sp. z o.o.",
+    // The bare brand and the hyphenated domain spelling: "micode" as typed into
+    // Google has to resolve to this entity, not just the registered legal name.
+    "legalName": "MiCode Sp. z o.o.",
+    "alternateName": ["MiCode", "Mi-Code"],
     "url": "https://mi-code.pl/",
     "foundingDate": "2024",
     "logo": {
@@ -100,6 +104,7 @@
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "MiCode Sp. z o.o.",
+    "alternateName": "MiCode",
     "url": "https://mi-code.pl/",
     "inLanguage": ["pl", "en", "ru"],
     "publisher": {

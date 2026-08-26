@@ -12,7 +12,7 @@
         "blog": "Blog"
     },
     "hero": {
-        "headline": "We build enterprise software with AI integrations",
+        "headline": "MiCode — we build enterprise software with AI integrations",
         "subheadline": "18+ years of IT experience — Gdańsk, Poland. Java, Angular, AI solutions.",
         "cta": "Contact us",
         "ctaAriaLabel": "Go to the contact form"
@@ -303,6 +303,7 @@
         "copyright": "© 2026 MiCode Sp. z o.o. All rights reserved.",
         "address": "Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Poland",
         "privacyPolicy": "Privacy Policy",
+        "about": "About us",
         "socialMedia": "Follow us"
     },
     "legal": {

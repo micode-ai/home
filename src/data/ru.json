@@ -12,7 +12,7 @@
     "blog": "Блог"
   },
   "hero": {
-    "headline": "Мы создаём enterprise-системы с AI-интеграциями",
+    "headline": "MiCode — создаём enterprise-системы с AI-интеграциями",
     "subheadline": "18+ лет опыта в IT — Гданьск, Польша. Java, Angular, AI-решения.",
     "cta": "Свяжитесь с нами",
     "ctaAriaLabel": "Перейти к форме контакта"
@@ -289,6 +289,7 @@
     "copyright": "© 2026 MiCode Sp. z o.o. Все права защищены.",
     "address": "Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Польша",
     "privacyPolicy": "Политика конфиденциальности",
+    "about": "О компании",
     "socialMedia": "Мы в соцсетях"
   },
   "legal": {

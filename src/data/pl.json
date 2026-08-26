@@ -12,7 +12,7 @@
     "blog": "Blog"
   },
   "hero": {
-    "headline": "Budujemy systemy enterprise z integracjami AI",
+    "headline": "MiCode — budujemy systemy enterprise z integracjami AI",
     "subheadline": "18 lat doświadczenia w IT — Gdańsk, Polska. Java, Angular, rozwiązania AI.",
     "cta": "Skontaktuj się z nami",
     "ctaAriaLabel": "Przejdź do formularza kontaktowego"
@@ -289,6 +289,7 @@
     "copyright": "© 2026 MiCode Sp. z o.o. Wszelkie prawa zastrzeżone.",
     "address": "Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Polska",
     "privacyPolicy": "Polityka prywatności",
+    "about": "O firmie",
     "socialMedia": "Obserwuj nas"
   },
   "legal": {
