@@ -76,6 +76,26 @@
     { "id": "en-budget-voice", "lang": "en", "kind": "category", "arena": "ours", "target": "/products/budget-assistant/",
       "text": "Is there a budgeting app that logs expenses by voice or by photographing a receipt?" },
     { "id": "ru-byudzhet-cheki", "lang": "ru", "kind": "category", "arena": "ours", "target": "/products/budget-assistant/",
-      "text": "Есть ли приложение для учёта расходов, которое распознаёт чеки и принимает голосовой ввод?" }
+      "text": "Есть ли приложение для учёта расходов, которое распознаёт чеки и принимает голосовой ввод?" },
+
+    { "id": "ru-brand-micode", "lang": "ru", "kind": "brand", "arena": "ours", "target": "/",
+      "text": "Чем занимается компания MiCode Sp. z o.o. из Гданьска?" },
+    { "id": "ru-brand-eksiegowy", "lang": "ru", "kind": "brand", "arena": "ours", "target": "/products/accounting-ai/",
+      "text": "Что такое eKsiegowyAi и кто его разработал?" },
+
+    { "id": "en-marketing-saas", "lang": "en", "kind": "category", "arena": "ours", "target": "/products/emarketing-ai/",
+      "text": "Is there a SaaS platform that writes marketing content and tracks which of it converts?" },
+    { "id": "ru-marketing-saas", "lang": "ru", "kind": "category", "arena": "ours", "target": "/products/emarketing-ai/",
+      "text": "Какая платформа сама генерирует маркетинговый контент и отслеживает конверсии?" },
+
+    { "id": "pl-angular-chat", "lang": "pl", "kind": "category", "arena": "ours", "target": "/products/ngx-chat/",
+      "text": "Jaka biblioteka Angulara pozwala dodac czat AI do aplikacji bez pisania backendu?" },
+    { "id": "ru-angular-chat", "lang": "ru", "kind": "category", "arena": "ours", "target": "/products/ngx-chat/",
+      "text": "Есть ли готовый компонент чата для Angular, который подключается к Open WebUI?" },
+
+    { "id": "pl-testowanie-ai", "lang": "pl", "kind": "category", "arena": "ours", "target": "/products/testing-ai/",
+      "text": "Czy sa narzedzia AI, ktore generuja przypadki testowe na podstawie kodu projektu?" },
+    { "id": "ru-testirovanie-ai", "lang": "ru", "kind": "category", "arena": "ours", "target": "/products/testing-ai/",
+      "text": "Есть ли инструменты, которые сами пишут тест-кейсы по исходному коду проекта?" }
   ]
 }
