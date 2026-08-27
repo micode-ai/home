@@ -13,6 +13,7 @@
 
   let lightboxOpen = $state(false);
 
+
   function trackOutbound(linkType: string) {
     track('click', { outbound: true, link_type: linkType, item_id: productId });
   }
@@ -59,6 +60,76 @@
   );
 
   const lang = $derived($languageStore);
+
+  // Structured data for answer engines: what the product is, what it answers, and where it sits
+  // in the site. Emitted in-body, like the article FAQ, so the static prerender bakes one copy
+  // per locale (JSON-LD is valid anywhere in the document).
+  const SITE = 'https://mi-code.pl';
+  const ORG_NAME = 'MiCode Sp. z o.o.';
+
+  function jsonLdScript(data: unknown): string {
+    // Escape `<` so the JSON can never break out of the surrounding <script> element.
+    const json = JSON.stringify(data).replace(/</g, '\\u003c');
+    return `<script type="application/ld+json">${json}<\/script>`;
+  }
+
+  const productUrl = $derived(`${SITE}${withLocale(`/products/${productId}/`, lang)}`);
+
+  const productJsonLd = $derived.by<string>(() => {
+    if (!product) return '';
+
+    const name = t(product.nameKey, lang);
+    const sameAs = [product.website, ...(product.links ?? []).map((link) => link.url)].filter(
+      (url): url is string => Boolean(url)
+    );
+
+    const parts = [
+      jsonLdScript({
+        '@context': 'https://schema.org',
+        '@type': 'SoftwareApplication',
+        name,
+        description: t(product.descriptionKey, lang),
+        url: productUrl,
+        applicationCategory: 'BusinessApplication',
+        inLanguage: lang,
+        sameAs,
+        publisher: { '@type': 'Organization', name: ORG_NAME, url: `${SITE}/` }
+      }),
+      jsonLdScript({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: ORG_NAME,
+            item: `${SITE}${withLocale('/', lang)}`
+          },
+          { '@type': 'ListItem', position: 2, name, item: productUrl }
+        ]
+      })
+    ];
+
+    const faq = (product.faq ?? [])
+      .map((item) => ({ q: t(item.questionKey, lang), a: t(item.answerKey, lang) }))
+      .filter((item) => item.q && item.a);
+
+    if (faq.length > 0) {
+      parts.push(
+        jsonLdScript({
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: faq.map((item) => ({
+            '@type': 'Question',
+            name: item.q,
+            acceptedAnswer: { '@type': 'Answer', text: item.a }
+          }))
+        })
+      );
+    }
+
+    return parts.join('');
+  });
   const aboutLabel = $derived(t('product.about', lang));
   const featuresLabel = $derived(t('product.features', lang));
   const agentArchitectureLabel = $derived(t('product.agentArchitecture', lang));
@@ -95,6 +166,7 @@
 </script>
 
 {#if product}
+{@html productJsonLd}
 <article
   class="product-page"
   aria-labelledby="product-name"

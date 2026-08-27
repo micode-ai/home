@@ -40,3 +40,22 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # Bing discovers a static site on its own schedule, and ChatGPT's search citations lean on
+  # Bing's index. IndexNow announces the new URLs the moment they are live. Runs after deploy so
+  # the key file is already served when the engine verifies it; never fails the pipeline.
+  indexnow:
+    needs: deploy
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Announce the deployed URLs to IndexNow
+        run: |
+          curl -sS --fail -o public/sitemap.xml https://mi-code.pl/sitemap.xml
+          node scripts/indexnow.mjs public

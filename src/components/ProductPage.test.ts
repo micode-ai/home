@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest';
 import { render, fireEvent } from '@testing-library/svelte';
-import { loadTranslations } from '../services/i18n';
+import { loadTranslations, t } from '../services/i18n';
 import { languageStore } from '../stores/languageStore';
 import ProductPage from './ProductPage.svelte';
 import plTranslations from '../data/pl.json';
@@ -93,5 +93,92 @@ describe('ProductPage outbound link tracking', () => {
     const { container } = render(ProductPage, { props: { productId: 'accounting-ai' } });
     await fireEvent.click(container.querySelector('.product-website-link')!);
     expect(window.gtag).not.toHaveBeenCalled();
+  });
+});
+
+describe('ProductPage structured data', () => {
+  function structuredData(container: HTMLElement) {
+    return Array.from(container.querySelectorAll('script[type="application/ld+json"]')).map(
+      (node) => JSON.parse(node.textContent ?? '{}')
+    );
+  }
+
+  function ofType(container: HTMLElement, type: string) {
+    return structuredData(container).find((data) => data['@type'] === type);
+  }
+
+  function renderProduct(productId: string, lang: 'pl' | 'en' | 'ru') {
+    languageStore.set(lang);
+    return render(ProductPage, { props: { productId } }).container;
+  }
+
+  it('describes the product as a SoftwareApplication under its localized name', () => {
+    const container = renderProduct('accounting-ai', 'pl');
+    expect(ofType(container, 'SoftwareApplication')?.name).toBe(
+      t('products.accountingAI.name', 'pl')
+    );
+  });
+
+  it('points the SoftwareApplication at the canonical product URL', () => {
+    const container = renderProduct('accounting-ai', 'pl');
+    expect(ofType(container, 'SoftwareApplication')?.url).toBe(
+      'https://mi-code.pl/products/accounting-ai/'
+    );
+  });
+
+  it('uses the locale-prefixed URL on a translated page', () => {
+    const container = renderProduct('accounting-ai', 'ru');
+    expect(ofType(container, 'SoftwareApplication')?.url).toBe(
+      'https://mi-code.pl/ru/products/accounting-ai/'
+    );
+  });
+
+  it('lists the external product links as sameAs', () => {
+    const container = renderProduct('accounting-ai', 'pl');
+    expect(ofType(container, 'SoftwareApplication')?.sameAs).toContain(
+      'https://github.com/micode-ai/accounting-ai-agent'
+    );
+  });
+
+  it('names MiCode as the publisher', () => {
+    const container = renderProduct('accounting-ai', 'pl');
+    expect(ofType(container, 'SoftwareApplication')?.publisher?.name).toBe('MiCode Sp. z o.o.');
+  });
+
+  it('publishes the product FAQ as a FAQPage', () => {
+    const container = renderProduct('accounting-ai', 'pl');
+    expect(ofType(container, 'FAQPage')?.mainEntity).toHaveLength(4);
+  });
+
+  it('localizes the FAQ answers', () => {
+    const container = renderProduct('accounting-ai', 'ru');
+    const first = ofType(container, 'FAQPage')?.mainEntity[0];
+    expect(first.name).toBe(t('products.accountingAI.faq.q1.question', 'ru'));
+    expect(first.acceptedAnswer.text).toBe(t('products.accountingAI.faq.q1.answer', 'ru'));
+  });
+
+  it('emits a breadcrumb trail from the home page to the product', () => {
+    const container = renderProduct('accounting-ai', 'pl');
+    const crumbs = ofType(container, 'BreadcrumbList')?.itemListElement;
+    expect(crumbs.map((c: { name: string }) => c.name)).toEqual([
+      'MiCode Sp. z o.o.',
+      t('products.accountingAI.name', 'pl')
+    ]);
+  });
+
+  it('escapes < so the JSON can never break out of its script element', () => {
+    const container = renderProduct('accounting-ai', 'pl');
+    const raw = Array.from(container.querySelectorAll('script[type="application/ld+json"]'))
+      .map((node) => node.textContent ?? '')
+      .join('');
+    expect(raw).not.toContain('<');
+  });
+
+  it('emits structured data for every product', () => {
+    for (const id of ['budget-assistant', 'legalka-kb', 'emarketing-ai', 'ngx-chat', 'testing-ai']) {
+      const container = renderProduct(id, 'en');
+      expect(ofType(container, 'SoftwareApplication'), id).toBeTruthy();
+      expect(ofType(container, 'FAQPage'), id).toBeTruthy();
+    }
   });
 });
