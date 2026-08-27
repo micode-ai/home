@@ -69,6 +69,22 @@ jobs:
             [ "$days" -ge "$MIN_CERT_DAYS" ] || fail "certificate expires in $days day(s) (< $MIN_CERT_DAYS)"
           fi
 
+          # 5. www over HTTPS. The apex is what everyone tests, so a certificate that
+          #    covers only the apex looks perfectly healthy from here — while every
+          #    visitor who types or links www.mi-code.pl meets a browser interstitial.
+          #    GitHub only puts www in the certificate when its DNS record is a CNAME
+          #    to <owner>.github.io; a CNAME to the apex resolves but is never covered.
+          # `|| true` matters: a TLS failure exits curl 60, and the step runs under
+          # `bash -e`, so an unguarded assignment would abort before anything is reported.
+          # It must not be `|| echo 000` — curl already prints 000 itself, and the second
+          # one would make the value 000000, which compares equal to nothing and passes.
+          www_code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 30 "https://www.mi-code.pl/" || true)
+          if [ "$www_code" = "000" ]; then
+            fail "https://www.mi-code.pl/ does not complete a TLS handshake — the certificate likely does not cover www"
+          elif [ "$www_code" != "200" ] && [ "$www_code" != "301" ] && [ "$www_code" != "308" ]; then
+            fail "https://www.mi-code.pl/ returned $www_code"
+          fi
+
           if [ -n "$FAILURES" ]; then
             {
               echo "report<<EOF"
