@@ -1,0 +1,131 @@
+{
+  "id": "reklama-firmy",
+  "track": "funnel-top",
+  "target": "https://mi-code.pl/blog/o-firmie-micode/",
+  "utm": { "campaign": "reklama-firmy" },
+  "source": {
+    "slug": "o-firmie-micode",
+    "figures": ["2024", "18"]
+  },
+  "slides": [
+    {
+      "type": "hook",
+      "bigNumber": "2024",
+      "pl": {
+        "eyebrow": "MICODE",
+        "headline": "Systemy dla firm. AI w środku.",
+        "sub": "MiCode to firma programistyczna z Gdańska, założona w 2024 roku przez inżyniera z 18-letnim doświadczeniem w IT."
+      },
+      "en": {
+        "eyebrow": "MICODE",
+        "headline": "Enterprise systems. AI inside.",
+        "sub": "MiCode is a software company in Gdańsk, founded in 2024 by an engineer with 18+ years of IT experience."
+      }
+    },
+    {
+      "type": "problem",
+      "pl": {
+        "eyebrow": "Dlaczego my",
+        "headline": "Większość doradców AI nigdy nie utrzymywała systemu AI",
+        "sub": "Utrzymujemy sześć własnych produktów — odpowiadamy więc z własnego doświadczenia, nie z teorii."
+      },
+      "en": {
+        "eyebrow": "Why us",
+        "headline": "Most AI consultants never kept an AI system running",
+        "sub": "We run six products of our own — so we answer from experience, not theory."
+      }
+    },
+    {
+      "type": "numbers",
+      "pl": {
+        "eyebrow": "Co wypuszczamy",
+        "headline": "Sześć własnych produktów",
+        "sub": "Cztery mają publiczne repozytoria. Jeden jest na npm. Trzy mają własne produkcyjne strony.",
+        "rows": [
+          ["AI Budget Assistant", "Google Play"],
+          ["Accounting AI Agent", "SaaS + GitHub"],
+          ["Legalka KB", "bot na Telegramie"],
+          ["Marketing AI assistant", "SaaS + GitHub"],
+          ["ngx-open-web-ui-chat", "open source, npm"],
+          ["Testing AI Assistant", "orkiestracja testów"]
+        ]
+      },
+      "en": {
+        "eyebrow": "What we ship",
+        "headline": "Six products of our own",
+        "sub": "Four have public repositories. One is on npm. Three have their own production sites.",
+        "rows": [
+          ["AI Budget Assistant", "Google Play"],
+          ["Accounting AI Agent", "SaaS + GitHub"],
+          ["Legalka KB", "Telegram bot"],
+          ["Marketing AI assistant", "SaaS + GitHub"],
+          ["ngx-open-web-ui-chat", "open source, npm"],
+          ["Testing AI Assistant", "test orchestration"]
+        ]
+      }
+    },
+    {
+      "type": "numbers",
+      "pl": {
+        "eyebrow": "Co sprzedajemy",
+        "headline": "Trzy linie, celowo wąskie",
+        "sub": "AI nie jest czwartą linią — trafia do środka systemu, który i tak budujemy.",
+        "rows": [
+          ["Oprogramowanie", "Java, Angular"],
+          ["Integracja systemów", "REST API"],
+          ["Chmura", "migracja, optymalizacja"]
+        ]
+      },
+      "en": {
+        "eyebrow": "What we sell",
+        "headline": "Three lines, deliberately narrow",
+        "sub": "AI is not a fourth line — it goes inside the system we are already building for you.",
+        "rows": [
+          ["Custom software", "Java, Angular"],
+          ["Systems integration", "REST API"],
+          ["Cloud", "migration, tuning"]
+        ]
+      }
+    },
+    {
+      "type": "numbers",
+      "pl": {
+        "eyebrow": "Jak zaczynamy",
+        "headline": "Pięć kroków do startu",
+        "sub": "Rozmowa wstępna jest bezpłatna, a pisemna wycena przychodzi w trzy dni robocze.",
+        "rows": [
+          ["Rozmowa wstępna", "bezpłatnie"],
+          ["Propozycja", "trzy dni robocze"],
+          ["Rozwój", "iteracyjnie, z demami"],
+          ["Wdrożenie", "działający system"],
+          ["Wsparcie", "zostajemy przy nim"]
+        ]
+      },
+      "en": {
+        "eyebrow": "How we start",
+        "headline": "Five steps to kickoff",
+        "sub": "The intro call is free, and a written quote follows within three business days.",
+        "rows": [
+          ["Intro call", "free"],
+          ["Proposal", "three business days"],
+          ["Development", "iterative, with demos"],
+          ["Delivery", "a working system"],
+          ["Support", "we stay with it"]
+        ]
+      }
+    },
+    {
+      "type": "cta",
+      "pl": {
+        "eyebrow": "MICODE",
+        "headline": "Zacznijmy rozmowę",
+        "sub": "Bezpłatna rozmowa wstępna i pisemna wycena w trzy dni robocze — bez zobowiązań, zanim poznamy Twój projekt."
+      },
+      "en": {
+        "eyebrow": "MICODE",
+        "headline": "Let's start the conversation",
+        "sub": "A free intro call and a written quote within three business days — no commitment before we know your project."
+      }
+    }
+  ]
+}

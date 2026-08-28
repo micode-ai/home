@@ -14,8 +14,8 @@ describe('SocialMedia smoke render', () => {
   it('renders every network as an external link', () => {
     render(SocialMedia);
     const links = screen.getAllByRole('link');
-    // three Telegram brands + Facebook + Instagram
-    expect(links).toHaveLength(5);
+    // three Telegram brands + Facebook + Instagram + LinkedIn + GitHub
+    expect(links).toHaveLength(7);
     links.forEach((link) => {
       expect(link.getAttribute('target')).toBe('_blank');
       expect(link.getAttribute('rel')).toContain('noopener');
@@ -63,6 +63,26 @@ describe('SocialMedia outbound tracking', () => {
       'event',
       'click',
       expect.objectContaining({ outbound: true, link_type: 'facebook', item_id: 'facebook' })
+    );
+  });
+
+  it('reports a LinkedIn click', async () => {
+    render(SocialMedia);
+    await fireEvent.click(screen.getByRole('link', { name: /LinkedIn/i }));
+    expect(window.gtag).toHaveBeenCalledWith(
+      'event',
+      'click',
+      expect.objectContaining({ outbound: true, link_type: 'linkedin', item_id: 'linkedin' })
+    );
+  });
+
+  it('reports a GitHub click', async () => {
+    render(SocialMedia);
+    await fireEvent.click(screen.getByRole('link', { name: /GitHub/i }));
+    expect(window.gtag).toHaveBeenCalledWith(
+      'event',
+      'click',
+      expect.objectContaining({ outbound: true, link_type: 'github', item_id: 'github' })
     );
   });
 

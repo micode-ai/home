@@ -261,3 +261,26 @@ UTM-схема — те же.
 называют источник (Digital Omnibus, рег. 2026/1744), а не только вывод. Отдельно
 про суммы: 15 и 35 млн евро — это пороги **из регламента**, а не оценка чьего-либо
 риска, и формулировать их как «вам грозит» нельзя.
+
+### `reklama-firmy`
+
+Кампания **верха воронки**, седьмая в этом треке и, как `ai-act-2026`, вне
+исходного плана из `strategy.md` — но не про продукт и не про статью-разбор,
+а про саму компанию. Адресат — читатель, который вообще не знает, кто такой
+MiCode, поэтому предложение самое широкое из всех: не «посчитаем/построим
+конкретную вещь», а «поговорим о Twoim projekcie». Контакт, домен и
+UTM-схема — те же.
+
+Пересечений по источнику нет: статью `o-firmie-micode` не использует ни одна
+из семи предыдущих кампаний.
+
+- **Rozmowa:** Chcesz zacząć projekt albo po prostu sprawdzić, czy pasujemy do Twojego stacku? Napisz na development@mi-code.pl.
+- **Artykuł:** Co dokładnie wypuściliśmy, co sprzedajemy i jak zaczyna się projekt z nami: `<link>`
+- **Conversation:** Want to start a project, or just check whether we fit your stack? Write to development@mi-code.pl.
+- **Article:** What we have actually shipped, what we sell, and how a project with us starts: `<link>`
+- **Хэштеги:** PL `#softwarehouse #Gdańsk #startup` · EN `#softwarehouse #startup #techleadership`
+
+Оговорка этой кампании: `2024` и `18` — единственные цифры статьи, всё
+остальное (sześć produktów, cztery repozytoria, trzy linie, pięć kroków, trzy
+dni robocze) она пишет словами, и колода делает то же самое. Подробнее — в
+шапке `funnel-reklama-firmy.md`.

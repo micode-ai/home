@@ -67,7 +67,7 @@ CAMPAIGN_IDS = sorted(path.parent.name for path in CAMPAIGNS.glob("*/campaign.js
 KNOWN_CAMPAIGNS = {"cost-of-ai-agent", "rag-without-hallucinations",
                    "accounting-ai", "geo-aeo", "legalka-kb",
                    "accounting-automation-pl", "self-improving-agents",
-                   "ai-act-2026"}
+                   "ai-act-2026", "reklama-firmy"}
 
 # The keys of a language block that end up as ink on a slide. `slides.py`
 # reads exactly these (`_plan_header` -> eyebrow/headline, `_plan_sub` -> sub,
