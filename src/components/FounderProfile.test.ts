@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeAll, afterEach } from 'vitest';
-import { render, fireEvent } from '@testing-library/svelte';
+import { describe, it, expect, beforeAll, afterEach, beforeEach, vi } from 'vitest';
+import { render, fireEvent, screen } from '@testing-library/svelte';
 import { loadTranslations } from '../services/i18n';
 import { languageStore } from '../stores/languageStore';
 import FounderProfile from './FounderProfile.svelte';
@@ -62,6 +62,39 @@ describe('FounderProfile', () => {
       const bioText = container.querySelector('.founder-bio')?.textContent ?? '';
       expect(bioText).toBe((translationsFor(lang).founder as any).bio);
     }
+  });
+});
+
+describe('company profile PDF download link', () => {
+  it('links to the locale-specific PDF for each language', () => {
+    for (const lang of ['pl', 'en', 'ru'] as const) {
+      languageStore.set(lang);
+      const { container } = render(FounderProfile);
+      const link = container.querySelector(`a[href="/downloads/micode-company-profile-${lang}.pdf"]`);
+      expect(link).toBeTruthy();
+      expect(link?.textContent).toContain(translationsFor(lang).founder.downloadProfile);
+    }
+  });
+
+  describe('tracking', () => {
+    beforeEach(() => {
+      localStorage.clear();
+      localStorage.setItem('cookieConsent', 'accepted');
+      window.history.replaceState(null, '', '/');
+      window.gtag = vi.fn();
+      window.mktai = vi.fn();
+    });
+
+    it('fires file_download when the download link is clicked', async () => {
+      render(FounderProfile);
+      const link = screen.getByText(plTranslations.founder.downloadProfile);
+      await fireEvent.click(link);
+      expect(window.gtag).toHaveBeenCalledWith(
+        'event',
+        'file_download',
+        expect.objectContaining({ item_id: 'company-profile', file_type: 'pdf' })
+      );
+    });
   });
 });
 

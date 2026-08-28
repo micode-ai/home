@@ -53,6 +53,7 @@
         "experienceValue": "18+ years in software development",
         "bio": "Mikhail Peraviortkin is the founder of MiCode. For over 18 years he has built software — from enterprise systems in Java and Oracle to AI-powered products. He worked on projects for Nokia, built supply-chain systems with AI agents (RAG, Text2SQL, 300+ REST endpoints), and ran the technical blog oracle-adf.info with 400,000+ views. Today at MiCode he turns that experience into practical AI tools that help businesses automate routine work and make data-driven decisions.",
         "careerHighlights": "Career highlights",
+        "downloadProfile": "Download company profile (PDF)",
         "highlights": {
             "nokia": {
                 "company": "Nokia",
