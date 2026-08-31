@@ -18,12 +18,20 @@
     hasEstimateParams,
     type CostCalculatorFields,
   } from '../services/costEstimateUrl';
+  import { CURRENCIES, PLN_PER_USD, formatCurrency, type Currency } from '../services/currency';
   import { copyToClipboard } from '../services/clipboard';
   import { withLocale } from '../services/locale';
   import { track } from '../services/tracking';
   import type { Language } from '../stores/languageStore';
 
   let { lang }: { lang: string } = $props();
+
+  // Polish is the site's canonical default locale, so a Polish reader sees PLN out of the gate;
+  // everyone else starts in USD. `lang` is treated as fixed for this component's lifetime (same
+  // assumption the discuss-link logic further below already makes), so capturing only its
+  // initial value here is intentional — the compiler's "only captures the initial value"
+  // warning is expected and safe to ignore for this line.
+  const DEFAULT_CURRENCY: Currency = lang === 'pl' ? 'PLN' : 'USD';
 
   // Defaults describe the reference configuration from the article's assumptions table: a
   // tool-heavy agent doing multi-step work. They are assumptions, not measurements. Also doubles
@@ -44,6 +52,7 @@
     cachedSharePct: 0,
     model: 'gpt-5.4-mini',
     euResidency: false,
+    currency: DEFAULT_CURRENCY,
   };
 
   let tools = $state(DEFAULT_FIELDS.tools);
@@ -58,6 +67,7 @@
   let cachedSharePct = $state(DEFAULT_FIELDS.cachedSharePct);
   let model = $state<ModelId>(DEFAULT_FIELDS.model);
   let euResidency = $state(DEFAULT_FIELDS.euResidency);
+  let currency = $state<Currency>(DEFAULT_FIELDS.currency);
 
   let restoredFromUrl = false;
 
@@ -80,16 +90,18 @@
     cachedSharePct = restored.cachedSharePct;
     model = restored.model;
     euResidency = restored.euResidency;
+    currency = restored.currency;
   });
 
   // Keeps the URL in sync with the inputs, but only once there is something worth sharing:
   // a visitor who never edits anything (and didn't arrive via a shared link) keeps a clean
-  // address bar. Reads (and only overwrites) the ~12 keys this feature owns, so any other
+  // address bar. Reads (and only overwrites) the ~13 keys this feature owns, so any other
   // query param the visitor arrived with (UTM, etc.) survives untouched.
   $effect(() => {
     const fields: CostCalculatorFields = {
       tools, tokensPerToolSchema, systemPromptTokens, historyTokens, ragTokens,
       outputTokensPerStep, stepsMin, stepsMax, tasksPerDay, cachedSharePct, model, euResidency,
+      currency,
     };
     if (!restoredFromUrl && estimateFieldsEqual(fields, DEFAULT_FIELDS)) return;
 
@@ -129,7 +141,7 @@
 
   const result = $derived(computeAgentCost(inputs));
 
-  const usd = (v: number) => '$' + v.toLocaleString('en-US', { maximumFractionDigits: 2 });
+  const money = (v: number) => formatCurrency(v, currency);
   const pct = (v: number, total: number) => (total > 0 ? Math.round((v / total) * 100) : 0);
   const label = (c: CostComponent) => t(`costCalc.comp.${c}`, lang);
 
@@ -137,8 +149,8 @@
   // has no contact section of its own. `ContactForm` reads the `msg` param to prefill its message.
   const discussSummary = $derived(
     t('costCalc.discussSummary', lang)
-      .replace('{low}', usd(result.low.monthly))
-      .replace('{high}', usd(result.high.monthly))
+      .replace('{low}', money(result.low.monthly))
+      .replace('{high}', money(result.high.monthly))
       .replace('{tasksPerDay}', String(tasksPerDay))
       .replace('{model}', model)
       .replace('{url}', typeof window !== 'undefined' ? window.location.href : '')
@@ -204,6 +216,11 @@
         {#each MODEL_IDS as id}<option value={id}>{id}</option>{/each}
       </select>
     </label>
+    <label>{t('costCalc.currency', lang)}
+      <select bind:value={currency} data-testid="currency-select">
+        {#each CURRENCIES as c}<option value={c}>{c}</option>{/each}
+      </select>
+    </label>
     <label class="calc-check">
       <input type="checkbox" bind:checked={euResidency} />
       {t('costCalc.euResidency', lang)}
@@ -213,12 +230,12 @@
   <p class="calc-result">
     <span class="calc-result-label">{t('costCalc.resultTitle', lang)}</span>
     <span class="calc-range">
-      <span data-testid="monthly-low">{usd(result.low.monthly)}</span>
+      <span data-testid="monthly-low">{money(result.low.monthly)}</span>
       <span aria-hidden="true"> — </span>
-      <span data-testid="monthly-high">{usd(result.high.monthly)}</span>
+      <span data-testid="monthly-high">{money(result.high.monthly)}</span>
     </span>
   </p>
-  <p class="calc-note">{t('costCalc.perTask', lang)}: {usd(result.low.perTask)} — {usd(result.high.perTask)}</p>
+  <p class="calc-note">{t('costCalc.perTask', lang)}: {money(result.low.perTask)} — {money(result.high.perTask)}</p>
   <p class="calc-note">{t('costCalc.rangeNote', lang)}</p>
 
   <div class="calc-actions">
@@ -255,7 +272,7 @@
       {@const h = segments.find((s) => s.key === hovered)}
       {#if h}
         <p class="bar-tooltip" data-testid="cost-tooltip">
-          {label(h.key)} — {usd(h.value)} ({h.share}%)
+          {label(h.key)} — {money(h.value)} ({h.share}%)
         </p>
       {/if}
     {/if}
@@ -275,7 +292,7 @@
       <thead>
         <tr>
           <th scope="col">{t('costCalc.componentHeader', lang)}</th>
-          <th scope="col">{t('costCalc.costHeader', lang)}</th>
+          <th scope="col">{t('costCalc.costHeader', lang).replace('{currency}', currency)}</th>
           <th scope="col">{t('costCalc.shareHeader', lang)}</th>
         </tr>
       </thead>
@@ -283,7 +300,7 @@
         {#each COST_COMPONENTS as c}
           <tr>
             <td>{label(c)}</td>
-            <td>{usd(result.low.components[c])}</td>
+            <td>{money(result.low.components[c])}</td>
             <td>{pct(result.low.components[c], result.low.monthly)}%</td>
           </tr>
         {/each}
@@ -293,6 +310,9 @@
 
   <p class="calc-note">{t('costCalc.priceNote', lang).replace('{date}', PRICES_SNAPSHOT_DATE)}</p>
   <p class="calc-note">{t('costCalc.monthNote', lang).replace('{days}', String(DAYS_PER_MONTH))}</p>
+  {#if currency === 'PLN'}
+    <p class="calc-note">{t('costCalc.rateNote', lang).replace('{rate}', PLN_PER_USD.toFixed(2))}</p>
+  {/if}
 </section>
 
 <style>

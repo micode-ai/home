@@ -6,6 +6,7 @@
 // consumes (`cachedShare` 0..1) — the component still does that conversion itself.
 
 import { MODEL_IDS, type ModelId } from './agentCost';
+import { CURRENCIES, type Currency } from './currency';
 
 export type CostCalculatorFields = {
   tools: number;
@@ -20,6 +21,7 @@ export type CostCalculatorFields = {
   cachedSharePct: number;
   model: ModelId;
   euResidency: boolean;
+  currency: Currency;
 };
 
 const NUMBER_FIELDS = [
@@ -43,6 +45,7 @@ export function applyEstimateParams(params: URLSearchParams, fields: CostCalcula
   for (const key of NUMBER_FIELDS) params.set(key, String(fields[key]));
   params.set('model', fields.model);
   params.set('euResidency', fields.euResidency ? '1' : '0');
+  params.set('currency', fields.currency);
 }
 
 /**
@@ -72,15 +75,21 @@ export function decodeEstimateQuery(
   const euRaw = params.get('euResidency');
   if (euRaw !== null) result.euResidency = euRaw === '1';
 
+  const currencyRaw = params.get('currency');
+  if (currencyRaw !== null && (CURRENCIES as string[]).includes(currencyRaw)) {
+    result.currency = currencyRaw as Currency;
+  }
+
   return result;
 }
 
-/** Shallow equality over all 12 fields — used to decide whether state has drifted from defaults. */
+/** Shallow equality over all 13 fields — used to decide whether state has drifted from defaults. */
 export function estimateFieldsEqual(a: CostCalculatorFields, b: CostCalculatorFields): boolean {
   return (
     NUMBER_FIELDS.every((key) => a[key] === b[key]) &&
     a.model === b.model &&
-    a.euResidency === b.euResidency
+    a.euResidency === b.euResidency &&
+    a.currency === b.currency
   );
 }
 

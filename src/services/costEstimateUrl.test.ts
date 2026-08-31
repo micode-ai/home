@@ -20,16 +20,18 @@ const DEFAULTS: CostCalculatorFields = {
   cachedSharePct: 0,
   model: 'gpt-5.4-mini',
   euResidency: false,
+  currency: 'USD',
 };
 
 describe('applyEstimateParams()', () => {
-  it('sets all 12 owned keys', () => {
+  it('sets all 13 owned keys', () => {
     const params = new URLSearchParams();
     applyEstimateParams(params, DEFAULTS);
     expect(params.get('tools')).toBe('80');
     expect(params.get('model')).toBe('gpt-5.4-mini');
     expect(params.get('euResidency')).toBe('0');
     expect(params.get('cachedSharePct')).toBe('0');
+    expect(params.get('currency')).toBe('USD');
   });
 
   it('encodes euResidency true as "1"', () => {
@@ -88,6 +90,16 @@ describe('decodeEstimateQuery()', () => {
     expect(result.model).toBe('gpt-5.6-luna');
   });
 
+  it('accepts a valid currency', () => {
+    const result = decodeEstimateQuery('?currency=PLN', DEFAULTS);
+    expect(result.currency).toBe('PLN');
+  });
+
+  it('ignores an unrecognized currency', () => {
+    const result = decodeEstimateQuery('?currency=EUR', DEFAULTS);
+    expect(result.currency).toBe(DEFAULTS.currency);
+  });
+
   it('treats euResidency=1 as true and anything else as false', () => {
     expect(decodeEstimateQuery('?euResidency=1', DEFAULTS).euResidency).toBe(true);
     expect(decodeEstimateQuery('?euResidency=0', DEFAULTS).euResidency).toBe(false);
@@ -115,6 +127,10 @@ describe('estimateFieldsEqual()', () => {
 
   it('is false when euResidency differs', () => {
     expect(estimateFieldsEqual(DEFAULTS, { ...DEFAULTS, euResidency: true })).toBe(false);
+  });
+
+  it('is false when currency differs', () => {
+    expect(estimateFieldsEqual(DEFAULTS, { ...DEFAULTS, currency: 'PLN' })).toBe(false);
   });
 });
 

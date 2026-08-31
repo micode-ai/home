@@ -172,6 +172,45 @@ describe('CostCalculator shareable estimate URL', () => {
   });
 });
 
+describe('CostCalculator currency toggle', () => {
+  it('defaults to PLN for the Polish locale', () => {
+    const { getByTestId } = render(CostCalculator, { props: { lang: 'pl' } });
+    expect((getByTestId('currency-select') as HTMLSelectElement).value).toBe('PLN');
+    expect(getByTestId('monthly-low').textContent).toContain('zł');
+  });
+
+  it('defaults to USD for non-Polish locales', () => {
+    const { getByTestId } = render(CostCalculator, { props: { lang: 'en' } });
+    expect((getByTestId('currency-select') as HTMLSelectElement).value).toBe('USD');
+    expect(getByTestId('monthly-low').textContent).toContain('$');
+  });
+
+  it('switches every displayed figure when the toggle changes', async () => {
+    const { getByTestId } = render(CostCalculator, { props: { lang: 'en' } });
+    const select = getByTestId('currency-select') as HTMLSelectElement;
+    await fireEvent.change(select, { target: { value: 'PLN' } });
+    expect(getByTestId('monthly-low').textContent).toContain('zł');
+    expect(getByTestId('monthly-high').textContent).toContain('zł');
+  });
+
+  it('shows the fixed-rate disclosure only when PLN is selected', async () => {
+    const { getByTestId, queryByText, getByText } = render(CostCalculator, { props: { lang: 'en' } });
+    expect(queryByText(/Updated periodically, not live/)).toBeNull();
+    await fireEvent.change(getByTestId('currency-select'), { target: { value: 'PLN' } });
+    expect(getByText(/Updated periodically, not live/)).toBeTruthy();
+  });
+
+  it('syncs the selected currency into the URL and restores it on reload', async () => {
+    const { getByTestId, unmount } = render(CostCalculator, { props: { lang: 'en' } });
+    await fireEvent.change(getByTestId('currency-select'), { target: { value: 'PLN' } });
+    expect(new URLSearchParams(window.location.search).get('currency')).toBe('PLN');
+    unmount();
+
+    const { getByTestId: getByTestId2 } = render(CostCalculator, { props: { lang: 'en' } });
+    expect((getByTestId2('currency-select') as HTMLSelectElement).value).toBe('PLN');
+  });
+});
+
 describe('CostCalculator copy-link button', () => {
   afterEach(() => {
     Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true });
