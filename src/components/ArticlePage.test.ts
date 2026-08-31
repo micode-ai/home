@@ -67,6 +67,16 @@ vi.mock('../data/blog-posts.json', () => ({
       bodyEn: 'Intro.\n\n## First section\n\nA.\n\n## Second section\n\nB.\n\n## Third section\n\nC.',
       bodyRu: 'Введение.\n\n## Первый\n\nA.\n\n## Второй\n\nB.\n\n## Третий\n\nC.',
     },
+    {
+      slug: 'glossary-fixture',
+      titlePl: 'Słownik', titleEn: 'Glossary', titleRu: 'Глоссарий',
+      summaryPl: 's', summaryEn: 's', summaryRu: 's',
+      date: '2026-07-22',
+      tags: ['AI'],
+      bodyPl: 'Używamy RAG do wyszukiwania. RAG działa dobrze. Także **RAG** pogrubione.\n\n> RAG w cytacie.\n\nInny akapit z GPT.',
+      bodyEn: 'We use RAG for retrieval. RAG works well. Also **RAG** in bold.\n\n> RAG in a callout.\n\nAnother paragraph with GPT.',
+      bodyRu: 'Мы используем RAG для поиска. RAG работает хорошо. Также **RAG** жирным.\n\n> RAG в цитате.\n\nДругой абзац с GPT.',
+    },
   ],
 }));
 
@@ -253,6 +263,55 @@ describe('ArticlePage reading progress bar', () => {
     expect(bar).toBeTruthy();
     expect(bar?.getAttribute('aria-hidden')).toBe('true');
     expect(bar?.getAttribute('style')).toMatch(/width:\s*[\d.]+%/);
+  });
+});
+
+describe('ArticlePage glossary tooltips', () => {
+  it('tags only the first plain-text occurrence of a term as a button', () => {
+    languageStore.set('en');
+    const { getAllByRole } = render(ArticlePage, { props: { slug: 'glossary-fixture' } });
+    expect(getAllByRole('button', { name: 'RAG' })).toHaveLength(1);
+  });
+
+  it('links the tagged term to a tooltip with the term definition', () => {
+    languageStore.set('en');
+    const { getAllByRole, container } = render(ArticlePage, { props: { slug: 'glossary-fixture' } });
+    const button = getAllByRole('button', { name: 'RAG' })[0];
+    const tooltip = container.querySelector(`#${button.getAttribute('aria-describedby')}`);
+    expect(tooltip?.textContent).toMatch(/Retrieval-Augmented Generation/);
+  });
+
+  it('leaves a bolded occurrence of the term as plain bold text, not a button', () => {
+    languageStore.set('en');
+    const { container } = render(ArticlePage, { props: { slug: 'glossary-fixture' } });
+    const boldEls = Array.from(container.querySelectorAll('strong')).filter(
+      (el) => el.textContent === 'RAG'
+    );
+    expect(boldEls).toHaveLength(1);
+    expect(boldEls[0].querySelector('button')).toBeNull();
+  });
+
+  it('does not tag a repeat occurrence inside a callout either', () => {
+    languageStore.set('en');
+    const { container } = render(ArticlePage, { props: { slug: 'glossary-fixture' } });
+    const callout = container.querySelector('.article-callout');
+    expect(callout?.textContent).toBe('RAG in a callout.');
+    expect(callout?.querySelector('button')).toBeNull();
+  });
+
+  it('tags a different term (GPT) independently from RAG', () => {
+    languageStore.set('en');
+    const { getAllByRole } = render(ArticlePage, { props: { slug: 'glossary-fixture' } });
+    expect(getAllByRole('button', { name: 'GPT' })).toHaveLength(1);
+  });
+
+  it('renders the Polish definition when the active language is Polish', () => {
+    languageStore.set('pl');
+    const { getAllByRole, container } = render(ArticlePage, { props: { slug: 'glossary-fixture' } });
+    const button = getAllByRole('button', { name: 'RAG' })[0];
+    const tooltip = container.querySelector(`#${button.getAttribute('aria-describedby')}`);
+    expect(tooltip?.textContent).toMatch(/Retrieval-Augmented Generation/);
+    expect(tooltip?.textContent).toContain('pozwala AI');
   });
 });
 

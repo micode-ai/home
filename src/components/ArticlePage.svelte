@@ -15,6 +15,12 @@
   import { getRelatedPosts } from '../services/relatedArticles';
   import { buildToc } from '../services/articleToc';
   import { computeReadingProgress } from '../services/readingProgress';
+  import { annotateGlossary, type GlossaryEntry, type GlossaryPart } from '../services/glossaryTerms';
+  import glossary from '../data/glossary.json';
+  import GlossaryTerm from './GlossaryTerm.svelte';
+
+  // Built once at module scope — glossary.json is static data, not per-render.
+  const glossaryById = Object.fromEntries((glossary as GlossaryEntry[]).map((e) => [e.id, e]));
 
   type Post = typeof blogPosts[number];
 
@@ -60,7 +66,7 @@
   // Body is authored as `\n\n`-separated chunks. Most chunks are plain paragraphs; a few opt into
   // light markup: `## heading`, `> callout`, and `[[diagram:id|caption]]` (renders a Mermaid figure).
   // Inline `**bold**` and `*italic*` are supported inside paragraphs/callouts. Plain-prose posts are unaffected.
-  type Seg = { t: string; b: boolean; i: boolean; href?: string };
+  type Seg = { t: string; b: boolean; i: boolean; href?: string; glossaryParts?: GlossaryPart[] };
   // `RawBlock` is what the split/regex pass below produces — an `h2` has heading text but no id
   // yet, since ids are derived from *all* headings in the article at once (see `tocHeadings`).
   // `Block` is the final per-render shape used by the template, with that id filled in.
@@ -192,6 +198,25 @@
     let h2Index = 0;
     return rawBlocks.map((b): Block => (b.kind === 'h2' ? { ...b, id: tocHeadings[h2Index++].id } : b));
   });
+
+  // First-occurrence glossary annotation, scoped to plain (non-bold/italic/link) segments of `p`
+  // and `callout` blocks only. One `seen` set per computation, so "first occurrence" resets per
+  // article render (and per language switch, since that recomputes `blocks`); see
+  // docs/contracts/blog-jargon-glossary-tooltips.md.
+  const blocksWithGlossary = $derived.by<Block[]>(() => {
+    const seen = new Set<string>();
+    return blocks.map((b): Block => {
+      if (b.kind !== 'p' && b.kind !== 'callout') return b;
+      return {
+        ...b,
+        segments: b.segments.map((seg): Seg =>
+          seg.b || seg.i || seg.href
+            ? seg
+            : { ...seg, glossaryParts: annotateGlossary(seg.t, glossary as GlossaryEntry[], seen) }
+        ),
+      };
+    });
+  });
   const shareUrl = $derived(typeof window !== 'undefined' ? window.location.href : '');
   const backLabel = $derived(t('blog.backToMicode', lang));
   const blogLabel = $derived(t('blog.title', lang));
@@ -300,11 +325,11 @@
           </ol>
         </nav>
       {/if}
-      {#each blocks as block}
+      {#each blocksWithGlossary as block}
         {#if block.kind === 'h2'}
           <h2 class="article-h2" id={block.id}>{block.text}</h2>
         {:else if block.kind === 'callout'}
-          <aside class="article-callout">{#each block.segments as seg}{#if seg.href}<a href={seg.href} target="_blank" rel="noopener noreferrer">{seg.t}</a>{:else if seg.b}<strong>{seg.t}</strong>{:else if seg.i}<em>{seg.t}</em>{:else}{seg.t}{/if}{/each}</aside>
+          <aside class="article-callout">{#each block.segments as seg}{#if seg.href}<a href={seg.href} target="_blank" rel="noopener noreferrer">{seg.t}</a>{:else if seg.b}<strong>{seg.t}</strong>{:else if seg.i}<em>{seg.t}</em>{:else}{#each seg.glossaryParts ?? [{ text: seg.t }] as part}{#if part.termId}<GlossaryTerm termId={part.termId} text={part.text} definition={(glossaryById[part.termId] as any)['definition' + tableSuffix]} />{:else}{part.text}{/if}{/each}{/if}{/each}</aside>
         {:else if block.kind === 'diagram'}
           {@const def = diagramDef(block.id, lang)}
           {#if def}
@@ -340,7 +365,7 @@
             <CostCalculator {lang} />
           {/if}
         {:else}
-          <p>{#each block.segments as seg}{#if seg.href}<a href={seg.href} target="_blank" rel="noopener noreferrer">{seg.t}</a>{:else if seg.b}<strong>{seg.t}</strong>{:else if seg.i}<em>{seg.t}</em>{:else}{seg.t}{/if}{/each}</p>
+          <p>{#each block.segments as seg}{#if seg.href}<a href={seg.href} target="_blank" rel="noopener noreferrer">{seg.t}</a>{:else if seg.b}<strong>{seg.t}</strong>{:else if seg.i}<em>{seg.t}</em>{:else}{#each seg.glossaryParts ?? [{ text: seg.t }] as part}{#if part.termId}<GlossaryTerm termId={part.termId} text={part.text} definition={(glossaryById[part.termId] as any)['definition' + tableSuffix]} />{:else}{part.text}{/if}{/each}{/if}{/each}</p>
         {/if}
       {/each}
 

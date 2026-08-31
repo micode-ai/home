@@ -1,0 +1,58 @@
+[
+  {
+    "id": "rag",
+    "terms": ["RAG"],
+    "definitionPl": "RAG (Retrieval-Augmented Generation) pozwala AI najpierw sprawdzić Twoje dokumenty, a dopiero potem odpowiedzieć — dzięki temu odpowiedzi opierają się na Twoich danych, a nie na domysłach.",
+    "definitionEn": "RAG (Retrieval-Augmented Generation) lets an AI look up your own documents before answering, so its replies are grounded in your data instead of guesswork.",
+    "definitionRu": "RAG (Retrieval-Augmented Generation) — это когда ИИ сначала находит нужную информацию в ваших документах, а потом отвечает, опираясь на неё, а не на догадки."
+  },
+  {
+    "id": "langgraph",
+    "terms": ["LangGraph"],
+    "definitionPl": "LangGraph to narzędzie dla programistów do budowania agentów AI, które realizują wieloetapowe procesy z rozgałęzieniami, zamiast odpowiadać jednym krokiem.",
+    "definitionEn": "LangGraph is a developer framework for building AI agents that follow multi-step workflows with branching logic, rather than answering in a single pass.",
+    "definitionRu": "LangGraph — это инструмент для разработчиков, который позволяет строить ИИ-агентов с многошаговыми сценариями и ветвлением, а не с одним разовым ответом."
+  },
+  {
+    "id": "text2sql",
+    "terms": ["Text2SQL"],
+    "definitionPl": "Text2SQL zamienia pytanie zadane zwykłym językiem na zapytanie do bazy danych — bez konieczności znajomości SQL.",
+    "definitionEn": "Text2SQL lets someone type a plain-language question and have it automatically turned into a database query, no SQL knowledge required.",
+    "definitionRu": "Text2SQL превращает вопрос, заданный обычным языком, в запрос к базе данных — знание SQL не требуется."
+  },
+  {
+    "id": "aeo",
+    "terms": ["AEO"],
+    "definitionPl": "AEO (Answer Engine Optimization) to tworzenie treści tak, by asystenci AI, np. ChatGPT, cytowali je wprost w odpowiedziach — odpowiednik SEO, ale dla asystentów AI.",
+    "definitionEn": "AEO (Answer Engine Optimization) is writing and structuring content so AI assistants like ChatGPT quote or cite it directly, the way SEO does for search engines.",
+    "definitionRu": "AEO (Answer Engine Optimization) — это оптимизация контента, чтобы ИИ-ассистенты вроде ChatGPT цитировали его напрямую, подобно тому как SEO работает для поисковых систем."
+  },
+  {
+    "id": "ksef",
+    "terms": ["KSeF"],
+    "definitionPl": "KSeF to obowiązkowy w Polsce Krajowy System e-Faktur do wystawiania i odbierania faktur bezpośrednio z organami skarbowymi.",
+    "definitionEn": "KSeF is Poland's mandatory national system for issuing and receiving e-invoices directly with the tax authority.",
+    "definitionRu": "KSeF — это обязательная в Польше государственная система для выставления и получения электронных счетов напрямую через налоговую."
+  },
+  {
+    "id": "llm",
+    "terms": ["LLM"],
+    "definitionPl": "LLM (Large Language Model) to rodzaj modelu AI — jak ten stojący za ChatGPT — wytrenowany na ogromnej ilości tekstu, by rozumieć i generować ludzki język.",
+    "definitionEn": "An LLM (Large Language Model) is the type of AI model — like the ones behind ChatGPT — trained on huge amounts of text to understand and generate human language.",
+    "definitionRu": "LLM (Large Language Model) — это тип ИИ-модели, такой как лежит в основе ChatGPT, обученной на огромном объёме текста, чтобы понимать и генерировать человеческий язык."
+  },
+  {
+    "id": "gpt",
+    "terms": ["GPT"],
+    "definitionPl": "GPT to rodzina dużych modeli językowych stworzonych przez OpenAI (technologia stojąca za ChatGPT); numer wersji, np. GPT-4, oznacza konkretną generację tego modelu.",
+    "definitionEn": "GPT is a family of large language models built by OpenAI (the technology behind ChatGPT); a version number like GPT-4 marks a specific generation of it.",
+    "definitionRu": "GPT — это семейство больших языковых моделей от OpenAI (технология, лежащая в основе ChatGPT); номер версии, например GPT-4, обозначает конкретное поколение модели."
+  },
+  {
+    "id": "saas",
+    "terms": ["SaaS"],
+    "definitionPl": "SaaS (Software as a Service) to oprogramowanie dostępne przez internet w modelu abonamentowym — bez konieczności instalowania i utrzymywania go samodzielnie.",
+    "definitionEn": "SaaS (Software as a Service) is software you use over the internet for a subscription fee, instead of installing and maintaining it yourself.",
+    "definitionRu": "SaaS (Software as a Service) — это программное обеспечение, которым вы пользуетесь через интернет по подписке, без необходимости устанавливать и обслуживать его самостоятельно."
+  }
+]
