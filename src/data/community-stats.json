@@ -1,8 +1,8 @@
 {
-  "fetchedAt": "2026-08-28T18:51:21.570Z",
+  "fetchedAt": "2026-08-31T19:18:21.449Z",
   "stats": {
     "budget-assistant": {
-      "githubStars": 8,
+      "githubStars": 9,
       "npmWeeklyDownloads": null
     },
     "accounting-ai": {
@@ -19,7 +19,7 @@
     },
     "ngx-chat": {
       "githubStars": null,
-      "npmWeeklyDownloads": 28
+      "npmWeeklyDownloads": 26
     },
     "testing-ai": {
       "githubStars": 7,
