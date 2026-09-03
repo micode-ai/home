@@ -54,5 +54,187 @@
     "definitionPl": "SaaS (Software as a Service) to oprogramowanie dostępne przez internet w modelu abonamentowym — bez konieczności instalowania i utrzymywania go samodzielnie.",
     "definitionEn": "SaaS (Software as a Service) is software you use over the internet for a subscription fee, instead of installing and maintaining it yourself.",
     "definitionRu": "SaaS (Software as a Service) — это программное обеспечение, которым вы пользуетесь через интернет по подписке, без необходимости устанавливать и обслуживать его самостоятельно."
+  },
+  {
+    "id": "prompt",
+    "terms": ["Prompt", "prompt", "promptu", "promptów", "promptem", "prompts", "промпт", "промпта", "промптов", "промпте"],
+    "definitionPl": "Prompt to polecenie, które wpisujesz modelowi AI — od jego precyzji zależy, czy odpowiedź będzie użyteczna, czy ogólnikowa.",
+    "definitionEn": "A prompt is the instruction you give an AI model, and how precisely it is written decides whether the answer comes back useful or vague.",
+    "definitionRu": "Промпт — это инструкция, которую вы даёте ИИ-модели: от её точности зависит, будет ответ полезным или общим."
+  },
+  {
+    "id": "token",
+    "terms": ["Token", "token", "tokeny", "tokenów", "tokenach", "tokens", "токен", "токены", "токенов", "токенам", "токенах"],
+    "definitionPl": "Token to fragment tekstu, zwykle kawałek słowa, w którym modele AI mierzą i długość zapytania, i koszt — rachunek wystawiany jest za tokeny, nie za pytania.",
+    "definitionEn": "A token is a fragment of text, usually a piece of a word, and it is the unit AI models measure length and charge by — bills are counted in tokens, not in questions.",
+    "definitionRu": "Токен — это фрагмент текста, обычно часть слова: ИИ-модели измеряют в токенах и длину запроса, и стоимость, поэтому счёт приходит за токены, а не за вопросы."
+  },
+  {
+    "id": "cache",
+    "terms": ["Cache", "cache", "cached", "cachowanie", "кэш", "кэша", "кэшем", "кэширование", "кэширования"],
+    "definitionPl": "Cache to ponowne użycie tej samej, powtarzalnej części zapytania — dostawcy modeli liczą za nią mniej, więc dobrze ułożony prompt bywa kilka razy tańszy.",
+    "definitionEn": "A cache reuses the repeated, unchanging part of a prompt, which model providers charge less for — so a well-ordered prompt can cost several times less.",
+    "definitionRu": "Кэш — это повторное использование неизменной части запроса: провайдеры моделей берут за неё меньше, поэтому продуманный промпт может стоить в несколько раз дешевле."
+  },
+  {
+    "id": "chunk",
+    "terms": ["Chunk", "chunk", "chunku", "chunki", "chunków", "chunkiem", "chunks"],
+    "definitionPl": "Chunk to fragment, na jakie dzieli się dokument, żeby AI znalazła i zacytowała akurat ten kawałek, zamiast przeszukiwać całość.",
+    "definitionEn": "A chunk is one of the fragments a document is split into, so an AI can retrieve and quote the relevant piece instead of reading the whole file.",
+    "definitionRu": "Чанк — это фрагмент, на которые разбивают документ, чтобы ИИ находил и цитировал нужный кусок, а не перечитывал весь файл."
+  },
+  {
+    "id": "agent",
+    "terms": ["AI Agent", "AI agent", "AI agents", "AI-agent", "agent AI", "agenta AI", "agentów AI", "agenty AI", "ИИ-агент", "ИИ-агента", "ИИ-агентов"],
+    "definitionPl": "Agent AI nie tylko odpowiada — planuje kolejne kroki i sam korzysta z narzędzi: pyta systemy, czyta dokumenty i dopiero potem wykonuje zadanie.",
+    "definitionEn": "An AI agent does more than answer: it plans the steps and uses tools on its own — querying systems, reading documents, then carrying the task out.",
+    "definitionRu": "ИИ-агент не просто отвечает: он планирует шаги и сам пользуется инструментами — обращается к системам, читает документы и затем выполняет задачу."
+  },
+  {
+    "id": "pipeline",
+    "terms": ["Pipeline", "pipeline", "pipelines", "пайплайн", "пайплайна", "пайплайну"],
+    "definitionPl": "Pipeline to ustalona z góry sekwencja kroków przetwarzania — w odróżnieniu od agenta nie wybiera kolejności, tylko zawsze wykonuje tę samą.",
+    "definitionEn": "A pipeline is a fixed, predefined sequence of processing steps — unlike an agent it does not choose the order, it always runs the same one.",
+    "definitionRu": "Пайплайн — это заранее заданная последовательность шагов обработки: в отличие от агента он не выбирает порядок, а всегда выполняет один и тот же."
+  },
+  {
+    "id": "orchestration",
+    "terms": ["Orkiestracja", "orkiestracja", "orkiestracji", "orkiestracją", "orchestration", "orchestrator", "оркестрация", "оркестрации", "оркестрацией"],
+    "definitionPl": "Orkiestracja to koordynowanie wielu modeli, narzędzi i agentów tak, by pracowały nad jednym zadaniem w ustalonej kolejności i przekazywały sobie wyniki.",
+    "definitionEn": "Orchestration is coordinating several models, tools and agents so they work on one task in a defined order and hand results to each other.",
+    "definitionRu": "Оркестрация — это координация нескольких моделей, инструментов и агентов, чтобы они решали одну задачу в заданном порядке и передавали результаты друг другу."
+  },
+  {
+    "id": "embedding",
+    "terms": ["Embedding", "embedding", "embeddingi", "embeddings", "эмбеддинг", "эмбеддинги"],
+    "definitionPl": "Embedding to zapis znaczenia tekstu w postaci liczb — dzięki niemu AI znajduje fragmenty o podobnym sensie, nawet jeśli użyto w nich innych słów.",
+    "definitionEn": "An embedding turns the meaning of a text into numbers, which lets an AI find passages that mean something similar even when they use different words.",
+    "definitionRu": "Эмбеддинг — это представление смысла текста в виде чисел: благодаря ему ИИ находит фрагменты с близким смыслом, даже если слова в них другие."
+  },
+  {
+    "id": "hallucination",
+    "terms": ["Halucynacja", "halucynacja", "halucynacji", "halucynację", "halucynacje", "hallucination", "hallucinations", "галлюцинация", "галлюцинации", "галлюцинаций", "галлюцинацию"],
+    "definitionPl": "Halucynacja to odpowiedź AI, która brzmi wiarygodnie, ale jest nieprawdziwa — model uzupełnia lukę domysłem, zamiast przyznać, że nie wie.",
+    "definitionEn": "A hallucination is an AI answer that sounds convincing but is simply untrue: the model fills a gap with a guess instead of admitting it does not know.",
+    "definitionRu": "Галлюцинация — это ответ ИИ, который звучит убедительно, но неправдив: модель заполняет пробел догадкой вместо того, чтобы признать, что не знает."
+  },
+  {
+    "id": "api",
+    "terms": ["API"],
+    "definitionPl": "API to interfejs, przez który dwa systemy wymieniają dane automatycznie — bez eksportów do Excela i przeklejania ręką.",
+    "definitionEn": "An API is the interface two systems use to exchange data automatically, with no Excel exports and no copying by hand.",
+    "definitionRu": "API — это интерфейс, через который две системы обмениваются данными автоматически, без выгрузок в Excel и копирования руками."
+  },
+  {
+    "id": "sql",
+    "terms": ["SQL"],
+    "definitionPl": "SQL to język, w którym zadaje się pytania bazie danych — to w nim zapisane jest „pokaż sprzedaż z zeszłego kwartału”.",
+    "definitionEn": "SQL is the language database questions are written in — it is what \"show last quarter's sales\" looks like once a database can answer it.",
+    "definitionRu": "SQL — это язык запросов к базе данных: именно на нём записано «покажи продажи за прошлый квартал»."
+  },
+  {
+    "id": "erp",
+    "terms": ["ERP"],
+    "definitionPl": "ERP (Enterprise Resource Planning) to główny system firmy, w którym trzymane są zamówienia, magazyn, księgowość i kadry — jedno miejsce zamiast kilku osobnych narzędzi.",
+    "definitionEn": "ERP (Enterprise Resource Planning) is a company's central system holding orders, inventory, accounting and HR in one place instead of several separate tools.",
+    "definitionRu": "ERP (Enterprise Resource Planning) — это основная система компании, где хранятся заказы, склад, бухгалтерия и кадры: одно место вместо нескольких отдельных инструментов."
+  },
+  {
+    "id": "ocr",
+    "terms": ["OCR"],
+    "definitionPl": "OCR (Optical Character Recognition) zamienia skan albo zdjęcie dokumentu w tekst, który komputer potrafi odczytać — pierwszy krok, żeby faktura z e-maila trafiała do systemu sama.",
+    "definitionEn": "OCR (Optical Character Recognition) turns a scan or photo of a document into text a computer can read — the first step to an emailed invoice entering your system by itself.",
+    "definitionRu": "OCR (Optical Character Recognition) превращает скан или фото документа в текст, который компьютер может прочитать, — первый шаг к тому, чтобы счёт из письма попадал в систему сам."
+  },
+  {
+    "id": "seo",
+    "terms": ["SEO"],
+    "definitionPl": "SEO (Search Engine Optimization) to przygotowanie strony tak, by pokazywała się wysoko w wynikach wyszukiwania.",
+    "definitionEn": "SEO (Search Engine Optimization) is preparing a site so it ranks high in search results.",
+    "definitionRu": "SEO (Search Engine Optimization) — это подготовка сайта так, чтобы он высоко показывался в результатах поиска."
+  },
+  {
+    "id": "geo",
+    "terms": ["GEO"],
+    "definitionPl": "GEO (Generative Engine Optimization) to obecność w samych odpowiedziach generowanych przez AI, a nie na liście linków pod nimi.",
+    "definitionEn": "GEO (Generative Engine Optimization) is being present inside AI-generated answers themselves, rather than in the list of links beneath them.",
+    "definitionRu": "GEO (Generative Engine Optimization) — это присутствие внутри самих ответов, которые генерирует ИИ, а не в списке ссылок под ними."
+  },
+  {
+    "id": "ctr",
+    "terms": ["CTR"],
+    "definitionPl": "CTR (Click-Through Rate) to odsetek osób, które zobaczyły link i w niego kliknęły — miara tego, czy treść zachęca, a nie tylko się wyświetla.",
+    "definitionEn": "CTR (Click-Through Rate) is the share of people who saw a link and clicked it — a measure of whether content invites action, not just impressions.",
+    "definitionRu": "CTR (Click-Through Rate) — это доля людей, которые увидели ссылку и нажали на неё: мера того, побуждает ли контент к действию, а не только показывается."
+  },
+  {
+    "id": "feng",
+    "terms": ["FENG"],
+    "definitionPl": "FENG (Fundusze Europejskie dla Nowoczesnej Gospodarki) to główny krajowy program, z którego firmy finansują innowacje i prace badawczo-rozwojowe w latach 2021–2027.",
+    "definitionEn": "FENG (European Funds for a Modern Economy) is Poland's main national programme funding company innovation and R&D in the 2021–2027 period.",
+    "definitionRu": "FENG (Fundusze Europejskie dla Nowoczesnej Gospodarki) — основная государственная программа Польши, из которой компании финансируют инновации и НИОКР в 2021–2027 годах."
+  },
+  {
+    "id": "kpo",
+    "terms": ["KPO"],
+    "definitionPl": "KPO (Krajowy Plan Odbudowy) to polski plan wydawania środków z unijnego funduszu odbudowy — jego nabory są w praktyce zamknięte dla nowych wniosków.",
+    "definitionEn": "KPO (Poland's National Recovery Plan) is how the country spends its share of the EU recovery fund; in practice its calls are closed to new applications.",
+    "definitionRu": "KPO (Krajowy Plan Odbudowy) — польский план расходования средств из фонда восстановления ЕС; на практике приём новых заявок по нему закрыт."
+  },
+  {
+    "id": "parp",
+    "terms": ["PARP"],
+    "definitionPl": "PARP (Polska Agencja Rozwoju Przedsiębiorczości) to instytucja, która prowadzi większość naborów dotacji dla małych i średnich firm.",
+    "definitionEn": "PARP (the Polish Agency for Enterprise Development) is the institution running most grant calls for small and medium-sized companies.",
+    "definitionRu": "PARP (Polska Agencja Rozwoju Przedsiębiorczości) — институция, которая проводит большинство конкурсов на гранты для малых и средних компаний."
+  },
+  {
+    "id": "arp",
+    "terms": ["ARP"],
+    "definitionPl": "ARP (Agencja Rozwoju Przemysłu) to państwowa agencja wspierająca przemysł — prowadzi m.in. granty na cyfryzację dla producentów.",
+    "definitionEn": "ARP (the Industrial Development Agency) is Poland's state agency for industry, running digitalisation grants for manufacturers among other things.",
+    "definitionRu": "ARP (Agencja Rozwoju Przemysłu) — государственное агентство поддержки промышленности; в том числе проводит гранты на цифровизацию для производителей."
+  },
+  {
+    "id": "ncbr",
+    "terms": ["NCBR"],
+    "definitionPl": "NCBR (Narodowe Centrum Badań i Rozwoju) finansuje projekty badawczo-rozwojowe — jego dotacje wymagają realnych prac badawczych, nie samego zakupu narzędzi.",
+    "definitionEn": "NCBR (the National Centre for Research and Development) funds R&D projects, and its grants require genuine research work rather than simply buying tools.",
+    "definitionRu": "NCBR (Narodowe Centrum Badań i Rozwoju) финансирует научно-исследовательские проекты: его гранты требуют реальной исследовательской работы, а не просто закупки инструментов."
+  },
+  {
+    "id": "edih",
+    "terms": ["EDIH"],
+    "definitionPl": "EDIH (European Digital Innovation Hub) to ośrodek współfinansowany przez UE, w którym firma może przetestować rozwiązania AI i skorzystać z doradztwa za darmo lub za niewielką opłatą.",
+    "definitionEn": "An EDIH (European Digital Innovation Hub) is an EU co-funded centre where a company can test AI solutions and get advice for free or for a small fee.",
+    "definitionRu": "EDIH (European Digital Innovation Hub) — центр, софинансируемый ЕС, где компания может протестировать ИИ-решения и получить консультации бесплатно или за небольшую плату."
+  },
+  {
+    "id": "gpai",
+    "terms": ["GPAI"],
+    "definitionPl": "GPAI (General-Purpose AI) to model ogólnego przeznaczenia, np. GPT — AI Act nakłada obowiązki dokumentacyjne na jego dostawcę, a nie na firmę, która na nim buduje.",
+    "definitionEn": "GPAI (general-purpose AI) means a general-purpose model such as GPT; the AI Act puts the documentation duties on its provider, not on a company building on top of it.",
+    "definitionRu": "GPAI (General-Purpose AI) — модель общего назначения, например GPT: AI Act возлагает обязанности по документации на её поставщика, а не на компанию, которая на ней строит."
+  },
+  {
+    "id": "upo",
+    "terms": ["UPO"],
+    "definitionPl": "UPO (Urzędowe Poświadczenie Odbioru) to oficjalne potwierdzenie, że system skarbowy przyjął dokument — dopiero ono, a nie samo wysłanie, oznacza, że faktura istnieje w KSeF.",
+    "definitionEn": "UPO is the official confirmation that the tax system accepted a document; only that receipt, not the act of sending, means an invoice exists in KSeF.",
+    "definitionRu": "UPO (Urzędowe Poświadczenie Odbioru) — официальное подтверждение, что налоговая система приняла документ: только оно, а не сама отправка, означает, что счёт существует в KSeF."
+  },
+  {
+    "id": "fa3",
+    "terms": ["FA(3)", "FA"],
+    "definitionPl": "FA(3) to obowiązująca wersja schematu, w jakim faktura musi być zapisana, żeby KSeF ją przyjął — zmiana wersji schematu wymusza aktualizację w systemach firmy.",
+    "definitionEn": "FA(3) is the current version of the schema an invoice has to follow for KSeF to accept it, and a change of schema version forces an update in a company's own systems.",
+    "definitionRu": "FA(3) — действующая версия схемы, в которой счёт должен быть записан, чтобы KSeF его принял; смена версии схемы вынуждает обновлять системы на стороне компании."
+  },
+  {
+    "id": "sme",
+    "terms": ["MŚP", "SME"],
+    "definitionPl": "MŚP (małe i średnie przedsiębiorstwa) to unijna kategoria firm zatrudniających mniej niż 250 osób — od przynależności do niej zależy dostęp do większości dotacji.",
+    "definitionEn": "SME (small and medium-sized enterprise) is the EU category for companies with fewer than 250 employees, and belonging to it decides access to most grants.",
+    "definitionRu": "MŚP (małe i średnie przedsiębiorstwa) — категория ЕС для компаний с числом сотрудников менее 250; от принадлежности к ней зависит доступ к большинству грантов."
   }
 ]

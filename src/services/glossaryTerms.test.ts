@@ -90,3 +90,71 @@ describe('annotateGlossary()', () => {
     expect(annotateGlossary('', [RAG], seen)).toEqual([{ text: '' }]);
   });
 });
+
+// Surface forms are not all ASCII: Polish inflections carry diacritics and the Russian
+// bodies spell concept terms in Cyrillic. A JS `\b` is ASCII-only, so it reports no
+// boundary next to any of those letters — which silently made such forms unmatchable.
+const PROMPT_RU: GlossaryEntry = {
+  id: 'prompt',
+  terms: ['промпт'],
+  definitionPl: 'pl',
+  definitionEn: 'en',
+  definitionRu: 'ru',
+};
+const ORCHESTRATION_PL: GlossaryEntry = {
+  id: 'orchestration',
+  terms: ['orkiestracją'],
+  definitionPl: 'pl',
+  definitionEn: 'en',
+  definitionRu: 'ru',
+};
+const DIACRITIC_INITIAL: GlossaryEntry = {
+  id: 'diacritic-initial',
+  terms: ['środowisko'],
+  definitionPl: 'pl',
+  definitionEn: 'en',
+  definitionRu: 'ru',
+};
+
+describe('annotateGlossary() with non-ASCII surface forms', () => {
+  it('tags a Cyrillic term in Russian prose', () => {
+    const seen = new Set<string>();
+    expect(annotateGlossary('это промпт тут', [PROMPT_RU], seen)).toEqual([
+      { text: 'это ' },
+      { text: 'промпт', termId: 'prompt' },
+      { text: ' тут' },
+    ]);
+  });
+
+  it('does not match a Cyrillic term glued to further Cyrillic letters', () => {
+    const seen = new Set<string>();
+    expect(annotateGlossary('это промпты тут', [PROMPT_RU], seen)).toEqual([
+      { text: 'это промпты тут' },
+    ]);
+  });
+
+  it('tags a Polish form that ends in a diacritic', () => {
+    const seen = new Set<string>();
+    expect(annotateGlossary('z orkiestracją agentów', [ORCHESTRATION_PL], seen)).toEqual([
+      { text: 'z ' },
+      { text: 'orkiestracją', termId: 'orchestration' },
+      { text: ' agentów' },
+    ]);
+  });
+
+  it('tags a Polish form that starts with a diacritic', () => {
+    const seen = new Set<string>();
+    expect(annotateGlossary('jedno środowisko wystarczy', [DIACRITIC_INITIAL], seen)).toEqual([
+      { text: 'jedno ' },
+      { text: 'środowisko', termId: 'diacritic-initial' },
+      { text: ' wystarczy' },
+    ]);
+  });
+
+  it('still refuses a form whose match would start mid-word', () => {
+    const seen = new Set<string>();
+    expect(annotateGlossary('mikrośrodowisko badawcze', [DIACRITIC_INITIAL], seen)).toEqual([
+      { text: 'mikrośrodowisko badawcze' },
+    ]);
+  });
+});
