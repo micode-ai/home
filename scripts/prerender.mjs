@@ -204,6 +204,7 @@ async function run() {
   const { renderPage: renderBlog } = await import('../dist-ssr/blog.js');
   const { renderPage: renderArticle } = await import('../dist-ssr/article.js');
   const { renderPage: renderPrivacyPolicy } = await import('../dist-ssr/privacyPolicy.js');
+  const { renderPage: renderGlossary } = await import('../dist-ssr/glossary.js');
 
   // metaFor(lang) returns localized {title, description, ...} to inject, or null
   // to keep the page's static (Polish) meta. Polish variants return null since
@@ -280,6 +281,24 @@ async function run() {
         };
         return {
           title: `${t('legal.privacyPolicy.title', l)} — MiCode`,
+          description: descriptions[l],
+        };
+      },
+    },
+    {
+      distRoute: 'glossary/index.html',
+      urlPath: 'glossary/',
+      priority: '0.5',
+      changefreq: 'monthly',
+      render: (l) => renderGlossary(l),
+      metaFor: (l) => {
+        if (l === 'pl') return null;
+        const descriptions = {
+          en: 'Short, plain-language definitions of the AI and tax terms (RAG, LangGraph, KSeF, AEO, and more) used across the MiCode blog.',
+          ru: 'Краткие, понятные определения терминов ИИ и налогового законодательства (RAG, LangGraph, KSeF, AEO и других), используемых в блоге MiCode.',
+        };
+        return {
+          title: `${t('glossary.title', l)} — MiCode`,
           description: descriptions[l],
         };
       },

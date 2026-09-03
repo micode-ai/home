@@ -292,7 +292,13 @@
     "address": "Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Polska",
     "privacyPolicy": "Polityka prywatności",
     "about": "O firmie",
-    "socialMedia": "Obserwuj nas"
+    "socialMedia": "Obserwuj nas",
+    "glossary": "Słownik pojęć"
+  },
+  "glossary": {
+    "title": "Słownik pojęć AI i podatkowych",
+    "intro": "Krótkie, jasne definicje terminów AI i podatkowych używanych w blogu MiCode — bez konieczności szukania ich w konkretnym artykule.",
+    "fullDefinitionLink": "Pełna definicja →"
   },
   "legal": {
     "cookieBanner": {

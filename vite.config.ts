@@ -16,6 +16,7 @@ export default defineConfig({
             //          /en/blog/                → /blog/           (listing page)
             //          /en/blog/main.ts         → /blog/main.ts
             //          /en/privacy-policy/      → /privacy-policy/
+            //          /en/glossary/            → /glossary/
             // Note the trailing `.*` (not `.+`): the bare listing route
             // `/en/blog/` has nothing after the slash, so `.+` would miss it
             // and Vite's SPA fallback would serve the root index.html instead.
@@ -23,7 +24,7 @@ export default defineConfig({
             configureServer(server) {
                 server.middlewares.use((req, _res, next) => {
                     const url = req.url ?? "";
-                    const m = url.match(/^\/(en|ru)(\/(?:products|blog|privacy-policy)\/.*)/);
+                    const m = url.match(/^\/(en|ru)(\/(?:products|blog|privacy-policy|glossary)\/.*)/);
                     if (m) {
                         req.url = m[2];
                     }
@@ -44,6 +45,7 @@ export default defineConfig({
                 testingAi: resolve(__dirname, "products/testing-ai/index.html"),
                 legalkaKb: resolve(__dirname, "products/legalka-kb/index.html"),
                 privacyPolicy: resolve(__dirname, "privacy-policy/index.html"),
+                glossary: resolve(__dirname, "glossary/index.html"),
                 blog: resolve(__dirname, "blog/index.html"),
                 scmArticle: resolve(__dirname, "blog/scm-ai-agents-supply-chain/index.html"),
                 ngxChatArticle: resolve(__dirname, "blog/ngx-open-web-ui-chat-tutorial/index.html"),

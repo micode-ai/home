@@ -306,7 +306,13 @@
         "address": "Jana Heweliusza 11 lok. 811, 80-890 Gdańsk, Poland",
         "privacyPolicy": "Privacy Policy",
         "about": "About us",
-        "socialMedia": "Follow us"
+        "socialMedia": "Follow us",
+        "glossary": "Glossary"
+    },
+    "glossary": {
+        "title": "AI & tax glossary",
+        "intro": "Short, plain-language definitions of the AI and tax terms used across the MiCode blog — no need to hunt through a specific article to find them.",
+        "fullDefinitionLink": "Full definition →"
     },
     "legal": {
         "cookieBanner": {
