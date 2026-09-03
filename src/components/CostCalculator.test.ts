@@ -300,3 +300,10 @@ describe('CostCalculator engagement tracking', () => {
     expect(window.gtag).not.toHaveBeenCalled();
   });
 });
+
+describe('CostCalculator as a landing-page section', () => {
+  it('exposes the #calculator anchor the site nav scrolls to', () => {
+    const { container } = render(CostCalculator, { props: { lang: 'en' } });
+    expect(container.querySelector('section#calculator')).toBeTruthy();
+  });
+});

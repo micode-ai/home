@@ -10,9 +10,10 @@
   const companyName = $derived(t('header.companyName', $languageStore));
 
   const navLinks = [
-    { key: 'nav.services', href: '/#services' },
-    { key: 'nav.products', href: '/#products' },
-    { key: 'nav.contact',  href: '/#contact'  },
+    { key: 'nav.services',   href: '/#services'   },
+    { key: 'nav.products',   href: '/#products'   },
+    { key: 'nav.calculator', href: '/#calculator' },
+    { key: 'nav.contact',    href: '/#contact'    },
   ];
 
   let activeSection = $state('');
@@ -65,7 +66,7 @@
     darkModeStore.init();
     handleScroll();
 
-    const sectionIds = ['services', 'products', 'contact'];
+    const sectionIds = ['services', 'products', 'calculator', 'contact'];
     const sections = sectionIds
       .map(id => document.getElementById(id))
       .filter((el): el is HTMLElement => el !== null);

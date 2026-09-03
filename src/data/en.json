@@ -6,6 +6,7 @@
     "nav": {
         "services": "Services",
         "products": "Products",
+        "calculator": "Calculator",
         "contact": "Contact",
         "menu": "Open menu",
         "menuClose": "Close menu",

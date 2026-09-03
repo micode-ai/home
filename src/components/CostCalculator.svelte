@@ -196,7 +196,7 @@
   );
 </script>
 
-<section class="calc" aria-labelledby="calc-title">
+<section id="calculator" class="calc" aria-labelledby="calc-title">
   <h3 id="calc-title" class="calc-title">{t('costCalc.title', lang)}</h3>
   <p class="calc-intro">{t('costCalc.intro', lang)}</p>
 

@@ -9,6 +9,7 @@
   import StatsStrip from './components/StatsStrip.svelte';
   import CommunityContributions from './components/CommunityContributions.svelte';
   import OwnProducts from './components/OwnProducts.svelte';
+  import CostCalculator from './components/CostCalculator.svelte';
   import Certificates from './components/Certificates.svelte';
   import Faq from './components/Faq.svelte';
   import ProcessTimeline from './components/ProcessTimeline.svelte';
@@ -18,6 +19,7 @@
   import AccessibilityToolbar from './components/AccessibilityToolbar.svelte';
   import CookieBanner from './components/CookieBanner.svelte';
   import PrivacyPolicyModal from './components/PrivacyPolicyModal.svelte';
+  import { languageStore } from './stores/languageStore';
   import { loadTranslations } from './services/i18n';
   import { initializeAnalytics } from './services/analytics';
   import { initializeMktai } from './services/mktai';
@@ -51,6 +53,14 @@
   <Hero />
   <Services />
   <OwnProducts />
+  <!--
+    CostCalculator styles itself as a bare card with no width of its own — inside an article
+    the `.article-inner` column constrains it. On the landing page nothing does, so give it
+    the same padded, centred band every other section here uses.
+  -->
+  <div class="calculator-band">
+    <CostCalculator lang={$languageStore} />
+  </div>
   <FounderProfile />
   <StatsStrip />
   <CommunityContributions />
@@ -76,6 +86,27 @@
 
   main {
     width: 100%;
+  }
+
+  /* Same band every other section on this page uses: capped, centred, 2rem gutters.
+     `margin: 0 auto` also cancels the component's own `margin: 2rem 0`, which exists
+     to space it inside an article's prose. */
+  .calculator-band {
+    padding: var(--section-padding);
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .calculator-band > :global(.calc) {
+    max-width: var(--max-width-lg);
+    margin: 0 auto;
+  }
+
+  @media (max-width: 767px) {
+    .calculator-band {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
   }
 
   /*
