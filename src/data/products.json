@@ -32,7 +32,8 @@
             { "questionKey": "products.budgetAssistant.faq.q1.question", "answerKey": "products.budgetAssistant.faq.q1.answer" },
             { "questionKey": "products.budgetAssistant.faq.q2.question", "answerKey": "products.budgetAssistant.faq.q2.answer" },
             { "questionKey": "products.budgetAssistant.faq.q3.question", "answerKey": "products.budgetAssistant.faq.q3.answer" },
-            { "questionKey": "products.budgetAssistant.faq.q4.question", "answerKey": "products.budgetAssistant.faq.q4.answer" }
+            { "questionKey": "products.budgetAssistant.faq.q4.question", "answerKey": "products.budgetAssistant.faq.q4.answer" },
+            { "questionKey": "products.budgetAssistant.faq.q5.question", "answerKey": "products.budgetAssistant.faq.q5.answer" }
         ]
     },
     {
@@ -63,7 +64,8 @@
             { "questionKey": "products.accountingAI.faq.q1.question", "answerKey": "products.accountingAI.faq.q1.answer" },
             { "questionKey": "products.accountingAI.faq.q2.question", "answerKey": "products.accountingAI.faq.q2.answer" },
             { "questionKey": "products.accountingAI.faq.q3.question", "answerKey": "products.accountingAI.faq.q3.answer" },
-            { "questionKey": "products.accountingAI.faq.q4.question", "answerKey": "products.accountingAI.faq.q4.answer" }
+            { "questionKey": "products.accountingAI.faq.q4.question", "answerKey": "products.accountingAI.faq.q4.answer" },
+            { "questionKey": "products.accountingAI.faq.q5.question", "answerKey": "products.accountingAI.faq.q5.answer" }
         ]
     },
     {
@@ -98,7 +100,8 @@
             { "questionKey": "products.legalkaKB.faq.q1.question", "answerKey": "products.legalkaKB.faq.q1.answer" },
             { "questionKey": "products.legalkaKB.faq.q2.question", "answerKey": "products.legalkaKB.faq.q2.answer" },
             { "questionKey": "products.legalkaKB.faq.q3.question", "answerKey": "products.legalkaKB.faq.q3.answer" },
-            { "questionKey": "products.legalkaKB.faq.q4.question", "answerKey": "products.legalkaKB.faq.q4.answer" }
+            { "questionKey": "products.legalkaKB.faq.q4.question", "answerKey": "products.legalkaKB.faq.q4.answer" },
+            { "questionKey": "products.legalkaKB.faq.q5.question", "answerKey": "products.legalkaKB.faq.q5.answer" }
         ]
     },
     {
@@ -131,7 +134,8 @@
             { "questionKey": "products.emarketingAI.faq.q1.question", "answerKey": "products.emarketingAI.faq.q1.answer" },
             { "questionKey": "products.emarketingAI.faq.q2.question", "answerKey": "products.emarketingAI.faq.q2.answer" },
             { "questionKey": "products.emarketingAI.faq.q3.question", "answerKey": "products.emarketingAI.faq.q3.answer" },
-            { "questionKey": "products.emarketingAI.faq.q4.question", "answerKey": "products.emarketingAI.faq.q4.answer" }
+            { "questionKey": "products.emarketingAI.faq.q4.question", "answerKey": "products.emarketingAI.faq.q4.answer" },
+            { "questionKey": "products.emarketingAI.faq.q5.question", "answerKey": "products.emarketingAI.faq.q5.answer" }
         ]
     },
     {
@@ -192,7 +196,8 @@
             { "questionKey": "products.testingAI.faq.q1.question", "answerKey": "products.testingAI.faq.q1.answer" },
             { "questionKey": "products.testingAI.faq.q2.question", "answerKey": "products.testingAI.faq.q2.answer" },
             { "questionKey": "products.testingAI.faq.q3.question", "answerKey": "products.testingAI.faq.q3.answer" },
-            { "questionKey": "products.testingAI.faq.q4.question", "answerKey": "products.testingAI.faq.q4.answer" }
+            { "questionKey": "products.testingAI.faq.q4.question", "answerKey": "products.testingAI.faq.q4.answer" },
+            { "questionKey": "products.testingAI.faq.q5.question", "answerKey": "products.testingAI.faq.q5.answer" }
         ]
     }
 ]

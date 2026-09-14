@@ -167,7 +167,8 @@
         "q1": { "question": "Czym jest Accounting AI Agent?", "answer": "Asystent AI dla księgowych i właścicieli firm w Polsce, łączący sztuczną inteligencję z głęboką wiedzą o polskim prawie podatkowym i integrujący się z platformą wFirma." },
         "q2": { "question": "Czy integruje się z wFirma?", "answer": "Tak — integruje się bezpośrednio z wFirma, zapewniając automatyczną synchronizację danych i dostęp w czasie rzeczywistym do dokumentów finansowych, bez ręcznego wprowadzania danych." },
         "q3": { "question": "Jakie obszary podatkowe obejmuje?", "answer": "Doradza w zakresie VAT, PIT i CIT oraz pomaga poruszać się po wymaganiach ZUS, zgodnie z polskimi standardami księgowymi." },
-        "q4": { "question": "Ile to kosztuje?", "answer": "Jest darmowy na GitHub, a plany subskrypcji dostępne są na stronie eKsiegowyAi.pl." }
+        "q4": { "question": "Ile to kosztuje?", "answer": "Jest darmowy na GitHub, a plany subskrypcji dostępne są na stronie eKsiegowyAi.pl." },
+        "q5": { "question": "Czy Accounting AI Agent to sztuczna inteligencja, czy człowiek?", "answer": "Gdy zadajesz pytania Accounting AI Agent, rozmawiasz z systemem sztucznej inteligencji, a nie z księgowym. Ujawniamy to zgodnie z art. 50 unijnego AI Act, którego obowiązki przejrzystości obowiązują od 2 sierpnia 2026 roku. Więcej o tym wymogu piszemy w artykule „AI Act w sierpniu 2026: co przesunięto, a co obowiązuje od dziś”." }
       }
     },
     "emarketingAI": {
@@ -188,7 +189,8 @@
         "q1": { "question": "Czym jest eMarketing AI?", "answer": "Platforma SaaS do automatyzacji marketingu oparta na AI, służąca do generowania treści, zarządzania kampaniami, wysyłki emaili i śledzenia analityki — wszystko w jednym miejscu." },
         "q2": { "question": "Jakie treści może generować?", "answer": "Posty w mediach społecznościowych, artykuły blogowe, emaile, newslettery, teksty reklamowe i strony docelowe, dopasowane do głosu marki i grupy docelowej." },
         "q3": { "question": "Czy zawiera asystenta czatu AI?", "answer": "Tak — interaktywny asystent czatu AI udziela wskazówek marketingowych w czasie rzeczywistym: strategia, pomysły na treści, SEO i planowanie kampanii, w językach angielskim, polskim i rosyjskim." },
-        "q4": { "question": "Jakie plany cenowe są dostępne?", "answer": "FREE z 50 generacjami AI/miesiąc, PRO z 500 generacjami i do 5 członków zespołu oraz ENTERPRISE z nielimitowanymi zasobami — nowe konta otrzymują 14-dniowy okres próbny." }
+        "q4": { "question": "Jakie plany cenowe są dostępne?", "answer": "FREE z 50 generacjami AI/miesiąc, PRO z 500 generacjami i do 5 członków zespołu oraz ENTERPRISE z nielimitowanymi zasobami — nowe konta otrzymują 14-dniowy okres próbny." },
+        "q5": { "question": "Czy asystent czatu w eMarketing AI to AI, czy człowiek?", "answer": "Gdy korzystasz z wbudowanego asystenta czatu AI w eMarketing AI, rozmawiasz z systemem sztucznej inteligencji, a nie z człowiekiem. Ujawniamy to zgodnie z art. 50 unijnego AI Act (obowiązki przejrzystości w mocy od 2 sierpnia 2026 roku). Treści marketingowe generowane przez AI w platformie trafiają do publikacji dopiero po przeglądzie i zatwierdzeniu przez człowieka — więcej o obu wymogach piszemy w artykule „AI Act w sierpniu 2026: co przesunięto, a co obowiązuje od dziś”." }
       }
     },
     "budgetAssistant": {
@@ -206,7 +208,8 @@
         "q1": { "question": "Czym jest AI Budget Assistant?", "answer": "Mobilna aplikacja finansowa, która pozwala śledzić wydatki głosem, skanowaniem paragonów (AI OCR) lub ręcznie, z budżetami wielowalutowymi i czatem finansowym opartym na GPT-4." },
         "q2": { "question": "Jakie waluty i języki są obsługiwane?", "answer": "Obsługuje USD, EUR, PLN, GBP i UAH z aktualnymi kursami wymiany, a interfejs dostępny jest w dziewięciu językach, w tym angielskim, polskim i rosyjskim." },
         "q3": { "question": "Czy mogę dzielić budżet z rodziną lub zespołem?", "answer": "Tak — obsługuje konta typu Personal, Shared i Business z dostępem opartym na rolach (Owner, Editor, Viewer)." },
-        "q4": { "question": "Gdzie mogę ją pobrać?", "answer": "Jest dostępna na Google Play, a kod źródłowy znajduje się na GitHub." }
+        "q4": { "question": "Gdzie mogę ją pobrać?", "answer": "Jest dostępna na Google Play, a kod źródłowy znajduje się na GitHub." },
+        "q5": { "question": "Czy czat w AI Budget Assistant prowadzi AI, czy człowiek?", "answer": "Gdy korzystasz z czatu finansowego opartego na GPT-4 w AI Budget Assistant, rozmawiasz z systemem sztucznej inteligencji, a nie z doradcą finansowym. Ujawniamy to zgodnie z art. 50 unijnego AI Act, którego obowiązki przejrzystości obowiązują od 2 sierpnia 2026 roku. Więcej o tym wymogu piszemy w artykule „AI Act w sierpniu 2026: co przesunięto, a co obowiązuje od dziś”." }
       }
     },
     "legalkaKB": {
@@ -229,7 +232,8 @@
         "q1": { "question": "Czym jest Legalka KB?", "answer": "Bot Telegram i baza wiedzy do legalizacji pobytu w Polsce. Odpowiada wyłącznie z zweryfikowanych źródeł — z odwołaniami do przepisów i realnych doświadczeń wnioskodawców. Jeśli nie ma odpowiedzi — uczciwie mówi „nie wiem\"." },
         "q2": { "question": "Jakie tematy pokrywa baza wiedzy?", "answer": "Tymczasowy pobyt (karta pobytu), praca, wizy, banki, zatrudnienie, nieruchomości, podatki, ZUS, obywatelstwo, łączenie rodzin, edukacja, ochrona międzynarodowa — wszystko dla Polski." },
         "q3": { "question": "W jakich językach odpowiada bot?", "answer": "Bot rozumie i odpowiada po ukraińsku, angielsku, rosyjsku i polsku." },
-        "q4": { "question": "Jak zapewniana jest dokładność odpowiedzi?", "answer": "Każdy fakt oznaczony jest jako „norma\" (z odwołaniem do artykułu ustawy) lub „praktyka — obserwacje wnioskodawców\". Jeśli pytanie nie jest pokryte przez bazę — bot się powstrzymuje. Zestaw ewaluacyjny: citation ~99%, fact coverage ~97%, abstention 100%." }
+        "q4": { "question": "Jak zapewniana jest dokładność odpowiedzi?", "answer": "Każdy fakt oznaczony jest jako „norma\" (z odwołaniem do artykułu ustawy) lub „praktyka — obserwacje wnioskodawców\". Jeśli pytanie nie jest pokryte przez bazę — bot się powstrzymuje. Zestaw ewaluacyjny: citation ~99%, fact coverage ~97%, abstention 100%." },
+        "q5": { "question": "Czy Legalka KB to bot AI, czy prawdziwy człowiek?", "answer": "Tak — Legalka KB to bot AI, nie człowiek. Informujemy o tym wprost w opisie bota na Telegramie i w pierwszej wiadomości, zanim zadasz pierwsze pytanie. To realizacja art. 50 unijnego AI Act, którego obowiązki przejrzystości obowiązują od 2 sierpnia 2026 roku — piszemy o nich w artykule „AI Act w sierpniu 2026: co przesunięto, a co obowiązuje od dziś”." }
       }
     },
     "testingAI": {
@@ -248,7 +252,8 @@
         "q1": { "question": "Czym jest Testing AI Assistant?", "answer": "Platforma orkiestracji testów oparta na AI, która automatyzuje wykonywanie testów, generuje przypadki testowe na podstawie analizy kodu i dostarcza informacje o jakości z jednego interfejsu." },
         "q2": { "question": "Czy potrafi automatycznie generować przypadki testowe?", "answer": "Tak — analizuje bazę kodu i automatycznie tworzy przypadki testowe obejmujące przypadki brzegowe, warunki graniczne i krytyczne przepływy użytkownika." },
         "q3": { "question": "Czy obsługuje listy kontrolne dla wydań?", "answer": "Tak — wbudowane zarządzanie listami kontrolnymi z listami generowanymi przez AI pomaga zespołom utrzymać dyscyplinę testowania podczas wydań i przeglądów sprintów." },
-        "q4": { "question": "Ile to kosztuje?", "answer": "Jest bezpłatny w okresie testowania; kod źródłowy dostępny jest na GitHub." }
+        "q4": { "question": "Ile to kosztuje?", "answer": "Jest bezpłatny w okresie testowania; kod źródłowy dostępny jest na GitHub." },
+        "q5": { "question": "Czy agenci w Testing AI Assistant to AI, czy człowiek?", "answer": "Gdy korzystasz z agentów AI w Testing AI Assistant — na przykład generatora przypadków testowych czy powiadomień o wynikach — masz do czynienia z systemem sztucznej inteligencji, a nie z człowiekiem. Ujawniamy to zgodnie z art. 50 unijnego AI Act, którego obowiązki przejrzystości obowiązują od 2 sierpnia 2026 roku. Więcej o tym wymogu piszemy w artykule „AI Act w sierpniu 2026: co przesunięto, a co obowiązuje od dziś”." }
       }
     },
     "pricing": {

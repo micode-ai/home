@@ -181,7 +181,8 @@
                 "q1": { "question": "What is Accounting AI Agent?", "answer": "An AI assistant for accounting professionals and business owners in Poland that combines AI with deep knowledge of Polish tax law and integrates with the wFirma accounting platform." },
                 "q2": { "question": "Does it integrate with wFirma?", "answer": "Yes — it integrates directly with wFirma for automatic data synchronization and real-time access to financial documents, eliminating manual data entry." },
                 "q3": { "question": "What tax areas does it cover?", "answer": "It advises on VAT, PIT, and CIT obligations and helps navigate ZUS (Social Insurance Institution) requirements, in compliance with Polish accounting standards." },
-                "q4": { "question": "How much does it cost?", "answer": "It's free on GitHub, with subscription plans available on the eKsiegowyAi.pl website." }
+                "q4": { "question": "How much does it cost?", "answer": "It's free on GitHub, with subscription plans available on the eKsiegowyAi.pl website." },
+                "q5": { "question": "Is Accounting AI Agent artificial intelligence or a human?", "answer": "When you ask Accounting AI Agent a question, you are talking to an AI system, not an accountant. We disclose this in line with Article 50 of the EU AI Act, whose transparency obligations have applied since 2 August 2026. Read more in our article \"The AI Act in August 2026: what was postponed, and what applies today.\"" }
             }
         },
         "emarketingAI": {
@@ -202,7 +203,8 @@
                 "q1": { "question": "What is eMarketing AI?", "answer": "An AI-powered marketing automation SaaS platform for generating content, managing campaigns, sending emails, and tracking analytics — all in one place." },
                 "q2": { "question": "What kind of content can it generate?", "answer": "Social media posts, blog articles, emails, newsletters, ad copy, and landing pages, tailored to your brand voice and target audience." },
                 "q3": { "question": "Does it include an AI chat assistant?", "answer": "Yes — an interactive AI chat assistant provides real-time marketing guidance on strategy, content ideas, SEO, and campaign planning in English, Polish, and Russian." },
-                "q4": { "question": "What pricing plans are available?", "answer": "FREE with 50 AI generations/month, PRO with 500 generations and up to 5 team members, and ENTERPRISE with unlimited resources — new accounts get a 14-day free trial." }
+                "q4": { "question": "What pricing plans are available?", "answer": "FREE with 50 AI generations/month, PRO with 500 generations and up to 5 team members, and ENTERPRISE with unlimited resources — new accounts get a 14-day free trial." },
+                "q5": { "question": "Is the chat assistant in eMarketing AI AI or a human?", "answer": "When you use eMarketing AI's built-in chat assistant, you are talking to an AI system, not a human. We disclose this in line with Article 50 of the EU AI Act (transparency obligations in force since 2 August 2026). AI-generated marketing content on the platform is only published after a human reviews and approves it — read more about both requirements in our article \"The AI Act in August 2026: what was postponed, and what applies today.\"" }
             }
         },
         "budgetAssistant": {
@@ -220,7 +222,8 @@
                 "q1": { "question": "What is AI Budget Assistant?", "answer": "A mobile personal finance app that lets you track expenses by voice, receipt scanning (AI OCR), or manual entry, with multi-currency budgets and a GPT-4-powered finance chat." },
                 "q2": { "question": "Which currencies and languages are supported?", "answer": "It supports USD, EUR, PLN, GBP, and UAH with real-time exchange rates, and the interface is available in nine languages including English, Polish, and Russian." },
                 "q3": { "question": "Can I share a budget with family or a team?", "answer": "Yes — it supports Personal, Shared, and Business account types with role-based access (Owner, Editor, Viewer)." },
-                "q4": { "question": "Where can I download it?", "answer": "It's available on Google Play, and the source code is on GitHub." }
+                "q4": { "question": "Where can I download it?", "answer": "It's available on Google Play, and the source code is on GitHub." },
+                "q5": { "question": "Is the chat in AI Budget Assistant run by AI or a human?", "answer": "When you use the GPT-4-powered financial chat inside AI Budget Assistant, you are talking to an AI system, not a financial advisor. We disclose this in line with Article 50 of the EU AI Act, whose transparency obligations have applied since 2 August 2026. Read more in our article \"The AI Act in August 2026: what was postponed, and what applies today.\"" }
             }
         },
         "legalkaKB": {
@@ -243,7 +246,8 @@
                 "q1": { "question": "What is Legalka KB?", "answer": "A Telegram bot and knowledge base for legalisation in Poland. It answers strictly from verified sources — with references to laws and real applicant experience. If there's no answer — it honestly says \"I don't know\"." },
                 "q2": { "question": "What topics does the knowledge base cover?", "answer": "Temporary residence (karta pobytu), work, visas, banking, employment, real estate, taxes, ZUS, citizenship, family reunification, education, international protection — all for Poland." },
                 "q3": { "question": "What languages does the bot support?", "answer": "The bot understands and responds in Ukrainian, English, Russian, and Polish." },
-                "q4": { "question": "How is answer accuracy ensured?", "answer": "Every fact is marked as \"norm\" (with a law article reference) or \"practice — applicant observations\". If a question is not covered by the base — the bot abstains. Eval suite shows: citation ~99%, fact coverage ~97%, abstention 100%." }
+                "q4": { "question": "How is answer accuracy ensured?", "answer": "Every fact is marked as \"norm\" (with a law article reference) or \"practice — applicant observations\". If a question is not covered by the base — the bot abstains. Eval suite shows: citation ~99%, fact coverage ~97%, abstention 100%." },
+                "q5": { "question": "Is Legalka KB an AI bot or a real human?", "answer": "Yes — Legalka KB is an AI bot, not a human. We state this directly in the bot's Telegram description and in its first message, before you ask your first question. This satisfies Article 50 of the EU AI Act, whose transparency obligations have applied since 2 August 2026 — see our article \"The AI Act in August 2026: what was postponed, and what applies today\" for more." }
             }
         },
         "testingAI": {
@@ -262,7 +266,8 @@
                 "q1": { "question": "What is Testing AI Assistant?", "answer": "An AI-powered test orchestration platform that automates test execution, generates test cases from codebase analysis, and provides quality insights from a single interface." },
                 "q2": { "question": "Can it generate test cases automatically?", "answer": "Yes — it analyzes your codebase and automatically creates test cases covering edge cases, boundary conditions, and critical user flows." },
                 "q3": { "question": "Does it support checklists for releases?", "answer": "Yes — built-in checklist management with AI-generated checklists helps teams maintain testing discipline for releases and sprint reviews." },
-                "q4": { "question": "How much does it cost?", "answer": "It's free during the testing period; source code is available on GitHub." }
+                "q4": { "question": "How much does it cost?", "answer": "It's free during the testing period; source code is available on GitHub." },
+                "q5": { "question": "Are the agents in Testing AI Assistant AI or human?", "answer": "When you use the AI agents in Testing AI Assistant — for example the test-case generator or result notifications — you are dealing with an AI system, not a human. We disclose this in line with Article 50 of the EU AI Act, whose transparency obligations have applied since 2 August 2026. Read more in our article \"The AI Act in August 2026: what was postponed, and what applies today.\"" }
             }
         },
         "pricing": {

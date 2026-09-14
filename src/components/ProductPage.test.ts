@@ -147,7 +147,7 @@ describe('ProductPage structured data', () => {
 
   it('publishes the product FAQ as a FAQPage', () => {
     const container = renderProduct('accounting-ai', 'pl');
-    expect(ofType(container, 'FAQPage')?.mainEntity).toHaveLength(4);
+    expect(ofType(container, 'FAQPage')?.mainEntity).toHaveLength(5);
   });
 
   it('localizes the FAQ answers', () => {
