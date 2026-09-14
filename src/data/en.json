@@ -30,7 +30,11 @@
         "regonValue": "528740633",
         "industry": "Industry",
         "industryValue": "IT Services and Software Development",
-        "foundedNote": "Founded in 2024 by an engineer with 18+ years of IT experience"
+        "foundedNote": "Founded in 2024 by an engineer with 18+ years of IT experience",
+        "copyNip": "Copy NIP",
+        "copyRegon": "Copy REGON",
+        "copied": "Copied!",
+        "copyFailed": "Copy failed"
     },
     "services": {
         "title": "Our services",

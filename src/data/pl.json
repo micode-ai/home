@@ -30,7 +30,11 @@
     "regonValue": "528740633",
     "industry": "Branża",
     "industryValue": "Usługi IT i tworzenie oprogramowania",
-    "foundedNote": "Firma założona w 2024 roku przez inżyniera z 18-letnim doświadczeniem w IT"
+    "foundedNote": "Firma założona w 2024 roku przez inżyniera z 18-letnim doświadczeniem w IT",
+    "copyNip": "Kopiuj NIP",
+    "copyRegon": "Kopiuj REGON",
+    "copied": "Skopiowano!",
+    "copyFailed": "Nie udało się skopiować"
   },
   "services": {
     "title": "Nasze usługi",

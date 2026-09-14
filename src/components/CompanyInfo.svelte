@@ -1,6 +1,7 @@
 <script lang="ts">
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
+  import CopyButton from './CopyButton.svelte';
 
   const title = $derived(t('company.title', $languageStore));
   const foundedLabel = $derived(t('company.founded', $languageStore));
@@ -14,6 +15,10 @@
   const industryLabel = $derived(t('company.industry', $languageStore));
   const industryValue = $derived(t('company.industryValue', $languageStore));
   const foundedNote = $derived(t('company.foundedNote', $languageStore));
+  const copyNipLabel = $derived(t('company.copyNip', $languageStore));
+  const copyRegonLabel = $derived(t('company.copyRegon', $languageStore));
+  const copiedLabel = $derived(t('company.copied', $languageStore));
+  const copyFailedLabel = $derived(t('company.copyFailed', $languageStore));
 
   const companyName = "MiCode Sp. z o.o.";
 </script>
@@ -39,12 +44,18 @@
 
       <div class="info-item">
         <dt class="info-label">{nipLabel}</dt>
-        <dd class="info-value">{nipValue}</dd>
+        <dd class="info-value info-value-row">
+          <span>{nipValue}</span>
+          <CopyButton value={nipValue} label={copyNipLabel} copiedLabel={copiedLabel} failedLabel={copyFailedLabel} />
+        </dd>
       </div>
 
       <div class="info-item">
         <dt class="info-label">{regonLabel}</dt>
-        <dd class="info-value">{regonValue}</dd>
+        <dd class="info-value info-value-row">
+          <span>{regonValue}</span>
+          <CopyButton value={regonValue} label={copyRegonLabel} copiedLabel={copiedLabel} failedLabel={copyFailedLabel} />
+        </dd>
       </div>
 
       <div class="info-item info-item-wide">
@@ -143,6 +154,12 @@
     line-height: 1.5;
   }
 
+  .info-value-row {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
   @media (max-width: 767px) {
     .company-container {
       padding: 0 1rem;
@@ -205,6 +222,10 @@
 
     .info-item:hover {
       box-shadow: none;
+    }
+
+    :global(.copy-button-wrap) {
+      display: none;
     }
   }
 

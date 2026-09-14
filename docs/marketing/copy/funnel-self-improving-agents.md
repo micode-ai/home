@@ -213,6 +213,15 @@ Reels/Stories, `reel-4x5.mp4` для ленты, `og.png`) отрендерен�
 ниже. Обложка одиночного поста, если карусель не заходит, —
 `renders/<lang>/li-single.png`.
 
+**Лимит поста — 3000 знаков**, и это лимит площадки, а не наше правило.
+Замеренная длина `### EN` — 2925 знаков вместе со ссылкой и хэштегами, запас
+есть. `### PL` сейчас 3872 — **не влезает**, композер обрежет текст на середине;
+его надо сократить тем же проходом, что и английский. Считать длину нужно
+**до** публикации и держать её здесь, в шапке, а не в самом посте:
+`tests/test_campaigns.py` сверяет каждое число внутри `### PL` / `### EN` с
+текстом статьи, и счётчик знаков честно уронил бы тест — в статье нет числа
+2925.
+
 ### PL
 
 Zadaj modelowi to samo pytanie za tydzień. Dostaniesz mniej więcej tę samą odpowiedź.
@@ -287,71 +296,54 @@ Chcesz zacząć od jednego agenta, jednej notatki i jednego nawyku? Napisz na de
 
 ### EN
 
-Ask a model the same question next week. You get roughly the same answer.
+Ask a model the same question next week and you get roughly the same answer.
+Not a better one.
 
-Not a better one. The model doesn't remember last week, doesn't know your
-codebase has moved on, and has no mechanism for noticing that the advice it
-just gave contradicts a decision your team made three commits ago. This is the
-quiet ceiling most teams hit with AI: agents that are useful on any given day
-but never actually get better at your work.
+It doesn't remember last week, doesn't know your codebase has moved on, and
+can't notice that the advice it just gave contradicts a decision your team
+made three commits ago. That's the quiet ceiling most teams hit with AI:
+agents useful on any given day that never get better at your work.
 
-In a 2025 conversation Andrej Karpathy named the missing piece. Humans, during
-sleep, distill the day's context into the weights of the brain — and today's
-models have no equivalent distillation phase. That is why he counts continual
-learning and persistent memory among the missing pieces that make agents
-collapse under real work.
+In a 2025 conversation Andrej Karpathy named the missing piece. Humans distill
+the day's context into the brain's weights during sleep; today's models have
+no equivalent distillation phase. He counts continual learning and persistent
+memory among the gaps that make agents collapse under real work.
 
-Getting past that plateau doesn't require a bigger model. It requires giving
-your agents something they normally never get — a night shift.
+Getting past that plateau doesn't take a bigger model. It takes giving your
+agents something they never get: a night shift.
 
-We run this approach in production. A team of specialist agents that, on a
-schedule and mostly while nobody is watching, re-read their own instructions,
-study the code they're responsible for, and propose improvements to themselves.
-The loop is deliberately small — the goal is a finished note every night, not a
-perfect map of the repository:
+We run this in production. Specialist agents that, on a schedule and mostly
+while nobody is watching, re-read their own instructions, study the code they
+own, and propose improvements to themselves. The loop is deliberately small —
+a finished note every night beats a perfect map of the repository:
 
 → Re-read the role. The anchor everything else is measured against.
-→ Sample the code, on a strict budget. A handful of reads, not an exhaustive
-crawl. A short, accurate note beats a long investigation that never finishes.
-→ Write a learning note. The role in one sentence, a watchlist of things
-specific to this repository, and one clarifying question. The consolidation step.
-→ Detect drift. A file the instructions reference is gone. A rule describes a
-flow that no longer exists. The mismatch itself is the finding — and the agent
-is explicitly told not to go and fix it, only to record it.
-→ Propose an evolution. When the mismatch is structural, the agent writes a
-proposed change to its own definition.
+→ Sample the code on a strict budget. A handful of reads, not an exhaustive
+crawl.
+→ Write a learning note: the role in one sentence, a watchlist specific to
+this repository, one clarifying question. That is the consolidation step.
+→ Detect drift. A referenced file is gone, a rule describes a flow that no
+longer exists. The mismatch is the finding, and the agent is told to record
+it, not fix it.
+→ Propose an evolution. When the mismatch is structural, it writes a change to
+its own definition.
 
-And here is the most important design decision in the whole approach: the agent
-proposes, a human disposes. The agent never edits its own instructions
-directly. A person reviews the proposal and applies it in a couple of minutes,
-or rejects it. It is learning by edits, not gradient descent, with a person
-holding the pen.
+The key decision: the agent proposes, a human disposes. It never edits its own
+instructions. A person applies the proposal in a couple of minutes or closes
+it — learning by edits, not gradient descent, with a person holding the pen.
+That is also what makes it safe to leave running unattended: a wrong night
+costs nothing, and a right one has already done the hard part.
 
-That is exactly what makes it safe to leave running unattended. The agent can
-be wrong every night at no cost — a bad proposal is simply closed. But when
-it's right, it has already done the hard part: noticing the drift and writing
-the patch.
-
-The rest is the boring operational layer, borrowed wholesale from operations: a
-rotation so none is starved, a global concurrency cap so the cost stays
-predictable, a watchdog that kills a run which has gone quiet for too long, and
-a reconciler that closes sessions which died without reporting, so the books
-always balance.
-
-Honestly about the cost, because without it this reads like selling a miracle:
-it costs tokens — modest per run, real in aggregate. The output is
-nondeterministic, so you don't wire it straight into anything that demands
-repeatability. And it needs review discipline: if nobody reads the proposals,
-they pile up and the value leaks away. On a small, short-lived project that
-fits in one person's head — skip it. This earns out where nobody holds the
+Honestly about cost, because otherwise this reads like a miracle: it costs
+tokens, modest per run and real in aggregate. The output is nondeterministic,
+so don't wire it into anything that demands repeatability. And it needs review
+discipline — unread proposals pile up and the value leaks away. On a project
+that fits in one person's head, skip it. This earns out where nobody holds the
 whole system in their head any more.
 
-A caveat on the number on the cover: 2025 is the year of the conversation in
-which that diagnosis was made — not a metric of ours, and not the result of any
-measurement.
+The 2025 on the cover is the date of that conversation, not a metric of ours.
 
-Where the idea comes from, what the loop looks like inside, and how to keep it
-from becoming an expensive mess:
+Where the idea comes from, and how to keep it from becoming an expensive mess:
 https://mi-code.pl/en/blog/self-improving-agent-teams/?utm_source=linkedin&utm_medium=social&utm_campaign=self-improving-agents
 
 Want to start with one agent, one note and one habit? Write to development@mi-code.pl.

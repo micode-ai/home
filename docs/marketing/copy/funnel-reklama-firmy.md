@@ -178,3 +178,56 @@ Write to development@mi-code.pl.
 5. `story-9x16-05.png` — A written quote in three days
 6. `story-9x16-06.png` — Let's start the conversation →
    https://mi-code.pl/en/blog/o-firmie-micode/?utm_source=instagram&utm_medium=social&utm_campaign=reklama-firmy
+
+## Threads
+
+Единственный канал фабрики с жёстким лимитом поста: **500 знаков**. Версия для
+LinkedIn (2900+) и даже для фида (1200+) сюда не влезает ни в каком виде,
+поэтому это не сокращённый пересказ, а цепочка из трёх постов: крючок, чему
+научили собственные продукты, три линии услуг со сроком и ссылкой.
+
+Замеренные длины — 228, 244 и 439 знаков (последний вместе со ссылкой), запас
+есть в каждом. Считать длину нужно **до** публикации и держать её в этой шапке,
+а не в самих постах: `tests/test_campaigns.py` сверяет каждое число внутри
+`### EN` с текстом статьи, и счётчик знаков честно уронил бы тест — в статье
+нет числа 228.
+
+Публикуется как thread: первый пост, затем два ответа к нему. Ссылка — только в
+последнем, чтобы превью не съело первый пост. `utm_source=threads`.
+
+Картинка не обязательна — Threads показывает превью ссылки, — но если нужна,
+берётся `renders/en/feed-4x5.png`, тот же файл, что для фида.
+
+Цифрами в постах стоят только `2024` и `18`: это единственные две величины,
+которые статья пишет цифрой (см. шапку файла). Sześć produktów, cztery
+repozytoria, trzy linie usług, trzy dni robocze — словами, как и везде в этой
+кампании. Маркеры `1/3`, `2/3`, `3/3` тест пропускает не по исключению, а
+потому что 1, 2 и 3 в статье действительно есть — это нумерация пяти шагов
+старта проекта.
+
+Только `### EN`, и это осознанно: как и у `ai-act-2026`, канал взят под
+англоязычную аудиторию, а не под польский рынок; польская версия здесь не
+написана, а не потеряна. В отличие от `ai-act-2026`, у этой цепочки есть строка
+в календаре — № 18, 2026-10-05, через рабочий день после Stories и в чужой
+ленте, поэтому правило вторник/четверг её не касается.
+
+### EN
+
+**1/3**
+
+Most companies pitching you AI have never had to keep an AI system running after the invoice cleared.
+
+We run six of our own. Four have public repositories, so that is a claim you can check in a minute rather than take on trust.
+
+**2/3**
+
+Running them forced us to answer, with our own money and before a client asked, the questions a client asks. What it costs per month. What happens when the model changes under you. What a RAG bot should do when its knowledge base has no answer.
+
+**3/3**
+
+We sell three things, deliberately narrow: custom software in Java and Angular, systems integration over REST APIs, cloud. AI goes inside the system we are already building, or it stays out of the project.
+
+Free intro call, written quote in three business days.
+
+MiCode, Gdańsk, founded in 2024 by an engineer with 18+ years in IT:
+https://mi-code.pl/en/blog/o-firmie-micode/?utm_source=threads&utm_medium=social&utm_campaign=reklama-firmy
