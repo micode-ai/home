@@ -1,0 +1,37 @@
+[
+  {
+    "id": "nvidia-deep-learning",
+    "name": "Getting Started with Deep Learning",
+    "issuer": "NVIDIA",
+    "year": 2026,
+    "alt": "NVIDIA Certificate of Competency — Getting Started with Deep Learning, Mikhail Peraviortkin, NVIDIA, 2026"
+  },
+  {
+    "id": "oracle-adf-11g",
+    "name": "Application Development Framework 11g Certified Implementation Specialist",
+    "issuer": "Oracle University",
+    "year": 2014,
+    "alt": "Oracle Application Development Framework 11g Certified Implementation Specialist — Mikhail Peraviortkin, Oracle University, 2014"
+  },
+  {
+    "id": "hf-agents-course",
+    "name": "Agents Course — Fundamentals of Agents",
+    "issuer": "Hugging Face",
+    "year": 2025,
+    "alt": "Hugging Face Agents Course — Fundamentals of Agents certificate, Mikhail Peraviortkin, 2025"
+  },
+  {
+    "id": "hf-llm-course",
+    "name": "LLM Course — Fundamentals of LLMs",
+    "issuer": "Hugging Face",
+    "year": 2025,
+    "alt": "Hugging Face LLM Course — Fundamentals of LLMs certificate, Mikhail Peraviortkin, 2025"
+  },
+  {
+    "id": "hf-mcp-course",
+    "name": "MCP Course — Fundamentals of MCP",
+    "issuer": "Hugging Face",
+    "year": 2025,
+    "alt": "Hugging Face MCP Course — Fundamentals of MCP certificate, Mikhail Peraviortkin, 2025"
+  }
+]

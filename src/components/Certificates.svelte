@@ -7,19 +7,22 @@
   import cert2 from '../assets/images/cerificates/2.png';
   import cert3 from '../assets/images/cerificates/3.png';
   import cert4 from '../assets/images/cerificates/4.png';
+  import certifications from '../data/certifications.json';
 
   const sectionTitle = $derived(t('certificates.title', $languageStore));
   const sectionSubtitle = $derived(t('certificates.subtitle', $languageStore));
   const prevLabel = $derived(t('certificates.prev', $languageStore));
   const nextLabel = $derived(t('certificates.next', $languageStore));
 
-  const certificates = [
-    { src: certNvidia, width: 802, height: 672, alt: 'NVIDIA Certificate of Competency — Getting Started with Deep Learning, Mikhail Peraviortkin, NVIDIA, 2026' },
-    { src: cert1, width: 805, height: 610, alt: 'Oracle Application Development Framework 11g Certified Implementation Specialist — Mikhail Peraviortkin, Oracle University, 2014' },
-    { src: cert2, width: 2000, height: 1414, alt: 'Hugging Face Agents Course — Fundamentals of Agents certificate, Mikhail Peraviortkin, 2025' },
-    { src: cert3, width: 2000, height: 1414, alt: 'Hugging Face LLM Course — Fundamentals of LLMs certificate, Mikhail Peraviortkin, 2025' },
-    { src: cert4, width: 2000, height: 1414, alt: 'Hugging Face MCP Course — Fundamentals of MCP certificate, Mikhail Peraviortkin, 2025' }
+  const certificateImages = [
+    { src: certNvidia, width: 802, height: 672 },
+    { src: cert1, width: 805, height: 610 },
+    { src: cert2, width: 2000, height: 1414 },
+    { src: cert3, width: 2000, height: 1414 },
+    { src: cert4, width: 2000, height: 1414 }
   ];
+
+  const certificates = certifications.map((cert, index) => ({ ...cert, ...certificateImages[index] }));
 
   let sliderOffset = $state(0);
   let visibleCount = $state(3);
@@ -132,14 +135,20 @@
       >
         <div class="certificates-grid" style="transform: {sliderTransform};">
           {#each certificates as cert, index}
-            <button
-              type="button"
-              class="certificate-card"
-              onclick={() => openLightbox(index)}
-              aria-label="Open certificate {index + 1}"
-            >
-              <img src={cert.src} alt={cert.alt} class="certificate-image" width={cert.width} height={cert.height} loading="lazy" />
-            </button>
+            <div class="certificate-item">
+              <button
+                type="button"
+                class="certificate-card"
+                onclick={() => openLightbox(index)}
+                aria-label="Open {cert.name} from {cert.issuer}"
+              >
+                <img src={cert.src} alt={cert.alt} class="certificate-image" width={cert.width} height={cert.height} loading="lazy" />
+              </button>
+              <div class="certificate-caption">
+                <span class="certificate-name">{cert.name}</span>
+                <span class="certificate-issuer">{cert.issuer}</span>
+              </div>
+            </div>
           {/each}
         </div>
       </div>
@@ -189,14 +198,20 @@
         <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
       </svg>
     </button>
-    <img
-      src={certificates[lightboxIndex].src}
-      alt={certificates[lightboxIndex].alt}
-      width={certificates[lightboxIndex].width}
-      height={certificates[lightboxIndex].height}
-      class="lightbox-image"
-      onclick={(e) => e.stopPropagation()}
-    />
+    <div class="lightbox-content">
+      <img
+        src={certificates[lightboxIndex].src}
+        alt={certificates[lightboxIndex].alt}
+        width={certificates[lightboxIndex].width}
+        height={certificates[lightboxIndex].height}
+        class="lightbox-image"
+        onclick={(e) => e.stopPropagation()}
+      />
+      <div class="lightbox-caption">
+        <span class="lightbox-caption-name">{certificates[lightboxIndex].name}</span>
+        <span class="lightbox-caption-issuer">{certificates[lightboxIndex].issuer}</span>
+      </div>
+    </div>
   </div>
 {/if}
 
@@ -286,8 +301,13 @@
     transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .certificate-card {
+  .certificate-item {
     flex: 0 0 calc((100% - 2 * 2rem) / 3);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .certificate-card {
     aspect-ratio: 4 / 3;
     border-radius: 12px;
     overflow: hidden;
@@ -310,6 +330,25 @@
     object-fit: contain;
     background: var(--color-bg-primary);
     display: block;
+  }
+
+  .certificate-caption {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    text-align: center;
+  }
+
+  .certificate-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+
+  .certificate-issuer {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
   }
 
   .slider-dots {
@@ -352,7 +391,7 @@
   }
 
   @media (max-width: 1024px) {
-    .certificate-card {
+    .certificate-item {
       flex: 0 0 calc((100% - 2rem) / 2);
     }
   }
@@ -361,7 +400,7 @@
     .certificates-container {
       padding: 0 1rem;
     }
-    .certificate-card {
+    .certificate-item {
       flex: 0 0 100%;
     }
     .slider-arrow {
@@ -382,14 +421,42 @@
     animation: fadeIn 0.2s ease;
   }
 
-  .lightbox-image {
+  .lightbox-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     max-width: 95vw;
     max-height: 90vh;
+  }
+
+  .lightbox-image {
+    max-width: 95vw;
+    max-height: 78vh;
     width: auto;
     height: auto;
     object-fit: contain;
     border-radius: 8px;
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  }
+
+  .lightbox-caption {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    text-align: center;
+  }
+
+  .lightbox-caption-name {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #ffffff;
+  }
+
+  .lightbox-caption-issuer {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.7);
   }
 
   .lightbox-close {

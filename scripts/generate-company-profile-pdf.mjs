@@ -23,15 +23,11 @@ const services = JSON.parse(readFileSync(join(root, 'src/data/services.json'), '
 const CONTACT_EMAIL = 'development@mi-code.pl';
 const SITE_URL = 'https://mi-code.pl';
 
-// Certificate titles only (no images — keeps the PDF one page and text-selectable).
-// Not translated in the source JSON either, so a single locale-independent list.
-const CERTIFICATIONS = [
-  'NVIDIA — Getting Started with Deep Learning (2026)',
-  'Oracle Application Development Framework 11g Certified Implementation Specialist (2014)',
-  'Hugging Face Agents Course — Fundamentals of Agents (2025)',
-  'Hugging Face LLM Course — Fundamentals of LLMs (2025)',
-  'Hugging Face MCP Course — Fundamentals of MCP (2025)',
-];
+// Shared with Certificates.svelte's on-page captions (src/data/certifications.json) so
+// the two lists can't drift. Not translated — certification names/issuers stay English
+// in both places (see docs/contracts/certificates-caption.md).
+const certifications = JSON.parse(readFileSync(join(root, 'src/data/certifications.json'), 'utf8'));
+const CERTIFICATIONS = certifications.map((cert) => `${cert.issuer} — ${cert.name} (${cert.year})`);
 
 const PAGE_WIDTH = 595.28; // A4 portrait, points
 const PAGE_HEIGHT = 841.89;
