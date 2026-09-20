@@ -2466,4 +2466,63 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
   RL --> J
   FA["Awaria źródła: połączone, liczby null,<br/>a nie zera"] -.-> J`,
   },
+  'jev-decision-audit': {
+    pl: `flowchart TB
+  subgraph KEEP["Zostaje przy LLM (ocena wygenerowanej treści)"]
+    K1["Czy wygenerowany test<br/>jest poprawny"]
+    K2["Czy wygenerowana checklista<br/>jest poprawna"]
+    K3["Czy poprawiona treść<br/>prawna jest poprawna"]
+  end
+  subgraph CAND["Kandydat na model decyzyjny (zamknięty zbiór odpowiedzi)"]
+    C1["Czy wywołać narzędzie<br/>(co krok pętli)"]
+    C2["Typ akcji: odpowiedź,<br/>odczyt czy zapis"]
+    C3["Który z 7 specjalistów<br/>przejmuje zadanie"]
+    C4["Typ wiadomości"]
+    C5["Czy baza wiedzy<br/>pokrywa pytanie"]
+    C6["Intencja: pytanie<br/>czy edycja"]
+  end
+  subgraph SKIP["Nie ruszamy albo niepewne"]
+    S1["Potwierdzenie<br/>użytkownika"]
+    S2["Który z 5 agentów<br/>testowych (mechanizm nieznany)"]
+    S3["Filtr danych osobowych<br/>(fail-closed)"]
+  end`,
+    en: `flowchart TB
+  subgraph KEEP["Stays with the LLM (judging generated content)"]
+    K1["Is the generated test<br/>valid"]
+    K2["Is the generated checklist<br/>valid"]
+    K3["Is the revised legal<br/>text correct"]
+  end
+  subgraph CAND["Candidate for a decision model (closed answer set)"]
+    C1["Call a tool<br/>(every loop step)"]
+    C2["Action type: answer,<br/>read or write"]
+    C3["Which of 7 specialists<br/>takes the task"]
+    C4["Message type"]
+    C5["Does the knowledge base<br/>cover the question"]
+    C6["Intent: question<br/>or edit"]
+  end
+  subgraph SKIP["Not moving, or unclear"]
+    S1["User<br/>confirmation"]
+    S2["Which of 5 test agents<br/>(mechanism unknown)"]
+    S3["Personal-data filter<br/>(fail-closed)"]
+  end`,
+    ru: `flowchart TB
+  subgraph KEEP["Остаётся за LLM (оценка сгенерированного контента)"]
+    K1["Корректен ли<br/>сгенерированный тест"]
+    K2["Корректен ли<br/>сгенерированный чек-лист"]
+    K3["Корректен ли исправленный<br/>правовой текст"]
+  end
+  subgraph CAND["Кандидат на модель решений (закрытое множество ответов)"]
+    C1["Вызвать инструмент<br/>(на каждом шаге цикла)"]
+    C2["Тип действия: ответ,<br/>чтение или запись"]
+    C3["Какой из 7 специалистов<br/>берёт задачу"]
+    C4["Тип сообщения"]
+    C5["Покрывает ли база знаний<br/>вопрос"]
+    C6["Намерение: вопрос<br/>или правка"]
+  end
+  subgraph SKIP["Не переносим или неясно"]
+    S1["Подтверждение<br/>пользователя"]
+    S2["Какой из 5 тестовых агентов<br/>(механизм неизвестен)"]
+    S3["Фильтр персональных данных<br/>(fail-closed)"]
+  end`,
+  },
 };

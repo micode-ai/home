@@ -67,6 +67,7 @@ export default defineConfig({
                 aiCitationMonitorGeminiFreeQuotaArticle: resolve(__dirname, "blog/ai-citation-monitor-gemini-free-quota/index.html"),
                 llmMetricSemanticsAnalyticsArticle: resolve(__dirname, "blog/llm-metric-semantics-analytics/index.html"),
                 oFirmieMicodeArticle: resolve(__dirname, "blog/o-firmie-micode/index.html"),
+                jevSystemOneGdzieWNaszychAgentachArticle: resolve(__dirname, "blog/jev-system-one-gdzie-w-naszych-agentach/index.html"),
             },
         },
     },
