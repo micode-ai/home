@@ -236,5 +236,12 @@
     "definitionPl": "MŚP (małe i średnie przedsiębiorstwa) to unijna kategoria firm zatrudniających mniej niż 250 osób — od przynależności do niej zależy dostęp do większości dotacji.",
     "definitionEn": "SME (small and medium-sized enterprise) is the EU category for companies with fewer than 250 employees, and belonging to it decides access to most grants.",
     "definitionRu": "MŚP (małe i średnie przedsiębiorstwa) — категория ЕС для компаний с числом сотрудников менее 250; от принадлежности к ней зависит доступ к большинству грантов."
+  },
+  {
+    "id": "system-one",
+    "terms": ["System One"],
+    "definitionPl": "System One to nowa klasa modeli AI (pierwszym jest Jev od TypeSafe AI), która zamiast tekstu zwraca typowaną decyzję ze skalibrowanym prawdopodobieństwem — bez generowania i parsowania ciągu znaków, więc działa dużo szybciej i taniej niż zwykły LLM.",
+    "definitionEn": "System One is a new class of AI model (the first is TypeSafe AI's Jev) that returns a typed decision with a calibrated probability instead of text — no string generation or parsing, so it runs far faster and cheaper than a regular LLM.",
+    "definitionRu": "System One — новый класс моделей ИИ (первая — Jev от TypeSafe AI), которая вместо текста возвращает типизированное решение с калиброванной вероятностью — без генерации и разбора строки, поэтому работает значительно быстрее и дешевле обычной LLM."
   }
 ]
