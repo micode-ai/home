@@ -476,4 +476,106 @@ export const articleTables: Record<string, Record<Lang, ArticleTable>> = {
       ],
     },
   },
+  // Three tables for the LLM-wiki article. The figures are what the repository itself reports
+  // on 2026-09-22 (word counts from wc -w, commit counts from git log); an article is a dated
+  // artifact, which is why it may state counts the wiki pages themselves are forbidden to.
+  'llm-wiki-layers': {
+    pl: {
+      headers: ['Warstwa', 'U Karpathy’ego', 'U nas'],
+      rows: [
+        ['Surowe źródła', 'Niezmienna kolekcja artykułów, PDF-ów i obrazów', 'Nie ma takiej warstwy — źródłem prawdy jest sam kod, a wiki go streszcza'],
+        ['Wiki', 'Katalog plików markdown, którego właścicielem jest model', 'Koncentratory domen w katalogu głównym, strony funkcjonalności w podkatalogu'],
+        ['Schemat', 'Plik konwencji i przepływów, na przykład CLAUDE.md albo AGENTS.md', 'CLAUDE.md: reguły repozytorium i wskaźnik do indeksu, bez opisów funkcjonalności'],
+        ['Indeks', 'Katalog wszystkich stron z jednozdaniowym opisem', 'Koncentrator na domenę, strona na funkcjonalność, plus jedna reguła czytania'],
+        ['Dziennik', 'Zapis chronologiczny: ingesty, zapytania, przebiegi lintu', 'Te same trzy sekcje, jeden wiersz na wpis — dziennik ma być celem wyszukiwania, nie drugą wiki'],
+      ],
+    },
+    en: {
+      headers: ['Layer', 'In the gist', 'On our side'],
+      rows: [
+        ['Raw sources', 'An immutable collection of articles, PDFs and images', 'No such layer — the code itself is the source of truth and the wiki summarizes it'],
+        ['The wiki', 'A directory of markdown files the model owns', 'Domain hubs at the root, feature pages in a subfolder'],
+        ['The schema', 'A conventions-and-workflows file, e.g. CLAUDE.md or AGENTS.md', 'CLAUDE.md: repo-wide rules and the pointer to the index, no feature descriptions'],
+        ['The index', 'A catalog of every page with a one-line summary', 'A hub per domain, a page per feature, plus one rule on how to read a page'],
+        ['The log', 'A chronological record: ingests, queries, lint passes', 'The same three sections, one line per entry — the log is a search target, not a second wiki'],
+      ],
+    },
+    ru: {
+      headers: ['Слой', 'У Карпаты', 'У нас'],
+      rows: [
+        ['Сырые источники', 'Неизменяемая коллекция статей, PDF и изображений', 'Такого слоя нет — источник истины сам код, а вики его конспектирует'],
+        ['Вики', 'Каталог markdown-файлов, которым владеет модель', 'Хабы доменов в корне, страницы фич во вложенной папке'],
+        ['Схема', 'Файл конвенций и процессов, например CLAUDE.md или AGENTS.md', 'CLAUDE.md: правила репозитория и указатель на индекс, без описаний фич'],
+        ['Индекс', 'Каталог всех страниц с однострочным описанием', 'Хаб на домен, страница на фичу и одно правило о том, как читать страницу'],
+        ['Журнал', 'Хронологическая запись: ингесты, запросы, проходы линта', 'Те же три секции, одна строка на запись — журнал это цель поиска, а не вторая вики'],
+      ],
+    },
+  },
+  'llm-wiki-operations': {
+    pl: {
+      headers: ['Operacja', 'Rytuał u nas', 'Co po nim zostaje'],
+      rows: [
+        ['Ingest', 'Zamknięcie zadania: zgłoszenie, strona funkcjonalności, wiersz w dzienniku', 'Zaktualizowana strona i jeden wiersz w sekcji ingestów'],
+        ['Query', 'Najpierw wiki, potem kod; odpowiedź z podaną ścieżką strony', 'Znalezisko dopisane do strony i wiersz w sekcji zapytań — także gdy kod się nie zmienił'],
+        ['Lint maszynowy', 'Dwa skrypty Pythona co tydzień w CI, bez wywołania modelu', 'Komentarz do jednego długowiecznego zgłoszenia: martwe linki, sieroty, strony wyprzedzone przez kod'],
+        ['Lint czytający', 'Audyt w sesji: dwie, trzy strony porządnie zamiast przeglądu wszystkich', 'Poprawione twierdzenia i wiersz w sekcji przebiegów lintu'],
+      ],
+    },
+    en: {
+      headers: ['Operation', 'Our ritual', 'What it leaves behind'],
+      rows: [
+        ['Ingest', 'Closing a task: the issue, the feature page, one line in the log', 'An updated page and one line in the ingests section'],
+        ['Query', 'Wiki before code; answer with the page path cited', 'A finding added to a page and a line in the queries section — even when no code changed'],
+        ['Machine lint', 'Two Python scripts weekly in CI, with no model call', 'A comment on one long-lived issue: dead links, orphans, pages the code has moved past'],
+        ['Reading lint', 'An in-session audit: two or three pages properly, not a skim of all', 'Corrected claims and a line in the lint-passes section'],
+      ],
+    },
+    ru: {
+      headers: ['Операция', 'Наш ритуал', 'Что после него остаётся'],
+      rows: [
+        ['Ingest', 'Закрытие задачи: issue, страница фичи, строка в журнале', 'Обновлённая страница и одна строка в секции ингестов'],
+        ['Query', 'Сначала вики, потом код; ответ со ссылкой на путь страницы', 'Находка, дописанная на страницу, и строка в секции запросов — даже если код не менялся'],
+        ['Машинный линт', 'Два python-скрипта еженедельно в CI, без вызова модели', 'Комментарий к одному долгоживущему issue: мёртвые ссылки, сироты, отставшие страницы'],
+        ['Читающий линт', 'Аудит в сессии: две-три страницы как следует, а не беглый просмотр всех', 'Исправленные утверждения и строка в секции проходов линта'],
+      ],
+    },
+  },
+  'llm-wiki-gaps': {
+    pl: {
+      headers: ['Luka', 'Dlaczego to ważne', 'Co z tym zrobimy'],
+      rows: [
+        ['Sekcja zapytań w dzienniku pusta', 'Wiki kumuluje się wyłącznie ze zmian, nigdy z pytań', 'Wbudować zapis odpowiedzi w rytuał, zamiast zostawiać go jako decyzję'],
+        ['52 484 słowa wciąż w CLAUDE.md', 'Reguła „przenosi ten, kto dotyka” nigdy nie ruszy funkcjonalności, których nikt nie dotyka', 'Nazwać resztę tym, co żyje w schemacie, albo domknąć migrację świadomie'],
+        ['Lint sprawdza tylko ścieżki od korzenia repozytorium', 'Ścieżki cytowane względem aplikacji nie są sprawdzane wcale', 'Rozszerzyć dopiero wtedy, gdy da się to zrobić bez zgadywania katalogu bazowego'],
+        ['Raport o dezaktualizacji liczy commity, nie treść', 'Trzy commity kosmetyczne wyglądają jak trzy łamiące opisany mechanizm', 'Traktować jako kolejność priorytetów dla człowieka, nie jako werdykt'],
+        ['Koncentratory nieprzeczytane od maja', 'Najwyższy poziom nawigacji to ten sam artefakt, który raz już skłamał', 'Następny cel jest wskazany w dzienniku: strona API, 46 commitów schematu bazy'],
+        ['Plik trendów zdrowia ma jeden punkt z 14 maja', 'Bez trendu nie widać, czy wiki żyje, czy umiera', 'Odkładać cotygodniowy wynik do pliku, nie tylko w komentarz do zgłoszenia'],
+        ['Brak pomiaru oszczędności', 'Każda podana dziś liczba oszczędności byłaby zmyślona', 'Zmierzyć średnią objętość czytania na sesję, przed i po, na porównywalnych zadaniach'],
+      ],
+    },
+    en: {
+      headers: ['Gap', 'Why it matters', 'What we will do'],
+      rows: [
+        ['The log’s queries section is empty', 'The wiki accumulates only from changes, never from questions', 'Build filing an answer into a ritual instead of leaving it as a decision'],
+        ['52,484 words still in CLAUDE.md', 'The rule "whoever touches it moves it" never moves a feature nobody touches', 'Either name the remainder what lives in the schema, or close the migration deliberately'],
+        ['The lint only checks repo-root paths', 'Paths cited relative to an app are not checked at all', 'Extend it only once it can be done without guessing a base directory'],
+        ['The staleness report counts commits, not substance', 'Three cosmetic commits look like three that broke the mechanism', 'Treat it as a priority order for a human, never as a verdict'],
+        ['The hubs have not been re-read since May', 'The top level of navigation is the artifact that already lied once', 'The next target is named in the log: the API page, 46 commits of schema behind'],
+        ['The health-trends file holds one datapoint from 14 May', 'Without a trend you cannot see whether the wiki is alive or dying', 'Append the weekly result to a file, not only to an issue comment'],
+        ['No measurement of the saving', 'Any savings figure quoted today would be invented', 'Measure the average volume read per session, before and after, on comparable tasks'],
+      ],
+    },
+    ru: {
+      headers: ['Пробел', 'Почему это важно', 'Что будем делать'],
+      rows: [
+        ['Секция запросов в журнале пуста', 'Вики накапливается только из изменений и никогда из вопросов', 'Встроить фиксацию ответа в ритуал, а не оставлять её решением'],
+        ['52 484 слова всё ещё в CLAUDE.md', 'Правило «переносит тот, кто трогает» не перенесёт фичу, которую никто не трогает', 'Либо честно назвать остаток тем, что живёт в схеме, либо закрыть миграцию осознанно'],
+        ['Линт проверяет только пути от корня репозитория', 'Пути, процитированные относительно приложения, не проверяются вообще', 'Расширять только тогда, когда это можно сделать без угадывания базового каталога'],
+        ['Отчёт о протухании считает коммиты, а не суть', 'Три косметических коммита выглядят как три, сломавших механизм', 'Считать его порядком приоритета для человека, а не вердиктом'],
+        ['Хабы не перечитаны с мая', 'Верхний уровень навигации — тот самый артефакт, который однажды соврал', 'Следующая цель названа в журнале: страница API, 46 коммитов схемы позади'],
+        ['В файле трендов одна точка от 14 мая', 'Без тренда не видно, живёт вики или умирает', 'Складывать еженедельный результат в файл, а не только в комментарий к issue'],
+        ['Экономия не измерена', 'Любая названная сегодня цифра экономии была бы выдуманной', 'Замерить средний объём прочитанного за сессию до и после на сопоставимых задачах'],
+      ],
+    },
+  },
 };

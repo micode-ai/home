@@ -68,6 +68,7 @@ export default defineConfig({
                 llmMetricSemanticsAnalyticsArticle: resolve(__dirname, "blog/llm-metric-semantics-analytics/index.html"),
                 oFirmieMicodeArticle: resolve(__dirname, "blog/o-firmie-micode/index.html"),
                 jevSystemOneGdzieWNaszychAgentachArticle: resolve(__dirname, "blog/jev-system-one-gdzie-w-naszych-agentach/index.html"),
+                llmWikiKarpathyJakToRobimyArticle: resolve(__dirname, "blog/llm-wiki-karpathy-jak-to-robimy/index.html"),
             },
         },
     },

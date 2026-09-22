@@ -243,5 +243,12 @@
     "definitionPl": "System One to nowa klasa modeli AI (pierwszym jest Jev od TypeSafe AI), która zamiast tekstu zwraca typowaną decyzję ze skalibrowanym prawdopodobieństwem — bez generowania i parsowania ciągu znaków, więc działa dużo szybciej i taniej niż zwykły LLM.",
     "definitionEn": "System One is a new class of AI model (the first is TypeSafe AI's Jev) that returns a typed decision with a calibrated probability instead of text — no string generation or parsing, so it runs far faster and cheaper than a regular LLM.",
     "definitionRu": "System One — новый класс моделей ИИ (первая — Jev от TypeSafe AI), которая вместо текста возвращает типизированное решение с калиброванной вероятностью — без генерации и разбора строки, поэтому работает значительно быстрее и дешевле обычной LLM."
+  },
+  {
+    "id": "llm-wiki",
+    "terms": ["LLM wiki"],
+    "definitionPl": "LLM wiki to baza wiedzy z plików markdown, którą utrzymuje model językowy: czyta nowe źródła i sam wplata je w istniejące strony razem z odsyłaczami, zamiast szukać wszystkiego od nowa przy każdym pytaniu. Wzorzec opisał Andrej Karpathy.",
+    "definitionEn": "An LLM wiki is a markdown knowledge base maintained by a language model: it reads new sources and weaves them into the pages that already exist, cross-references included, instead of searching everything again on every question. The pattern was described by Andrej Karpathy.",
+    "definitionRu": "LLM wiki — база знаний из markdown-файлов, которую поддерживает языковая модель: она читает новые источники и сама встраивает их в уже существующие страницы вместе с перекрёстными ссылками, вместо того чтобы искать всё заново на каждый вопрос. Паттерн описал Андрей Карпаты."
   }
 ]

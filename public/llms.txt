@@ -46,6 +46,7 @@ Contact: development@mi-code.pl — Jana Heweliusza 11 lok. 811, 80-890 Gdańsk,
 - [Metric semantics: why an LLM lies on correct numbers](https://mi-code.pl/blog/llm-metric-semantics-analytics/): Six defects from wiring cross-channel analytics into an LLM digest — cumulative counters, search rank direction, a level read inside the reporting window, reporting lag, and null versus zero — plus the prompt rules and pure-module tests that catch them.
 - [MiCode: what we build, what we sell, and how to start](https://mi-code.pl/blog/o-firmie-micode/): Six products of our own, three service lines, and a quote in three business days — a description of the company in which every figure can be checked by the reader.
 - [Jev: auditing our LangGraph decision nodes for a System One model](https://mi-code.pl/blog/jev-system-one-gdzie-w-naszych-agentach/): Audit of five production LangGraph agents against TypeSafe AI's Jev (System One) model: which decision nodes are real candidates, which stay with the LLM, and why nothing is migrating yet.
+- [Karpathy’s LLM wiki in a real repo: the pattern, our setup, the gaps](https://mi-code.pl/blog/llm-wiki-karpathy-jak-to-robimy/): Karpathy’s LLM wiki pattern applied to a production monorepo: CLAUDE.md as the schema, domain hubs and feature pages, ingest/query/lint as three rituals, a model-free weekly lint in CI, and an honest list of the gaps that remain.
 
 ## FAQ
 

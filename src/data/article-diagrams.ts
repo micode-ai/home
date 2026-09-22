@@ -2525,4 +2525,57 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
     S3["Фильтр персональных данных<br/>(fail-closed)"]
   end`,
   },
+  'llm-wiki-loop': {
+    ru: `flowchart TB
+  SCH["Схема проекта:<br/>правила репозитория<br/>и указатель на индекс"] --> IDX
+  subgraph ENTRY["Три входа"]
+    T["Задача завершена"]
+    Q["Вопрос отвечён"]
+    W["Еженедельная проверка"]
+  end
+  T --> PAGE["Страница фичи:<br/>механизм, инварианты,<br/>известные пробелы"]
+  Q --> PAGE
+  PAGE --> IDX["Индекс:<br/>хаб на домен,<br/>страница на фичу"]
+  PAGE --> LOG["Журнал:<br/>одна строка на запись"]
+  W --> LINT["Скрипты без модели:<br/>мёртвые ссылки, сироты,<br/>страницы, отставшие от кода"]
+  LINT --> REP["Отчёт в одном<br/>долгоживущем issue"]
+  REP --> READ["Читающий аудит в сессии:<br/>две-три страницы как следует"]
+  READ --> PAGE
+  READ --> LOG
+  IDX --> ANS["Ответ со ссылкой<br/>на страницу"]`,
+    en: `flowchart TB
+  SCH["The schema:<br/>repo-wide rules<br/>and the pointer to the index"] --> IDX
+  subgraph ENTRY["Three ways in"]
+    T["A task is finished"]
+    Q["A question is answered"]
+    W["The weekly check"]
+  end
+  T --> PAGE["Feature page:<br/>mechanism, invariants,<br/>known gaps"]
+  Q --> PAGE
+  PAGE --> IDX["Index:<br/>a hub per domain,<br/>a page per feature"]
+  PAGE --> LOG["Log:<br/>one line per entry"]
+  W --> LINT["Model-free scripts:<br/>dead links, orphans,<br/>pages the code moved past"]
+  LINT --> REP["Report on one<br/>long-lived issue"]
+  REP --> READ["Reading audit in a session:<br/>two or three pages properly"]
+  READ --> PAGE
+  READ --> LOG
+  IDX --> ANS["An answer that cites<br/>the page it came from"]`,
+    pl: `flowchart TB
+  SCH["Schemat:<br/>reguły repozytorium<br/>i wskaźnik do indeksu"] --> IDX
+  subgraph ENTRY["Trzy wejścia"]
+    T["Zadanie ukończone"]
+    Q["Pytanie odpowiedziane"]
+    W["Cotygodniowa kontrola"]
+  end
+  T --> PAGE["Strona funkcjonalności:<br/>mechanizm, niezmienniki,<br/>znane luki"]
+  Q --> PAGE
+  PAGE --> IDX["Indeks:<br/>koncentrator na domenę,<br/>strona na funkcjonalność"]
+  PAGE --> LOG["Dziennik:<br/>jeden wiersz na wpis"]
+  W --> LINT["Skrypty bez modelu:<br/>martwe linki, sieroty,<br/>strony wyprzedzone przez kod"]
+  LINT --> REP["Raport w jednym<br/>długowiecznym zgłoszeniu"]
+  REP --> READ["Audyt czytający w sesji:<br/>dwie, trzy strony porządnie"]
+  READ --> PAGE
+  READ --> LOG
+  IDX --> ANS["Odpowiedź z podaną<br/>ścieżką strony"]`,
+  },
 };
