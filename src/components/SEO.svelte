@@ -26,11 +26,15 @@
   const structuredData = {
     "@context": "https://schema.org",
     "@type": ["Organization", "ProfessionalService"],
+    // Stable node id: ai-budget.pl (a MiCode product) describes the same company, and the
+    // Wikidata item below is what ties the two descriptions together for search and AI engines.
+    "@id": "https://mi-code.pl/#organization",
     "name": "MiCode Sp. z o.o.",
     // The bare brand and the hyphenated domain spelling: "micode" as typed into
     // Google has to resolve to this entity, not just the registered legal name.
     "legalName": "MiCode Sp. z o.o.",
-    "alternateName": ["MiCode", "Mi-Code"],
+    "alternateName": ["MiCode", "Mi-Code", "MICODE sp. z o.o."],
+    "taxID": "5833510147",
     "url": "https://mi-code.pl/",
     "foundingDate": "2024",
     "logo": {
@@ -85,7 +89,8 @@
       "https://www.npmjs.com/~perevertkinma",
       "https://www.facebook.com/profile.php?id=61570771625318",
       "https://www.instagram.com/micode.development/",
-      "https://t.me/micode_ai"
+      "https://t.me/micode_ai",
+      "https://www.wikidata.org/wiki/Q141551004"
     ],
     "knowsAbout": [
       "Custom Software Development",
