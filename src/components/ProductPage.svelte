@@ -7,6 +7,7 @@
   import blogPosts from '../data/blog-posts.json';
   import type { Product } from '../types/products';
   import CommunityStatBadges from './CommunityStatBadges.svelte';
+  import TechStackBadges from './TechStackBadges.svelte';
   import MermaidDiagram from './MermaidDiagram.svelte';
   import { langgraphDiagrams } from '../data/langgraph-diagrams';
   import ImageLightbox from './ImageLightbox.svelte';
@@ -210,6 +211,7 @@
             </a>
           {/if}
           <CommunityStatBadges stats={product.communityStats} size="md" />
+          <TechStackBadges stack={product.stack} size="md" />
         </div>
 
         {#if product.pricingKey}

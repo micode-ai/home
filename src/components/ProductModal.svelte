@@ -4,6 +4,7 @@
   import { t } from '../services/i18n';
   import type { Product } from '../types/products';
   import CommunityStatBadges from './CommunityStatBadges.svelte';
+  import TechStackBadges from './TechStackBadges.svelte';
 
   interface Props {
     product: Product;
@@ -81,6 +82,7 @@
           </a>
         {/if}
         <CommunityStatBadges stats={product.communityStats} size="md" />
+        <TechStackBadges stack={product.stack} size="md" />
       </div>
 
       {#if product.detailedDescriptionKey}

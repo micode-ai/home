@@ -146,6 +146,9 @@
         "modal": {
             "featuresHeading": "Key features"
         },
+        "techStack": {
+            "label": "Tech stack"
+        },
         "ngxChat": {
             "name": "ngx-open-web-ui-chat",
             "description": "npm component for AI chat integration in Angular applications",

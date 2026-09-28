@@ -5,6 +5,7 @@
   import { track } from '../services/tracking';
   import type { Product } from '../types/products';
   import CommunityStatBadges from './CommunityStatBadges.svelte';
+  import TechStackBadges from './TechStackBadges.svelte';
 
   interface Props {
     product: Product;
@@ -98,6 +99,7 @@
     {/if}
     <p class="product-description">{t(product.descriptionKey, $languageStore)}</p>
 
+    <TechStackBadges stack={product.stack} />
     <CommunityStatBadges stats={product.communityStats} />
 
     {#if product.pricingKey}

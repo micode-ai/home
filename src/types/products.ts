@@ -29,5 +29,6 @@ export interface Product {
   accentColor?: string;
   communityStats?: CommunityStats | null;
   langgraphDiagramId?: string;
+  stack?: string[];
   faq?: ProductFaqItem[];
 }

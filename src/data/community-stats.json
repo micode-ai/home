@@ -1,12 +1,12 @@
 {
-  "fetchedAt": "2026-09-14T10:13:43.047Z",
+  "fetchedAt": "2026-09-28T06:55:27.887Z",
   "stats": {
     "budget-assistant": {
       "githubStars": 9,
       "npmWeeklyDownloads": null
     },
     "accounting-ai": {
-      "githubStars": 6,
+      "githubStars": 9,
       "npmWeeklyDownloads": null
     },
     "legalka-kb": {
@@ -19,7 +19,7 @@
     },
     "ngx-chat": {
       "githubStars": null,
-      "npmWeeklyDownloads": 8
+      "npmWeeklyDownloads": 6
     },
     "testing-ai": {
       "githubStars": 6,
