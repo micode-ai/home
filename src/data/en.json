@@ -390,7 +390,8 @@
             "twitter": "Share on X",
             "copyLink": "Copy link",
             "copyLinkCopied": "Link copied!",
-            "copyLinkFailed": "Couldn't copy"
+            "copyLinkFailed": "Couldn't copy",
+            "print": "Print / Save as PDF"
         },
         "filter": {
             "all": "All",

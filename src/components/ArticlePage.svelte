@@ -12,6 +12,7 @@
   import { articleTables, type ArticleTable } from '../data/article-tables';
   import { estimateReadingMinutes } from '../services/readingTime';
   import ShareButtons from './ShareButtons.svelte';
+  import PrintButton from './PrintButton.svelte';
   import { getRelatedPosts } from '../services/relatedArticles';
   import { buildToc } from '../services/articleToc';
   import { computeReadingProgress } from '../services/readingProgress';
@@ -310,7 +311,10 @@
           <span class="tag">{tag}</span>
         {/each}
       </div>
-      <ShareButtons url={shareUrl} {title} {lang} />
+      <div class="article-actions">
+        <ShareButtons url={shareUrl} {title} {lang} />
+        <PrintButton {lang} />
+      </div>
     </div>
   </div>
   <div class="article-body" bind:this={articleBodyEl}>
@@ -467,6 +471,10 @@
   .article-meta-sep,
   .article-reading-time { font-size: 0.875rem; opacity: 0.7; }
   .article-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
+  .article-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.25rem; }
+  /* ShareButtons brings its own margin-top for its standalone use elsewhere; zero it out here so
+     it doesn't add to `.article-actions`'s own margin and misalign against `PrintButton`. */
+  .article-actions :global(.share-row) { margin-top: 0; }
   .tag { padding: 0.2rem 0.6rem; background: rgba(255,255,255,0.15); border-radius: 0.25rem; font-size: 0.75rem; }
   .article-body { padding: 3rem 2rem; background: var(--color-bg-primary, #fff); }
   .article-body p { line-height: 1.8; margin-bottom: 1.25rem; color: var(--color-text-primary, #1e293b); text-align: justify; }
@@ -683,4 +691,33 @@
   .back-link { margin-top: 2.5rem; }
   .back-link a { color: var(--color-primary, #1e3a8a); text-decoration: none; }
   .back-link a:hover { text-decoration: underline; }
+
+  /* ── Print ── */
+
+  @media print {
+    /* Fixed-position — without this it tiles onto every printed page in Chrome. */
+    .reading-progress-bar { display: none; }
+    /* In-page nav, share/print controls, and links back into the live site all have no
+       purpose on a printed/PDF-exported page. */
+    .article-toc,
+    .article-actions,
+    .related-product,
+    .related-articles,
+    .back-link {
+      display: none;
+    }
+    .article-hero {
+      background: #fff;
+      color: #000;
+      padding: 1rem 0;
+    }
+    .article-inner { max-width: 100%; }
+    .article-byline,
+    .article-date,
+    .article-meta-sep,
+    .article-reading-time,
+    .article-breadcrumb { opacity: 1; color: #000; }
+    .tag { background: transparent; border: 1px solid #000; color: #000; }
+    .article-body { padding: 1rem 0; background: #fff; }
+  }
 </style>

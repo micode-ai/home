@@ -165,4 +165,11 @@
       color: #ffffff;
     }
   }
+
+  @media print {
+    /* position: fixed — without this it tiles onto every printed page in Chrome. */
+    .cookie-banner {
+      display: none;
+    }
+  }
 </style>

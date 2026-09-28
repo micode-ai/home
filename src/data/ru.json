@@ -376,7 +376,8 @@
       "twitter": "Поделиться в X",
       "copyLink": "Скопировать ссылку",
       "copyLinkCopied": "Ссылка скопирована!",
-      "copyLinkFailed": "Не удалось скопировать"
+      "copyLinkFailed": "Не удалось скопировать",
+      "print": "Печать / Сохранить как PDF"
     },
     "filter": {
       "all": "Все",

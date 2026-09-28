@@ -235,4 +235,12 @@
   @media (prefers-reduced-motion: reduce) {
     .lb-overlay, .lb-content { animation: none; }
   }
+
+  /* ── Print ── */
+  /* The already-rendered inline <svg> prints as-is; only the click-to-enlarge affordance
+     (irrelevant on paper) needs hiding. */
+  @media print {
+    .zoom-hint { display: none; }
+    .diagram-wrap { cursor: default; box-shadow: none; }
+  }
 </style>

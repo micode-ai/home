@@ -100,6 +100,26 @@ beforeAll(() => {
   });
 });
 
+describe('ArticlePage print/share actions', () => {
+  it('renders a share row and a print button together', () => {
+    languageStore.set('en');
+    const { getByTestId } = render(ArticlePage, { props: { slug: 'block-fixture' } });
+    expect(getByTestId('share-copy-button')).toBeTruthy();
+    expect(getByTestId('print-button').textContent).toContain('Print / Save as PDF');
+  });
+
+  it('calls window.print when the print button is clicked', async () => {
+    languageStore.set('en');
+    const printSpy = vi.spyOn(window, 'print').mockImplementation(() => {});
+    const { getByTestId } = render(ArticlePage, { props: { slug: 'block-fixture' } });
+
+    await fireEvent.click(getByTestId('print-button'));
+
+    expect(printSpy).toHaveBeenCalledTimes(1);
+    printSpy.mockRestore();
+  });
+});
+
 describe('ArticlePage table block', () => {
   it('renders headers and rows in the active language', () => {
     languageStore.set('pl');

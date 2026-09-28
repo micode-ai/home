@@ -376,7 +376,8 @@
       "twitter": "Udostępnij na X",
       "copyLink": "Kopiuj link",
       "copyLinkCopied": "Link skopiowany!",
-      "copyLinkFailed": "Nie udało się skopiować"
+      "copyLinkFailed": "Nie udało się skopiować",
+      "print": "Drukuj / Zapisz jako PDF"
     },
     "filter": {
       "all": "Wszystkie",
