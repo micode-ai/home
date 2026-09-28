@@ -12,6 +12,17 @@
     "menuClose": "Закрыть меню",
     "blog": "Блог"
   },
+  "search": {
+    "trigger": "Поиск",
+    "placeholder": "Поиск по продуктам, блогу, словарю…",
+    "group": {
+      "products": "Продукты",
+      "blog": "Блог",
+      "glossary": "Словарь"
+    },
+    "empty": "Ничего не найдено.",
+    "close": "Закрыть поиск"
+  },
   "hero": {
     "headline": "MiCode — создаём enterprise-системы с AI-интеграциями",
     "subheadline": "18+ лет опыта в IT — Гданьск, Польша. Java, Angular, AI-решения.",

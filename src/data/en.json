@@ -12,6 +12,17 @@
         "menuClose": "Close menu",
         "blog": "Blog"
     },
+    "search": {
+        "trigger": "Search",
+        "placeholder": "Search products, blog, glossary…",
+        "group": {
+            "products": "Products",
+            "blog": "Blog",
+            "glossary": "Glossary"
+        },
+        "empty": "No results.",
+        "close": "Close search"
+    },
     "hero": {
         "headline": "MiCode — we build enterprise software with AI integrations",
         "subheadline": "18+ years of IT experience — Gdańsk, Poland. Java, Angular, AI solutions.",

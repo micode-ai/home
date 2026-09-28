@@ -4,6 +4,7 @@
   import { t } from '../services/i18n';
   import { withLocale, stripLocale } from '../services/locale';
   import LanguageSwitcher from './LanguageSwitcher.svelte';
+  import QuickSearch from './QuickSearch.svelte';
   import logoUrl from '../assets/images/mi_code_logo_mark.svg';
   import { darkModeStore } from '../stores/darkModeStore';
 
@@ -120,6 +121,8 @@
     </nav>
 
     <div class="header-right">
+      <QuickSearch />
+
       <button
         type="button"
         class="theme-toggle"
