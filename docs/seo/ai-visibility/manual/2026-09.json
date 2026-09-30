@@ -1,0 +1,510 @@
+{
+  "month": "2026-09",
+  "source": "manual",
+  "notes": "Browser pass run 2026-09-30 in anonymous (logged-out) sessions. A first attempt in the logged-in ChatGPT account was discarded: even in temporary chats it answered Polish prompts in Russian and opened a neutral GEO question with \"w przypadku Twojej strony AI Budget Assistant\", so memory/custom instructions were leaking our identity into the answers. crawlers/referrals are deliberately absent rather than zero, as in August — the Cloudflare and GA4 dashboards have not been read. ChatGPT ran all 39 prompts with web search on; three answered from model knowledge without searching (pl-rag-halucynacje, ru-stoimost-agenta, ru-rag-bez-gallucinacij). Source domains come from the favicon of each citation chip, so a chip collapsed as \"+1\" hides domains. Perplexity allowed two anonymous queries before demanding signup.",
+  "engines": [
+    {
+      "engine": "perplexity",
+      "id": "pl-firma-ai-gdansk",
+      "status": "absent",
+      "note": "Listed MALINSKI.AI, JustAutomate, The Automators, AI-Team and agency directories; MiCode not among them, although ChatGPT named it second for the same prompt.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "malinski.ai",
+        "justautomate.ai",
+        "theautomators.ai",
+        "ai-team.pl",
+        "twojsoftware.pl",
+        "pracodawcypomorza.pl",
+        "agencjeai.pl"
+      ]
+    },
+    {
+      "engine": "perplexity",
+      "id": "pl-brand-micode",
+      "status": "cited",
+      "note": "One-line answer (software and IT/AI integration) with mi-code.pl as the lead source chip of 10. A signup wall covered the page before the source list could be read, so sourceDomains holds only what was visible.",
+      "citedDomains": [
+        "mi-code.pl"
+      ],
+      "sourceDomains": [
+        "mi-code.pl"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "pl-firma-ai-gdansk",
+      "status": "cited",
+      "note": "MiCode named second, after DLabs.AI, described as openly offering LangGraph/RAG/Text2SQL agents with ERP/CRM integration and the Accounting AI Agent example.",
+      "citedDomains": [
+        "mi-code.pl"
+      ],
+      "sourceDomains": [
+        "biznesmagazyn.pl",
+        "mi-code.pl",
+        "bytewave.pl",
+        "ai-team.pl",
+        "aioa.pl"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "pl-ksiegowosc-wfirma",
+      "status": "cited",
+      "note": "eKsiegowyAi / Accounting AI Agent by MiCode named first of the options. Absent in August.",
+      "citedDomains": [
+        "mi-code.pl"
+      ],
+      "sourceDomains": [
+        "mi-code.pl",
+        "fakto.app",
+        "pomoc.wfirma.pl"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "pl-koszt-agenta",
+      "status": "absent",
+      "note": "Generic cost breakdown (users, calls, context length); our cost-per-month article not surfaced.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "reuters.com"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "pl-rag-halucynacje",
+      "status": "absent",
+      "note": "Answered from model knowledge without web search; no sources shown.",
+      "citedDomains": [],
+      "sourceDomains": []
+    },
+    {
+      "engine": "chatgpt",
+      "id": "pl-geo-aeo",
+      "status": "absent",
+      "note": "Generic GEO advice; our GEO/AEO article not surfaced.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "perplexity.ai",
+        "developers.google.com"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "pl-legalizacja-bot",
+      "status": "absent",
+      "note": "Said it found no reliable free bot; pointed to government services. Legalka not mentioned.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "gov.pl",
+        "warszawa19115.pl"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "pl-ai-act-2026",
+      "status": "absent",
+      "note": "Answered from EU Commission sources only; our AI Act article not surfaced.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "digital-strategy.ec.europa.eu",
+        "ai-act-service-desk.ec.europa.eu"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "pl-text2sql",
+      "status": "absent",
+      "note": "Listed Polish RAG/Text2SQL vendors; MiCode not among them.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "goldenore.pl",
+        "ht-x.com",
+        "ragen.ai",
+        "polcom.com.pl",
+        "sysmo.pl",
+        "opsiocloud.com",
+        "omnipolis.pl"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "pl-integracja-erp",
+      "status": "absent",
+      "note": "Architecture advice drawn from Microsoft and SAP docs; our SCM article not surfaced.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "learn.microsoft.com",
+        "microsoft.com",
+        "sap.com",
+        "architecture.learning.sap.com"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "pl-marketing-saas",
+      "status": "cited",
+      "note": "eMarketing AI listed last of six Polish platforms, with a mi-code.pl source chip.",
+      "citedDomains": [
+        "mi-code.pl"
+      ],
+      "sourceDomains": [
+        "marketingowiec.ai",
+        "postra.pl",
+        "postownik.pl",
+        "tresciomat.eu",
+        "generatortekstow.pl",
+        "mi-code.pl"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "en-angular-ai-chat",
+      "status": "absent",
+      "note": "Recommended other Angular chat packages from npm; ngx-open-web-ui-chat not named.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "npmjs.com"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "en-open-webui-angular",
+      "status": "absent",
+      "note": "Said it sees no mature Angular library for Open WebUI and suggested calling its API directly — exactly the gap ngx-open-web-ui-chat fills, yet the package was not found.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "docs.openwebui.com",
+        "openui.com"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "en-agent-cost",
+      "status": "absent",
+      "note": "Unit-economics breakdown sourced from llmcosts.dev; our cost article not surfaced.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "llmcosts.dev"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "en-self-improving-agents",
+      "status": "absent",
+      "note": "Overnight prompt-evolution loop described from DSPy and Microsoft sources; our article not surfaced.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "github.com",
+        "microsoft.com",
+        "dspy.ai"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "en-langgraph-tools",
+      "status": "absent",
+      "note": "Tool-routing advice from LangGraph docs only.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "langchain-ai.github.io"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "en-geo-aeo",
+      "status": "absent",
+      "note": "GEO explained from Bing and Google docs; our GEO/AEO article not surfaced.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "bing.com",
+        "developers.google.com"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "en-testing-ai",
+      "status": "absent",
+      "note": "Named TestSprite, Qodo, ContextQA and GitHub tooling; Testing AI not named.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "testsprite.com",
+        "qodo.ai",
+        "contextqa.com",
+        "github.com"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "en-poland-ai-dev",
+      "status": "cited",
+      "note": "MiCode listed fourth of seven Polish software houses (Java/Spring plus ERP/CRM and AI integration), with a mi-code.pl chip.",
+      "citedDomains": [
+        "mi-code.pl"
+      ],
+      "sourceDomains": [
+        "boldare.com",
+        "bytewave.pl",
+        "pwlsoft.pl",
+        "mi-code.pl",
+        "eontechpl.com",
+        "halosoft.pl",
+        "rsmanagement.ai"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "ru-legalizacja",
+      "status": "absent",
+      "note": "Recommended MigrantApp and government services; Legalka not mentioned.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "migrantapp.pl",
+        "gov.pl",
+        "warszawa19115.pl"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "ru-stoimost-agenta",
+      "status": "absent",
+      "note": "Answered from model knowledge without web search; no sources shown.",
+      "citedDomains": [],
+      "sourceDomains": []
+    },
+    {
+      "engine": "chatgpt",
+      "id": "ru-rag-bez-gallucinacij",
+      "status": "absent",
+      "note": "Answered from model knowledge without web search; no sources shown.",
+      "citedDomains": [],
+      "sourceDomains": []
+    },
+    {
+      "engine": "chatgpt",
+      "id": "ru-geo-aeo",
+      "status": "absent",
+      "note": "GEO advice from Perplexity and Google docs; our article not surfaced.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "community.perplexity.ai",
+        "developers.google.com",
+        "docs.perplexity.ai"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "ru-buhgalteria-polsha",
+      "status": "absent",
+      "note": "Recommended PODATKI AI, Ksiegoboty and Rozlio; eKsiegowyAi not named, although the Polish wFirma prompt found it.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "podatki-ai.pl",
+        "ksef.podatki.gov.pl",
+        "ksiegoboty.pl",
+        "rozlio.pl"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "pl-brand-micode",
+      "status": "cited",
+      "note": "Accurate profile in Polish: custom software (Java/Spring Boot, Angular), ERP/CRM integration, RAG/Text2SQL/LangGraph agents, AI Budget Assistant, Accounting AI Agent, founder Mikhail Peraviortkin. Source chips all mi-code.pl.",
+      "citedDomains": [
+        "mi-code.pl"
+      ],
+      "sourceDomains": [
+        "mi-code.pl"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "en-brand-micode",
+      "status": "cited",
+      "note": "Accurate English profile (Gdańsk, founded 2024, Java/Spring Boot + Angular, ERP/CRM integration, cloud, RAG/Text2SQL/LangGraph agents). All chips mi-code.pl.",
+      "citedDomains": [
+        "mi-code.pl"
+      ],
+      "sourceDomains": [
+        "mi-code.pl"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "pl-brand-eksiegowy",
+      "status": "cited",
+      "note": "Correct: eKsiegowyAi = Accounting AI Agent built by MiCode, wFirma API, VAT/PIT/CIT/ZUS. Founder rendered as 'Michał Peraviortkin'. Cited mi-code.pl, not eksiegowyai.pl.",
+      "citedDomains": [
+        "mi-code.pl"
+      ],
+      "sourceDomains": [
+        "mi-code.pl",
+        "github.com"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "en-brand-ngx",
+      "status": "mentioned",
+      "note": "Correct description, attributed to MiCode / Mikhail Peraviortkin, MIT license, with a usage snippet. Sources were yarnpkg, npm and GitHub — mi-code.pl not cited.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "classic.yarnpkg.com",
+        "npmjs.com",
+        "github.com"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "en-brand-budget",
+      "status": "cited",
+      "note": "Described from the Google Play listing (voice, receipt OCR, finance chat) with MiCode as developer and a mi-code.pl chip. ai-budget.pl not cited.",
+      "citedDomains": [
+        "mi-code.pl"
+      ],
+      "sourceDomains": [
+        "play.google.com",
+        "mi-code.pl"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "pl-budzet-paragony",
+      "status": "absent",
+      "note": "Recommended FamArca and other store apps; AI Budget Assistant not named in Polish, although the English prompt found it.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "play.google.com",
+        "apps.apple.com"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "en-budget-voice",
+      "status": "mentioned",
+      "note": "'AI Budget & Expense Tracker (MiCode)' named first of five, sourced from its Google Play listing — neither mi-code.pl nor ai-budget.pl cited. Absent in August.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "play.google.com",
+        "trybreadsheet.com",
+        "rupai.co",
+        "talkspense.app",
+        "dulyai.app"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "ru-byudzhet-cheki",
+      "status": "absent",
+      "note": "Recommended Duly AI, Splittier, Expenvisor and store apps; ours not named.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "dulyai.app",
+        "splittier.com",
+        "play.google.com",
+        "apps.apple.com",
+        "expenvisor.com"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "ru-brand-micode",
+      "status": "cited",
+      "note": "Accurate Russian profile with a Maps place card for MiCode; chips mi-code.pl and Google Play.",
+      "citedDomains": [
+        "mi-code.pl"
+      ],
+      "sourceDomains": [
+        "mi-code.pl",
+        "play.google.com"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "ru-brand-eksiegowy",
+      "status": "cited",
+      "note": "Correct: wFirma API agent for VAT/PIT/CIT/ZUS with browser and Telegram UI, built by MiCode. Also pulled eksiegowy.eu, an unrelated name-alike.",
+      "citedDomains": [
+        "mi-code.pl"
+      ],
+      "sourceDomains": [
+        "mi-code.pl",
+        "eksiegowy.eu"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "en-marketing-saas",
+      "status": "absent",
+      "note": "Named Anyword, HubSpot and Jasper; eMarketing AI not named in English, although the Polish prompt found it.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "anyword.com",
+        "knowledge.hubspot.com",
+        "help.jasper.ai"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "ru-marketing-saas",
+      "status": "absent",
+      "note": "Named HubSpot and Jasper; eMarketing AI not named.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "hubspot.com",
+        "knowledge.hubspot.com",
+        "jasper.ai"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "pl-angular-chat",
+      "status": "absent",
+      "note": "Suggested generic Angular UI kits plus a hosted model; ngx-open-web-ui-chat not named.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "npmjs.com",
+        "github.com",
+        "v20.angular.dev",
+        "tanstack.com"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "ru-angular-chat",
+      "status": "absent",
+      "note": "Said it found no ready Angular component for Open WebUI — the exact gap ngx-open-web-ui-chat fills.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "docs.openwebui.com",
+        "openui.com"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "pl-testowanie-ai",
+      "status": "absent",
+      "note": "Named Qodo, Diffblue, GitHub Copilot and EvoSuite; Testing AI not named.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "qodo.ai",
+        "cover-docs.diffblue.com",
+        "docs.github.com",
+        "evosuite.org"
+      ]
+    },
+    {
+      "engine": "chatgpt",
+      "id": "ru-testirovanie-ai",
+      "status": "absent",
+      "note": "Named Qodo, Diffblue and EvoSuite; Testing AI not named.",
+      "citedDomains": [],
+      "sourceDomains": [
+        "docs.qodo.ai",
+        "cover-docs.diffblue.com",
+        "evosuite.org"
+      ]
+    }
+  ]
+}
