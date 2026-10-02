@@ -578,4 +578,153 @@ export const articleTables: Record<string, Record<Lang, ArticleTable>> = {
       ],
     },
   },
+  'promo-video-pipelines': {
+    pl: {
+      headers: ['Potok', 'Wejście', 'Narzędzia', 'Wynik', 'Kiedy go używamy'],
+      rows: [
+        ['A — rolki ze zrzutów ekranu', 'Prawdziwe zrzuty z telefonu lub przeglądarki plus listy PHASES i PILLS', 'Python, Pillow 12, imageio, numpy, imageio-ffmpeg', 'MP4 9:16 lub 4:5 w 30 fps i GIF o szerokości 600 px, bez dźwięku', 'Kampania jednej funkcji, która ma pokazać prawdziwe ekrany; ok. 77 skryptów na ok. 37 kampanii'],
+        ['B — rolka z prezentacji funkcji', 'Surowe nagranie animowanej prezentacji funkcji w samej aplikacji', 'Python, numpy, ffmpeg przez potok', 'MP4 9:16 o długości 19 s z cichą ścieżką stereo AAC', 'Jedna rolka, która przechodzi przez kilka funkcji w prawdziwym interfejsie'],
+        ['C — film proceduralny', 'Brief, wiki produktu, plik motywu aplikacji', 'JavaScript (Canvas 2D), Web Audio, Playwright z Chromium bez okna, ffmpeg, agenci Claude Code', '30 s, 1080×1920, 24 fps, syntetyzowana muzyka, wersje PL i EN', 'Reklama-opowieść z jedną puentą, w której ruch i muzyka niosą przekaz'],
+      ],
+    },
+    en: {
+      headers: ['Pipeline', 'Input', 'Tools', 'Output', 'When we use it'],
+      rows: [
+        ['A — screenshot reels', 'Real phone or browser screenshots plus the PHASES and PILLS lists', 'Python, Pillow 12, imageio, numpy, imageio-ffmpeg', '9:16 or 4:5 MP4 at 30 fps and a 600 px-wide GIF, no audio', 'A single-feature campaign that should show the real screens; about 77 scripts for about 37 campaigns'],
+        ['B — feature-tour reel', 'A raw recording of the app\'s own animated feature tour', 'Python, numpy, ffmpeg over a pipe', 'A 19 s 9:16 MP4 with a silent stereo AAC track', 'One reel that walks through several features in the real UI'],
+        ['C — procedural film', 'A brief, the product wiki, the app theme file', 'JavaScript (Canvas 2D), Web Audio, Playwright with headless Chromium, ffmpeg, Claude Code agents', '30 s, 1080×1920, 24 fps, synthesized score, PL and EN versions', 'A story ad with one premise, where motion and music carry the message'],
+      ],
+    },
+    ru: {
+      headers: ['Конвейер', 'Вход', 'Инструменты', 'Результат', 'Когда мы его используем'],
+      rows: [
+        ['A — ролики из скриншотов', 'Настоящие скриншоты телефона или браузера плюс списки PHASES и PILLS', 'Python, Pillow 12, imageio, numpy, imageio-ffmpeg', 'MP4 9:16 или 4:5 в 30 fps и GIF шириной 600 px, без звука', 'Кампания одной фичи, где нужно показать настоящие экраны; около 77 скриптов на около 37 кампаний'],
+        ['B — ролик из тура по функциям', 'Сырая запись анимированного тура по функциям внутри самого приложения', 'Python, numpy, ffmpeg через пайп', 'MP4 9:16 длиной 19 с с тихой стереодорожкой AAC', 'Один ролик, который проходит по нескольким функциям в настоящем интерфейсе'],
+        ['C — процедурный фильм', 'Бриф, вики продукта, файл темы приложения', 'JavaScript (Canvas 2D), Web Audio, Playwright с headless Chromium, ffmpeg, агенты Claude Code', '30 с, 1080×1920, 24 fps, синтезированная музыка, версии PL и EN', 'Реклама-история с одной идеей, где сообщение несут движение и музыка'],
+      ],
+    },
+  },
+  'promo-reel-frame': {
+    pl: {
+      headers: ['Fragment kodu (Python, potok A)', 'Co robi'],
+      rows: [
+        ['def ease(t): return t*t*(3 - 2*t)', 'Smoothstep: zerowa prędkość na początku i końcu przejazdu, bez szarpnięcia ruchu liniowego'],
+        ['content = Image.new("RGBA", (VW, VH), (22, 22, 27, 255))', 'Ciemny „ekran” o rozmiarze wyświetlacza telefonu'],
+        ['content.alpha_composite(shots[scene], (0, int(-e*VH)))', 'Bieżący zrzut wyjeżdża w górę o ułamek e wysokości ekranu'],
+        ['if off > 0: content.alpha_composite(shots[nxt], (0, int((1-e)*VH)))', 'W trakcie przejścia następny zrzut wjeżdża od dołu'],
+        ['content.putalpha(mask)', 'Maska prostokąta z zaokrąglonymi rogami przycina oba zrzuty do kształtu ekranu'],
+        ['frame.alpha_composite(content, (VX, VY))', 'Złożenie na tło policzone raz przed pętlą'],
+        ['paste_alpha(frame, tops[pc], max(0.0, 1 - 2*e))', 'Stary nagłówek gaśnie w pierwszej połowie przejścia'],
+        ['paste_alpha(frame, tops[pn], max(0.0, 2*e - 1))', 'Nowy nagłówek pojawia się w drugiej połowie, więc teksty nigdy się nie nakładają'],
+      ],
+    },
+    en: {
+      headers: ['Code fragment (Python, pipeline A)', 'What it does'],
+      rows: [
+        ['def ease(t): return t*t*(3 - 2*t)', 'Smoothstep: zero velocity at both ends of the slide, none of the jolt of linear motion'],
+        ['content = Image.new("RGBA", (VW, VH), (22, 22, 27, 255))', 'A dark "screen" the size of the phone display'],
+        ['content.alpha_composite(shots[scene], (0, int(-e*VH)))', 'The current screenshot slides up by a fraction e of the screen height'],
+        ['if off > 0: content.alpha_composite(shots[nxt], (0, int((1-e)*VH)))', 'During a transition the next screenshot comes in from below'],
+        ['content.putalpha(mask)', 'A rounded-rect mask clips both screenshots to the screen shape'],
+        ['frame.alpha_composite(content, (VX, VY))', 'Composite onto the background computed once before the loop'],
+        ['paste_alpha(frame, tops[pc], max(0.0, 1 - 2*e))', 'The old headline fades out in the first half of the transition'],
+        ['paste_alpha(frame, tops[pn], max(0.0, 2*e - 1))', 'The new headline fades in during the second half, so the two never overlap'],
+      ],
+    },
+    ru: {
+      headers: ['Фрагмент кода (Python, конвейер A)', 'Что делает'],
+      rows: [
+        ['def ease(t): return t*t*(3 - 2*t)', 'Smoothstep: нулевая скорость в начале и в конце сдвига, без рывка линейного движения'],
+        ['content = Image.new("RGBA", (VW, VH), (22, 22, 27, 255))', 'Тёмный «экран» размером с дисплей телефона'],
+        ['content.alpha_composite(shots[scene], (0, int(-e*VH)))', 'Текущий скриншот уезжает вверх на долю e высоты экрана'],
+        ['if off > 0: content.alpha_composite(shots[nxt], (0, int((1-e)*VH)))', 'Во время перехода следующий скриншот въезжает снизу'],
+        ['content.putalpha(mask)', 'Маска скруглённого прямоугольника обрезает оба скриншота по форме экрана'],
+        ['frame.alpha_composite(content, (VX, VY))', 'Наложение на фон, посчитанный один раз до цикла'],
+        ['paste_alpha(frame, tops[pc], max(0.0, 1 - 2*e))', 'Старый заголовок гаснет в первой половине перехода'],
+        ['paste_alpha(frame, tops[pn], max(0.0, 2*e - 1))', 'Новый заголовок проявляется во второй половине, поэтому тексты никогда не накладываются'],
+      ],
+    },
+  },
+  'promo-film-contract': {
+    pl: {
+      headers: ['Fragment kodu (JavaScript, potok C)', 'Znaczenie'],
+      rows: [
+        ["FILM.TIMELINE = { title: 'Paragon, który liczy się sam', bpm: 120, duration: 30, fps: 24, width: 1080, height: 1920, shots: […], cues: […] }", 'Cały film jako dane: tempo, długość, format, lista ujęć i lista zdarzeń dźwiękowych'],
+        ["{ id: 'today-coin', file: '11-today-coin.js', start: 20, end: 23, mode: 'illustrated', title: 'Safe to spend today', brief: '…' }", 'Jedno ujęcie: zaczyna się i kończy na beacie, ma tryb (ilustracja lub schemat) i brief dla autora sceny'],
+        ["{ t: 20.5, kind: 'hit', note: 'The coin: bright FM bell, tock and noise burst ka-ching, sub hit' }", 'Jedno z 46 zdarzeń dźwiękowych w receipt-journey; muzyka i obraz czytają ten sam czas'],
+        ["FILM.scene({ id: 'egg-blueprint', draw(ctx, t, info) { … } })", 'Kontrakt sceny; id musi odpowiadać ujęciu z FILM.TIMELINE.shots'],
+        ['t, info: { dur, p, T, frame, W, H, lib, shot }', 't to sekundy od początku ujęcia (0 … info.dur); info niesie długość, czas globalny, numer klatki, wymiary i bibliotekę pomocniczą'],
+        ['const B_LAND = 0.5; // T 20.5 beat 2: the coin lands, yellow ring bursts', 'Beaty jako nazwane stałe: komentarz podaje czas globalny i numer beatu'],
+        ['const GLINTS = [1.0, 1.5, 2.0, 2.5]; // a glint every beat', 'Przy 120 bpm beat trwa 0,5 s, więc błysk co beat to co pół sekundy'],
+        ['const tw = L.onTwos(t);', 'Czas skwantowany do 1/12 s — animacja „na dwójkach”'],
+        ['const LAT = 0.006;', 'Kompensacja 6 ms opóźnienia kompresora w ścieżce dźwiękowej'],
+      ],
+    },
+    en: {
+      headers: ['Code fragment (JavaScript, pipeline C)', 'Meaning'],
+      rows: [
+        ["FILM.TIMELINE = { title: 'Paragon, który liczy się sam', bpm: 120, duration: 30, fps: 24, width: 1080, height: 1920, shots: […], cues: […] }", 'The whole film as data: tempo, length, format, the shot list and the audio cue list'],
+        ["{ id: 'today-coin', file: '11-today-coin.js', start: 20, end: 23, mode: 'illustrated', title: 'Safe to spend today', brief: '…' }", 'One shot: starts and ends on a beat, has a mode (illustrated or schematic) and a brief for the scene author'],
+        ["{ t: 20.5, kind: 'hit', note: 'The coin: bright FM bell, tock and noise burst ka-ching, sub hit' }", 'One of the 46 audio cues in receipt-journey; music and picture read the same clock'],
+        ["FILM.scene({ id: 'egg-blueprint', draw(ctx, t, info) { … } })", 'The scene contract; the id must match a shot in FILM.TIMELINE.shots'],
+        ['t, info: { dur, p, T, frame, W, H, lib, shot }', 't is seconds since the shot started (0 … info.dur); info carries the duration, global time, frame number, dimensions and the helper library'],
+        ['const B_LAND = 0.5; // T 20.5 beat 2: the coin lands, yellow ring bursts', 'Beats as named constants: the comment gives the global time and the beat number'],
+        ['const GLINTS = [1.0, 1.5, 2.0, 2.5]; // a glint every beat', 'At 120 bpm a beat lasts 0.5 s, so a glint every beat is one every half second'],
+        ['const tw = L.onTwos(t);', 'Time quantized to 1/12 s — animation "on twos"'],
+        ['const LAT = 0.006;', 'Compensation for the compressor\'s 6 ms delay in the audio chain'],
+      ],
+    },
+    ru: {
+      headers: ['Фрагмент кода (JavaScript, конвейер C)', 'Смысл'],
+      rows: [
+        ["FILM.TIMELINE = { title: 'Paragon, który liczy się sam', bpm: 120, duration: 30, fps: 24, width: 1080, height: 1920, shots: […], cues: […] }", 'Весь фильм как данные: темп, длина, формат, список планов и список звуковых событий'],
+        ["{ id: 'today-coin', file: '11-today-coin.js', start: 20, end: 23, mode: 'illustrated', title: 'Safe to spend today', brief: '…' }", 'Один план: начинается и заканчивается на бите, имеет режим (иллюстрация или схема) и бриф для автора сцены'],
+        ["{ t: 20.5, kind: 'hit', note: 'The coin: bright FM bell, tock and noise burst ka-ching, sub hit' }", 'Одно из 46 звуковых событий в receipt-journey; музыка и картинка читают одни и те же часы'],
+        ["FILM.scene({ id: 'egg-blueprint', draw(ctx, t, info) { … } })", 'Контракт сцены; id обязан совпадать с планом из FILM.TIMELINE.shots'],
+        ['t, info: { dur, p, T, frame, W, H, lib, shot }', 't — секунды от начала плана (0 … info.dur); в info длительность, глобальное время, номер кадра, размеры и вспомогательная библиотека'],
+        ['const B_LAND = 0.5; // T 20.5 beat 2: the coin lands, yellow ring bursts', 'Биты как именованные константы: в комментарии глобальное время и номер бита'],
+        ['const GLINTS = [1.0, 1.5, 2.0, 2.5]; // a glint every beat', 'При 120 bpm бит длится 0,5 с, так что блик на каждый бит — это раз в полсекунды'],
+        ['const tw = L.onTwos(t);', 'Время, квантованное до 1/12 с, — анимация «на двойках»'],
+        ['const LAT = 0.006;', 'Компенсация 6 мс задержки компрессора в звуковой цепочке'],
+      ],
+    },
+  },
+  'promo-video-delivery': {
+    pl: {
+      headers: ['Wersja', 'Rozdzielczość', 'fps', 'Obraz', 'Dźwięk', 'Głośność i bitrate'],
+      rows: [
+        ['A — rolka 9:16', '1080×1920', '30', 'H.264 Main@4.0, yuv420p, CRF 18, faststart', 'Brak — muzykę wybiera się w aplikacji Instagram lub TikTok', '—'],
+        ['A — rolka 4:5', '1080×1344', '30', 'Jak wyżej', 'Brak', '—'],
+        ['A — GIF', 'Szerokość 600 px', '—', 'GIF', '—', '—'],
+        ['B — rolka z prezentacji', '1080×1920', 'Z nagrania', 'H.264 Main@4.0, yuv420p, CRF 18, preset slow, faststart', 'Cicha ścieżka stereo AAC (anullsrc, 44,1 kHz)', '—'],
+        ['C — master filmu', '1080×1920', '24', 'H.264, CRF 16, yuv420p, BT.709', 'AAC 192 kb/s, 48 kHz, stereo', 'Surowa ścieżka ok. −16,2 LUFS; 34–43 Mb/s, 120–155 MB na 30 s'],
+        ['C — wersja na telefon', '720×1280', '24', 'H.264, CRF 23', 'AAC', '—'],
+        ['C — wersja do social mediów', '1080×1920', '24', 'H.264', 'AAC po loudnorm I=−14, TP=−1,5, LRA=11', 'Od −13,1 do −14 LUFS; ok. 19 Mb/s'],
+      ],
+    },
+    en: {
+      headers: ['Version', 'Resolution', 'fps', 'Video', 'Audio', 'Loudness and bitrate'],
+      rows: [
+        ['A — 9:16 reel', '1080×1920', '30', 'H.264 Main@4.0, yuv420p, CRF 18, faststart', 'None — music is picked in the Instagram or TikTok app', '—'],
+        ['A — 4:5 reel', '1080×1344', '30', 'As above', 'None', '—'],
+        ['A — GIF', '600 px wide', '—', 'GIF', '—', '—'],
+        ['B — feature-tour reel', '1080×1920', 'From the recording', 'H.264 Main@4.0, yuv420p, CRF 18, preset slow, faststart', 'Silent stereo AAC (anullsrc, 44.1 kHz)', '—'],
+        ['C — film master', '1080×1920', '24', 'H.264, CRF 16, yuv420p, BT.709', 'AAC 192 kbps, 48 kHz, stereo', 'Raw score about −16.2 LUFS; 34–43 Mb/s, 120–155 MB per 30 s'],
+        ['C — phone transcode', '720×1280', '24', 'H.264, CRF 23', 'AAC', '—'],
+        ['C — social transcode', '1080×1920', '24', 'H.264', 'AAC after loudnorm I=−14, TP=−1.5, LRA=11', '−13.1 to −14 LUFS; about 19 Mb/s'],
+      ],
+    },
+    ru: {
+      headers: ['Версия', 'Разрешение', 'fps', 'Видео', 'Звук', 'Громкость и битрейт'],
+      rows: [
+        ['A — ролик 9:16', '1080×1920', '30', 'H.264 Main@4.0, yuv420p, CRF 18, faststart', 'Нет — музыку выбирают в приложении Instagram или TikTok', '—'],
+        ['A — ролик 4:5', '1080×1344', '30', 'Как выше', 'Нет', '—'],
+        ['A — GIF', 'Ширина 600 px', '—', 'GIF', '—', '—'],
+        ['B — ролик из тура по функциям', '1080×1920', 'Как в записи', 'H.264 Main@4.0, yuv420p, CRF 18, preset slow, faststart', 'Тихая стереодорожка AAC (anullsrc, 44,1 кГц)', '—'],
+        ['C — мастер фильма', '1080×1920', '24', 'H.264, CRF 16, yuv420p, BT.709', 'AAC 192 кбит/с, 48 кГц, стерео', 'Сырая дорожка около −16,2 LUFS; 34–43 Мбит/с, 120–155 МБ на 30 с'],
+        ['C — версия для телефона', '720×1280', '24', 'H.264, CRF 23', 'AAC', '—'],
+        ['C — версия для соцсетей', '1080×1920', '24', 'H.264', 'AAC после loudnorm I=−14, TP=−1,5, LRA=11', 'От −13,1 до −14 LUFS; около 19 Мбит/с'],
+      ],
+    },
+  },
 };

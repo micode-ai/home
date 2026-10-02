@@ -2578,4 +2578,42 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
   READ --> LOG
   IDX --> ANS["Odpowiedź z podaną<br/>ścieżką strony"]`,
   },
+  'promo-film-pipeline': {
+    ru: `flowchart TB
+  BR["1. Бриф<br/>фича, идея, 30 с, 9:16"] --> RS["2. Исследование<br/>факты из вики продукта"]
+  RS --> AB["3. Арт-библия<br/>цвета бренда из темы приложения"]
+  AB --> SB["4. Раскадровка<br/>сетка битов, геометрия склеек"]
+  SB --> TL["5. timeline.js<br/>планы и звуковые события как данные"]
+  TL --> ST["6. Заглушки и проверка<br/>черновой рендер в половинном масштабе"]
+  ST --> SC["7. Сцены<br/>один субагент на файл, параллельно"]
+  TL --> MU["8. music.js<br/>синтезированная музыка"]
+  SC --> CR["9. Волны критиков<br/>P1 · P2 · P3"]
+  MU --> CR
+  CR -->|исправления| SC
+  CR --> DL["10. Выдача<br/>мастер, телефон, соцсети, плеер"]`,
+    en: `flowchart TB
+  BR["1. Brief<br/>feature, premise, 30 s, 9:16"] --> RS["2. Research<br/>facts from the product wiki"]
+  RS --> AB["3. Art bible<br/>brand colours from the app theme"]
+  AB --> SB["4. Storyboard<br/>beat grid, match-cut geometry"]
+  SB --> TL["5. timeline.js<br/>shots and audio cues as data"]
+  TL --> ST["6. Stub pass and gate<br/>draft render at half scale"]
+  ST --> SC["7. Scenes<br/>one subagent per file, in parallel"]
+  TL --> MU["8. music.js<br/>synthesized score"]
+  SC --> CR["9. Critic waves<br/>P1 · P2 · P3"]
+  MU --> CR
+  CR -->|fixes| SC
+  CR --> DL["10. Delivery<br/>master, phone, social, player"]`,
+    pl: `flowchart TB
+  BR["1. Brief<br/>funkcja, puenta, 30 s, 9:16"] --> RS["2. Research<br/>fakty z wiki produktu"]
+  RS --> AB["3. Biblia stylu<br/>kolory marki z motywu aplikacji"]
+  AB --> SB["4. Storyboard<br/>siatka beatów, geometria cięć"]
+  SB --> TL["5. timeline.js<br/>ujęcia i zdarzenia dźwiękowe jako dane"]
+  TL --> ST["6. Zaślepki i bramka<br/>szkic w połowie skali"]
+  ST --> SC["7. Sceny<br/>jeden subagent na plik, równolegle"]
+  TL --> MU["8. music.js<br/>syntetyzowana muzyka"]
+  SC --> CR["9. Fale krytyków<br/>P1 · P2 · P3"]
+  MU --> CR
+  CR -->|poprawki| SC
+  CR --> DL["10. Dostawa<br/>master, telefon, social, odtwarzacz"]`,
+  },
 };
