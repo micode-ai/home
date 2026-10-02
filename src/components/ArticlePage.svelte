@@ -348,7 +348,7 @@
           {@const tbl = tableDef(block.id, lang)}
           {#if tbl}
             <div class="article-table-wrap">
-              <table class="article-table">
+              <table class="article-table article-table--stack">
                 <thead>
                   <tr>
                     {#each tbl.headers as h}<th scope="col">{h}</th>{/each}
@@ -357,7 +357,7 @@
                 <tbody>
                   {#each tbl.rows as row}
                     <tr>
-                      {#each row as cell}<td>{cell}</td>{/each}
+                      {#each row as cell, ci}<td data-label={tbl.headers[ci]}>{cell}</td>{/each}
                     </tr>
                   {/each}
                 </tbody>
@@ -572,6 +572,9 @@
     text-align: left;
     padding: 0.7rem 1rem;
     border-bottom: 1px solid var(--color-border, #e2e8f0);
+    /* `anywhere` (unlike `break-word`) also lowers the min-content width, so a long
+       unbroken value such as a code line wraps instead of widening the table past the column. */
+    overflow-wrap: anywhere;
   }
   .article-table thead th {
     background: var(--color-bg-secondary, #f8fafc);
@@ -580,7 +583,6 @@
     font-size: 0.8125rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    white-space: nowrap;
   }
   .article-table tbody tr:last-child td { border-bottom: none; }
   .article-table td:first-child { color: var(--color-text-primary, #1e293b); }
@@ -590,8 +592,38 @@
     padding: 0.15rem 0.4rem;
     background: var(--color-bg-secondary, #f1f5f9);
     border-radius: 0.25rem;
-    white-space: nowrap;
     color: var(--color-primary, #1e3a8a);
+  }
+  /* On a phone a multi-column table cannot fit without scrolling, so each row becomes
+     a card of "header: value" lines, the header taken from the cell's data-label. */
+  @media (max-width: 640px) {
+    .article-table--stack thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+    .article-table--stack tr {
+      display: block;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--color-border, #e2e8f0);
+    }
+    .article-table--stack tbody tr:last-child { border-bottom: none; }
+    .article-table--stack td {
+      display: block;
+      padding: 0.3rem 1rem;
+      border-bottom: none;
+    }
+    .article-table--stack td::before {
+      content: attr(data-label);
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--color-text-tertiary, #64748b);
+    }
   }
   .article-faq { margin: 3rem 0 0; }
   .article-faq-list { margin: 1.25rem 0 0; }
