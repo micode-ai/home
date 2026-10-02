@@ -346,7 +346,14 @@
           {/if}
         {:else if block.kind === 'table'}
           {@const tbl = tableDef(block.id, lang)}
-          {#if tbl}
+          {#if tbl?.variant === 'code'}
+            <dl class="article-code-list">
+              <div class="article-code-list-head"><dt>{tbl.headers[0]}</dt><dd>{tbl.headers[1]}</dd></div>
+              {#each tbl.rows as row}
+                <div class="article-code-list-item"><dt><code>{row[0]}</code></dt><dd>{row[1]}</dd></div>
+              {/each}
+            </dl>
+          {:else if tbl}
             <div class="article-table-wrap">
               <table class="article-table article-table--stack">
                 <thead>
@@ -572,9 +579,9 @@
     text-align: left;
     padding: 0.7rem 1rem;
     border-bottom: 1px solid var(--color-border, #e2e8f0);
-    /* `anywhere` (unlike `break-word`) also lowers the min-content width, so a long
-       unbroken value such as a code line wraps instead of widening the table past the column. */
-    overflow-wrap: anywhere;
+    vertical-align: top;
+    /* Breaks a long unbroken token only when it cannot fit; plain words still wrap at spaces. */
+    overflow-wrap: break-word;
   }
   .article-table thead th {
     background: var(--color-bg-secondary, #f8fafc);
@@ -583,6 +590,51 @@
     font-size: 0.8125rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
+    vertical-align: bottom;
+  }
+  /* Code tables: each code line on its own monospace row with the explanation under it. */
+  .article-code-list {
+    margin: 2rem 0;
+    border: 1px solid var(--color-border, #e2e8f0);
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  .article-code-list-head,
+  .article-code-list-item {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--color-border, #e2e8f0);
+  }
+  .article-code-list-item:last-child { border-bottom: none; }
+  .article-code-list-head {
+    display: flex;
+    gap: 0.5rem;
+    background: var(--color-bg-secondary, #f8fafc);
+    color: var(--color-text-secondary, #475569);
+    font-weight: 600;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .article-code-list-head dd::before { content: '→ '; }
+  .article-code-list dt,
+  .article-code-list dd { margin: 0; }
+  .article-code-list-item code {
+    display: block;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    padding: 0.5rem 0.75rem;
+    background: var(--color-bg-secondary, #f1f5f9);
+    border-radius: 0.375rem;
+    color: var(--color-primary, #1e3a8a);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .article-code-list-item dd {
+    margin-top: 0.45rem;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary, #475569);
   }
   .article-table tbody tr:last-child td { border-bottom: none; }
   .article-table td:first-child { color: var(--color-text-primary, #1e293b); }

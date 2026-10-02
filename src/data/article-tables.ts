@@ -18,6 +18,10 @@ type Lang = 'ru' | 'en' | 'pl';
 export type ArticleTable = {
   headers: string[];
   rows: string[][];
+  // 'code': two columns, a code line and its explanation. Rendered as a list (code on its own
+  // monospace line, explanation under it), since a code column squeezed into a table cell
+  // breaks mid-identifier and becomes unreadable.
+  variant?: 'code';
 };
 
 export const articleTables: Record<string, Record<Lang, ArticleTable>> = {
@@ -580,32 +584,36 @@ export const articleTables: Record<string, Record<Lang, ArticleTable>> = {
   },
   'promo-video-pipelines': {
     pl: {
-      headers: ['Potok', 'Wejście', 'Narzędzia', 'Wynik', 'Kiedy go używamy'],
+      headers: ['', 'A: zrzuty ekranu', 'B: prezentacja funkcji', 'C: film proceduralny'],
       rows: [
-        ['A — rolki ze zrzutów ekranu', 'Prawdziwe zrzuty z telefonu lub przeglądarki plus listy PHASES i PILLS', 'Python, Pillow 12, imageio, numpy, imageio-ffmpeg', 'MP4 9:16 lub 4:5 w 30 fps i GIF o szerokości 600 px, bez dźwięku', 'Kampania jednej funkcji, która ma pokazać prawdziwe ekrany; ok. 77 skryptów na ok. 37 kampanii'],
-        ['B — rolka z prezentacji funkcji', 'Surowe nagranie animowanej prezentacji funkcji w samej aplikacji', 'Python, numpy, ffmpeg przez potok', 'MP4 9:16 o długości 19 s z cichą ścieżką stereo AAC', 'Jedna rolka, która przechodzi przez kilka funkcji w prawdziwym interfejsie'],
-        ['C — film proceduralny', 'Brief, wiki produktu, plik motywu aplikacji', 'JavaScript (Canvas 2D), Web Audio, Playwright z Chromium bez okna, ffmpeg, agenci Claude Code', '30 s, 1080×1920, 24 fps, syntetyzowana muzyka, wersje PL i EN', 'Reklama-opowieść z jedną puentą, w której ruch i muzyka niosą przekaz'],
+        ['Wejście', 'Prawdziwe zrzuty z telefonu lub przeglądarki plus listy PHASES i PILLS', 'Surowe nagranie animowanej prezentacji funkcji w samej aplikacji', 'Brief, wiki produktu, plik motywu aplikacji'],
+        ['Narzędzia', 'Python, Pillow 12, imageio, numpy, imageio-ffmpeg', 'Python, numpy, ffmpeg przez potok', 'JavaScript (Canvas 2D), Web Audio, Playwright z Chromium bez okna, ffmpeg, agenci Claude Code'],
+        ['Wynik', 'MP4 9:16 lub 4:5 w 30 fps i GIF o szerokości 600 px, bez dźwięku', 'MP4 9:16 o długości 19 s z cichą ścieżką stereo AAC', '30 s, 1080×1920, 24 fps, syntetyzowana muzyka, wersje PL i EN'],
+        ['Kiedy go używamy', 'Kampania jednej funkcji, która ma pokazać prawdziwe ekrany; ok. 77 skryptów na ok. 37 kampanii', 'Jedna rolka, która przechodzi przez kilka funkcji w prawdziwym interfejsie', 'Reklama-opowieść z jedną puentą, w której ruch i muzyka niosą przekaz'],
       ],
     },
     en: {
-      headers: ['Pipeline', 'Input', 'Tools', 'Output', 'When we use it'],
+      headers: ['', 'A: screenshots', 'B: feature tour', 'C: procedural film'],
       rows: [
-        ['A — screenshot reels', 'Real phone or browser screenshots plus the PHASES and PILLS lists', 'Python, Pillow 12, imageio, numpy, imageio-ffmpeg', '9:16 or 4:5 MP4 at 30 fps and a 600 px-wide GIF, no audio', 'A single-feature campaign that should show the real screens; about 77 scripts for about 37 campaigns'],
-        ['B — feature-tour reel', 'A raw recording of the app\'s own animated feature tour', 'Python, numpy, ffmpeg over a pipe', 'A 19 s 9:16 MP4 with a silent stereo AAC track', 'One reel that walks through several features in the real UI'],
-        ['C — procedural film', 'A brief, the product wiki, the app theme file', 'JavaScript (Canvas 2D), Web Audio, Playwright with headless Chromium, ffmpeg, Claude Code agents', '30 s, 1080×1920, 24 fps, synthesized score, PL and EN versions', 'A story ad with one premise, where motion and music carry the message'],
+        ['Input', 'Real phone or browser screenshots plus the PHASES and PILLS lists', 'A raw recording of the app\'s own animated feature tour', 'A brief, the product wiki, the app theme file'],
+        ['Tools', 'Python, Pillow 12, imageio, numpy, imageio-ffmpeg', 'Python, numpy, ffmpeg over a pipe', 'JavaScript (Canvas 2D), Web Audio, Playwright with headless Chromium, ffmpeg, Claude Code agents'],
+        ['Output', '9:16 or 4:5 MP4 at 30 fps and a 600 px-wide GIF, no audio', 'A 19 s 9:16 MP4 with a silent stereo AAC track', '30 s, 1080×1920, 24 fps, synthesized score, PL and EN versions'],
+        ['When we use it', 'A single-feature campaign that should show the real screens; about 77 scripts for about 37 campaigns', 'One reel that walks through several features in the real UI', 'A story ad with one premise, where motion and music carry the message'],
       ],
     },
     ru: {
-      headers: ['Конвейер', 'Вход', 'Инструменты', 'Результат', 'Когда мы его используем'],
+      headers: ['', 'A: скриншоты', 'B: тур по функциям', 'C: процедурный фильм'],
       rows: [
-        ['A — ролики из скриншотов', 'Настоящие скриншоты телефона или браузера плюс списки PHASES и PILLS', 'Python, Pillow 12, imageio, numpy, imageio-ffmpeg', 'MP4 9:16 или 4:5 в 30 fps и GIF шириной 600 px, без звука', 'Кампания одной фичи, где нужно показать настоящие экраны; около 77 скриптов на около 37 кампаний'],
-        ['B — ролик из тура по функциям', 'Сырая запись анимированного тура по функциям внутри самого приложения', 'Python, numpy, ffmpeg через пайп', 'MP4 9:16 длиной 19 с с тихой стереодорожкой AAC', 'Один ролик, который проходит по нескольким функциям в настоящем интерфейсе'],
-        ['C — процедурный фильм', 'Бриф, вики продукта, файл темы приложения', 'JavaScript (Canvas 2D), Web Audio, Playwright с headless Chromium, ffmpeg, агенты Claude Code', '30 с, 1080×1920, 24 fps, синтезированная музыка, версии PL и EN', 'Реклама-история с одной идеей, где сообщение несут движение и музыка'],
+        ['Вход', 'Настоящие скриншоты телефона или браузера плюс списки PHASES и PILLS', 'Сырая запись анимированного тура по функциям внутри самого приложения', 'Бриф, вики продукта, файл темы приложения'],
+        ['Инструменты', 'Python, Pillow 12, imageio, numpy, imageio-ffmpeg', 'Python, numpy, ffmpeg через пайп', 'JavaScript (Canvas 2D), Web Audio, Playwright с headless Chromium, ffmpeg, агенты Claude Code'],
+        ['Результат', 'MP4 9:16 или 4:5 в 30 fps и GIF шириной 600 px, без звука', 'MP4 9:16 длиной 19 с с тихой стереодорожкой AAC', '30 с, 1080×1920, 24 fps, синтезированная музыка, версии PL и EN'],
+        ['Когда используем', 'Кампания одной фичи, где нужно показать настоящие экраны; около 77 скриптов на около 37 кампаний', 'Один ролик, который проходит по нескольким функциям в настоящем интерфейсе', 'Реклама-история с одной идеей, где сообщение несут движение и музыка'],
       ],
     },
   },
   'promo-reel-frame': {
     pl: {
+      variant: 'code',
       headers: ['Fragment kodu (Python, potok A)', 'Co robi'],
       rows: [
         ['def ease(t): return t*t*(3 - 2*t)', 'Smoothstep: zerowa prędkość na początku i końcu przejazdu, bez szarpnięcia ruchu liniowego'],
@@ -619,6 +627,7 @@ export const articleTables: Record<string, Record<Lang, ArticleTable>> = {
       ],
     },
     en: {
+      variant: 'code',
       headers: ['Code fragment (Python, pipeline A)', 'What it does'],
       rows: [
         ['def ease(t): return t*t*(3 - 2*t)', 'Smoothstep: zero velocity at both ends of the slide, none of the jolt of linear motion'],
@@ -632,6 +641,7 @@ export const articleTables: Record<string, Record<Lang, ArticleTable>> = {
       ],
     },
     ru: {
+      variant: 'code',
       headers: ['Фрагмент кода (Python, конвейер A)', 'Что делает'],
       rows: [
         ['def ease(t): return t*t*(3 - 2*t)', 'Smoothstep: нулевая скорость в начале и в конце сдвига, без рывка линейного движения'],
@@ -647,6 +657,7 @@ export const articleTables: Record<string, Record<Lang, ArticleTable>> = {
   },
   'promo-film-contract': {
     pl: {
+      variant: 'code',
       headers: ['Fragment kodu (JavaScript, potok C)', 'Znaczenie'],
       rows: [
         ["FILM.TIMELINE = { title: 'Paragon, który liczy się sam', bpm: 120, duration: 30, fps: 24, width: 1080, height: 1920, shots: […], cues: […] }", 'Cały film jako dane: tempo, długość, format, lista ujęć i lista zdarzeń dźwiękowych'],
@@ -661,6 +672,7 @@ export const articleTables: Record<string, Record<Lang, ArticleTable>> = {
       ],
     },
     en: {
+      variant: 'code',
       headers: ['Code fragment (JavaScript, pipeline C)', 'Meaning'],
       rows: [
         ["FILM.TIMELINE = { title: 'Paragon, który liczy się sam', bpm: 120, duration: 30, fps: 24, width: 1080, height: 1920, shots: […], cues: […] }", 'The whole film as data: tempo, length, format, the shot list and the audio cue list'],
@@ -675,6 +687,7 @@ export const articleTables: Record<string, Record<Lang, ArticleTable>> = {
       ],
     },
     ru: {
+      variant: 'code',
       headers: ['Фрагмент кода (JavaScript, конвейер C)', 'Смысл'],
       rows: [
         ["FILM.TIMELINE = { title: 'Paragon, który liczy się sam', bpm: 120, duration: 30, fps: 24, width: 1080, height: 1920, shots: […], cues: […] }", 'Весь фильм как данные: темп, длина, формат, список планов и список звуковых событий'],
@@ -691,39 +704,39 @@ export const articleTables: Record<string, Record<Lang, ArticleTable>> = {
   },
   'promo-video-delivery': {
     pl: {
-      headers: ['Wersja', 'Rozdzielczość', 'fps', 'Obraz', 'Dźwięk', 'Głośność i bitrate'],
+      headers: ['Wersja', 'Format', 'Obraz', 'Dźwięk'],
       rows: [
-        ['A — rolka 9:16', '1080×1920', '30', 'H.264 Main@4.0, yuv420p, CRF 18, faststart', 'Brak — muzykę wybiera się w aplikacji Instagram lub TikTok', '—'],
-        ['A — rolka 4:5', '1080×1344', '30', 'Jak wyżej', 'Brak', '—'],
-        ['A — GIF', 'Szerokość 600 px', '—', 'GIF', '—', '—'],
-        ['B — rolka z prezentacji', '1080×1920', 'Z nagrania', 'H.264 Main@4.0, yuv420p, CRF 18, preset slow, faststart', 'Cicha ścieżka stereo AAC (anullsrc, 44,1 kHz)', '—'],
-        ['C — master filmu', '1080×1920', '24', 'H.264, CRF 16, yuv420p, BT.709', 'AAC 192 kb/s, 48 kHz, stereo', 'Surowa ścieżka ok. −16,2 LUFS; 34–43 Mb/s, 120–155 MB na 30 s'],
-        ['C — wersja na telefon', '720×1280', '24', 'H.264, CRF 23', 'AAC', '—'],
-        ['C — wersja do social mediów', '1080×1920', '24', 'H.264', 'AAC po loudnorm I=−14, TP=−1,5, LRA=11', 'Od −13,1 do −14 LUFS; ok. 19 Mb/s'],
+        ['A — rolka 9:16', '1080×1920, 30 fps', 'H.264 Main@4.0, yuv420p, CRF 18, faststart', 'Brak — muzykę wybiera się w aplikacji Instagram lub TikTok'],
+        ['A — rolka 4:5', '1080×1344, 30 fps', 'Jak wyżej', 'Brak'],
+        ['A — GIF', 'Szerokość 600 px', 'GIF', '—'],
+        ['B — rolka z prezentacji', '1080×1920, fps z nagrania', 'H.264 Main@4.0, yuv420p, CRF 18, preset slow, faststart', 'Cicha ścieżka stereo AAC (anullsrc, 44,1 kHz)'],
+        ['C — master filmu', '1080×1920, 24 fps', 'H.264, CRF 16, yuv420p, BT.709; 34–43 Mb/s, 120–155 MB na 30 s', 'AAC 192 kb/s, 48 kHz, stereo; surowa ścieżka ok. −16,2 LUFS'],
+        ['C — wersja na telefon', '720×1280, 24 fps', 'H.264, CRF 23', 'AAC'],
+        ['C — wersja do social mediów', '1080×1920, 24 fps', 'H.264, ok. 19 Mb/s', 'AAC po loudnorm I=−14, TP=−1,5, LRA=11; od −13,1 do −14 LUFS'],
       ],
     },
     en: {
-      headers: ['Version', 'Resolution', 'fps', 'Video', 'Audio', 'Loudness and bitrate'],
+      headers: ['Version', 'Format', 'Video', 'Audio'],
       rows: [
-        ['A — 9:16 reel', '1080×1920', '30', 'H.264 Main@4.0, yuv420p, CRF 18, faststart', 'None — music is picked in the Instagram or TikTok app', '—'],
-        ['A — 4:5 reel', '1080×1344', '30', 'As above', 'None', '—'],
-        ['A — GIF', '600 px wide', '—', 'GIF', '—', '—'],
-        ['B — feature-tour reel', '1080×1920', 'From the recording', 'H.264 Main@4.0, yuv420p, CRF 18, preset slow, faststart', 'Silent stereo AAC (anullsrc, 44.1 kHz)', '—'],
-        ['C — film master', '1080×1920', '24', 'H.264, CRF 16, yuv420p, BT.709', 'AAC 192 kbps, 48 kHz, stereo', 'Raw score about −16.2 LUFS; 34–43 Mb/s, 120–155 MB per 30 s'],
-        ['C — phone transcode', '720×1280', '24', 'H.264, CRF 23', 'AAC', '—'],
-        ['C — social transcode', '1080×1920', '24', 'H.264', 'AAC after loudnorm I=−14, TP=−1.5, LRA=11', '−13.1 to −14 LUFS; about 19 Mb/s'],
+        ['A — 9:16 reel', '1080×1920, 30 fps', 'H.264 Main@4.0, yuv420p, CRF 18, faststart', 'None — music is picked in the Instagram or TikTok app'],
+        ['A — 4:5 reel', '1080×1344, 30 fps', 'As above', 'None'],
+        ['A — GIF', '600 px wide', 'GIF', '—'],
+        ['B — feature-tour reel', '1080×1920, fps from the recording', 'H.264 Main@4.0, yuv420p, CRF 18, preset slow, faststart', 'Silent stereo AAC (anullsrc, 44.1 kHz)'],
+        ['C — film master', '1080×1920, 24 fps', 'H.264, CRF 16, yuv420p, BT.709; 34–43 Mb/s, 120–155 MB per 30 s', 'AAC 192 kbps, 48 kHz, stereo; raw score about −16.2 LUFS'],
+        ['C — phone transcode', '720×1280, 24 fps', 'H.264, CRF 23', 'AAC'],
+        ['C — social transcode', '1080×1920, 24 fps', 'H.264, about 19 Mb/s', 'AAC after loudnorm I=−14, TP=−1.5, LRA=11; −13.1 to −14 LUFS'],
       ],
     },
     ru: {
-      headers: ['Версия', 'Разрешение', 'fps', 'Видео', 'Звук', 'Громкость и битрейт'],
+      headers: ['Версия', 'Формат', 'Видео', 'Звук'],
       rows: [
-        ['A — ролик 9:16', '1080×1920', '30', 'H.264 Main@4.0, yuv420p, CRF 18, faststart', 'Нет — музыку выбирают в приложении Instagram или TikTok', '—'],
-        ['A — ролик 4:5', '1080×1344', '30', 'Как выше', 'Нет', '—'],
-        ['A — GIF', 'Ширина 600 px', '—', 'GIF', '—', '—'],
-        ['B — ролик из тура по функциям', '1080×1920', 'Как в записи', 'H.264 Main@4.0, yuv420p, CRF 18, preset slow, faststart', 'Тихая стереодорожка AAC (anullsrc, 44,1 кГц)', '—'],
-        ['C — мастер фильма', '1080×1920', '24', 'H.264, CRF 16, yuv420p, BT.709', 'AAC 192 кбит/с, 48 кГц, стерео', 'Сырая дорожка около −16,2 LUFS; 34–43 Мбит/с, 120–155 МБ на 30 с'],
-        ['C — версия для телефона', '720×1280', '24', 'H.264, CRF 23', 'AAC', '—'],
-        ['C — версия для соцсетей', '1080×1920', '24', 'H.264', 'AAC после loudnorm I=−14, TP=−1,5, LRA=11', 'От −13,1 до −14 LUFS; около 19 Мбит/с'],
+        ['A — ролик 9:16', '1080×1920, 30 fps', 'H.264 Main@4.0, yuv420p, CRF 18, faststart', 'Нет — музыку выбирают в приложении Instagram или TikTok'],
+        ['A — ролик 4:5', '1080×1344, 30 fps', 'Как выше', 'Нет'],
+        ['A — GIF', 'Ширина 600 px', 'GIF', '—'],
+        ['B — ролик из тура по функциям', '1080×1920, fps как в записи', 'H.264 Main@4.0, yuv420p, CRF 18, preset slow, faststart', 'Тихая стереодорожка AAC (anullsrc, 44,1 кГц)'],
+        ['C — мастер фильма', '1080×1920, 24 fps', 'H.264, CRF 16, yuv420p, BT.709; 34–43 Мбит/с, 120–155 МБ на 30 с', 'AAC 192 кбит/с, 48 кГц, стерео; сырая дорожка около −16,2 LUFS'],
+        ['C — версия для телефона', '720×1280, 24 fps', 'H.264, CRF 23', 'AAC'],
+        ['C — версия для соцсетей', '1080×1920, 24 fps', 'H.264, около 19 Мбит/с', 'AAC после loudnorm I=−14, TP=−1,5, LRA=11; от −13,1 до −14 LUFS'],
       ],
     },
   },
