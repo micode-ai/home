@@ -5,6 +5,7 @@
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import { withLocale } from '../services/locale';
+  import { tick } from 'svelte';
 
   let { termId, text, definition }: { termId: string; text: string; definition: string } = $props();
 
@@ -16,6 +17,27 @@
 
   let open = $state(false);
   let wrapEl: HTMLElement | undefined = $state();
+  let tipEl: HTMLElement | undefined = $state();
+  // Horizontal nudge (px) that keeps the open tooltip inside the viewport: it is centred on the
+  // word, so a term near either edge of a phone screen would otherwise poke out past it.
+  let shift = $state(0);
+  const EDGE = 8;
+
+  $effect(() => {
+    if (!open || !tipEl) {
+      shift = 0;
+      return;
+    }
+    shift = 0;
+    // After the zero shift reaches the DOM, measure the tooltip at its centred position.
+    tick().then(() => {
+      if (!open || !tipEl) return;
+      const r = tipEl.getBoundingClientRect();
+      const vw = document.documentElement.clientWidth;
+      if (r.left < EDGE) shift = EDGE - r.left;
+      else if (r.right > vw - EDGE) shift = vw - EDGE - r.right;
+    });
+  });
 
   function show() {
     open = true;
@@ -69,7 +91,7 @@
     aria-expanded={open}
     onclick={toggle}
   >{text}</button>
-  <span id={tipId} role="tooltip" class="glossary-tooltip" class:visible={open}>
+  <span id={tipId} role="tooltip" class="glossary-tooltip" class:visible={open} bind:this={tipEl} style:--tip-shift="{shift}px">
     {definition}
     <a class="glossary-tooltip-link" href="{withLocale('/glossary/', $languageStore)}#{termId}">{t('glossary.fullDefinitionLink', $languageStore)}</a>
   </span>
@@ -95,9 +117,9 @@
     position: absolute;
     bottom: 100%;
     left: 50%;
-    transform: translate(-50%, -0.4rem);
+    transform: translate(calc(-50% + var(--tip-shift, 0px)), -0.4rem);
     width: max-content;
-    max-width: 240px;
+    max-width: min(240px, calc(100vw - 1rem));
     padding: 0.6rem 0.75rem;
     background: var(--color-bg-secondary, #f8fafc);
     border: 1px solid var(--color-border, #e2e8f0);
@@ -112,6 +134,19 @@
     pointer-events: none;
     transition: opacity 0.15s ease;
     z-index: var(--z-dropdown, 20);
+  }
+  /* Closed: visually hidden but still in the accessibility tree (the aria-describedby target
+     must not be display:none). Opacity alone left a 240px invisible box that, for a term near
+     the right edge, stretched the page and gave phones a horizontal scroll. */
+  .glossary-tooltip:not(.visible) {
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
   .glossary-tooltip.visible {
     opacity: 1;

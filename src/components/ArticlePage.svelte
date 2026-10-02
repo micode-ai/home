@@ -465,7 +465,9 @@
     color: #fff;
     padding: 4rem 2rem;
   }
-  .article-inner { max-width: 720px; margin: 0 auto; }
+  /* overflow-wrap: a long unbroken token in prose (an ffmpeg filter string, a URL) wraps
+     instead of widening the page on a phone. */
+  .article-inner { max-width: 720px; margin: 0 auto; overflow-wrap: break-word; }
   .article-breadcrumb { font-size: 0.875rem; opacity: 0.7; margin-bottom: 1.5rem; }
   .article-breadcrumb a { color: inherit; text-decoration: none; }
   .article-breadcrumb a:hover { text-decoration: underline; }
@@ -649,13 +651,9 @@
   /* On a phone a multi-column table cannot fit without scrolling, so each row becomes
      a card of "header: value" lines, the header taken from the cell's data-label. */
   @media (max-width: 640px) {
-    .article-table--stack thead {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip: rect(0 0 0 0);
-    }
+    /* Each cell repeats its header through data-label, so the header row is redundant here;
+       visually-hidden clipping does not work on a table-header-group (its cells still overflow). */
+    .article-table--stack thead { display: none; }
     .article-table--stack tr {
       display: block;
       padding: 0.6rem 0;
