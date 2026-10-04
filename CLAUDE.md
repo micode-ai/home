@@ -31,6 +31,9 @@ Since there's no router, every new product or blog article requires: a new direc
 
 - `src/data/products.json` is the source of truth for all product pages — `ProductPage.svelte` looks up the product by `id` and renders generically. Adding a product = adding a JSON entry (+ i18n keys + optional image/diagram), not new markup.
 - `src/data/blog-posts.json` drives `BlogListing.svelte` and `ArticlePage.svelte` similarly (slug, per-language title/summary, date, tags).
+- Article bodies support block tokens, each on its own `
+
+`-separated line: `## heading`, `> callout`, `[[diagram:id|caption]]` (`src/data/article-diagrams.ts`), `[[table:id]]` (`src/data/article-tables.ts`), `[[widget:id]]` and `[[image:/blog/<dir>/<file>.webp|caption]]` — a lazy, click-to-enlarge figure; the file goes under `public/`, its pixel size in `src/data/article-images.ts`, and the caption is written per language inside each body.
 - `src/data/langgraph-diagrams.ts` holds Mermaid diagram definitions keyed by id; a product opts in via `langgraphDiagramId` in `products.json` and they render through `MermaidDiagram.svelte` (lazy-loads the `mermaid` package via dynamic import, calls `mermaid.run()`).
 - `src/data/community-stats.json` is **generated**, not hand-edited — it's overwritten by `npm run prebuild` (`scripts/fetch-github-npm-stats.js`), which reads GitHub/npm links out of `products.json` and fetches star/download counts at build time.
 

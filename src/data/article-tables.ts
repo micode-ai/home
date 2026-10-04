@@ -740,4 +740,56 @@ export const articleTables: Record<string, Record<Lang, ArticleTable>> = {
       ],
     },
   },
+  // Part 2 of the promo-video article: the "Мультики кодом на Opus 5.5" guide's practices
+  // against what the ad-film skill already did, and what ABA-632 added.
+  'pencil-films-methodology': {
+    pl: {
+      headers: ['Praktyka z poradnika', 'U nas wcześniej', 'Co zrobiliśmy'],
+      rows: [
+        ['Rysunek jako kod (JavaScript, canvas)', 'Było', '—'],
+        ['Rysunki „na dwójkach”: 12/s przy 24 fps', 'Było', '—'],
+        ['„Gotujące się” linie z generatora z ziarnem', 'Było', '—'],
+        ['Szrafowanie i linie konstrukcyjne', 'Było', 'Rozbudowane w zestaw ołówkowy'],
+        ['Syntetyzowany dźwięk, zdarzenia widoczne w kadrze', 'Było', '—'],
+        ['Scenorys → sceny → klatki → dźwięk → render', 'Było', '—'],
+        ['Agenci-krytycy oglądają klatki; styl w skillu', 'Było', '—'],
+        ['Narastająca lista pułapek', 'Brak', 'PITFALLS.md, ok. 35 wierszy'],
+        ['Jawne reguły opowieści', 'Brak', 'Cztery reguły w skillu'],
+        ['Wygląd ołówka, palety jako role', 'Brak', 'pencil-film, sześć motywów'],
+        ['Renderer HyperFrames', 'Brak', 'Wypróbowany: dobre narzędzia, nie szybszy'],
+      ],
+    },
+    en: {
+      headers: ['Practice from the guide', 'Before', 'What we did'],
+      rows: [
+        ['Drawing as code (JavaScript, canvas)', 'Had it', '—'],
+        ['Drawings on twos: 12/s at 24 fps', 'Had it', '—'],
+        ['Boiling lines from a seeded generator', 'Had it', '—'],
+        ['Hatching and construction lines', 'Had it', 'Grown into a pencil kit'],
+        ['Synthesized sound, cues visible in the frame', 'Had it', '—'],
+        ['Storyboard → scenes → frames → sound → render', 'Had it', '—'],
+        ['Critic agents review frames; style in a skill', 'Had it', '—'],
+        ['A cumulative pitfalls list', 'Missing', 'PITFALLS.md, ~35 rows'],
+        ['Explicit story rules', 'Missing', 'Four rules in the skill'],
+        ['A pencil look, palettes as roles', 'Missing', 'pencil-film, six themes'],
+        ['The HyperFrames renderer', 'Missing', 'Tried: good tooling, not faster'],
+      ],
+    },
+    ru: {
+      headers: ['Практика из методички', 'У нас до этого', 'Что сделали'],
+      rows: [
+        ['Рисунок как код (JavaScript, canvas)', 'Было', '—'],
+        ['Рисунки «на двойках»: 12/с при 24 fps', 'Было', '—'],
+        ['«Кипящие» линии от генератора с сидом', 'Было', '—'],
+        ['Штриховка и строительные линии', 'Было', 'Выросли в карандашный набор'],
+        ['Синтезированный звук, события видны в кадре', 'Было', '—'],
+        ['Раскадровка → сцены → кадры → звук → рендер', 'Было', '—'],
+        ['Агенты-критики смотрят кадры; стиль в скилле', 'Было', '—'],
+        ['Накопительный список граблей', 'Не было', 'PITFALLS.md, ~35 строк'],
+        ['Явные правила истории', 'Не было', 'Четыре правила в скилле'],
+        ['Карандашный вид, палитры как роли', 'Не было', 'pencil-film, шесть тем'],
+        ['Рендерер HyperFrames', 'Не было', 'Попробовали: хорошие инструменты, не быстрее'],
+      ],
+    },
+  },
 };

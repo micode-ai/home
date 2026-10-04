@@ -77,7 +77,25 @@ vi.mock('../data/blog-posts.json', () => ({
       bodyEn: 'We use RAG for retrieval. RAG works well. Also **RAG** in bold.\n\n> RAG in a callout.\n\nAnother paragraph with GPT.',
       bodyRu: 'Мы используем RAG для поиска. RAG работает хорошо. Также **RAG** жирным.\n\n> RAG в цитате.\n\nДругой абзац с GPT.',
     },
+    {
+      // Own tag and oldest date, so it never appears in another fixture's related list.
+      slug: 'image-fixture',
+      titlePl: 'Obrazy', titleEn: 'Images', titleRu: 'Картинки',
+      summaryPl: 's', summaryEn: 's', summaryRu: 's',
+      date: '2026-06-01',
+      tags: ['ImagesOnly'],
+      bodyPl: 'Akapit.\n\n[[image:/blog/fixture/sheet.webp|Podpis po polsku]]',
+      bodyEn:
+        'Paragraph.\n\n[[image:/blog/fixture/sheet.webp|English caption]]\n\n[[image:/blog/fixture/unsized.png]]\n\n[[image:https://evil.example/x.webp|remote]]',
+      bodyRu: 'Абзац.\n\n[[image:/blog/fixture/sheet.webp|Подпись по-русски]]',
+    },
   ],
+}));
+
+vi.mock('../data/article-images', () => ({
+  articleImages: {
+    '/blog/fixture/sheet.webp': { width: 900, height: 1600 },
+  },
 }));
 
 vi.mock('../data/article-tables', () => ({
@@ -415,5 +433,52 @@ describe('ArticlePage scroll depth tracking', () => {
     articleTop(-2232);
     await fireEvent.scroll(window);
     expect(window.gtag).not.toHaveBeenCalled();
+  });
+});
+
+describe('ArticlePage image block', () => {
+  it('renders a lazy figure with alt, intrinsic size and a localised caption', () => {
+    languageStore.set('en');
+    const { container } = render(ArticlePage, { props: { slug: 'image-fixture' } });
+    const img = container.querySelector('figure.article-image img[src="/blog/fixture/sheet.webp"]') as HTMLImageElement;
+    expect(img).toBeTruthy();
+    expect(img.getAttribute('alt')).toBe('English caption');
+    expect(img.getAttribute('loading')).toBe('lazy');
+    expect(img.getAttribute('width')).toBe('900');
+    expect(img.getAttribute('height')).toBe('1600');
+    expect(img.closest('figure')!.querySelector('figcaption')!.textContent).toBe('English caption');
+  });
+
+  it('uses the caption written in the active language body', () => {
+    languageStore.set('ru');
+    const { getByAltText } = render(ArticlePage, { props: { slug: 'image-fixture' } });
+    expect(getByAltText('Подпись по-русски')).toBeTruthy();
+  });
+
+  it('still renders an image missing from the size registry, without a caption', () => {
+    languageStore.set('en');
+    const { container } = render(ArticlePage, { props: { slug: 'image-fixture' } });
+    const img = container.querySelector('img[src="/blog/fixture/unsized.png"]') as HTMLImageElement;
+    expect(img).toBeTruthy();
+    expect(img.hasAttribute('width')).toBe(false);
+    expect(img.closest('figure')!.querySelector('figcaption')).toBeNull();
+  });
+
+  it('does not turn a remote URL into an image', () => {
+    languageStore.set('en');
+    const { container } = render(ArticlePage, { props: { slug: 'image-fixture' } });
+    expect(container.querySelector('img[src^="https://evil"]')).toBeNull();
+  });
+
+  it('opens the image in the lightbox on click and closes it again', async () => {
+    languageStore.set('en');
+    const { container, getByRole, queryByRole } = render(ArticlePage, { props: { slug: 'image-fixture' } });
+    const button = container.querySelector('figure.article-image button') as HTMLButtonElement;
+    await fireEvent.click(button);
+    const dialog = getByRole('dialog');
+    expect(dialog.getAttribute('aria-label')).toBe('English caption');
+    expect(dialog.querySelector('img')!.getAttribute('src')).toBe('/blog/fixture/sheet.webp');
+    await fireEvent.click(dialog.querySelector('button.lb-close') as HTMLButtonElement);
+    expect(queryByRole('dialog')).toBeNull();
   });
 });

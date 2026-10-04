@@ -37,6 +37,11 @@ describe('estimateReadingMinutes', () => {
     );
   });
 
+  it('strips image directives, caption included', () => {
+    // 1 word per minute, so every counted word shows up in the result.
+    expect(estimateReadingMinutes('One two.\n\n[[image:/blog/x/sheet.webp|Five words of caption here]]', 1)).toBe(2);
+  });
+
   it('strips heading and callout block markers but keeps their text', () => {
     const withMarkers = '## A Heading\n\n> A callout with some words';
     const withoutMarkers = 'A Heading\n\nA callout with some words';

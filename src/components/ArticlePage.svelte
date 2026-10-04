@@ -10,6 +10,8 @@
   import CostCalculator from './CostCalculator.svelte';
   import { articleDiagrams } from '../data/article-diagrams';
   import { articleTables, type ArticleTable } from '../data/article-tables';
+  import { articleImages } from '../data/article-images';
+  import ImageLightbox from './ImageLightbox.svelte';
   import { estimateReadingMinutes } from '../services/readingTime';
   import ShareButtons from './ShareButtons.svelte';
   import PrintButton from './PrintButton.svelte';
@@ -40,6 +42,9 @@
     .slice()
     .sort((a, b) => b.date.localeCompare(a.date));
 
+  // The image shown enlarged, if any — article figures open in the shared lightbox.
+  let lightbox = $state<{ src: string; alt: string } | null>(null);
+
   const relatedPosts = $derived(post ? getRelatedPosts(publishedPosts, post, 3) : []);
 
   function relatedTitle(p: Post, l: string): string {
@@ -65,7 +70,8 @@
     : '');
 
   // Body is authored as `\n\n`-separated chunks. Most chunks are plain paragraphs; a few opt into
-  // light markup: `## heading`, `> callout`, and `[[diagram:id|caption]]` (renders a Mermaid figure).
+  // light markup: `## heading`, `> callout`, `[[diagram:id|caption]]` (renders a Mermaid figure) and
+  // `[[image:/path.webp|caption]]` (a lazy image figure; size from src/data/article-images.ts).
   // Inline `**bold**` and `*italic*` are supported inside paragraphs/callouts. Plain-prose posts are unaffected.
   type Seg = { t: string; b: boolean; i: boolean; href?: string; glossaryParts?: GlossaryPart[] };
   // `RawBlock` is what the split/regex pass below produces — an `h2` has heading text but no id
@@ -77,6 +83,7 @@
     | { kind: 'callout'; segments: Seg[] }
     | { kind: 'diagram'; id: string; caption: string }
     | { kind: 'table'; id: string }
+    | { kind: 'image'; src: string; caption: string }
     | { kind: 'widget'; id: string };
   type Block =
     | { kind: 'p'; segments: Seg[] }
@@ -84,11 +91,15 @@
     | { kind: 'callout'; segments: Seg[] }
     | { kind: 'diagram'; id: string; caption: string }
     | { kind: 'table'; id: string }
+    | { kind: 'image'; src: string; caption: string }
     | { kind: 'widget'; id: string };
 
   const DIAGRAM_RE = /^\[\[diagram:([a-z0-9-]+)(?:\|([^\]]+))?\]\]$/i;
   const TABLE_RE = /^\[\[table:([a-z0-9-]+)\]\]$/i;
   const WIDGET_RE = /^\[\[widget:([a-z0-9-]+)\]\]$/i;
+  // Root-relative paths only (a file under public/), so an authored token can never point the
+  // page at another origin or a `javascript:`/`data:` URL.
+  const IMAGE_RE = /^\[\[image:(\/[a-z0-9\/_.-]+\.(?:webp|png|jpe?g|avif))(?:\|([^\]]+))?\]\]$/i;
 
   // `[text](url)` in prose and callouts, rendered as an external link. Only http(s) URLs match,
   // so an authored `javascript:`/`data:` target stays inert text rather than becoming a link.
@@ -152,6 +163,8 @@
       if (tm) return { kind: 'table', id: tm[1] };
       const wm = c.match(WIDGET_RE);
       if (wm) return { kind: 'widget', id: wm[1] };
+      const im = c.match(IMAGE_RE);
+      if (im) return { kind: 'image', src: im[1], caption: (im[2] ?? '').trim() };
       if (c.startsWith('## ')) return { kind: 'h2', text: c.slice(3).trim() };
       if (c.startsWith('> ')) return { kind: 'callout', segments: inlineSegments(c.replace(/^> ?/gm, '').trim()) };
       return { kind: 'p', segments: inlineSegments(chunk) };
@@ -371,6 +384,14 @@
               </table>
             </div>
           {/if}
+        {:else if block.kind === 'image'}
+          {@const dim = articleImages[block.src]}
+          <figure class="article-figure article-image">
+            <button type="button" class="article-image-zoom" onclick={() => (lightbox = { src: block.src, alt: block.caption })}>
+              <img src={block.src} alt={block.caption} width={dim?.width} height={dim?.height} loading="lazy" decoding="async" />
+            </button>
+            {#if block.caption}<figcaption>{block.caption}</figcaption>{/if}
+          </figure>
         {:else if block.kind === 'widget'}
           {#if block.id === 'cost-calculator'}
             <CostCalculator {lang} />
@@ -447,6 +468,9 @@
     </div>
   </div>
 </article>
+{#if lightbox}
+  <ImageLightbox src={lightbox.src} alt={lightbox.alt} onClose={() => (lightbox = null)} />
+{/if}
 {:else}
 <p class="not-found" style="padding: 4rem 2rem; text-align: center;">{t('blog.articleNotFound', lang)}</p>
 {/if}
@@ -558,6 +582,27 @@
     font-size: 0.95rem;
   }
   .article-figure { margin: 1.75rem 0 2rem; }
+  /* Article images: never wider than the column (no horizontal scroll on phones, cf. MI-101),
+     and a tall 9:16 sheet is capped by viewport height — the lightbox shows it full size. */
+  .article-image-zoom {
+    display: block;
+    margin: 0 auto;
+    padding: 0;
+    border: 0;
+    background: none;
+    max-width: 100%;
+    cursor: zoom-in;
+  }
+  .article-image-zoom img {
+    display: block;
+    max-width: 100%;
+    max-height: 80vh;
+    width: auto;
+    height: auto;
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-border, #e2e8f0);
+  }
+  .article-image-zoom:focus-visible { outline: 2px solid var(--color-primary, #2563eb); outline-offset: 3px; }
   .article-figure figcaption {
     margin-top: 0.65rem;
     font-size: 0.85rem;

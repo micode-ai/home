@@ -1,8 +1,8 @@
 // Reading-time estimate for a blog post body. Pure derived value — no new data fields; see
 // docs/contracts/blog-reading-time-estimate.md.
 
-/** `[[diagram:id|caption]]`, `[[table:id]]`, `[[widget:id]]` — whole token is dropped, not counted. */
-const DIRECTIVE_RE = /\[\[(?:diagram|table|widget):[^\]]*\]\]/gi;
+/** `[[diagram:id|caption]]`, `[[table:id]]`, `[[widget:id]]`, `[[image:/path|caption]]` — whole token is dropped, not counted. */
+const DIRECTIVE_RE = /\[\[(?:diagram|table|widget|image):[^\]]*\]\]/gi;
 
 const DEFAULT_WORDS_PER_MINUTE = 200;
 
