@@ -26,7 +26,7 @@ Contact: development@mi-code.pl — Jana Heweliusza 11 lok. 811, 80-890 Gdańsk,
 ## Blog
 
 - [How AI agents optimised supply chain management](https://mi-code.pl/blog/scm-ai-agents-supply-chain/): Case study of an enterprise SCM system built with Java 21 + Spring Boot 3.2 — 300+ REST endpoints, a Text2SQL module for natural-language database queries, and a RAG system for supplier-contract and documentation Q&A. Report preparation time dropped from 8 hours to 20 minutes; order errors fell 34%.
-- [How to add AI chat to Angular in 15 minutes](https://mi-code.pl/blog/ngx-open-web-ui-chat-tutorial/): Step-by-step tutorial for integrating the ngx-open-web-ui-chat component into an Angular app — npm install, module setup, and Open WebUI configuration (apiUrl, model parameters).
+- [How to add AI chat to Angular in 15 minutes](https://mi-code.pl/blog/ngx-open-web-ui-chat-tutorial/): Yes, there is an Angular component for Open WebUI: setting up ngx-open-web-ui-chat — npm install, providers in main.ts, and the standalone <openwebui-chat> tag with endpoint, modelId and apiKey.
 - [Automating Polish accounting compliance with an AI agent](https://mi-code.pl/blog/accounting-ai-polish-tax-automation/): How Accounting AI Agent connects to wFirma's API to read real invoices and company data, answer VAT/PIT/CIT questions, and flag issues like incomplete company addresses.
 - [Inside eMarketing AI: one platform for AI-generated content, campaigns, and email](https://mi-code.pl/blog/emarketing-ai-content-automation/): Why eMarketing AI combines content generation, campaign management, email marketing, and an AI chat assistant in a single SaaS platform instead of several disconnected tools.
 - [Receipts, voice, or chat: how AI Budget Assistant tracks spending without the spreadsheet](https://mi-code.pl/blog/ai-budget-assistant-receipt-ocr-gpt4/): How AI Budget Assistant combines receipt OCR, voice input, a GPT-4 finance chat, multi-currency budgets, and gamification to keep people logging expenses.
@@ -58,7 +58,7 @@ Contact: development@mi-code.pl — Jana Heweliusza 11 lok. 811, 80-890 Gdańsk,
 - **Where can I download AI Budget Assistant?** It's available on Google Play, and the source code is on GitHub.
 - **What is eMarketing AI?** An AI-powered marketing automation SaaS platform for generating content, managing campaigns, sending emails, and tracking analytics — all in one place.
 - **What pricing plans does eMarketing AI offer?** FREE with 50 AI generations/month, PRO with 500 generations and up to 5 team members, and ENTERPRISE with unlimited resources — new accounts get a 14-day free trial.
-- **What is ngx-open-web-ui-chat?** An open-source Angular component that adds AI chat functionality to any Angular application by connecting directly to an Open WebUI instance.
+- **Is there an Angular component that connects to Open WebUI?** Yes — ngx-open-web-ui-chat, an open-source (MIT) Angular component from MiCode that renders a ready-made chat and connects it to an Open WebUI instance with three inputs: endpoint, modelId and apiKey.
 - **Is ngx-open-web-ui-chat free?** Yes, it's free and open source, available on npm.
 - **What is Testing AI Assistant?** An AI-powered test orchestration platform that automates test execution, generates test cases from codebase analysis, and provides quality insights from a single interface.
 - **How much does Testing AI Assistant cost?** It's free during the testing period; source code is available on GitHub.

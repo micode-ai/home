@@ -88,6 +88,9 @@
       jsonLdScript({
         '@context': 'https://schema.org',
         '@type': 'SoftwareApplication',
+        // Same @id as the hand-written head node, which prerender.mjs localizes, so the two
+        // merge into one entity rather than reading as two products.
+        '@id': `${productUrl}#software`,
         name,
         description: t(product.descriptionKey, lang),
         url: productUrl,

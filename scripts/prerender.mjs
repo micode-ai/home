@@ -1,6 +1,8 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import { execFileSync } from 'child_process';
+import { localizeHeadJsonLd, jsonLdTypes } from './seo-jsonld.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
@@ -135,8 +137,44 @@ function ogImageFor(slug, lang) {
   return existsSync(join(root, 'dist', relPath)) ? SITE + relPath : null;
 }
 
+// Date (YYYY-MM-DD) of the last commit touching any of `paths`, for <lastmod>. Null when git is
+// unavailable or the checkout is shallow — a shallow clone would date every file to the tip
+// commit, which is the build-date lie this replaces. Omitting <lastmod> is honest; a wrong one
+// teaches crawlers to ignore the field.
+let shallowCheckout;
+function gitDate(paths) {
+  try {
+    shallowCheckout ??=
+      execFileSync('git', ['rev-parse', '--is-shallow-repository'], { cwd: root, encoding: 'utf8' }).trim() === 'true';
+    if (shallowCheckout) return null;
+    const out = execFileSync('git', ['log', '-1', '--format=%cs', '--', ...paths], { cwd: root, encoding: 'utf8' }).trim();
+    return out || null;
+  } catch {
+    return null;
+  }
+}
+
+// When a post was last changed: its explicit dateModified, else its publish date.
+function postModified(post) {
+  return post.dateModified ?? post.date;
+}
+
+// Head JSON-LD edit for a simple page (WebPage + two-step breadcrumb) in a non-Polish locale.
+// The authored description stays Polish, so it is dropped rather than served under `en`/`ru`.
+function webPageJsonLd(title) {
+  return (node) => {
+    if (node['@type'] === 'WebPage') {
+      node.name = `${title} — MiCode Sp. z o.o.`;
+      delete node.description;
+    } else if (node['@type'] === 'BreadcrumbList') {
+      const last = (node.itemListElement ?? []).at(-1);
+      if (last) last.name = title;
+    }
+  };
+}
+
 // Render every locale variant of one route from the built (Polish) client shell.
-function processRoute({ distRoute, urlPath, render, metaFor }) {
+function processRoute({ distRoute, urlPath, render, metaFor, jsonLdFor }) {
   const templatePath = join(root, 'dist', distRoute);
   const template = readFileSync(templatePath, 'utf8');
   const marker = '<div id="app"></div>';
@@ -151,6 +189,13 @@ function processRoute({ distRoute, urlPath, render, metaFor }) {
     html = injectSeo(html, urlPath, lang);
     const meta = metaFor ? metaFor(lang) : null;
     if (meta) html = replaceMeta(html, meta);
+    // Head JSON-LD: drop what the rendered body already emits per locale, localize the rest.
+    // SoftwareApplication is kept and merged with the body node by @id (see the product route).
+    html = localizeHeadJsonLd(html, {
+      lang,
+      drop: new Set([...jsonLdTypes(appHtml)].filter((type) => type !== 'SoftwareApplication')),
+      edit: jsonLdFor ? jsonLdFor(lang) : undefined,
+    });
     if (meta?.ogImage) html = injectOgImage(html, meta.ogImage);
     if (urlPath === '' && lang === 'pl') html = injectLanguageRedirect(html);
 
@@ -165,7 +210,6 @@ function processRoute({ distRoute, urlPath, render, metaFor }) {
 // Build a localized sitemap: one <url> per (route, locale) with hreflang
 // alternates. Written to both dist/ (deployed) and public/ (source of truth).
 function generateSitemap(routes) {
-  const lastmod = new Date().toISOString().slice(0, 10);
   const entries = [];
   for (const route of routes) {
     for (const lang of LOCALES) {
@@ -179,7 +223,7 @@ function generateSitemap(routes) {
       entries.push(
         `  <url>\n` +
           `    <loc>${canonicalFor(route.urlPath, lang)}</loc>\n` +
-          `    <lastmod>${lastmod}</lastmod>\n` +
+          (route.lastmod ? `    <lastmod>${route.lastmod}</lastmod>\n` : '') +
           `    <changefreq>${route.changefreq}</changefreq>\n` +
           `    <priority>${route.priority}</priority>\n` +
           `${alternates}\n` +
@@ -216,6 +260,7 @@ async function run() {
       distRoute: 'index.html',
       urlPath: '',
       priority: '1.0',
+      lastmod: gitDate(['index.html', 'src/App.svelte', 'src/data/seo-home.json', 'src/data/products.json']),
       changefreq: 'monthly',
       render: (l) => renderHome(l),
       metaFor: (l) =>
@@ -233,17 +278,31 @@ async function run() {
       urlPath: `products/${p.id}/`,
       priority: '0.8',
       changefreq: 'monthly',
+      lastmod: gitDate([`products/${p.id}`, 'src/data/products.json', 'src/components/ProductPage.svelte']),
       render: (l) => renderProduct(p.id, l),
       metaFor: (l) =>
         l === 'pl'
           ? null
           : { title: `${t(p.nameKey, l)} — MiCode`, description: t(p.descriptionKey, l) },
+      // The head SoftwareApplication is hand-written in English and carries facts the body one
+      // lacks (OS, category, download, offers). Localize its text and give it the same @id as
+      // the body node (ProductPage.svelte) so crawlers merge the two into one entity.
+      jsonLdFor: (l) => (node) => {
+        if (node['@type'] !== 'SoftwareApplication') return;
+        node['@id'] = `${canonicalFor(`products/${p.id}/`, l)}#software`;
+        node.name = t(p.nameKey, l);
+        node.description = t(p.descriptionKey, l);
+        node.inLanguage = l;
+        if (p.features?.length) node.featureList = p.features.map((key) => t(key, l));
+        if (node.offers?.description && l !== 'en') delete node.offers.description;
+      },
     })),
     {
       distRoute: 'blog/index.html',
       urlPath: 'blog/',
       priority: '0.7',
       changefreq: 'weekly',
+      lastmod: blogPosts.map(postModified).sort().at(-1),
       render: (l) => renderBlog(l),
       metaFor: (l) => (l === 'pl' ? null : { title: `${t('blog.title', l)} — MiCode` }),
     },
@@ -252,6 +311,7 @@ async function run() {
       urlPath: `blog/${post.slug}/`,
       priority: '0.6',
       changefreq: 'monthly',
+      lastmod: postModified(post),
       render: (l) => renderArticle(post.slug, l),
       // Prefer an explicit SERP-length meta override (metaTitle*/metaDescription*) when a
       // post defines one — falls back to the full title/summary otherwise. The visible H1
@@ -266,13 +326,32 @@ async function run() {
           ...(ogImage ? { ogImage } : {}),
         };
       },
+      // BlogPosting (TechArticle on one post) + BreadcrumbList are authored in Polish; dates come from the post on every
+      // locale so an edit (dateModified) reaches the structured data without touching the HTML.
+      jsonLdFor: (l) => (node) => {
+        const title = l === 'pl' ? null : post[`title${suffix(l)}`];
+        if (node['@type'] === 'BlogPosting' || node['@type'] === 'TechArticle') {
+          node.datePublished = post.date;
+          node.dateModified = postModified(post);
+          if (title) {
+            node.headline = title;
+            node.description = post[`metaDescription${suffix(l)}`] ?? post[`summary${suffix(l)}`];
+          }
+        } else if (node['@type'] === 'BreadcrumbList' && title) {
+          const items = node.itemListElement ?? [];
+          if (items[1]) items[1].name = t('blog.title', l);
+          if (items[2]) items[2].name = title;
+        }
+      },
     })),
     {
       distRoute: 'privacy-policy/index.html',
       urlPath: 'privacy-policy/',
       priority: '0.3',
       changefreq: 'yearly',
+      lastmod: gitDate(['privacy-policy', 'src/components/PrivacyPolicyPage.svelte']),
       render: (l) => renderPrivacyPolicy(l),
+      jsonLdFor: (l) => (l === 'pl' ? undefined : webPageJsonLd(t('legal.privacyPolicy.title', l))),
       metaFor: (l) => {
         if (l === 'pl') return null;
         const descriptions = {
@@ -290,7 +369,9 @@ async function run() {
       urlPath: 'glossary/',
       priority: '0.5',
       changefreq: 'monthly',
+      lastmod: gitDate(['glossary', 'src/data/glossary.json', 'src/components/GlossaryPage.svelte']),
       render: (l) => renderGlossary(l),
+      jsonLdFor: (l) => (l === 'pl' ? undefined : webPageJsonLd(t('glossary.title', l))),
       metaFor: (l) => {
         if (l === 'pl') return null;
         const descriptions = {

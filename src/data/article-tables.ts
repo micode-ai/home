@@ -792,4 +792,105 @@ export const articleTables: Record<string, Record<Lang, ArticleTable>> = {
       ],
     },
   },
+  // ngx-open-web-ui-chat-tutorial. Code lines follow the package README
+  // (micode-ai/ngx-open-web-ui-chat, v1.1.x): standalone OpenwebuiChatComponent, zoneless Angular 20.
+  'ngx-chat-install': {
+    pl: {
+      variant: 'code',
+      headers: ['Polecenie', 'Po co'],
+      rows: [
+        ['npm install ngx-open-web-ui-chat', 'Sam komponent'],
+        ['npm install ngx-markdown marked socket.io-client', 'Zależności peer, jeśli aplikacja jeszcze ich nie ma'],
+      ],
+    },
+    en: {
+      variant: 'code',
+      headers: ['Command', 'Why'],
+      rows: [
+        ['npm install ngx-open-web-ui-chat', 'The component itself'],
+        ['npm install ngx-markdown marked socket.io-client', 'Peer dependencies, if the app does not have them yet'],
+      ],
+    },
+    ru: {
+      variant: 'code',
+      headers: ['Команда', 'Зачем'],
+      rows: [
+        ['npm install ngx-open-web-ui-chat', 'Сам компонент'],
+        ['npm install ngx-markdown marked socket.io-client', 'Peer-зависимости, если их ещё нет в приложении'],
+      ],
+    },
+  },
+  'ngx-chat-providers': {
+    pl: {
+      variant: 'code',
+      headers: ['Kod (main.ts, angular.json)', 'Co robi'],
+      rows: [
+        ['bootstrapApplication(AppComponent, { providers: [ ... ] })', 'Providery z kolejnych wierszy trafiają do tej tablicy w main.ts'],
+        ['provideZonelessChangeDetection()', 'Detekcja zmian bez zone.js — tak działa komponent'],
+        ['provideHttpClient(withInterceptorsFromDi())', 'Wywołania API Open WebUI'],
+        ['provideMarkdown()', 'Renderowanie odpowiedzi modelu jako markdown'],
+        ['"polyfills": []', 'W angular.json: usuń zone.js z polyfills'],
+      ],
+    },
+    en: {
+      variant: 'code',
+      headers: ['Code (main.ts, angular.json)', 'What it does'],
+      rows: [
+        ['bootstrapApplication(AppComponent, { providers: [ ... ] })', 'The providers in the next rows go into this array in main.ts'],
+        ['provideZonelessChangeDetection()', 'Change detection without zone.js, which is how the component runs'],
+        ['provideHttpClient(withInterceptorsFromDi())', 'Calls to the Open WebUI API'],
+        ['provideMarkdown()', "Renders the model's answers as markdown"],
+        ['"polyfills": []', 'In angular.json: remove zone.js from polyfills'],
+      ],
+    },
+    ru: {
+      variant: 'code',
+      headers: ['Код (main.ts, angular.json)', 'Что делает'],
+      rows: [
+        ['bootstrapApplication(AppComponent, { providers: [ ... ] })', 'Провайдеры из следующих строк добавляются в этот массив в main.ts'],
+        ['provideZonelessChangeDetection()', 'Обнаружение изменений без zone.js — так работает компонент'],
+        ['provideHttpClient(withInterceptorsFromDi())', 'Вызовы API Open WebUI'],
+        ['provideMarkdown()', 'Отображение ответов модели как markdown'],
+        ['"polyfills": []', 'В angular.json: уберите zone.js из polyfills'],
+      ],
+    },
+  },
+  'ngx-chat-component': {
+    pl: {
+      variant: 'code',
+      headers: ['Kod komponentu', 'Co robi'],
+      rows: [
+        ["import { OpenwebuiChatComponent } from 'ngx-open-web-ui-chat';", 'Komponent standalone — bez NgModule'],
+        ['imports: [OpenwebuiChatComponent],', 'Dodaj go do imports swojego komponentu'],
+        ['<openwebui-chat', 'Znacznik czatu w szablonie'],
+        ['[endpoint]="\'https://ai.example.com\'"', 'Adres Twojej instancji Open WebUI'],
+        ['[modelId]="\'llama3\'"', 'Identyfikator modelu, tak jak pokazuje go Open WebUI'],
+        ['[apiKey]="apiKey"></openwebui-chat>', 'Klucz API Open WebUI'],
+      ],
+    },
+    en: {
+      variant: 'code',
+      headers: ['Component code', 'What it does'],
+      rows: [
+        ["import { OpenwebuiChatComponent } from 'ngx-open-web-ui-chat';", 'A standalone component, no NgModule'],
+        ['imports: [OpenwebuiChatComponent],', "Add it to your component's imports"],
+        ['<openwebui-chat', 'The chat tag in your template'],
+        ['[endpoint]="\'https://ai.example.com\'"', 'Address of your Open WebUI instance'],
+        ['[modelId]="\'llama3\'"', 'Model id as Open WebUI lists it'],
+        ['[apiKey]="apiKey"></openwebui-chat>', 'Open WebUI API key'],
+      ],
+    },
+    ru: {
+      variant: 'code',
+      headers: ['Код компонента', 'Что делает'],
+      rows: [
+        ["import { OpenwebuiChatComponent } from 'ngx-open-web-ui-chat';", 'Standalone-компонент, без NgModule'],
+        ['imports: [OpenwebuiChatComponent],', 'Добавьте его в imports своего компонента'],
+        ['<openwebui-chat', 'Тег чата в шаблоне'],
+        ['[endpoint]="\'https://ai.example.com\'"', 'Адрес вашего экземпляра Open WebUI'],
+        ['[modelId]="\'llama3\'"', 'Идентификатор модели, как его показывает Open WebUI'],
+        ['[apiKey]="apiKey"></openwebui-chat>', 'API-ключ Open WebUI'],
+      ],
+    },
+  },
 };

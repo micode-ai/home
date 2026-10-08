@@ -237,6 +237,15 @@
   const readingTimeLabel = $derived(
     t('blog.readingTime', lang).replace('{min}', String(estimateReadingMinutes(body)))
   );
+  // Optional `dateModified` on the post: shown next to the publish date only when it differs,
+  // and fed to BlogPosting + the sitemap by scripts/prerender.mjs.
+  const dateModified = $derived.by<string | undefined>(() => {
+    const value = (post as any)?.dateModified as string | undefined;
+    return value && value !== post?.date ? value : undefined;
+  });
+  const updatedLabel = $derived(
+    lang === 'pl' ? 'zaktualizowano' : lang === 'ru' ? 'обновлено' : 'updated'
+  );
 
   const tableSuffix = $derived(lang === 'pl' ? 'Pl' : lang === 'ru' ? 'Ru' : 'En');
   const aiModelsTable = $derived((post as any)?.aiModelsTable as
@@ -317,6 +326,10 @@
         <span aria-hidden="true"> — </span>{authorTitle}
       </p>
       <time class="article-date" datetime={post.date}>{post.date}</time>
+      {#if dateModified}
+        <span class="article-meta-sep" aria-hidden="true"> · </span>
+        <span class="article-date">{updatedLabel} <time datetime={dateModified}>{dateModified}</time></span>
+      {/if}
       <span class="article-meta-sep" aria-hidden="true"> · </span>
       <span class="article-reading-time">{readingTimeLabel}</span>
       <div class="article-tags">

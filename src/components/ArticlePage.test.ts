@@ -39,6 +39,7 @@ vi.mock('../data/blog-posts.json', () => ({
       titlePl: 'Krótki', titleEn: 'Short', titleRu: 'Короткий',
       summaryPl: 's', summaryEn: 's', summaryRu: 's',
       date: '2026-07-18',
+      dateModified: '2026-08-02',
       tags: ['AI'],
       bodyPl: 'Akapit.\n\n## Jedna sekcja\n\nWięcej.',
       bodyEn: 'Paragraph.\n\n## One section\n\nMore.',
@@ -244,6 +245,23 @@ describe('ArticlePage related articles', () => {
     languageStore.set('pl');
     const { getByText } = render(ArticlePage, { props: { slug: 'block-fixture' } });
     expect(getByText('Powiązane artykuły')).toBeTruthy();
+  });
+});
+
+describe('ArticlePage dates', () => {
+  it('shows the updated date next to the publish date when the post has one', () => {
+    languageStore.set('ru');
+    const { container } = render(ArticlePage, { props: { slug: 'short-fixture' } });
+    const updated = container.querySelector('time[datetime="2026-08-02"]');
+    expect(updated).toBeTruthy();
+    expect(updated!.parentElement!.textContent).toContain('обновлено');
+  });
+
+  it('shows only the publish date when the post was never updated', () => {
+    languageStore.set('en');
+    const { container, queryByText } = render(ArticlePage, { props: { slug: 'block-fixture' } });
+    expect(container.querySelectorAll('.article-hero time')).toHaveLength(1);
+    expect(queryByText(/updated/)).toBeNull();
   });
 });
 

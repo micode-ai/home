@@ -30,7 +30,8 @@ Since there's no router, every new product or blog article requires: a new direc
 ### Content/data-driven pages, not hardcoded markup
 
 - `src/data/products.json` is the source of truth for all product pages — `ProductPage.svelte` looks up the product by `id` and renders generically. Adding a product = adding a JSON entry (+ i18n keys + optional image/diagram), not new markup.
-- `src/data/blog-posts.json` drives `BlogListing.svelte` and `ArticlePage.svelte` similarly (slug, per-language title/summary, date, tags).
+- `src/data/blog-posts.json` drives `BlogListing.svelte` and `ArticlePage.svelte` similarly (slug, per-language title/summary, date, tags). When you materially edit a published post, set its optional `dateModified` (YYYY-MM-DD): it is shown as "updated" and feeds `BlogPosting.dateModified` and the sitemap `<lastmod>`.
+- The JSON-LD hand-written in each page's `index.html` `<head>` is authored once; `scripts/prerender.mjs` (via `scripts/seo-jsonld.mjs`) localizes it for `/en/` and `/ru/` and drops head nodes the rendered body already emits.
 - Article bodies support block tokens, each on its own `
 
 `-separated line: `## heading`, `> callout`, `[[diagram:id|caption]]` (`src/data/article-diagrams.ts`), `[[table:id]]` (`src/data/article-tables.ts`), `[[widget:id]]` and `[[image:/blog/<dir>/<file>.webp|caption]]` — a lazy, click-to-enlarge figure; the file goes under `public/`, its pixel size in `src/data/article-images.ts`, and the caption is written per language inside each body.
