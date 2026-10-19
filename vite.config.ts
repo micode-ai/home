@@ -71,6 +71,7 @@ export default defineConfig({
                 llmWikiKarpathyJakToRobimyArticle: resolve(__dirname, "blog/llm-wiki-karpathy-jak-to-robimy/index.html"),
                 aiBudgetPromoVideosRenderedInCodeArticle: resolve(__dirname, "blog/ai-budget-promo-videos-rendered-in-code/index.html"),
                 aiBudgetPencilFilmsOwnFacesArticle: resolve(__dirname, "blog/ai-budget-pencil-films-own-faces/index.html"),
+                claudeCodeModsForEveryProjectArticle: resolve(__dirname, "blog/claude-code-mods-for-every-project/index.html"),
             },
         },
     },

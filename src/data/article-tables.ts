@@ -893,4 +893,73 @@ export const articleTables: Record<string, Record<Lang, ArticleTable>> = {
       ],
     },
   },
+  // Claude Code mods article (2026-10-19). "Expected effect" cells are expectations at
+  // publication, not measured results: the article says so and promises a follow-up.
+  'claude-code-mods': {
+    pl: {
+      headers: ['Mod', 'Problem', 'Co robi', 'Oczekiwany efekt'],
+      rows: [
+        ['prod-radar', 'Stan produkcji widać dopiero, gdy ktoś sprawdzi', 'Health każdego projektu w linii statusu co 90 s, pasek i powiadomienie przy awarii, dysk VPS, śledzenie deployu po git push', 'Awaria zauważona w ciągu 90 s pracy w sesji, deploy bez ręcznego pilnowania'],
+        ['vps-guard', 'Zasady wspólnego serwera i gita żyją tylko w pamięci', 'Odmawia niszczących komend Dockera, force-pusha na gałęzie chronione, pusha bez pull i commitów łamiących konwencję', 'Klasa „usunąłem cudzą bazę” niemożliwa domyślnie'],
+        ['prod-query', 'Agent nie może czytać produkcji, więc człowiek kopiuje komendy', 'Narzędzie dla modelu: jedno zapytanie SELECT w transakcji READ ONLY, każde potwierdzane przez człowieka, maskowanie danych osobowych', 'Analiza danych w jednym potwierdzonym kroku zamiast ping-ponga'],
+        ['finish-task', 'Wiedza o projekcie gnije, gdy pominie się rytuał', 'Po commicie z kodem bez strony wiki, wpisu w logu lub klucza zadania pokazuje przypomnienie', 'Dokumentacja aktualizowana w momencie commita, nie tygodnie później'],
+      ],
+    },
+    en: {
+      headers: ['Mod', 'Problem', 'What it does', 'Expected effect'],
+      rows: [
+        ['prod-radar', 'Production state is visible only when someone checks', 'Health of every project in the status line every 90 s, a band and a notification on failure, VPS disk, a deploy watcher after git push', 'An outage noticed within 90 s of working in a session; deploys without manual watching'],
+        ['vps-guard', 'Rules for the shared server and for git live only in memory', 'Refuses destructive Docker commands, force pushes to protected branches, pushes without a pull, and commits that break the conventions', 'The "deleted another project\'s database" class becomes impossible by default'],
+        ['prod-query', 'The agent cannot read production, so a person copies commands', 'A tool for the model: one SELECT in a READ ONLY transaction, each call confirmed by a person, personal data masked', 'Data analysis in one confirmed step instead of copy-paste ping-pong'],
+        ['finish-task', 'Project knowledge rots when the ritual is skipped', 'After a commit with code but no wiki page, log line or issue key, shows a reminder', 'Docs updated at commit time, not weeks later'],
+      ],
+    },
+    ru: {
+      headers: ['Мод', 'Проблема', 'Что делает', 'Ожидаемый эффект'],
+      rows: [
+        ['prod-radar', 'Состояние прода видно, только когда кто-то проверит', 'Health каждого проекта в строке статуса раз в 90 с, полоса и уведомление при падении, диск VPS, слежение за деплоем после git push', 'Падение замечено за 90 с работы в сессии, деплой без ручного наблюдения'],
+        ['vps-guard', 'Правила общего сервера и git живут только в памяти', 'Отклоняет разрушительные команды Docker, force-push в защищённые ветки, push без pull и коммиты, нарушающие соглашения', 'Класс «удалил чужую базу» невозможен по умолчанию'],
+        ['prod-query', 'Агент не может читать прод, и человек копирует команды', 'Инструмент для модели: один SELECT в транзакции READ ONLY, каждый вызов подтверждает человек, персональные данные маскируются', 'Анализ данных за один подтверждённый шаг вместо пинг-понга'],
+        ['finish-task', 'Знания о проекте гниют, когда ритуал пропущен', 'После коммита с кодом без страницы вики, строки в логе или ключа задачи показывает напоминание', 'Документация обновляется в момент коммита, а не через недели'],
+      ],
+    },
+  },
+  'vps-guard-rules': {
+    pl: {
+      variant: 'code',
+      headers: ['Komenda, której agent nie wykona', 'Powód, który czyta model'],
+      rows: [
+        ['docker volume prune -f', 'Demon Dockera jest wspólny dla kilku projektów, a wolumeny to ich bazy danych. Usuń konkretny wolumen po nazwie i tylko po potwierdzeniu człowieka.'],
+        ['docker image prune -a -f', 'Nieużywane, ale otagowane obrazy to cele rollbacku innych projektów. Użyj image prune -f (tylko wiszące).'],
+        ['docker compose down -v', 'Usuwa wolumeny stosu razem z bazą. Użyj down bez -v.'],
+        ['git push --force origin development', 'Przepisuje wspólną historię. Zrób pull --rebase i zwykły push.'],
+        ['git push   (na remote są nowe commity)', 'Upstream ma N commitów, których ta gałąź nie ma. Najpierw git pull --rebase.'],
+        ['git commit -m "ABA-12: ..."', 'Bez dwukropka po kluczu zadania: "ABA-12 Zrób coś".'],
+      ],
+    },
+    en: {
+      variant: 'code',
+      headers: ['Command the agent will not run', 'Reason the model reads'],
+      rows: [
+        ['docker volume prune -f', 'The Docker daemon is shared by several projects and its volumes are their databases. Remove one volume by name, and only after the person confirms.'],
+        ['docker image prune -a -f', 'Unused-but-tagged images are other projects\' rollback targets. Use image prune -f (dangling only).'],
+        ['docker compose down -v', 'Deletes the stack\'s volumes, database included. Use down without -v.'],
+        ['git push --force origin development', 'Rewrites shared history. Pull --rebase and push normally.'],
+        ['git push   (the remote has new commits)', 'The upstream has N commits this branch lacks. Run git pull --rebase first.'],
+        ['git commit -m "ABA-12: ..."', 'No colon after the issue key: "ABA-12 Do the thing".'],
+      ],
+    },
+    ru: {
+      variant: 'code',
+      headers: ['Команда, которую агент не выполнит', 'Причина, которую читает модель'],
+      rows: [
+        ['docker volume prune -f', 'Демон Docker общий для нескольких проектов, а его тома — их базы данных. Удаляйте конкретный том по имени и только после подтверждения человека.'],
+        ['docker image prune -a -f', 'Неиспользуемые, но помеченные образы — цели отката других проектов. Используйте image prune -f (только висячие).'],
+        ['docker compose down -v', 'Удаляет тома стека вместе с базой. Используйте down без -v.'],
+        ['git push --force origin development', 'Переписывает общую историю. Сделайте pull --rebase и обычный push.'],
+        ['git push   (на remote новые коммиты)', 'В upstream N коммитов, которых нет в этой ветке. Сначала git pull --rebase.'],
+        ['git commit -m "ABA-12: ..."', 'Без двоеточия после ключа задачи: «ABA-12 Сделать что-то».'],
+      ],
+    },
+  },
 };
