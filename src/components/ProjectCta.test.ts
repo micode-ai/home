@@ -36,6 +36,12 @@ describe('ProjectCta link', () => {
     expect(msg).toContain('Accounting AI');
   });
 
+  it('jumps to the form on the same home page without a prefill', () => {
+    render(ProjectCta, { lang: 'ru', location: 'home_band' });
+    expect(screen.getByTestId('project-cta-link').getAttribute('href')).toBe('/ru/#contact');
+    expect(screen.getByRole('heading').textContent).not.toContain('projectCta.');
+  });
+
   it('has real copy in every language, not echoed keys', () => {
     for (const lang of ['pl', 'en', 'ru'] as const) {
       const { unmount } = render(ProjectCta, { lang, location: 'article_end', itemId: 'x', subject: 'X' });
@@ -65,6 +71,16 @@ describe('ProjectCta tracking', () => {
       'cta_click',
       expect.objectContaining({ location: 'article_end', item_id: 'some-post' })
     );
+  });
+
+  it('reports the home band without an item id', async () => {
+    render(ProjectCta, { lang: 'pl', location: 'home_band' });
+    const link = screen.getByTestId('project-cta-link');
+    link.addEventListener('click', e => e.preventDefault());
+    await fireEvent.click(link);
+    const params = (window.gtag as any).mock.calls[0][2];
+    expect(params).toMatchObject({ location: 'home_band' });
+    expect(params).not.toHaveProperty('item_id');
   });
 
   it('sends nothing when cookies were not accepted', async () => {

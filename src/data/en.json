@@ -496,6 +496,7 @@
         }
     },
     "projectCta": {
+        "homeTitle": "Have a project in mind? Let’s talk.",
         "articleTitle": "Want something like this for your business?",
         "productTitle": "Need a solution like {name}?",
         "text": "We design and ship AI agents, automation, and web and mobile apps. Describe what you need and we will come back with a concrete proposal.",

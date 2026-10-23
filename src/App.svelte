@@ -14,6 +14,7 @@
   import Faq from './components/Faq.svelte';
   import ProcessTimeline from './components/ProcessTimeline.svelte';
   import ContactForm from './components/ContactForm.svelte';
+  import ProjectCta from './components/ProjectCta.svelte';
   import Footer from './components/Footer.svelte';
   import SEO from './components/SEO.svelte';
   import AccessibilityToolbar from './components/AccessibilityToolbar.svelte';
@@ -53,6 +54,13 @@
   <Hero />
   <Services />
   <OwnProducts />
+  <!--
+    The contact form is the last section and visitors rarely scroll that far, so offer the
+    jump to it right after what we do and what we have built.
+  -->
+  <div class="cta-band">
+    <ProjectCta lang={$languageStore} location="home_band" />
+  </div>
   <!--
     CostCalculator styles itself as a bare card with no width of its own — inside an article
     the `.article-inner` column constrains it. On the landing page nothing does, so give it
@@ -100,6 +108,22 @@
   .calculator-band > :global(.calc) {
     max-width: var(--max-width-lg);
     margin: 0 auto;
+  }
+
+  /* Sits between two sections that already carry their own vertical padding. */
+  .cta-band {
+    padding: 0 2rem;
+  }
+
+  .cta-band > :global(.project-cta) {
+    max-width: var(--max-width-lg);
+    margin: 0 auto;
+  }
+
+  @media (max-width: 640px) {
+    .cta-band {
+      padding: 0 1rem;
+    }
   }
 
   @media (max-width: 767px) {

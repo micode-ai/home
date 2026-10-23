@@ -7,34 +7,41 @@
   // The contact form lives only on the home page, while most visitors read articles and
   // product pages — this block is their way into it. The link hands a prefilled message over
   // through the `msg` param, the same bridge the cost calculator uses (see ContactForm).
+  // On the home page itself (`home_band`) the form is further down the same page, so the link
+  // is a plain in-page jump with nothing to prefill.
   let {
     lang,
     location,
-    itemId,
-    subject
+    itemId = '',
+    subject = ''
   }: {
     lang: Language;
-    location: 'article_end' | 'product';
-    itemId: string;
+    location: 'article_end' | 'product' | 'home_band';
+    itemId?: string;
     /** Article title or product name, quoted in the heading and the prefilled message. */
-    subject: string;
+    subject?: string;
   } = $props();
 
-  const isArticle = $derived(location === 'article_end');
   const heading = $derived(
-    isArticle
-      ? t('projectCta.articleTitle', lang)
-      : t('projectCta.productTitle', lang).replace('{name}', subject)
+    location === 'home_band'
+      ? t('projectCta.homeTitle', lang)
+      : location === 'article_end'
+        ? t('projectCta.articleTitle', lang)
+        : t('projectCta.productTitle', lang).replace('{name}', subject)
   );
   const message = $derived(
-    isArticle
+    location === 'article_end'
       ? t('projectCta.articleMessage', lang).replace('{title}', subject)
       : t('projectCta.productMessage', lang).replace('{name}', subject)
   );
-  const href = $derived(`${withLocale('/', lang)}?msg=${encodeURIComponent(message)}#contact`);
+  const href = $derived(
+    location === 'home_band'
+      ? `${withLocale('/', lang)}#contact`
+      : `${withLocale('/', lang)}?msg=${encodeURIComponent(message)}#contact`
+  );
 
   function handleClick() {
-    track('cta_click', { location, item_id: itemId });
+    track('cta_click', itemId ? { location, item_id: itemId } : { location });
   }
 </script>
 
