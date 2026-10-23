@@ -3,6 +3,7 @@
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import { withLocale, stripLocale } from '../services/locale';
+  import { track } from '../services/tracking';
   import LanguageSwitcher from './LanguageSwitcher.svelte';
   import QuickSearch from './QuickSearch.svelte';
   import logoUrl from '../assets/images/mi_code_logo_mark.svg';
@@ -36,6 +37,8 @@
 
   function handleNavClick(e: MouseEvent, href: string) {
     closeMenu();
+    // The one nav link that leads to the form, so it counts as an entry point in the funnel.
+    if (href === '/#contact') track('cta_click', { location: 'header' });
     // Only intercept for smooth-scroll when we're on the home page of any locale
     // (/, /en/, /ru/). Elsewhere let the link navigate to the localized home.
     if (typeof window === 'undefined' || stripLocale(window.location.pathname) !== '') return;

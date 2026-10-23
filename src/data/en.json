@@ -494,5 +494,13 @@
             "rag": "Retrieved context (RAG)",
             "output": "Model output"
         }
+    },
+    "projectCta": {
+        "articleTitle": "Want something like this for your business?",
+        "productTitle": "Need a solution like {name}?",
+        "text": "We design and ship AI agents, automation, and web and mobile apps. Describe what you need and we will come back with a concrete proposal.",
+        "button": "Discuss your project",
+        "articleMessage": "Hi! After reading \"{title}\" I would like to discuss a similar project: ",
+        "productMessage": "Hi! I am interested in {name} and would like to discuss implementation: "
     }
 }

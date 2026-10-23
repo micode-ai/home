@@ -15,6 +15,7 @@
   import { estimateReadingMinutes } from '../services/readingTime';
   import ShareButtons from './ShareButtons.svelte';
   import PrintButton from './PrintButton.svelte';
+  import ProjectCta from './ProjectCta.svelte';
   import { getRelatedPosts } from '../services/relatedArticles';
   import { buildToc } from '../services/articleToc';
   import { computeReadingProgress } from '../services/readingProgress';
@@ -434,6 +435,8 @@
           </table>
         </div>
       {/if}
+
+      <ProjectCta {lang} location="article_end" itemId={slug} subject={title} />
 
       {#if faqItems.length > 0}
         <section class="article-faq" aria-labelledby="article-faq-title">

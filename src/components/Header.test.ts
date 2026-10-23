@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeAll } from 'vitest';
-import { render } from '@testing-library/svelte';
+import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest';
+import { render, fireEvent } from '@testing-library/svelte';
 import { loadTranslations } from '../services/i18n';
 import { languageStore } from '../stores/languageStore';
 import Header from './Header.svelte';
@@ -62,5 +62,32 @@ describe('Header calculator link', () => {
     const links = getAllByRole('link', { name: 'Калькулятор' }) as HTMLAnchorElement[];
     expect(links.length).toBeGreaterThan(0);
     expect(links.every(l => l.getAttribute('href') === '/ru/#calculator')).toBe(true);
+  });
+});
+
+describe('Header contact link tracking', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    localStorage.setItem('cookieConsent', 'accepted');
+    window.history.replaceState(null, '', '/blog/');
+    window.gtag = vi.fn();
+    window.mktai = vi.fn();
+    languageStore.set('en');
+  });
+
+  it('fires cta_click with location header when Contact is clicked', async () => {
+    const { getByRole } = render(Header);
+    await fireEvent.click(getByRole('link', { name: 'Contact' }));
+    expect(window.gtag).toHaveBeenCalledWith(
+      'event',
+      'cta_click',
+      expect.objectContaining({ location: 'header' })
+    );
+  });
+
+  it('does not count other nav links as a CTA', async () => {
+    const { getByRole } = render(Header);
+    await fireEvent.click(getByRole('link', { name: 'Services' }));
+    expect(window.gtag).not.toHaveBeenCalledWith('event', 'cta_click', expect.anything());
   });
 });

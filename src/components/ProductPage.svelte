@@ -11,6 +11,7 @@
   import MermaidDiagram from './MermaidDiagram.svelte';
   import { langgraphDiagrams } from '../data/langgraph-diagrams';
   import ImageLightbox from './ImageLightbox.svelte';
+  import ProjectCta from './ProjectCta.svelte';
 
   let lightboxOpen = $state(false);
 
@@ -325,6 +326,8 @@
           />
         </section>
       {/if}
+
+      <ProjectCta {lang} location="product" itemId={productId} subject={name} />
 
       {#if faqItems.length > 0}
         <section class="content-section" aria-labelledby="section-faq">

@@ -480,5 +480,13 @@
       "rag": "Znaleziony kontekst (RAG)",
       "output": "Odpowiedź modelu"
     }
+  },
+  "projectCta": {
+    "articleTitle": "Chcesz coś podobnego w swojej firmie?",
+    "productTitle": "Potrzebujesz rozwiązania jak {name}?",
+    "text": "Projektujemy i wdrażamy agentów AI, automatyzacje oraz aplikacje webowe i mobilne. Opisz, czego potrzebujesz — wrócimy z konkretną propozycją.",
+    "button": "Omów swój projekt",
+    "articleMessage": "Dzień dobry! Po lekturze artykułu „{title}” chcę omówić podobny projekt: ",
+    "productMessage": "Dzień dobry! Interesuje mnie {name} — chcę omówić wdrożenie: "
   }
 }
