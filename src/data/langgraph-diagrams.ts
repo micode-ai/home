@@ -61,7 +61,7 @@ export const langgraphDiagrams: Record<string, string> = {
     TOOL --> A7`,
 
   'testing-ai': `flowchart TD
-    START([Code Change / PR]) --> SEL{Select Agent}
+    START([Request<br/>dashboard · API · chat]) --> SEL{Select Agent}
 
     SEL --> TG[Test Generator Agent]
     TG --> TGA[Analyze Code] --> TGB[Generate Tests] --> TGC[Validate Tests]
