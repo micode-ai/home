@@ -2616,4 +2616,79 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
   CR -->|poprawki| SC
   CR --> DL["10. Dostawa<br/>master, telefon, social, odtwarzacz"]`,
   },
+  'langgraph-agent-80-tools-structure-graph': {
+    pl: `flowchart LR
+  subgraph CAT["Katalog narzędzi (kod)"]
+    D1["16 dziedzin<br/>58 narzędzi bazowych"]
+    D2["Kadry: 15 narzędzi<br/>gdy jest serwis HR"]
+    D3["KSeF: 9 narzędzi<br/>gdy jest serwis KSeF"]
+  end
+  CAT --> F["createAllTools<br/>jedna płaska lista, do 82"]
+  F --> B["bindTools<br/>nazwy, opisy, schematy"]
+  P["Prompt systemowy<br/>reguły ponad narzędziami + pamięć"] --> A
+  B --> A["węzeł agent<br/>wywołanie modelu"]
+  A -->|tool_calls| T["węzeł tools<br/>ToolNode wykonuje kod"]
+  T -->|wyniki w markdown| A
+  A -->|brak tool_calls| E["odpowiedź"]`,
+    en: `flowchart LR
+  subgraph CAT["Tool catalogue (code)"]
+    D1["16 domains<br/>58 base tools"]
+    D2["HR: 15 tools<br/>when the HR service is wired"]
+    D3["KSeF: 9 tools<br/>when the KSeF service is wired"]
+  end
+  CAT --> F["createAllTools<br/>one flat list, up to 82"]
+  F --> B["bindTools<br/>names, descriptions, schemas"]
+  P["System prompt<br/>cross-tool rules + memory"] --> A
+  B --> A["agent node<br/>model call"]
+  A -->|tool_calls| T["tools node<br/>ToolNode runs the code"]
+  T -->|markdown results| A
+  A -->|no tool_calls| E["answer"]`,
+    ru: `flowchart LR
+  subgraph CAT["Каталог инструментов (код)"]
+    D1["16 доменов<br/>58 базовых инструментов"]
+    D2["Кадры: 15 инструментов<br/>если подключён сервис HR"]
+    D3["KSeF: 9 инструментов<br/>если подключён сервис KSeF"]
+  end
+  CAT --> F["createAllTools<br/>один плоский список, до 82"]
+  F --> B["bindTools<br/>имена, описания, схемы"]
+  P["Системный промпт<br/>правила над инструментами + память"] --> A
+  B --> A["узел agent<br/>вызов модели"]
+  A -->|tool_calls| T["узел tools<br/>ToolNode выполняет код"]
+  T -->|результаты в markdown| A
+  A -->|нет tool_calls| E["ответ"]`,
+  },
+  // Test-generation wizard of Testing AI (services/ai/src/test-gen-session in
+  // micode-ai/testing-ai-assistant): analyze -> propose -> approve -> generate -> validate -> review -> commit.
+  'ai-test-cases-from-source-code-flow': {
+    ru: `flowchart TB
+  RE["Репозиторий<br/>GitHub · GitLab · Bitbucket"] --> PR["Профиль проекта<br/>язык, фреймворк, шаблоны тестов"]
+  PR --> PO["Предложение<br/>до 30 исходных файлов"]
+  PO --> AP{"Человек одобряет<br/>пункты"}
+  AP --> GE["Генерация<br/>файл за файлом"]
+  GE --> VA["Валидация<br/>tsc и ESLint"]
+  VA -->|ошибки, до 3 попыток| GE
+  VA --> RV["Ревью и правка<br/>в браузере"]
+  RV --> CM["Ветка ai/test-gen<br/>коммит и pull request"]
+  CM --> CI["Ваш CI запускает тесты"]`,
+    en: `flowchart TB
+  RE["Repository<br/>GitHub · GitLab · Bitbucket"] --> PR["Project profile<br/>language, framework, test patterns"]
+  PR --> PO["Proposal<br/>up to 30 source files"]
+  PO --> AP{"A person approves<br/>the items"}
+  AP --> GE["Generation<br/>file by file"]
+  GE --> VA["Validation<br/>tsc and ESLint"]
+  VA -->|errors, up to 3 attempts| GE
+  VA --> RV["Review and edit<br/>in the browser"]
+  RV --> CM["ai/test-gen branch<br/>commit and pull request"]
+  CM --> CI["Your CI runs the tests"]`,
+    pl: `flowchart TB
+  RE["Repozytorium<br/>GitHub · GitLab · Bitbucket"] --> PR["Profil projektu<br/>język, framework, wzorce testów"]
+  PR --> PO["Propozycja<br/>do 30 plików źródłowych"]
+  PO --> AP{"Człowiek zatwierdza<br/>pozycje"}
+  AP --> GE["Generowanie<br/>plik po pliku"]
+  GE --> VA["Walidacja<br/>tsc i ESLint"]
+  VA -->|błędy, do 3 prób| GE
+  VA --> RV["Przegląd i edycja<br/>w przeglądarce"]
+  RV --> CM["Gałąź ai/test-gen<br/>commit i pull request"]
+  CM --> CI["Twój CI uruchamia testy"]`,
+  },
 };

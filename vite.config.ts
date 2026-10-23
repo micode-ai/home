@@ -72,6 +72,8 @@ export default defineConfig({
                 aiBudgetPromoVideosRenderedInCodeArticle: resolve(__dirname, "blog/ai-budget-promo-videos-rendered-in-code/index.html"),
                 aiBudgetPencilFilmsOwnFacesArticle: resolve(__dirname, "blog/ai-budget-pencil-films-own-faces/index.html"),
                 claudeCodeModsForEveryProjectArticle: resolve(__dirname, "blog/claude-code-mods-for-every-project/index.html"),
+                langgraphAgent80ToolsStructureArticle: resolve(__dirname, "blog/langgraph-agent-80-tools-structure/index.html"),
+                aiTestCasesFromSourceCodeArticle: resolve(__dirname, "blog/ai-test-cases-from-source-code/index.html"),
             },
         },
     },
