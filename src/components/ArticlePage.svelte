@@ -24,6 +24,8 @@
   import { annotateGlossary, type GlossaryEntry, type GlossaryPart } from '../services/glossaryTerms';
   import glossary from '../data/glossary.json';
   import GlossaryTerm from './GlossaryTerm.svelte';
+  import ArticleLanguageChips from './ArticleLanguageChips.svelte';
+  import { resolveContentLanguage } from '../services/articleLanguages';
 
   // Built once at module scope — glossary.json is static data, not per-render.
   const glossaryById = Object.fromEntries((glossary as GlossaryEntry[]).map((e) => [e.id, e]));
@@ -68,11 +70,18 @@
   const relatedArticlesLabel = $derived(t('blog.relatedArticles', lang));
   const readArticleLabel = $derived(t('blog.readArticle', lang));
 
+  // A post missing in the active locale renders in the first available one, with a notice.
+  const contentLang = $derived(post ? resolveContentLanguage(post, lang) : lang);
+  const LANG_NAMES = { pl: 'Polski', en: 'English', ru: 'Русский' };
+  const fallbackNotice = $derived(
+    t('blog.languages.fallbackNotice', lang).replace('{lang}', LANG_NAMES[contentLang])
+  );
+
   const title = $derived(post
-    ? (lang === 'pl' ? post.titlePl : lang === 'ru' ? post.titleRu : post.titleEn)
+    ? (contentLang === 'pl' ? post.titlePl : contentLang === 'ru' ? post.titleRu : post.titleEn)
     : '');
   const body = $derived(post
-    ? (lang === 'pl' ? (post as any).bodyPl : lang === 'ru' ? (post as any).bodyRu : (post as any).bodyEn) ?? ''
+    ? (contentLang === 'pl' ? (post as any).bodyPl : contentLang === 'ru' ? (post as any).bodyRu : (post as any).bodyEn) ?? ''
     : '');
 
   // Body is authored as `\n\n`-separated chunks. Most chunks are plain paragraphs; a few opt into
@@ -347,6 +356,10 @@
           <span class="tag">{tag}</span>
         {/each}
       </div>
+      <ArticleLanguageChips {post} {slug} {lang} />
+      {#if contentLang !== lang}
+        <p class="article-lang-notice" role="note">{fallbackNotice}</p>
+      {/if}
       <div class="article-actions">
         <ShareButtons url={shareUrl} {title} {lang} />
         <PrintButton {lang} />
@@ -535,6 +548,7 @@
   .article-date { font-size: 0.875rem; opacity: 0.7; }
   .article-meta-sep,
   .article-reading-time { font-size: 0.875rem; opacity: 0.7; }
+  .article-lang-notice { font-size: 0.875rem; margin: 0.75rem 0 0; padding: 0.5rem 0.75rem; border-left: 3px solid var(--color-primary, #1e3a8a); background: var(--color-bg-secondary, #f1f5f9); }
   .article-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
   .article-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.25rem; }
   /* ShareButtons brings its own margin-top for its standalone use elsewhere; zero it out here so

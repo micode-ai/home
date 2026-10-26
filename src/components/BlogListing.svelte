@@ -4,6 +4,7 @@
   import { t } from '../services/i18n';
   import { withLocale } from '../services/locale';
   import blogPosts from '../data/blog-posts.json';
+  import ArticleLanguageChips from './ArticleLanguageChips.svelte';
   import { estimateReadingMinutes } from '../services/readingTime';
   import { collectTags, rankTagsByCount, filterByTag, getTagFromQuery, buildTagQuery } from '../services/blogTagFilter';
 
@@ -158,6 +159,7 @@
                 >{tag}</button>
               {/each}
             </div>
+            <ArticleLanguageChips {post} slug={post.slug} lang={$languageStore} />
           </li>
         {/each}
       </ul>

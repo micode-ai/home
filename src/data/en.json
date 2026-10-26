@@ -394,6 +394,7 @@
         "title": "Blog",
         "backToMicode": "← Back to MiCode",
         "readArticle": "Read article →",
+        "languages": { "label": "Available languages", "unavailable": "Not translated into this language", "fallbackNotice": "This article is not yet available in your language — showing the {lang} version." },
         "code": { "copy": "Copy code", "copied": "Code copied", "copyFailed": "Couldn't copy code" },
         "relatedArticles": "Related articles",
         "tableOfContents": "On this page",
