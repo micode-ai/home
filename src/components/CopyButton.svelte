@@ -5,8 +5,9 @@
     value,
     label,
     copiedLabel,
-    failedLabel
-  }: { value: string; label: string; copiedLabel: string; failedLabel: string } = $props();
+    failedLabel,
+    onCopy
+  }: { value: string; label: string; copiedLabel: string; failedLabel: string; onCopy?: () => void } = $props();
 
   let copyState = $state<'idle' | 'copied' | 'error'>('idle');
   let resetTimer: ReturnType<typeof setTimeout> | undefined;
@@ -14,6 +15,7 @@
   async function handleClick() {
     const ok = await copyToClipboard(value);
     copyState = ok ? 'copied' : 'error';
+    if (ok) onCopy?.();
     clearTimeout(resetTimer);
     resetTimer = setTimeout(() => (copyState = 'idle'), 2000);
   }

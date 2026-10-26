@@ -14,6 +14,8 @@
   import ImageLightbox from './ImageLightbox.svelte';
   import { estimateReadingMinutes } from '../services/readingTime';
   import ShareButtons from './ShareButtons.svelte';
+  import CopyButton from './CopyButton.svelte';
+  import { splitArticleChunks, parseCodeFence } from '../services/articleCodeBlocks';
   import PrintButton from './PrintButton.svelte';
   import ProjectCta from './ProjectCta.svelte';
   import { getRelatedPosts } from '../services/relatedArticles';
@@ -60,6 +62,9 @@
     return p.summaryEn;
   }
 
+  const codeCopyLabel = $derived(t('blog.code.copy', lang));
+  const codeCopiedLabel = $derived(t('blog.code.copied', lang));
+  const codeCopyFailedLabel = $derived(t('blog.code.copyFailed', lang));
   const relatedArticlesLabel = $derived(t('blog.relatedArticles', lang));
   const readArticleLabel = $derived(t('blog.readArticle', lang));
 
@@ -85,7 +90,8 @@
     | { kind: 'diagram'; id: string; caption: string }
     | { kind: 'table'; id: string }
     | { kind: 'image'; src: string; caption: string }
-    | { kind: 'widget'; id: string };
+    | { kind: 'widget'; id: string }
+    | { kind: 'code'; lang: string; code: string };
   type Block =
     | { kind: 'p'; segments: Seg[] }
     | { kind: 'h2'; text: string; id: string }
@@ -93,7 +99,8 @@
     | { kind: 'diagram'; id: string; caption: string }
     | { kind: 'table'; id: string }
     | { kind: 'image'; src: string; caption: string }
-    | { kind: 'widget'; id: string };
+    | { kind: 'widget'; id: string }
+    | { kind: 'code'; lang: string; code: string };
 
   const DIAGRAM_RE = /^\[\[diagram:([a-z0-9-]+)(?:\|([^\]]+))?\]\]$/i;
   const TABLE_RE = /^\[\[table:([a-z0-9-]+)\]\]$/i;
@@ -156,8 +163,10 @@
 
   const rawBlocks = $derived.by<RawBlock[]>(() => {
     if (!body) return [];
-    return body.split('\n\n').map((chunk: string): RawBlock => {
+    return splitArticleChunks(body).map((chunk: string): RawBlock => {
       const c = chunk.trim();
+      const cf = parseCodeFence(c);
+      if (cf) return { kind: 'code', ...cf };
       const dm = c.match(DIAGRAM_RE);
       if (dm) return { kind: 'diagram', id: dm[1], caption: (dm[2] ?? '').trim() };
       const tm = c.match(TABLE_RE);
@@ -398,6 +407,13 @@
               </table>
             </div>
           {/if}
+        {:else if block.kind === 'code'}
+          <div class="article-code">
+            <div class="article-code-copy">
+              <CopyButton value={block.code} label={codeCopyLabel} copiedLabel={codeCopiedLabel} failedLabel={codeCopyFailedLabel} onCopy={() => track('copy_code', { slug })} />
+            </div>
+            <pre tabindex="0"><code class={block.lang ? `language-${block.lang}` : undefined}>{block.code}</code></pre>
+          </div>
         {:else if block.kind === 'image'}
           {@const dim = articleImages[block.src]}
           <figure class="article-figure article-image">
@@ -586,6 +602,39 @@
        behind it and the reader lands ~3 lines into the section. */
     scroll-margin-top: calc(var(--header-height, 89px) + 1rem);
   }
+  .article-code {
+    position: relative;
+    margin: 1.75rem 0;
+  }
+  .article-code pre {
+    margin: 0;
+    padding: 1rem 3.25rem 1rem 1.25rem;
+    overflow-x: auto;
+    background: var(--color-bg-secondary, #f8fafc);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+  .article-code code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    white-space: pre;
+  }
+  .article-code-copy {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 1;
+  }
+  /* The status text sits left of the corner button so it never overflows the viewport edge. */
+  .article-code-copy :global(.copy-status) {
+    left: auto;
+    right: calc(100% + 0.5rem);
+  }
+  .article-code-copy :global(.copy-button) {
+    background: var(--color-bg, #fff);
+  }
+
   .article-callout {
     display: block;
     margin: 1.75rem 0;
@@ -844,6 +893,7 @@
        purpose on a printed/PDF-exported page. */
     .article-toc,
     .article-actions,
+    .article-code-copy,
     .related-product,
     .related-articles,
     .back-link {

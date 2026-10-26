@@ -380,6 +380,7 @@
     "title": "Блог",
     "backToMicode": "← На сайт MiCode",
     "readArticle": "Читать статью →",
+    "code": { "copy": "Копировать код", "copied": "Код скопирован", "copyFailed": "Не удалось скопировать код" },
     "relatedArticles": "Похожие статьи",
     "tableOfContents": "На этой странице",
     "articleNotFound": "Статья не найдена.",

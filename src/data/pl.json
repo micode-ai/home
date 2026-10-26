@@ -380,6 +380,7 @@
     "title": "Blog",
     "backToMicode": "← Powrót do MiCode",
     "readArticle": "Czytaj artykuł →",
+    "code": { "copy": "Kopiuj kod", "copied": "Skopiowano kod", "copyFailed": "Nie udało się skopiować kodu" },
     "relatedArticles": "Powiązane artykuły",
     "tableOfContents": "Na tej stronie",
     "articleNotFound": "Artykuł nie znaleziony.",

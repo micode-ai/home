@@ -90,6 +90,16 @@ vi.mock('../data/blog-posts.json', () => ({
         'Paragraph.\n\n[[image:/blog/fixture/sheet.webp|English caption]]\n\n[[image:/blog/fixture/unsized.png]]\n\n[[image:https://evil.example/x.webp|remote]]',
       bodyRu: 'Абзац.\n\n[[image:/blog/fixture/sheet.webp|Подпись по-русски]]',
     },
+    {
+      slug: 'code-fixture',
+      titlePl: 'T', titleEn: 'T', titleRu: 'T',
+      summaryPl: 's', summaryEn: 's', summaryRu: 's',
+      date: '2026-06-01',
+      tags: ['CodeOnly'],
+      bodyPl: 'P.\n\n```ts\nconst a = 1;\n```',
+      bodyEn: 'Para.\n\n```ts\nconst a = 1;\n\nconst b = 2;\n```\n\nAfter.',
+      bodyRu: 'P.\n\n```ts\nconst a = 1;\n```',
+    },
   ],
 }));
 
@@ -498,5 +508,39 @@ describe('ArticlePage image block', () => {
     expect(dialog.querySelector('img')!.getAttribute('src')).toBe('/blog/fixture/sheet.webp');
     await fireEvent.click(dialog.querySelector('button.lb-close') as HTMLButtonElement);
     expect(queryByRole('dialog')).toBeNull();
+  });
+});
+
+describe('ArticlePage code block', () => {
+  afterEach(() => {
+    Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true });
+  });
+
+  it('renders a fenced block (blank lines kept) in a pre/code with a copy button', () => {
+    languageStore.set('en');
+    const { container, getByLabelText } = render(ArticlePage, { props: { slug: 'code-fixture' } });
+    const code = container.querySelector('.article-code pre code') as HTMLElement;
+    expect(code.textContent).toBe('const a = 1;\n\nconst b = 2;');
+    expect(code.classList.contains('language-ts')).toBe(true);
+    expect(getByLabelText('Copy code')).toBeTruthy();
+    expect(container.textContent).toContain('After.');
+  });
+
+  it('copies the raw code and announces the confirmation', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+    languageStore.set('en');
+    const { container, getByLabelText } = render(ArticlePage, { props: { slug: 'code-fixture' } });
+    await fireEvent.click(getByLabelText('Copy code'));
+    expect(writeText).toHaveBeenCalledWith('const a = 1;\n\nconst b = 2;');
+    await vi.waitFor(() =>
+      expect(container.querySelector('.article-code [aria-live="polite"]')!.textContent).toBe('Code copied')
+    );
+  });
+
+  it('localises the button label', () => {
+    languageStore.set('ru');
+    const { getByLabelText } = render(ArticlePage, { props: { slug: 'code-fixture' } });
+    expect(getByLabelText('Копировать код')).toBeTruthy();
   });
 });

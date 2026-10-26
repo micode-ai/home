@@ -394,6 +394,7 @@
         "title": "Blog",
         "backToMicode": "← Back to MiCode",
         "readArticle": "Read article →",
+        "code": { "copy": "Copy code", "copied": "Code copied", "copyFailed": "Couldn't copy code" },
         "relatedArticles": "Related articles",
         "tableOfContents": "On this page",
         "articleNotFound": "Article not found.",
