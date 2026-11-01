@@ -3,6 +3,7 @@
   import { t } from '../services/i18n';
   import { withLocale } from '../services/locale';
   import SocialMedia from './SocialMedia.svelte';
+  import { industries, industryPath, loc } from '../services/industries';
 
   // `onopenPrivacyPolicy` is accepted (but unused) for backward compatibility with call
   // sites that still pass it — no longer invoked internally. The privacy policy is now a
@@ -29,6 +30,9 @@
         <a href={withLocale('/blog/o-firmie-micode/', $languageStore)}>{aboutLabel}</a>
         <a href={withLocale('/blog/', $languageStore)}>{blogLabel}</a>
         <a href={withLocale('/glossary/', $languageStore)}>{glossaryLabel}</a>
+        {#each industries as industry (industry.id)}
+          <a href={withLocale(industryPath(industry.id), $languageStore)}>{loc(industry.title, $languageStore)}</a>
+        {/each}
         <a href={withLocale('/products/accounting-ai/', $languageStore)}>{accountingAiLabel}</a>
         <a href={withLocale('/products/budget-assistant/', $languageStore)}>{budgetAssistantLabel}</a>
         <a href={withLocale('/privacy-policy/', $languageStore)}>{privacyPolicyLabel}</a>

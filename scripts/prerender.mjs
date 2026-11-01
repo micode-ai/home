@@ -8,6 +8,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
 
 const products = JSON.parse(readFileSync(join(root, 'src/data/products.json'), 'utf8'));
+const industries = JSON.parse(readFileSync(join(root, 'src/data/industries.json'), 'utf8'));
 const blogPosts = JSON.parse(readFileSync(join(root, 'src/data/blog-posts.json'), 'utf8'));
 const homeMeta = JSON.parse(readFileSync(join(root, 'src/data/seo-home.json'), 'utf8'));
 
@@ -248,6 +249,7 @@ async function run() {
   const { renderPage: renderBlog } = await import('../dist-ssr/blog.js');
   const { renderPage: renderArticle } = await import('../dist-ssr/article.js');
   const { renderPage: renderPrivacyPolicy } = await import('../dist-ssr/privacyPolicy.js');
+  const { renderPage: renderIndustry } = await import('../dist-ssr/industry.js');
   const { renderPage: renderGlossary } = await import('../dist-ssr/glossary.js');
 
   // metaFor(lang) returns localized {title, description, ...} to inject, or null
@@ -364,6 +366,16 @@ async function run() {
         };
       },
     },
+    ...industries.map((ind) => ({
+      distRoute: `for/${ind.id}/index.html`,
+      urlPath: `for/${ind.id}/`,
+      priority: '0.7',
+      changefreq: 'monthly',
+      lastmod: gitDate([`for/${ind.id}`, 'src/data/industries.json', 'src/components/IndustryPage.svelte']),
+      render: (l) => renderIndustry(ind.id, l),
+      metaFor: (l) =>
+        l === 'pl' ? null : { title: ind.metaTitle[l], description: ind.metaDescription[l] },
+    })),
     {
       distRoute: 'glossary/index.html',
       urlPath: 'glossary/',

@@ -1,0 +1,303 @@
+[
+  {
+    "id": "accounting",
+    "productIds": ["accounting-ai", "budget-assistant"],
+    "title": {
+      "pl": "AI dla biur rachunkowych",
+      "en": "AI for accounting firms",
+      "ru": "ИИ для бухгалтерских бюро"
+    },
+    "metaTitle": {
+      "pl": "AI dla biur rachunkowych — agenci księgowi, KSeF, wFirma | MiCode",
+      "en": "AI for accounting firms — tax agents, KSeF, wFirma | MiCode",
+      "ru": "ИИ для бухгалтерских бюро — налоговые агенты, KSeF, wFirma | MiCode"
+    },
+    "metaDescription": {
+      "pl": "Agenci AI dla biur rachunkowych w Polsce: obliczenia VAT i PIT, obsługa faktur, integracja z wFirma i gotowość na KSeF. Zobacz produkty i umów rozmowę.",
+      "en": "AI agents for accounting firms in Poland: VAT and PIT calculations, invoice handling, wFirma integration and KSeF readiness. See the products and book a call.",
+      "ru": "ИИ-агенты для бухгалтерских бюро в Польше: расчёты VAT и PIT, работа со счетами, интеграция с wFirma и готовность к KSeF. Посмотрите продукты и запишитесь на разговор."
+    },
+    "heroLead": {
+      "pl": "Mniej przepisywania faktur i ręcznych wyliczeń, więcej czasu na doradztwo. Budujemy agentów, którzy pracują na Twoich danych w wFirma i liczą podatki według polskich zasad.",
+      "en": "Less retyping of invoices and manual calculations, more time for advisory work. We build agents that work on your data in wFirma and calculate taxes by Polish rules.",
+      "ru": "Меньше перепечатывания счетов и ручных расчётов, больше времени на консультации. Мы строим агентов, которые работают с вашими данными в wFirma и считают налоги по польским правилам."
+    },
+    "ctaLabel": { "pl": "Porozmawiajmy o Twoim biurze", "en": "Talk about your firm", "ru": "Обсудить ваше бюро" },
+    "ctaMessage": {
+      "pl": "Dzień dobry, prowadzę biuro rachunkowe i chcę sprawdzić, jak agent AI może pomóc przy fakturach, VAT/PIT i KSeF. Liczba klientów: ... Używany system: ...",
+      "en": "Hello, I run an accounting firm and want to see how an AI agent could help with invoices, VAT/PIT and KSeF. Number of clients: ... System in use: ...",
+      "ru": "Здравствуйте, я веду бухгалтерское бюро и хочу понять, как ИИ-агент может помочь со счетами, VAT/PIT и KSeF. Число клиентов: ... Используемая система: ..."
+    },
+    "painPoints": [
+      {
+        "title": { "pl": "Faktury przepisywane ręcznie", "en": "Invoices retyped by hand", "ru": "Счета вводятся вручную" },
+        "body": {
+          "pl": "Każda faktura kosztowa to kilka minut klikania. Przy kilkudziesięciu klientach to cały etat.",
+          "en": "Every cost invoice takes minutes of clicking. Across dozens of clients that adds up to a full-time job.",
+          "ru": "Каждый расходный счёт — несколько минут кликов. На десятках клиентов это целая ставка."
+        }
+      },
+      {
+        "title": { "pl": "Zmiany przepisów i KSeF", "en": "Rule changes and KSeF", "ru": "Изменения правил и KSeF" },
+        "body": {
+          "pl": "Przepisy się zmieniają, a klienci pytają o wszystko. Trudno nadążać z odpowiedziami i z przeglądem źródeł.",
+          "en": "Rules keep changing and clients ask about everything. It is hard to keep up with both the answers and the sources.",
+          "ru": "Правила меняются, а клиенты спрашивают обо всём. Трудно успевать и с ответами, и с проверкой источников."
+        }
+      },
+      {
+        "title": { "pl": "Błędy w wyliczeniach", "en": "Calculation errors", "ru": "Ошибки в расчётах" },
+        "body": {
+          "pl": "Powtarzalne wyliczenia VAT i PIT wykonywane ręcznie to ryzyko pomyłek, które wychodzą dopiero przy kontroli.",
+          "en": "Repetitive VAT and PIT calculations done by hand invite mistakes that only surface during an audit.",
+          "ru": "Повторяющиеся расчёты VAT и PIT вручную — риск ошибок, которые всплывают только при проверке."
+        }
+      }
+    ],
+    "useCases": {
+      "accounting-ai": {
+        "pl": "Agent księgowy na LangGraph z integracją wFirma: obsługa faktur, obliczenia podatkowe i odpowiedzi na pytania klientów.",
+        "en": "A LangGraph accounting agent integrated with wFirma: invoice handling, tax calculations and answers to client questions.",
+        "ru": "Бухгалтерский агент на LangGraph с интеграцией wFirma: обработка счетов, налоговые расчёты и ответы на вопросы клиентов."
+      },
+      "budget-assistant": {
+        "pl": "Rozpoznawanie paragonów (OCR) i porządkowanie wydatków — przydatne dla klientów, którzy dostarczają dokumenty zdjęciami.",
+        "en": "Receipt OCR and expense sorting — useful for clients who hand over documents as photos.",
+        "ru": "Распознавание чеков (OCR) и сортировка расходов — удобно для клиентов, которые присылают документы фотографиями."
+      }
+    },
+    "scenario": {
+      "title": { "pl": "Przykładowy scenariusz: miesięczne zamknięcie", "en": "Example scenario: month-end close", "ru": "Пример сценария: закрытие месяца" },
+      "body": {
+        "pl": "Klient przesyła faktury kosztowe. Agent odczytuje dane, przygotowuje wpisy w wFirma i oznacza dokumenty, które wymagają decyzji księgowego. Człowiek zatwierdza wyjątki, a nie przepisuje całość. To scenariusz projektowy, nie referencja klienta — zakres ustalamy na rozmowie.",
+        "en": "A client sends cost invoices. The agent reads the data, prepares entries in wFirma and flags the documents that need an accountant's decision. A human approves exceptions instead of retyping everything. This is a design scenario, not a client reference — we scope it together on a call.",
+        "ru": "Клиент присылает расходные счета. Агент считывает данные, готовит записи в wFirma и отмечает документы, требующие решения бухгалтера. Человек подтверждает исключения, а не вводит всё заново. Это проектный сценарий, а не отзыв клиента — объём мы определяем на разговоре."
+      }
+    },
+    "faq": [
+      {
+        "q": { "pl": "Czy agent zastępuje księgowego?", "en": "Does the agent replace the accountant?", "ru": "Заменяет ли агент бухгалтера?" },
+        "a": {
+          "pl": "Nie. Przygotowuje i liczy, a decyzje oraz odpowiedzialność zostają po stronie księgowego.",
+          "en": "No. It prepares and calculates; decisions and responsibility stay with the accountant.",
+          "ru": "Нет. Он готовит и считает, а решения и ответственность остаются за бухгалтером."
+        }
+      },
+      {
+        "q": { "pl": "Z jakimi systemami się integrujecie?", "en": "Which systems do you integrate with?", "ru": "С какими системами вы интегрируетесь?" },
+        "a": {
+          "pl": "Gotowy produkt działa z wFirma przez API. Inne systemy księgowe wyceniamy indywidualnie.",
+          "en": "The ready product works with wFirma through its API. Other accounting systems are scoped individually.",
+          "ru": "Готовый продукт работает с wFirma через API. Другие учётные системы оцениваем индивидуально."
+        }
+      },
+      {
+        "q": { "pl": "Co z danymi klientów i RODO?", "en": "What about client data and GDPR?", "ru": "Что с данными клиентов и GDPR?" },
+        "a": {
+          "pl": "Dane przetwarzamy zgodnie z RODO; sposób hostingu i wybór modelu (np. z rezydencją w UE) ustalamy przed startem.",
+          "en": "We process data in line with GDPR; hosting and model choice (for example EU residency) are agreed before we start.",
+          "ru": "Данные обрабатываются в соответствии с GDPR; хостинг и выбор модели (например, с резидентностью в ЕС) согласуем до старта."
+        }
+      }
+    ]
+  },
+  {
+    "id": "legal",
+    "productIds": ["legalka-kb"],
+    "title": {
+      "pl": "AI dla kancelarii prawnych",
+      "en": "AI for law firms",
+      "ru": "ИИ для юридических фирм"
+    },
+    "metaTitle": {
+      "pl": "AI dla kancelarii prawnych — baza wiedzy z cytowaniem źródeł | MiCode",
+      "en": "AI for law firms — a knowledge base that cites its sources | MiCode",
+      "ru": "ИИ для юридических фирм — база знаний со ссылками на источники | MiCode"
+    },
+    "metaDescription": {
+      "pl": "Asystent AI dla kancelarii: odpowiada wyłącznie ze zweryfikowanej bazy wiedzy, cytuje przepisy i mówi „nie wiem” zamiast zgadywać. Zobacz Legalka KB.",
+      "en": "An AI assistant for law practices: answers only from a verified knowledge base, cites the law and says 'I don't know' instead of guessing. See Legalka KB.",
+      "ru": "ИИ-ассистент для юридических практик: отвечает только из проверенной базы знаний, цитирует нормы и говорит «не знаю» вместо догадок. Смотрите Legalka KB."
+    },
+    "heroLead": {
+      "pl": "W prawie liczy się źródło. Budujemy asystentów, którzy odpowiadają tylko na podstawie zweryfikowanej bazy wiedzy, wskazują artykuł przepisu i odmawiają odpowiedzi, gdy jej nie mają.",
+      "en": "In law the source is what matters. We build assistants that answer only from a verified knowledge base, point to the article of the law, and decline when they have no answer.",
+      "ru": "В праве главное — источник. Мы строим ассистентов, которые отвечают только из проверенной базы знаний, указывают статью закона и отказываются отвечать, когда ответа нет."
+    },
+    "ctaLabel": { "pl": "Porozmawiajmy o Twojej kancelarii", "en": "Talk about your practice", "ru": "Обсудить вашу практику" },
+    "ctaMessage": {
+      "pl": "Dzień dobry, prowadzę kancelarię i chcę sprawdzić, jak asystent AI oparty na bazie wiedzy mógłby odpowiadać na powtarzalne pytania klientów. Obszar prawa: ... Języki klientów: ...",
+      "en": "Hello, I run a law practice and want to see how a knowledge-base AI assistant could answer clients' repeat questions. Area of law: ... Client languages: ...",
+      "ru": "Здравствуйте, я веду юридическую практику и хочу понять, как ИИ-ассистент на базе знаний мог бы отвечать на повторяющиеся вопросы клиентов. Область права: ... Языки клиентов: ..."
+    },
+    "painPoints": [
+      {
+        "title": { "pl": "Te same pytania w kółko", "en": "The same questions again and again", "ru": "Одни и те же вопросы" },
+        "body": {
+          "pl": "Klienci pytają o te same procedury, terminy i dokumenty. Prawnik odpowiada po raz setny zamiast pracować nad sprawami.",
+          "en": "Clients ask about the same procedures, deadlines and documents. A lawyer answers for the hundredth time instead of working on cases.",
+          "ru": "Клиенты спрашивают об одних и тех же процедурах, сроках и документах. Юрист отвечает в сотый раз вместо работы над делами."
+        }
+      },
+      {
+        "title": { "pl": "Halucynacje są niedopuszczalne", "en": "Hallucinations are not acceptable", "ru": "Галлюцинации недопустимы" },
+        "body": {
+          "pl": "Ogólny chatbot potrafi zmyślić artykuł ustawy. W kancelarii taki błąd kosztuje reputację.",
+          "en": "A general chatbot can invent an article of a statute. In a law firm such a mistake costs reputation.",
+          "ru": "Обычный чат-бот может выдумать статью закона. В юридической фирме такая ошибка стоит репутации."
+        }
+      },
+      {
+        "title": { "pl": "Klienci z różnych języków", "en": "Clients in several languages", "ru": "Клиенты на разных языках" },
+        "body": {
+          "pl": "Obsługa klientów zagranicznych wymaga odpowiedzi w ich języku, przy zachowaniu precyzji prawniczej.",
+          "en": "Serving foreign clients means answering in their language while keeping legal precision.",
+          "ru": "Работа с иностранными клиентами требует ответов на их языке при сохранении юридической точности."
+        }
+      }
+    ],
+    "useCases": {
+      "legalka-kb": {
+        "pl": "Publiczna implementacja referencyjna dla prawa imigracyjnego w Polsce: dwie warstwy wiedzy (norma i praktyka), cytowanie przepisów, odmowa odpowiedzi bez pokrycia w źródłach, obsługa UA/EN/PL/RU. Ten sam wzorzec dostosujemy do Twojego obszaru prawa.",
+        "en": "A public reference build for Polish immigration law: two knowledge layers (norm and practice), citations to the law, abstention when sources do not cover the question, UA/EN/PL/RU support. We adapt the same pattern to your area of law.",
+        "ru": "Публичная референсная реализация для иммиграционного права Польши: два слоя знаний (норма и практика), цитирование законов, отказ от ответа без покрытия источниками, поддержка UA/EN/PL/RU. Тот же подход адаптируем под вашу область права."
+      }
+    },
+    "scenario": {
+      "title": { "pl": "Przykładowy scenariusz: pierwsza linia pytań klientów", "en": "Example scenario: first line of client questions", "ru": "Пример сценария: первая линия вопросов клиентов" },
+      "body": {
+        "pl": "Kancelaria zasila bazę własnymi, sprawdzonymi opracowaniami. Asystent odpowiada na typowe pytania z odwołaniem do źródła, a pytania spoza bazy przekazuje prawnikowi. Legalka KB mierzy ten wzorzec zestawem ewaluacyjnym: cytowanie ok. 99%, pokrycie faktów ok. 97%, odmowa odpowiedzi 100% (dane z jej strony produktowej).",
+        "en": "The firm feeds the base with its own vetted write-ups. The assistant answers typical questions with a reference to the source and hands anything outside the base to a lawyer. Legalka KB measures this pattern with an eval suite: citation ~99%, fact coverage ~97%, abstention 100% (figures from its product page).",
+        "ru": "Фирма наполняет базу собственными проверенными материалами. Ассистент отвечает на типовые вопросы со ссылкой на источник, а всё, чего нет в базе, передаёт юристу. Legalka KB измеряет этот подход набором оценочных тестов: цитирование ~99%, покрытие фактов ~97%, отказ от ответа 100% (данные со страницы продукта)."
+      }
+    },
+    "faq": [
+      {
+        "q": { "pl": "Czy to porada prawna?", "en": "Is this legal advice?", "ru": "Это юридическая консультация?" },
+        "a": {
+          "pl": "Nie. Asystent udziela informacji ze źródeł i odsyła do prawnika. Odpowiedzialność za poradę zostaje po stronie kancelarii.",
+          "en": "No. The assistant gives information from sources and refers to a lawyer. Responsibility for advice stays with the firm.",
+          "ru": "Нет. Ассистент даёт информацию из источников и отправляет к юристу. Ответственность за консультацию остаётся за фирмой."
+        }
+      },
+      {
+        "q": { "pl": "Co robi, gdy nie zna odpowiedzi?", "en": "What does it do when it does not know?", "ru": "Что он делает, если не знает ответа?" },
+        "a": {
+          "pl": "Odmawia odpowiedzi zamiast zgadywać i może przekazać pytanie człowiekowi.",
+          "en": "It abstains instead of guessing and can hand the question to a human.",
+          "ru": "Он воздерживается от ответа вместо догадок и может передать вопрос человеку."
+        }
+      },
+      {
+        "q": { "pl": "Kto kontroluje treść bazy wiedzy?", "en": "Who controls the knowledge base content?", "ru": "Кто контролирует содержимое базы знаний?" },
+        "a": {
+          "pl": "Kancelaria. Każdy fakt jest oznaczony jako norma (z odwołaniem do przepisu) lub praktyka, a zmiany przechodzą przez panel weryfikacji.",
+          "en": "The firm. Every fact is marked as norm (with a reference to the law) or practice, and changes go through a review panel.",
+          "ru": "Фирма. Каждый факт помечен как норма (со ссылкой на закон) или практика, а изменения проходят через панель проверки."
+        }
+      }
+    ]
+  },
+  {
+    "id": "smb-ops",
+    "productIds": ["emarketing-ai", "budget-assistant"],
+    "title": {
+      "pl": "AI dla e-commerce i małych firm",
+      "en": "AI for e-commerce and small business operations",
+      "ru": "ИИ для e-commerce и операций малого бизнеса"
+    },
+    "metaTitle": {
+      "pl": "AI dla e-commerce i małych firm — marketing i finanse | MiCode",
+      "en": "AI for e-commerce and small business — marketing and finance | MiCode",
+      "ru": "ИИ для e-commerce и малого бизнеса — маркетинг и финансы | MiCode"
+    },
+    "metaDescription": {
+      "pl": "Agenci AI do codziennej pracy sklepu i małej firmy: treści marketingowe, kontrola wydatków i rozpoznawanie paragonów. Zobacz produkty i umów rozmowę.",
+      "en": "AI agents for the daily work of a shop or small business: marketing content, expense control and receipt recognition. See the products and book a call.",
+      "ru": "ИИ-агенты для ежедневной работы магазина и малого бизнеса: маркетинговый контент, контроль расходов и распознавание чеков. Посмотрите продукты и запишитесь на разговор."
+    },
+    "heroLead": {
+      "pl": "Mały zespół robi pracę dużego: opisy produktów, kampanie, rozliczenia. Automatyzujemy powtarzalne zadania, żeby właściciel wracał do sprzedaży.",
+      "en": "A small team does the work of a big one: product descriptions, campaigns, bookkeeping. We automate the repetitive tasks so the owner can get back to selling.",
+      "ru": "Маленькая команда делает работу большой: описания товаров, кампании, учёт. Мы автоматизируем рутину, чтобы владелец вернулся к продажам."
+    },
+    "ctaLabel": { "pl": "Porozmawiajmy o Twojej firmie", "en": "Talk about your business", "ru": "Обсудить ваш бизнес" },
+    "ctaMessage": {
+      "pl": "Dzień dobry, prowadzę sklep internetowy / małą firmę i chcę zautomatyzować: treści marketingowe, rozliczanie wydatków. Platforma sklepu: ... Największa żmudna czynność: ...",
+      "en": "Hello, I run an online shop / small business and want to automate: marketing content, expense tracking. Shop platform: ... Most tedious task: ...",
+      "ru": "Здравствуйте, у меня интернет-магазин / малый бизнес, и я хочу автоматизировать: маркетинговый контент, учёт расходов. Платформа магазина: ... Самая рутинная задача: ..."
+    },
+    "painPoints": [
+      {
+        "title": { "pl": "Treści na każdy kanał", "en": "Content for every channel", "ru": "Контент для каждого канала" },
+        "body": {
+          "pl": "Opisy produktów, posty, newslettery — ktoś musi to pisać regularnie, a zwykle nie ma na to czasu.",
+          "en": "Product descriptions, posts, newsletters — someone has to write them regularly, and there is rarely time for it.",
+          "ru": "Описания товаров, посты, рассылки — кто-то должен писать их регулярно, а времени обычно нет."
+        }
+      },
+      {
+        "title": { "pl": "Paragony i wydatki w chaosie", "en": "Receipts and expenses in disarray", "ru": "Чеки и расходы в беспорядке" },
+        "body": {
+          "pl": "Zdjęcia paragonów w telefonie, wydatki w arkuszach. Pod koniec miesiąca nikt nie wie, na co poszły pieniądze.",
+          "en": "Receipt photos on a phone, expenses in spreadsheets. At month-end nobody knows where the money went.",
+          "ru": "Фото чеков в телефоне, расходы в таблицах. В конце месяца никто не знает, куда ушли деньги."
+        }
+      },
+      {
+        "title": { "pl": "Brak czasu na narzędzia", "en": "No time for tooling", "ru": "Нет времени на инструменты" },
+        "body": {
+          "pl": "Wdrażanie dużych systemów przekracza możliwości małego zespołu. Potrzebne są małe, konkretne automaty.",
+          "en": "Rolling out large systems is beyond a small team. What helps are small, specific automations.",
+          "ru": "Внедрение больших систем не по силам маленькой команде. Нужны небольшие конкретные автоматизации."
+        }
+      }
+    ],
+    "useCases": {
+      "emarketing-ai": {
+        "pl": "Agent do tworzenia i planowania treści marketingowych dla firm — od pomysłu po gotowy tekst.",
+        "en": "An agent for creating and planning marketing content for businesses — from idea to finished text.",
+        "ru": "Агент для создания и планирования маркетингового контента для бизнеса — от идеи до готового текста."
+      },
+      "budget-assistant": {
+        "pl": "Rozpoznawanie paragonów (OCR) i kategoryzowanie wydatków, żeby budżet był widoczny na bieżąco.",
+        "en": "Receipt OCR and expense categorisation so the budget stays visible as you go.",
+        "ru": "Распознавание чеков (OCR) и категоризация расходов, чтобы бюджет был виден в реальном времени."
+      }
+    },
+    "scenario": {
+      "title": { "pl": "Przykładowy scenariusz: tydzień pracy sklepu", "en": "Example scenario: a shop's working week", "ru": "Пример сценария: рабочая неделя магазина" },
+      "body": {
+        "pl": "Agent marketingowy przygotowuje szkice opisów i postów do akceptacji, a asystent budżetowy zbiera paragony ze zdjęć w jednym zestawieniu. Właściciel zatwierdza, zamiast tworzyć od zera. To scenariusz projektowy, nie referencja klienta.",
+        "en": "A marketing agent prepares draft descriptions and posts for approval, while the budget assistant collects receipts from photos into one overview. The owner approves instead of creating from scratch. This is a design scenario, not a client reference.",
+        "ru": "Маркетинговый агент готовит черновики описаний и постов на утверждение, а бюджетный ассистент собирает чеки с фотографий в одну сводку. Владелец утверждает, а не создаёт с нуля. Это проектный сценарий, а не отзыв клиента."
+      }
+    },
+    "faq": [
+      {
+        "q": { "pl": "Czy muszę mieć zespół IT?", "en": "Do I need an IT team?", "ru": "Нужна ли мне IT-команда?" },
+        "a": {
+          "pl": "Nie. Wdrożenie i utrzymanie bierzemy na siebie; po Twojej stronie jest dostęp do danych i akceptacja efektów.",
+          "en": "No. We handle deployment and upkeep; on your side it is data access and approving the output.",
+          "ru": "Нет. Внедрение и поддержку берём на себя; с вашей стороны — доступ к данным и утверждение результата."
+        }
+      },
+      {
+        "q": { "pl": "Ile to kosztuje?", "en": "How much does it cost?", "ru": "Сколько это стоит?" },
+        "a": {
+          "pl": "Zależy od zakresu. Po krótkiej rozmowie przygotowujemy wycenę, a koszty modeli AI można oszacować w naszym kalkulatorze na stronie głównej.",
+          "en": "It depends on scope. After a short call we prepare a quote, and AI model costs can be estimated in the calculator on our home page.",
+          "ru": "Зависит от объёма. После короткого разговора мы готовим оценку, а стоимость ИИ-моделей можно прикинуть в калькуляторе на главной странице."
+        }
+      },
+      {
+        "q": { "pl": "Czy to działa ze sklepem na dowolnej platformie?", "en": "Does it work with a shop on any platform?", "ru": "Работает ли это с магазином на любой платформе?" },
+        "a": {
+          "pl": "Produkty działają niezależnie od platformy; integracje ze sklepem wyceniamy osobno.",
+          "en": "The products work regardless of platform; shop integrations are scoped separately.",
+          "ru": "Продукты работают независимо от платформы; интеграции с магазином оцениваем отдельно."
+        }
+      }
+    ]
+  }
+]

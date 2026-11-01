@@ -24,7 +24,7 @@ export default defineConfig({
             configureServer(server) {
                 server.middlewares.use((req, _res, next) => {
                     const url = req.url ?? "";
-                    const m = url.match(/^\/(en|ru)(\/(?:products|blog|privacy-policy|glossary)\/.*)/);
+                    const m = url.match(/^\/(en|ru)(\/(?:products|blog|privacy-policy|glossary|for)\/.*)/);
                     if (m) {
                         req.url = m[2];
                     }
@@ -44,6 +44,9 @@ export default defineConfig({
                 ngxChat: resolve(__dirname, "products/ngx-chat/index.html"),
                 testingAi: resolve(__dirname, "products/testing-ai/index.html"),
                 legalkaKb: resolve(__dirname, "products/legalka-kb/index.html"),
+                industryAccounting: resolve(__dirname, "for/accounting/index.html"),
+                industryLegal: resolve(__dirname, "for/legal/index.html"),
+                industrySmbOps: resolve(__dirname, "for/smb-ops/index.html"),
                 privacyPolicy: resolve(__dirname, "privacy-policy/index.html"),
                 glossary: resolve(__dirname, "glossary/index.html"),
                 blog: resolve(__dirname, "blog/index.html"),

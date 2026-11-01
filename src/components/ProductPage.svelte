@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { industriesForProduct, industryPath, loc, uiLabels } from '../services/industries';
   import { languageStore } from '../stores/languageStore';
   import { t } from '../services/i18n';
   import { withLocale } from '../services/locale';
@@ -370,6 +371,17 @@
               </a>
             {/each}
           </div>
+        </section>
+      {/if}
+
+      {#if industriesForProduct(productId).length}
+        <section class="industry-links" aria-label={loc(uiLabels.solutions, lang)}>
+          <h2>{loc(uiLabels.solutions, lang)}</h2>
+          <ul>
+            {#each industriesForProduct(productId) as industry (industry.id)}
+              <li><a href={withLocale(industryPath(industry.id), lang)}>{loc(industry.title, lang)}</a></li>
+            {/each}
+          </ul>
         </section>
       {/if}
 
@@ -877,4 +889,8 @@
     .product-hero-image-btn .product-hero-image { transition: none; }
     .product-hero-image-btn:hover .product-hero-image { transform: none; }
   }
+  .industry-links { margin: 2rem 0 0; }
+  .industry-links h2 { font-size: 1.1rem; margin: 0 0 0.75rem; }
+  .industry-links ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; }
+  .industry-links a { color: var(--color-primary, #3b82f6); font-weight: 600; text-decoration: none; }
 </style>
