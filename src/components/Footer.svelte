@@ -16,6 +16,7 @@
   const privacyPolicyLabel = $derived(t('footer.privacyPolicy', $languageStore));
   const blogLabel = $derived(t('nav.blog', $languageStore));
   const glossaryLabel = $derived(t('footer.glossary', $languageStore));
+  const pressLabel = $derived(t('footer.press', $languageStore));
   const aboutLabel = $derived(t('footer.about', $languageStore));
   const accountingAiLabel = $derived(t('products.accountingAI.name', $languageStore));
   const budgetAssistantLabel = $derived(t('products.budgetAssistant.name', $languageStore));
@@ -30,6 +31,7 @@
         <a href={withLocale('/blog/o-firmie-micode/', $languageStore)}>{aboutLabel}</a>
         <a href={withLocale('/blog/', $languageStore)}>{blogLabel}</a>
         <a href={withLocale('/glossary/', $languageStore)}>{glossaryLabel}</a>
+        <a href={withLocale('/press/', $languageStore)}>{pressLabel}</a>
         {#each industries as industry (industry.id)}
           <a href={withLocale(industryPath(industry.id), $languageStore)}>{loc(industry.title, $languageStore)}</a>
         {/each}
