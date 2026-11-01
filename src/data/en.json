@@ -505,5 +505,42 @@
         "button": "Discuss your project",
         "articleMessage": "Hi! After reading \"{title}\" I would like to discuss a similar project: ",
         "productMessage": "Hi! I am interested in {name} and would like to discuss implementation: "
+    },
+    "press": {
+        "title": "Press kit",
+        "metaDesc": "MiCode press kit: logos (SVG, PNG), brand colours, 50- and 150-word company descriptions, product screenshots and media contact.",
+        "intro": "Logos, colours, company descriptions and screenshots for use in articles, podcasts, events and partner listings.",
+        "factsTitle": "Company facts",
+        "logosTitle": "Logos",
+        "logoDark": "Logo for light backgrounds",
+        "logoLight": "Logo for dark backgrounds",
+        "downloadSvg": "Download SVG",
+        "downloadPng": "Download PNG",
+        "colorsTitle": "Brand colours",
+        "copyHex": "Copy colour",
+        "usageTitle": "Logo usage rules",
+        "usage1": "Keep clear space around the logo equal to the height of the “M”.",
+        "usage2": "Do not stretch, rotate or recolour the logo.",
+        "usage3": "Use the dark logo on light backgrounds and the light one on dark.",
+        "usage4": "Full company name: MiCode Sp. z o.o.",
+        "boilerplateTitle": "Company description",
+        "words50": "50 words",
+        "words150": "150 words",
+        "copyText": "Copy description",
+        "copied": "Copied!",
+        "copyFailed": "Copy failed",
+        "screenshotsTitle": "Product screenshots",
+        "zipTitle": "Full package",
+        "zipText": "Logos, screenshots and company descriptions in a single ZIP archive.",
+        "zipDownload": "Download press kit (ZIP)",
+        "contactTitle": "Press contact",
+        "contactText": "Questions, quotes, interviews or other materials:",
+        "colors": {
+            "primary": "Primary blue",
+            "primaryDark": "Dark blue",
+            "accent": "Orange accent",
+            "ink": "Ink background",
+            "slate": "Text slate"
+        }
     }
 }

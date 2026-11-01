@@ -24,7 +24,7 @@ export default defineConfig({
             configureServer(server) {
                 server.middlewares.use((req, _res, next) => {
                     const url = req.url ?? "";
-                    const m = url.match(/^\/(en|ru)(\/(?:products|blog|privacy-policy|glossary|for)\/.*)/);
+                    const m = url.match(/^\/(en|ru)(\/(?:products|blog|privacy-policy|press|glossary|for)\/.*)/);
                     if (m) {
                         req.url = m[2];
                     }
@@ -48,6 +48,7 @@ export default defineConfig({
                 industryLegal: resolve(__dirname, "for/legal/index.html"),
                 industrySmbOps: resolve(__dirname, "for/smb-ops/index.html"),
                 privacyPolicy: resolve(__dirname, "privacy-policy/index.html"),
+                press: resolve(__dirname, "press/index.html"),
                 glossary: resolve(__dirname, "glossary/index.html"),
                 blog: resolve(__dirname, "blog/index.html"),
                 scmArticle: resolve(__dirname, "blog/scm-ai-agents-supply-chain/index.html"),

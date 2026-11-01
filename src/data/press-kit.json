@@ -1,0 +1,94 @@
+{
+  "contactEmail": "development@mi-code.pl",
+  "zipPath": "/downloads/micode-press-kit.zip",
+  "includeFounderPhoto": false,
+  "boilerplate": {
+    "pl": {
+      "short": "MiCode Sp. z o.o. to gdańska firma programistyczna założona w 2024 roku przez inżyniera z ponad 18-letnim doświadczeniem w IT. Tworzymy oprogramowanie na zamówienie w Javie, Spring Boot i Angularze oraz własne produkty oparte na AI: księgowość, marketing, budżet i testy. Pomagamy małym i średnim firmom automatyzować pracę.",
+      "long": "MiCode Sp. z o.o. to firma programistyczna z siedzibą w Gdańsku, założona w 2024 roku przez inżyniera z ponad 18-letnim doświadczeniem w IT. Łączymy solidną inżynierię oprogramowania z praktycznym zastosowaniem sztucznej inteligencji. Realizujemy systemy na zamówienie w Javie, Spring Boot i Angularze — od analizy wymagań po wdrożenie i utrzymanie. Rozwijamy też własne produkty oparte na agentach AI: Accounting AI do automatyzacji księgowości, eMarketing AI do tworzenia treści i kampanii, Budget Assistant do kontroli wydatków oraz Testing AI do orkiestracji testów. Dużą część narzędzi publikujemy jako open source i dzielimy się wiedzą na blogu technicznym. Naszymi klientami są małe i średnie firmy, które chcą skrócić czas rutynowych zadań bez budowania własnego zespołu AI. Stawiamy na przejrzyste koszty, bezpieczeństwo danych i rozwiązania, które działają w codziennej pracy, a nie tylko w prezentacji. Pracujemy w języku polskim, angielskim i rosyjskim, więc wspieramy zespoły i klientów w całej Europie Środkowo-Wschodniej."
+    },
+    "en": {
+      "short": "MiCode Sp. z o.o. is a software company from Gdańsk, Poland, founded in 2024 by an engineer with over 18 years of IT experience. We build custom software in Java, Spring Boot and Angular, plus own AI products for accounting, marketing, budgeting and testing. We help small businesses automate work.",
+      "long": "MiCode Sp. z o.o. is a software company based in Gdańsk, Poland, founded in 2024 by an engineer with over 18 years of IT experience. We combine solid software engineering with practical use of artificial intelligence. We deliver custom systems in Java, Spring Boot and Angular, from requirements analysis through deployment and maintenance. We also develop our own AI-agent products: Accounting AI for bookkeeping automation, eMarketing AI for content and campaigns, Budget Assistant for expense control, and Testing AI for test orchestration. Many of our tools are released as open source, and we share what we learn on our technical blog. Our clients are small and mid-sized companies that want to cut routine work without building an in-house AI team. We focus on transparent costs, data security and solutions that work in everyday operations, not just in a demo. We work in Polish, English and Russian, supporting teams and clients across Central and Eastern Europe."
+    },
+    "ru": {
+      "short": "MiCode Sp. z o.o. — софтверная компания из Гданьска, основанная в 2024 году инженером с более чем 18-летним опытом в IT. Мы разрабатываем ПО на заказ на Java, Spring Boot и Angular, а также собственные AI-продукты для бухгалтерии, маркетинга, бюджета и тестирования. Помогаем малому бизнесу автоматизировать работу.",
+      "long": "MiCode Sp. z o.o. — софтверная компания из Гданьска, основанная в 2024 году инженером с более чем 18-летним опытом в IT. Мы соединяем качественную программную инженерию с практическим применением искусственного интеллекта. Разрабатываем системы на заказ на Java, Spring Boot и Angular — от анализа требований до внедрения и сопровождения. Также развиваем собственные продукты на основе AI-агентов: Accounting AI для автоматизации бухгалтерии, eMarketing AI для контента и кампаний, Budget Assistant для контроля расходов и Testing AI для оркестрации тестов. Многие инструменты мы публикуем как open source и делимся опытом в техническом блоге. Наши клиенты — малые и средние компании, которые хотят сократить рутину, не создавая собственную AI-команду. Мы делаем ставку на прозрачные расходы, безопасность данных и решения, которые работают в повседневной работе, а не только на демонстрации. Мы работаем на польском, английском и русском языках и поддерживаем команды и клиентов по всей Центральной и Восточной Европе."
+    }
+  },
+  "logos": [
+    {
+      "id": "mark-dark",
+      "file": "/press/logos/micode-logo-dark.svg",
+      "format": "svg",
+      "background": "light"
+    },
+    {
+      "id": "mark-dark-png",
+      "file": "/press/logos/micode-logo-dark.png",
+      "format": "png",
+      "background": "light"
+    },
+    {
+      "id": "mark-light",
+      "file": "/press/logos/micode-logo-light.svg",
+      "format": "svg",
+      "background": "dark"
+    },
+    {
+      "id": "mark-light-png",
+      "file": "/press/logos/micode-logo-light.png",
+      "format": "png",
+      "background": "dark"
+    }
+  ],
+  "colors": [
+    {
+      "token": "--color-primary",
+      "hex": "#1E40AF",
+      "nameKey": "press.colors.primary"
+    },
+    {
+      "token": "--color-primary-dark",
+      "hex": "#1E3A8A",
+      "nameKey": "press.colors.primaryDark"
+    },
+    {
+      "token": "--color-accent",
+      "hex": "#F97316",
+      "nameKey": "press.colors.accent"
+    },
+    {
+      "token": "--color-bg-hero",
+      "hex": "#0F172A",
+      "nameKey": "press.colors.ink"
+    },
+    {
+      "token": "--color-text-secondary",
+      "hex": "#475569",
+      "nameKey": "press.colors.slate"
+    }
+  ],
+  "screenshots": [
+    {
+      "id": "accounting-ai",
+      "src": "accounting-ai.png"
+    },
+    {
+      "id": "emarketing-ai",
+      "src": "emarketing-ai.png"
+    },
+    {
+      "id": "budget-assistant",
+      "src": "budget-assistant.png"
+    },
+    {
+      "id": "ngx-open-web-ui-chat",
+      "src": "ngx-open-web-ui-chat.png"
+    },
+    {
+      "id": "testing-ai",
+      "src": "testing-ai.png"
+    }
+  ]
+}

@@ -249,6 +249,7 @@ async function run() {
   const { renderPage: renderBlog } = await import('../dist-ssr/blog.js');
   const { renderPage: renderArticle } = await import('../dist-ssr/article.js');
   const { renderPage: renderPrivacyPolicy } = await import('../dist-ssr/privacyPolicy.js');
+  const { renderPage: renderPress } = await import('../dist-ssr/press.js');
   const { renderPage: renderIndustry } = await import('../dist-ssr/industry.js');
   const { renderPage: renderGlossary } = await import('../dist-ssr/glossary.js');
 
@@ -365,6 +366,17 @@ async function run() {
           description: descriptions[l],
         };
       },
+    },
+    {
+      distRoute: 'press/index.html',
+      urlPath: 'press/',
+      priority: '0.4',
+      changefreq: 'yearly',
+      lastmod: gitDate(['press', 'src/components/PressKitPage.svelte', 'src/data/press-kit.json']),
+      render: (l) => renderPress(l),
+      jsonLdFor: (l) => (l === 'pl' ? undefined : webPageJsonLd(t('press.title', l))),
+      metaFor: (l) =>
+        l === 'pl' ? null : { title: `${t('press.title', l)} — MiCode`, description: t('press.metaDesc', l) },
     },
     ...industries.map((ind) => ({
       distRoute: `for/${ind.id}/index.html`,

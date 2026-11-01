@@ -491,5 +491,42 @@
     "button": "Omów swój projekt",
     "articleMessage": "Dzień dobry! Po lekturze artykułu „{title}” chcę omówić podobny projekt: ",
     "productMessage": "Dzień dobry! Interesuje mnie {name} — chcę omówić wdrożenie: "
-  }
+  },
+    "press": {
+        "title": "Materiały prasowe",
+        "metaDesc": "Press kit MiCode: logotypy (SVG, PNG), kolory marki, opisy firmy w 50 i 150 słowach, zrzuty ekranu produktów i kontakt dla mediów.",
+        "intro": "Logotypy, kolory, opisy firmy i zrzuty ekranu do wykorzystania w publikacjach, podcastach, na wydarzeniach i listach partnerów.",
+        "factsTitle": "Fakty o firmie",
+        "logosTitle": "Logotypy",
+        "logoDark": "Logotyp na jasne tło",
+        "logoLight": "Logotyp na ciemne tło",
+        "downloadSvg": "Pobierz SVG",
+        "downloadPng": "Pobierz PNG",
+        "colorsTitle": "Kolory marki",
+        "copyHex": "Kopiuj kolor",
+        "usageTitle": "Zasady użycia logo",
+        "usage1": "Zachowaj wolne pole wokół logo równe wysokości litery „M”.",
+        "usage2": "Nie rozciągaj, nie obracaj i nie zmieniaj kolorów logo.",
+        "usage3": "Używaj wersji ciemnej na jasnym tle, jasnej na ciemnym.",
+        "usage4": "Pełna nazwa firmy: MiCode Sp. z o.o.",
+        "boilerplateTitle": "Opis firmy",
+        "words50": "50 słów",
+        "words150": "150 słów",
+        "copyText": "Kopiuj opis",
+        "copied": "Skopiowano!",
+        "copyFailed": "Nie udało się skopiować",
+        "screenshotsTitle": "Zrzuty ekranu produktów",
+        "zipTitle": "Pełny pakiet",
+        "zipText": "Logotypy, zrzuty ekranu i opisy firmy w jednym archiwum ZIP.",
+        "zipDownload": "Pobierz press kit (ZIP)",
+        "contactTitle": "Kontakt dla mediów",
+        "contactText": "Pytania, cytaty, wywiady lub inne materiały:",
+        "colors": {
+            "primary": "Niebieski główny",
+            "primaryDark": "Niebieski ciemny",
+            "accent": "Pomarańczowy akcent",
+            "ink": "Granat tła",
+            "slate": "Szary tekstu"
+        }
+    }
 }
