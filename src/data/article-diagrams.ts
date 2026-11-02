@@ -2691,4 +2691,74 @@ export const articleDiagrams: Record<string, Record<Lang, string>> = {
   RV --> CM["Gałąź ai/test-gen<br/>commit i pull request"]
   CM --> CI["Twój CI uruchamia testy"]`,
   },
+  // Connect flow of the AI Budget public API with eKsięgowy AI (ABA-707/709 in ai-budget-assistant):
+  // the callback forwards code+state to an authenticated page; the state must belong to the signed-in user.
+  'ai-budget-public-api-connect-flow': {
+    ru: `sequenceDiagram
+  actor U as Пользователь
+  participant W as eksiegowyai.pl (веб)
+  participant E as API eKsięgowy AI
+  participant B as AI Budget
+  U->>W: «Подключить AI Budget»
+  W->>E: POST /connect (с входом)
+  E-->>W: адрес авторизации, state и PKCE
+  W->>B: экран согласия
+  U->>B: вход, галочки счетов, «Разрешить»
+  B-->>E: редирект на /callback с code и state
+  E-->>W: 302 на страницу завершения
+  W->>E: POST code и state с JWT пользователя
+  E->>E: state принадлежит этому пользователю?
+  Note over E: иначе state_mismatch, ничего не сохраняется
+  E->>B: POST /oauth/token (code, verifier, секрет клиента)
+  B-->>E: токены и account_ids
+  E->>E: токены зашифрованы при хранении
+  E->>B: GET /public/v1/accounts
+  B-->>E: счета с типом и доступом
+  E->>B: GET /expenses/changes, X-Account-Id компании
+  B-->>E: первая синхронизация зеркала компании`,
+    en: `sequenceDiagram
+  actor U as User
+  participant W as eksiegowyai.pl (web)
+  participant E as eKsięgowy AI API
+  participant B as AI Budget
+  U->>W: «Connect AI Budget»
+  W->>E: POST /connect (signed in)
+  E-->>W: authorize URL with state and PKCE
+  W->>B: consent screen
+  U->>B: sign in, tick accounts, «Allow»
+  B-->>E: redirect to /callback with code and state
+  E-->>W: 302 to the completion page
+  W->>E: POST code and state with the user's JWT
+  E->>E: does the state belong to this user?
+  Note over E: otherwise state_mismatch, nothing stored
+  E->>B: POST /oauth/token (code, verifier, client secret)
+  B-->>E: tokens and account_ids
+  E->>E: tokens encrypted at rest
+  E->>B: GET /public/v1/accounts
+  B-->>E: accounts with type and access
+  E->>B: GET /expenses/changes, company X-Account-Id
+  B-->>E: first sync of the company mirror`,
+    pl: `sequenceDiagram
+  actor U as Użytkownik
+  participant W as eksiegowyai.pl (web)
+  participant E as API eKsięgowego AI
+  participant B as AI Budget
+  U->>W: «Połącz AI Budget»
+  W->>E: POST /connect (zalogowany)
+  E-->>W: adres autoryzacji, state i PKCE
+  W->>B: ekran zgody
+  U->>B: logowanie, wybór kont, «Zezwól»
+  B-->>E: przekierowanie na /callback z code i state
+  E-->>W: 302 na stronę zakończenia
+  W->>E: POST code i state z JWT użytkownika
+  E->>E: czy state należy do tego użytkownika?
+  Note over E: inaczej state_mismatch, nic nie jest zapisywane
+  E->>B: POST /oauth/token (code, verifier, sekret klienta)
+  B-->>E: tokeny i account_ids
+  E->>E: tokeny szyfrowane w spoczynku
+  E->>B: GET /public/v1/accounts
+  B-->>E: konta z typem i dostępem
+  E->>B: GET /expenses/changes, X-Account-Id firmy
+  B-->>E: pierwsza synchronizacja lustra firmy`,
+  },
 };

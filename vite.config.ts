@@ -78,6 +78,7 @@ export default defineConfig({
                 claudeCodeModsForEveryProjectArticle: resolve(__dirname, "blog/claude-code-mods-for-every-project/index.html"),
                 langgraphAgent80ToolsStructureArticle: resolve(__dirname, "blog/langgraph-agent-80-tools-structure/index.html"),
                 aiTestCasesFromSourceCodeArticle: resolve(__dirname, "blog/ai-test-cases-from-source-code/index.html"),
+                aiBudgetPublicApiOauthAiAccountingArticle: resolve(__dirname, "blog/ai-budget-public-api-oauth-ai-accounting/index.html"),
             },
         },
     },

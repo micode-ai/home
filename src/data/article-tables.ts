@@ -1107,4 +1107,48 @@ export const articleTables: Record<string, Record<Lang, ArticleTable>> = {
       ],
     },
   },
+
+  // Review and security-audit findings of the AI Budget public API + eKsięgowy AI integration
+  // (ABA-707/708/709). All fixed before or at launch; the article body details each row.
+  'ai-budget-public-api-review-findings': {
+    ru: {
+      headers: ['Находка', 'Чем грозило', 'Исправление'],
+      rows: [
+        ['IDOR в /sync AI Budget (существовал раньше)', 'Участник одного счёта мог менять связи и видеть позицию чека в чужом счёте', 'Каждая запись идёт через счёт родителя; чужое — «не найдено»'],
+        ['Фишинг согласия: state привязан к тому, кто начал', 'Токены жертвы сохранились бы под чужим аккаунтом', 'Обмен кода только на аутентифицированной странице; state обязан принадлежать вошедшему'],
+        ['Markdown-картинки в чате, нет CSP', 'Браузер сам отправил бы личные суммы на чужой сервер', 'Без удалённых картинок; очистка всех строк из AI Budget; вывод инструментов — данные'],
+        ['Личные данные в трейсах LangSmith', 'Личные цифры во внешнем хранилище', 'Приватность трейса решается до корневого прогона; входы и выходы затираются'],
+        ['Израсходованный токен обновления после сбоя сохранения', 'AI Budget отозвал бы всё подключение', 'Повтор под блокировкой, needs_reconnect, 60-секундный маркер, compare-and-swap'],
+        ['Отключение во время синхронизации', 'Устаревшие расходы навсегда в цифрах компании', 'Сначала локальный отзыв; SELECT … FOR UPDATE на каждой записи в зеркало'],
+        ['Тихая смена компании', 'Зеркало настоящей компании стёрто', 'Неактивный, но видимый счёт сохраняет метку'],
+        ['«Всё сопоставлено» вместо «неизвестно»', 'Ложное «у каждого расхода есть документ»', 'Различимые состояния; зеркало полное только после полного прогона'],
+      ],
+    },
+    en: {
+      headers: ['Finding', 'What it risked', 'Fix'],
+      rows: [
+        ['IDOR in AI Budget /sync (pre-existing)', 'A member of one account could change links and see a line item in another account', 'Every write resolves through the parent account; foreign rows are "not found"'],
+        ['Consent phishing: state bound to whoever started', 'A victim\'s tokens stored under someone else\'s account', 'Code exchanged only on an authenticated page; the state must belong to the signed-in user'],
+        ['Markdown images in chat, no CSP', 'The browser itself sending private totals to an outside server', 'No remote images; every AI Budget string sanitised; tool output is data'],
+        ['Private data in LangSmith traces', 'Private figures in a third-party store', 'Trace privacy decided before the root run; inputs and outputs blanked'],
+        ['Spent refresh token after a failed save', 'AI Budget revoking the whole connection', 'Retry under the lock, needs_reconnect, 60-second marker, compare-and-swap'],
+        ['Disconnect during a running sync', 'Stale expenses permanently in company figures', 'Revoke locally first; SELECT … FOR UPDATE on every mirror write'],
+        ['Silent company switch', 'The real company\'s mirror wiped', 'An inactive but visible account keeps its label'],
+        ['"All matched" instead of "unknown"', 'A false "every expense has a document"', 'Discriminated states; a mirror is complete only after a full run'],
+      ],
+    },
+    pl: {
+      headers: ['Znalezisko', 'Czym groziło', 'Poprawka'],
+      rows: [
+        ['IDOR w /sync AI Budget (istniał wcześniej)', 'Członek jednego konta mógł zmieniać powiązania i widzieć pozycję paragonu w cudzym koncie', 'Każdy zapis przez konto rodzica; obce wiersze — «nie znaleziono»'],
+        ['Phishing zgody: state powiązany z tym, kto zaczął', 'Tokeny ofiary zapisane pod cudzym kontem', 'Wymiana kodu tylko na uwierzytelnionej stronie; state musi należeć do zalogowanego'],
+        ['Obrazki markdown w czacie, brak CSP', 'Przeglądarka sama wysłałaby prywatne sumy na obcy serwer', 'Bez zdalnych obrazków; czyszczenie każdego ciągu z AI Budget; wynik narzędzia to dane'],
+        ['Dane prywatne w śladach LangSmith', 'Prywatne liczby w zewnętrznym magazynie', 'Prywatność śladu ustalana przed przebiegiem głównym; wejścia i wyjścia wymazane'],
+        ['Zużyty token odświeżania po nieudanym zapisie', 'AI Budget unieważniłby całe połączenie', 'Ponowienie pod blokadą, needs_reconnect, 60-sekundowy znacznik, compare-and-swap'],
+        ['Odłączenie w trakcie synchronizacji', 'Nieaktualne wydatki na stałe w liczbach firmy', 'Najpierw lokalne unieważnienie; SELECT … FOR UPDATE przy każdym zapisie lustra'],
+        ['Ciche przełączenie firmy', 'Skasowane lustro prawdziwej firmy', 'Konto nieaktywne, ale widoczne, zachowuje etykietę'],
+        ['«Wszystko dopasowane» zamiast «nie wiadomo»', 'Fałszywe «każdy wydatek ma dokument»', 'Rozróżnione stany; lustro kompletne dopiero po pełnym przebiegu'],
+      ],
+    },
+  },
 };
